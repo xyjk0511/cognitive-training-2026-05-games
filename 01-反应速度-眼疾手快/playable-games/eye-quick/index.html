@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>眼疾手快</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; font-family: "Microsoft YaHei", system-ui, sans-serif; color: #172033; background: #f4f7fb; display: grid; place-items: center; }
+    main { width: min(980px, calc(100vw - 28px)); display: grid; gap: 14px; }
+    header, section, footer { background: #fff; border: 1px solid #dbe3ef; border-radius: 8px; padding: 16px; box-shadow: 0 14px 36px rgba(20,31,48,.08); }
+    header { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+    h1 { margin: 0; font-size: 28px; }
+    .hud { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+    .hud b { font-size: 24px; }
+    .board { display: grid; gap: 8px; aspect-ratio: 1.25; min-height: 480px; background: #edf5ff; }
+    .cell { border: 1px solid #d2dfef; border-radius: 8px; background: #fff; display: grid; place-items: center; cursor: pointer; min-width: 0; }
+    .cell img { width: 70%; height: 70%; object-fit: contain; pointer-events: none; }
+    .effect { color: #0f7a63; font-weight: 900; }
+    footer { display: flex; justify-content: space-between; align-items: center; color: #536173; }
+    button { border: 0; border-radius: 8px; padding: 10px 14px; font-weight: 800; background: #172033; color: #fff; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>眼疾手快</h1>
+      <div class="hud">
+        <span>等级 <b id="level">1</b></span>
+        <span>目标 <b id="target">0/0</b></span>
+        <span>得分 <b id="score">0</b></span>
+        <span id="feedback">点击普通地鼠和头盔地鼠，避开干扰项</span>
+      </div>
+    </header>
+    <section id="board" class="board" aria-live="polite"></section>
+    <footer>
+      <span>源合同：data.json / 51关 / 连错两次或倒计时结束结算</span>
+      <button id="reset">重新开始</button>
+    </footer>
+  </main>
+  <script type="module">
+    import { applyEyeQuickClick, createEyeQuickSession, createNextEyeQuickSession, getEyeQuickTargetProgress, stepEyeQuickSession } from '../../implementation/eyeQuickSource.js';
+
+    const assets = {
+      normal: '../../../training-assets/eye-quick/mole_normal_idle.svg',
+      helmet: '../../../training-assets/eye-quick/mole_helmet_idle.svg',
+      bomb: '../../../training-assets/eye-quick/bomb_idle.svg',
+      whiteCat: '../../../training-assets/eye-quick/rabbit_decoy_idle.svg',
+      otherCat: '../../../training-assets/eye-quick/panda_decoy_idle.svg',
+    };
+    let session = createEyeQuickSession(1, { now: performance.now(), durationMs: 3000 });
+    const board = document.getElementById('board');
+    const feedback = document.getElementById('feedback');
+
+    function render() {
+      const config = session.config;
+      board.style.gridTemplateColumns = `repeat(${config.columns}, minmax(0, 1fr))`;
+      board.innerHTML = '';
+      const activeByCell = new Map(session.active.map((item) => [item.cellIndex, item]));
+      for (let i = 0; i < config.boardSize; i += 1) {
+        const cell = document.createElement('button');
+        cell.className = 'cell';
+        cell.type = 'button';
+        const active = activeByCell.get(i);
+        const effect = session.effects.find((item) => item.cellIndex === i);
+        if (active) {
+          const img = document.createElement('img');
+          img.src = assets[active.type];
+          img.alt = active.type;
+          cell.append(img);
+        } else if (effect) {
+          const span = document.createElement('span');
+          span.className = 'effect';
+          span.textContent = effect.label;
+          cell.append(span);
+        }
+        cell.addEventListener('click', () => {
+          session = applyEyeQuickClick(session, i, performance.now());
+          if (session.ended) finishRound();
+          render();
+        });
+        board.append(cell);
+      }
+      document.getElementById('level').textContent = session.level;
+      document.getElementById('target').textContent = getEyeQuickTargetProgress(session);
+      document.getElementById('score').textContent = session.score;
+      if (session.roundResult) feedback.textContent = `${session.roundResult.note}，奖励 ${session.roundResult.award}`;
+    }
+
+    function finishRound() {
+      session = createNextEyeQuickSession(session, { now: performance.now(), durationMs: 3000 });
+    }
+
+    function loop() {
+      session = stepEyeQuickSession(session, performance.now());
+      if (session.ended) finishRound();
+      render();
+      window.setTimeout(loop, 160);
+    }
+
+    document.getElementById('reset').addEventListener('click', () => {
+      session = createEyeQuickSession(1, { now: performance.now(), durationMs: 3000 });
+      render();
+    });
+    loop();
+  </script>
+</body>
+</html>

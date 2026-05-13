@@ -1,0 +1,671 @@
+:root {
+  --unified-ink: #334155;
+  --unified-title: #3f2d22;
+  --unified-paper: rgba(255, 253, 247, 0.94);
+  --unified-paper-strong: rgba(255, 255, 255, 0.96);
+  --unified-line: rgba(146, 118, 87, 0.18);
+  --unified-primary: #ffbd59;
+  --unified-primary-dark: #d67a19;
+  --unified-calm: #dff7eb;
+  --unified-calm-dark: #2f855a;
+  --unified-blue: #dff3ff;
+  --unified-blue-dark: #2563eb;
+  --unified-shadow: 0 18px 45px rgba(68, 49, 31, 0.14);
+  --unified-radius: 22px;
+  --unified-font: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", "Source Han Sans SC", sans-serif;
+}
+
+html.playable-unified,
+html.playable-unified body {
+  font-family: var(--unified-font) !important;
+  color: var(--unified-ink) !important;
+  background:
+    radial-gradient(circle at 18% 8%, rgba(255, 224, 202, 0.45), transparent 30%),
+    radial-gradient(circle at 82% 12%, rgba(214, 245, 225, 0.52), transparent 34%),
+    linear-gradient(135deg, #fff8e8 0%, #eefaf4 52%, #e9f6ff 100%) !important;
+}
+
+html.playable-unified body {
+  min-height: 100vh;
+}
+
+html.playable-unified h1,
+html.playable-unified h2,
+html.playable-unified h3,
+html.playable-unified .title,
+html.playable-unified .game-title,
+html.playable-unified .section-title {
+  color: var(--unified-title) !important;
+  letter-spacing: 0 !important;
+}
+
+html.playable-unified p,
+html.playable-unified li,
+html.playable-unified .small,
+html.playable-unified .tiny {
+  line-height: 1.65 !important;
+}
+
+html.playable-unified .unified-home-link {
+  position: fixed;
+  left: 14px;
+  top: 14px;
+  z-index: 999999;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 38px;
+  padding: 8px 13px;
+  border: 1px solid rgba(255, 255, 255, 0.86);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 10px 26px rgba(51, 65, 85, 0.13);
+  color: #334155;
+  font-size: 13px;
+  font-weight: 900;
+  text-decoration: none;
+  backdrop-filter: blur(10px);
+}
+
+html.playable-unified .unified-home-link:hover {
+  background: #fff4d6;
+  color: #7c3f00;
+}
+
+html.playable-unified .unified-home-link::before {
+  content: "⌂";
+  font-size: 15px;
+  line-height: 1;
+}
+
+html.playable-unified .unified-debug-hidden,
+html.playable-unified .asset-note,
+html.playable-unified .asset-check {
+  display: none !important;
+}
+
+html.playable-unified button,
+html.playable-unified [role="button"],
+html.playable-unified .btn,
+html.playable-unified .button,
+html.playable-unified .primary,
+html.playable-unified .secondary,
+html.playable-unified .ghost {
+  min-height: 42px;
+  border-radius: 999px !important;
+  font-family: var(--unified-font) !important;
+  font-weight: 900 !important;
+  letter-spacing: 0 !important;
+  transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease !important;
+}
+
+html.playable-unified button:hover,
+html.playable-unified [role="button"]:hover,
+html.playable-unified .btn:hover,
+html.playable-unified .button:hover {
+  transform: translateY(-1px);
+  filter: saturate(1.04);
+}
+
+html.playable-unified button:active,
+html.playable-unified [role="button"]:active,
+html.playable-unified .btn:active,
+html.playable-unified .button:active {
+  transform: translateY(1px);
+}
+
+html.playable-unified .primary,
+html.playable-unified button.primary,
+html.playable-unified button[data-unified-action="start"],
+html.playable-unified button[data-unified-action="teach"] {
+  border: 1px solid rgba(214, 122, 25, 0.32) !important;
+  background: linear-gradient(180deg, #ffd982 0%, var(--unified-primary) 100%) !important;
+  color: #5a3309 !important;
+  box-shadow: 0 8px 0 rgba(214, 122, 25, 0.18), 0 12px 24px rgba(214, 122, 25, 0.14) !important;
+}
+
+html.playable-unified .secondary,
+html.playable-unified button.secondary,
+html.playable-unified button[data-unified-action="practice"] {
+  border: 1px solid rgba(47, 133, 90, 0.24) !important;
+  background: linear-gradient(180deg, #f0fff6 0%, var(--unified-calm) 100%) !important;
+  color: #276749 !important;
+  box-shadow: 0 8px 18px rgba(47, 133, 90, 0.11) !important;
+}
+
+html.playable-unified .ghost,
+html.playable-unified button.ghost,
+html.playable-unified button[data-unified-action="info"],
+html.playable-unified button[data-unified-action="cover"],
+html.playable-unified button[data-unified-action="setting"] {
+  border: 1px solid rgba(37, 99, 235, 0.17) !important;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, var(--unified-blue) 100%) !important;
+  color: #31537d !important;
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.08) !important;
+}
+
+html.playable-unified .card,
+html.playable-unified .panel,
+html.playable-unified .modal,
+html.playable-unified .info,
+html.playable-unified .box,
+html.playable-unified .sheet,
+html.playable-unified .hud,
+html.playable-unified .result,
+html.playable-unified .cover-card,
+html.playable-unified .detail-card {
+  border-color: var(--unified-line) !important;
+  border-radius: var(--unified-radius) !important;
+  background-color: var(--unified-paper) !important;
+  box-shadow: var(--unified-shadow) !important;
+}
+
+html.playable-unified .badge,
+html.playable-unified .tag,
+html.playable-unified .chip,
+html.playable-unified .pill {
+  border-radius: 999px !important;
+  font-family: var(--unified-font) !important;
+  font-weight: 850 !important;
+  letter-spacing: 0 !important;
+}
+
+html.playable-unified [id*="hasAdaptive"],
+html.playable-unified [class*="debug"],
+html.playable-unified [id*="debug"] {
+  display: none !important;
+}
+
+html.playable-unified[data-game="simon-says"] .cover-panel,
+html.playable-unified[data-game="schulte-table"] .cover-card,
+html.playable-unified[data-game="number-sequence"] .home-shell,
+html.playable-unified[data-game="tower-of-hanoi"] .home-grid {
+  width: min(1120px, calc(100vw - 112px)) !important;
+  max-width: 1120px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  align-items: center !important;
+  gap: 28px !important;
+}
+
+html.playable-unified[data-game="simon-says"] .cover-panel {
+  display: grid !important;
+  grid-template-columns: minmax(360px, 0.9fr) minmax(0, 0.95fr) !important;
+  min-height: min(640px, calc(100vh - 120px)) !important;
+  padding: clamp(30px, 3.2vw, 44px) !important;
+}
+
+html.playable-unified[data-game="simon-says"] .cover-panel > * {
+  grid-column: 2 !important;
+}
+
+html.playable-unified[data-game="simon-says"] .cover-panel::after {
+  content: "";
+  grid-column: 1;
+  grid-row: 1 / span 6;
+  align-self: stretch;
+  min-height: 420px;
+  border-radius: 24px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.10), rgba(255, 253, 247, 0.18)),
+    url("../simon-says/assets/game-cover-poster.png") center / cover no-repeat;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.74), 0 18px 40px rgba(67, 114, 139, 0.16);
+}
+
+html.playable-unified[data-game="simon-says"] .cover-info,
+html.playable-unified[data-game="number-sequence"] .info-panel,
+html.playable-unified[data-game="tower-of-hanoi"] .info-panel {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 14px !important;
+}
+
+html.playable-unified[data-game="simon-says"] .cover-info-card,
+html.playable-unified[data-game="number-sequence"] .info-block,
+html.playable-unified[data-game="tower-of-hanoi"] .info-panel > div {
+  border: 1px solid rgba(146, 118, 87, 0.16) !important;
+  border-radius: 20px !important;
+  background: rgba(255, 253, 247, 0.78) !important;
+  box-shadow: 0 10px 22px rgba(68, 49, 31, 0.08) !important;
+}
+
+html.playable-unified[data-game="schulte-table"] .cover-card,
+html.playable-unified[data-game="number-sequence"] .home-shell,
+html.playable-unified[data-game="tower-of-hanoi"] .home-grid {
+  grid-template-columns: minmax(0, 0.95fr) minmax(340px, 0.85fr) !important;
+}
+
+html.playable-unified[data-game="schulte-table"] .cover-card,
+html.playable-unified[data-game="number-sequence"] .home-card,
+html.playable-unified[data-game="number-sequence"] .info-panel {
+  min-height: min(650px, calc(100vh - 140px)) !important;
+}
+
+html.playable-unified[data-game="schulte-table"] .cover-card {
+  align-items: stretch !important;
+  padding: clamp(30px, 3.2vw, 44px) !important;
+}
+
+html.playable-unified[data-game="schulte-table"] .cover-card > div:first-child {
+  grid-column: 2 !important;
+  display: flex !important;
+  min-width: 0 !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+}
+
+html.playable-unified[data-game="schulte-table"] .cover-art {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+  min-height: 430px !important;
+  height: auto !important;
+  max-height: none !important;
+}
+
+html.playable-unified[data-game="schulte-table"] .adapt-box {
+  margin: 14px 0 18px !important;
+  padding: 14px 16px !important;
+}
+
+html.playable-unified[data-game="schulte-table"] .cover-card .row[style*="margin-top"],
+html.playable-unified[data-game="schulte-table"] .cover-card .switch {
+  display: none !important;
+}
+
+html.playable-unified[data-game="tower-of-hanoi"] .page {
+  display: grid !important;
+  align-content: center !important;
+}
+
+html.playable-unified[data-game="tower-of-hanoi"] .topbar {
+  width: min(1120px, calc(100vw - 112px)) !important;
+  margin: 0 auto 14px !important;
+}
+
+html.playable-unified[data-game="tower-of-hanoi"] .home-grid {
+  max-height: calc(100vh - 128px) !important;
+  overflow: visible !important;
+}
+
+html.playable-unified[data-game="tower-of-hanoi"] .home-card,
+html.playable-unified[data-game="tower-of-hanoi"] .info-panel {
+  height: calc(100vh - 140px) !important;
+  max-height: 660px !important;
+}
+
+html.playable-unified[data-game="tower-of-hanoi"] .info-panel {
+  overflow: auto !important;
+  align-content: start !important;
+}
+
+html.playable-unified[data-game="tower-of-hanoi"] .home-grid .adaptive-row,
+html.playable-unified[data-game="tower-of-hanoi"] .info-panel > div:has(.level-strip) {
+  display: none !important;
+}
+
+html.playable-unified[data-game="tower-of-hanoi"] .home-card-body {
+  padding: 22px 24px 24px !important;
+}
+
+html.playable-unified[data-game="tower-of-hanoi"] .brand {
+  visibility: hidden !important;
+}
+
+html.playable-unified[data-game="tower-of-hanoi"] .brand::after {
+  content: "甜甜圈收纳架";
+  visibility: visible;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-left: 58px;
+  background:
+    radial-gradient(circle at 22px 50%, #fff 0 6px, transparent 7px),
+    linear-gradient(135deg, #ffb07c, #ffd978) 0 50% / 44px 44px no-repeat;
+  border-radius: 16px;
+}
+
+html.playable-unified[data-game="schulte-table"] h1,
+html.playable-unified[data-game="simon-says"] .title,
+html.playable-unified[data-game="number-sequence"] .title-xl,
+html.playable-unified[data-game="tower-of-hanoi"] h1 {
+  font-size: clamp(42px, 4.4vw, 58px) !important;
+  line-height: 1.06 !important;
+  letter-spacing: 0 !important;
+}
+
+html.playable-unified[data-game="schulte-table"] .lead,
+html.playable-unified[data-game="simon-says"] .subtitle,
+html.playable-unified[data-game="number-sequence"] .subtitle,
+html.playable-unified[data-game="tower-of-hanoi"] .small-note {
+  font-size: clamp(17px, 1.45vw, 20px) !important;
+  line-height: 1.62 !important;
+}
+
+html.playable-unified[data-game="schulte-table"] .cover-art,
+html.playable-unified[data-game="number-sequence"] .home-card img,
+html.playable-unified[data-game="tower-of-hanoi"] .home-card img {
+  min-height: 250px !important;
+  height: 34vh !important;
+  max-height: 300px !important;
+  border-radius: 24px !important;
+}
+
+html.playable-unified[data-game="schulte-table"] .cover-art {
+  min-height: 100% !important;
+  height: 100% !important;
+  max-height: none !important;
+  background-color: rgba(234, 248, 255, 0.64) !important;
+  background-repeat: no-repeat !important;
+  background-size: contain !important;
+}
+
+html.playable-unified[data-game="schulte-table"] .adapt-box,
+html.playable-unified[data-game="number-sequence"] .progress-note,
+html.playable-unified[data-game="tower-of-hanoi"] .adaptive-panel {
+  border: 1px solid rgba(47, 133, 90, 0.18) !important;
+  background: rgba(240, 255, 246, 0.84) !important;
+  border-radius: 20px !important;
+}
+
+@media (max-width: 640px) {
+  html.playable-unified .unified-home-link {
+    left: 8px;
+    top: 8px;
+    min-height: 32px;
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  html.playable-unified body {
+    overflow-x: hidden;
+  }
+}
+
+@media (max-width: 900px) {
+  html.playable-unified[data-game="simon-says"] .cover-panel,
+  html.playable-unified[data-game="schulte-table"] .cover-card,
+  html.playable-unified[data-game="number-sequence"] .home-shell,
+  html.playable-unified[data-game="tower-of-hanoi"] .home-grid {
+    width: min(94vw, 720px) !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  html.playable-unified[data-game="simon-says"] .cover-panel::after {
+    grid-column: 1;
+    grid-row: 2;
+    min-height: 260px;
+  }
+
+  html.playable-unified[data-game="simon-says"] .cover-info,
+  html.playable-unified[data-game="number-sequence"] .info-panel,
+  html.playable-unified[data-game="tower-of-hanoi"] .info-panel {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+
+/* === smooth-polish-v1: 全局游戏手感补丁 === */
+html.playable-unified {
+  scroll-behavior: smooth;
+}
+
+html.playable-unified body {
+  overflow-x: hidden;
+}
+
+html.playable-unified main,
+html.playable-unified section,
+html.playable-unified .screen,
+html.playable-unified [data-screen],
+html.playable-unified .dg-shell,
+html.playable-unified .cover-card,
+html.playable-unified .home-shell,
+html.playable-unified .cover-panel,
+html.playable-unified .stage,
+html.playable-unified .game,
+html.playable-unified .training,
+html.playable-unified .result {
+  animation: cg-soft-enter 360ms cubic-bezier(.2,.9,.2,1) both;
+}
+
+html.playable-unified button,
+html.playable-unified [role="button"],
+html.playable-unified .btn,
+html.playable-unified .button,
+html.playable-unified .card,
+html.playable-unified .panel,
+html.playable-unified .option,
+html.playable-unified .choice,
+html.playable-unified .tile,
+html.playable-unified .cell,
+html.playable-unified .node,
+html.playable-unified .cup,
+html.playable-unified .peg,
+html.playable-unified .object-btn,
+html.playable-unified .dg-option,
+html.playable-unified .dg-btn {
+  will-change: transform, filter, box-shadow;
+}
+
+html.playable-unified button,
+html.playable-unified [role="button"],
+html.playable-unified .btn,
+html.playable-unified .button,
+html.playable-unified .option,
+html.playable-unified .choice,
+html.playable-unified .tile,
+html.playable-unified .cell,
+html.playable-unified .node,
+html.playable-unified .object-btn,
+html.playable-unified .dg-option,
+html.playable-unified .dg-btn {
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform 160ms cubic-bezier(.2,.9,.2,1),
+    box-shadow 180ms cubic-bezier(.2,.9,.2,1),
+    border-color 180ms ease,
+    background-color 180ms ease,
+    filter 180ms ease,
+    opacity 180ms ease !important;
+}
+
+html.playable-unified button:hover,
+html.playable-unified [role="button"]:hover,
+html.playable-unified .btn:hover,
+html.playable-unified .button:hover,
+html.playable-unified .option:hover,
+html.playable-unified .choice:hover,
+html.playable-unified .tile:hover,
+html.playable-unified .cell:hover,
+html.playable-unified .node:hover,
+html.playable-unified .object-btn:hover,
+html.playable-unified .dg-option:hover,
+html.playable-unified .dg-btn:hover {
+  transform: translateY(-2px) scale(1.012);
+  filter: saturate(1.06) brightness(1.015);
+}
+
+html.playable-unified button:active,
+html.playable-unified [role="button"]:active,
+html.playable-unified .btn:active,
+html.playable-unified .button:active,
+html.playable-unified .option:active,
+html.playable-unified .choice:active,
+html.playable-unified .tile:active,
+html.playable-unified .cell:active,
+html.playable-unified .node:active,
+html.playable-unified .object-btn:active,
+html.playable-unified .dg-option:active,
+html.playable-unified .dg-btn:active {
+  transform: translateY(1px) scale(.985);
+}
+
+html.playable-unified .card,
+html.playable-unified .panel,
+html.playable-unified .modal,
+html.playable-unified .box,
+html.playable-unified .sheet,
+html.playable-unified .hud,
+html.playable-unified .dg-card,
+html.playable-unified .dg-metric {
+  transition:
+    transform 220ms cubic-bezier(.2,.9,.2,1),
+    box-shadow 220ms cubic-bezier(.2,.9,.2,1),
+    opacity 200ms ease !important;
+}
+
+html.playable-unified .card:hover,
+html.playable-unified .panel:hover,
+html.playable-unified .dg-card:hover {
+  transform: translateY(-1px);
+}
+
+html.playable-unified img,
+html.playable-unified .mascot,
+html.playable-unified .avatar,
+html.playable-unified .character,
+html.playable-unified .sticker,
+html.playable-unified .badge,
+html.playable-unified .dg-mascot,
+html.playable-unified .dg-face {
+  transition: transform 260ms cubic-bezier(.2,.9,.2,1), filter 220ms ease !important;
+}
+
+html.playable-unified img:hover,
+html.playable-unified .mascot:hover,
+html.playable-unified .avatar:hover,
+html.playable-unified .character:hover,
+html.playable-unified .sticker:hover,
+html.playable-unified .badge:hover,
+html.playable-unified .dg-mascot:hover,
+html.playable-unified .dg-face:hover {
+  transform: translateY(-2px) scale(1.015);
+}
+
+html.playable-unified .progress,
+html.playable-unified .progress-fill,
+html.playable-unified .bar,
+html.playable-unified .bar-fill,
+html.playable-unified .meter,
+html.playable-unified .meter-fill,
+html.playable-unified [class*="progress"],
+html.playable-unified [class*="fill"] {
+  transition: width 260ms ease, height 260ms ease, transform 220ms ease, opacity 180ms ease !important;
+}
+
+html.playable-unified .cg-ripple {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  pointer-events: none;
+  border-radius: 999px;
+  background: rgba(255,255,255,.62);
+  box-shadow: 0 0 0 1px rgba(255,255,255,.36);
+  transform: translate(-50%, -50%) scale(.2);
+  animation: cg-ripple 520ms ease-out forwards;
+  z-index: 2;
+}
+
+html.playable-unified .cg-pressed {
+  animation: cg-pop 190ms cubic-bezier(.2,1.4,.2,1) both;
+}
+
+html.playable-unified .cg-answer-correct,
+html.playable-unified .dg-option.cg-answer-correct {
+  border-color: rgba(65,166,107,.75) !important;
+  background: linear-gradient(180deg,#f1fff5,#dff7eb) !important;
+  box-shadow: 0 0 0 4px rgba(65,166,107,.12), 0 12px 24px rgba(65,166,107,.15) !important;
+}
+
+html.playable-unified .cg-answer-wrong,
+html.playable-unified .dg-option.cg-answer-wrong {
+  border-color: rgba(224,92,92,.75) !important;
+  background: linear-gradient(180deg,#fff7f5,#ffe1de) !important;
+  animation: cg-shake 320ms ease both;
+}
+
+html.playable-unified .cg-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  z-index: 9999999;
+  transform: translateX(-50%);
+  max-width: min(520px, calc(100vw - 32px));
+  padding: 12px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.75);
+  background: rgba(255,255,255,.94);
+  box-shadow: 0 14px 38px rgba(37,48,71,.18);
+  color: #253047;
+  font-weight: 950;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  animation: cg-toast 1100ms ease both;
+}
+
+html.playable-unified .cg-toast.good {
+  background: rgba(238,255,244,.96);
+  color: #276749;
+}
+
+html.playable-unified .cg-toast.bad {
+  background: rgba(255,244,242,.96);
+  color: #b63a3a;
+}
+
+html.playable-unified .cg-particle {
+  position: fixed;
+  z-index: 9999998;
+  pointer-events: none;
+  font-size: 18px;
+  line-height: 1;
+  animation: cg-float-up 720ms ease-out forwards;
+}
+
+@keyframes cg-soft-enter {
+  from { opacity: 0; transform: translateY(10px) scale(.992); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes cg-ripple {
+  to { opacity: 0; transform: translate(-50%, -50%) scale(16); }
+}
+
+@keyframes cg-pop {
+  0% { transform: scale(.985); }
+  70% { transform: scale(1.026); }
+  100% { transform: scale(1); }
+}
+
+@keyframes cg-shake {
+  0%, 100% { transform: translateX(0); }
+  22% { transform: translateX(-7px); }
+  45% { transform: translateX(6px); }
+  68% { transform: translateX(-3px); }
+  84% { transform: translateX(2px); }
+}
+
+@keyframes cg-toast {
+  0% { opacity: 0; transform: translate(-50%, 12px) scale(.98); }
+  18% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  82% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -8px) scale(.98); }
+}
+
+@keyframes cg-float-up {
+  0% { opacity: 0; transform: translate(0, 8px) scale(.7) rotate(0deg); }
+  16% { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--cg-dx), -54px) scale(1.2) rotate(var(--cg-rot)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.playable-unified *,
+  html.playable-unified *::before,
+  html.playable-unified *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .001ms !important;
+  }
+}

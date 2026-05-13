@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-label="flash shape stimulus" data-color-id="6" data-shape-id="1" data-texture-id="3" data-icon-name="Icon_c06_s01_t03">
+  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=6 s=1 t=3 -->
+  <defs>
+    <mask id="mask_c06_s01_t03"><polygon points="128,30 224,100 187,222 69,222 32,100" fill="white"/></mask>
+    <pattern id="pattern_c06_s01_t03" patternUnits="userSpaceOnUse" width="28" height="28" patternTransform="rotate(45)">
+      <rect x="0" y="0" width="28" height="28" fill="none"/>
+      <rect x="0" y="0" width="8" height="28" fill="#FFFFFF" fill-opacity="0.48"/>
+      <rect x="12" y="0" width="3" height="28" fill="#111827" fill-opacity="0.14"/>
+    </pattern>
+  </defs>
+  <rect x="0" y="0" width="256" height="256" fill="#9B51E0" mask="url(#mask_c06_s01_t03)"/>
+  <polygon points="128,30 224,100 187,222 69,222 32,100" fill="none" stroke="#252A31" stroke-width="8" stroke-linejoin="round"/>
+  <rect x="0" y="0" width="256" height="256" fill="url(#pattern_c06_s01_t03)" mask="url(#mask_c06_s01_t03)"/>
+</svg>

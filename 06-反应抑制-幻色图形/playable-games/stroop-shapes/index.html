@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>幻色图形</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; font-family: "Microsoft YaHei", system-ui, sans-serif; color: #172033; background: #f3f6fb; display: grid; place-items: center; }
+    main { width: min(880px, calc(100vw - 28px)); display: grid; grid-template-rows: auto 1fr auto; gap: 14px; }
+    header, section, footer { background: #fff; border: 1px solid #dbe3ef; border-radius: 8px; padding: 16px; box-shadow: 0 14px 36px rgba(20,31,48,.08); }
+    header { display: flex; justify-content: space-between; gap: 12px; align-items: center; flex-wrap: wrap; }
+    h1 { margin: 0; font-size: 28px; }
+    .word { min-height: 420px; display: grid; place-items: center; font-size: clamp(86px, 18vw, 180px); font-weight: 1000; letter-spacing: 0; }
+    .choices { display: grid; grid-template-columns: repeat(2, 160px); justify-content: center; gap: 16px; }
+    button { border: 0; border-radius: 8px; padding: 18px 20px; font-size: 44px; font-weight: 900; cursor: pointer; background: #172033; color: #fff; }
+    button.check { background: #10a37f; }
+    button.cross { background: #d92d20; }
+    .hud { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+    .hud b { font-size: 24px; }
+    footer { display: flex; justify-content: space-between; align-items: center; color: #536173; }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>幻色图形</h1>
+      <div class="hud">
+        <span>等级 <b id="level">1</b></span>
+        <span>正确 <b id="correct">0</b></span>
+        <span>错误 <b id="wrong">0</b></span>
+        <span id="feedback">判断文字含义和显示颜色是否一致</span>
+      </div>
+    </header>
+    <section>
+      <div id="word" class="word" aria-live="polite"></div>
+      <div class="choices">
+        <button id="check" class="check" aria-label="一致">✓</button>
+        <button id="cross" class="cross" aria-label="不一致">×</button>
+      </div>
+    </section>
+    <footer>
+      <span>源合同：data.json / P2幻色图形.xlsm / 一致点勾，不一致点叉</span>
+      <button id="reset">重新开始</button>
+    </footer>
+  </main>
+  <script type="module">
+    import { buildStroopTrial, completeStroopLevel, hydrateStroopShapesData, judgeStroopResponse, nextStroopLevel, shouldEndStroopLevel } from './rules.mjs';
+
+    const raw = await fetch('./data.json').then((res) => res.json());
+    const { colors, levels } = hydrateStroopShapesData(raw);
+    let currentLevel = 1;
+    let correct = 0;
+    let wrong = 0;
+    let failures = 0;
+    let consecutiveWrong = 0;
+    let draw = 0;
+    let trial = null;
+    const word = document.getElementById('word');
+    const feedback = document.getElementById('feedback');
+
+    function colorCss(color) {
+      const [r, g, b, a = 255] = color.rgba;
+      return `rgba(${r}, ${g}, ${b}, ${a / 255})`;
+    }
+    function nextTrial() {
+      const level = levels[currentLevel - 1];
+      trial = buildStroopTrial(level, colors, (draw % 10) / 10);
+      draw += 1;
+      word.textContent = trial.word;
+      word.style.color = colorCss(trial.displayColor);
+      document.getElementById('level').textContent = currentLevel;
+      document.getElementById('correct').textContent = correct;
+      document.getElementById('wrong').textContent = wrong;
+    }
+    function answer(response) {
+      const result = judgeStroopResponse(trial, response);
+      if (result.correct) {
+        correct += 1;
+        consecutiveWrong = 0;
+      } else {
+        wrong += 1;
+        consecutiveWrong += 1;
+      }
+      feedback.textContent = result.correct ? '正确' : `错误，应选择${result.expectedResponse === 'check' ? '一致' : '不一致'}`;
+      const level = levels[currentLevel - 1];
+      if (shouldEndStroopLevel({ level, correctCount: correct, consecutiveWrong })) {
+        const done = completeStroopLevel({ level, correctCount: correct });
+        const next = nextStroopLevel({ level: currentLevel, passed: done.passed, consecutiveFailures: failures });
+        failures = next.consecutiveFailures;
+        currentLevel = next.nextLevel;
+        correct = 0;
+        wrong = 0;
+        consecutiveWrong = 0;
+      }
+      window.setTimeout(nextTrial, 320);
+    }
+    document.getElementById('check').addEventListener('click', () => answer('check'));
+    document.getElementById('cross').addEventListener('click', () => answer('cross'));
+    document.getElementById('reset').addEventListener('click', () => { currentLevel = 1; correct = 0; wrong = 0; failures = 0; consecutiveWrong = 0; draw = 0; nextTrial(); });
+    nextTrial();
+  </script>
+</body>
+</html>

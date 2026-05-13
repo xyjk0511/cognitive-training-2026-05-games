@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-label="flash shape stimulus" data-color-id="6" data-shape-id="2" data-texture-id="1" data-icon-name="Icon_c06_s02_t01">
+  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=6 s=2 t=1 -->
+  <defs>
+    <mask id="mask_c06_s02_t01"><circle cx="128" cy="128" r="88" fill="white"/><rect x="98" y="98" width="60" height="60" rx="4" fill="black"/></mask>
+  </defs>
+  <rect x="0" y="0" width="256" height="256" fill="#9B51E0" mask="url(#mask_c06_s02_t01)"/>
+  <circle cx="128" cy="128" r="88" fill="none" stroke="#252A31" stroke-width="8"/><rect x="98" y="98" width="60" height="60" rx="4" fill="none" stroke="#252A31" stroke-width="8"/>
+  
+</svg>

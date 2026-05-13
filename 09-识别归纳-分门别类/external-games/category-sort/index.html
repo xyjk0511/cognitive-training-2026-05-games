@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>分门别类</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; font-family: "Microsoft YaHei", system-ui, sans-serif; color: #172033; background: #f5f8fc; display: grid; place-items: center; }
+    main { width: min(1040px, calc(100vw - 28px)); display: grid; grid-template-rows: auto 1fr auto; gap: 14px; }
+    header, section, footer { background: #fff; border: 1px solid #dbe3ef; border-radius: 8px; padding: 16px; box-shadow: 0 14px 36px rgba(20,31,48,.08); }
+    header { display: flex; justify-content: space-between; gap: 12px; align-items: center; flex-wrap: wrap; }
+    h1 { margin: 0; font-size: 28px; }
+    .hud { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+    .hud b { font-size: 24px; }
+    .layout { display: grid; grid-template-columns: 280px 1fr; gap: 16px; min-height: 520px; }
+    .cue { display: grid; place-items: center; border: 1px solid #dbe3ef; border-radius: 8px; background: #f8fafc; padding: 16px; text-align: center; }
+    .cue strong { font-size: 42px; }
+    .cue span { margin-top: 10px; color: #536173; }
+    .options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .option { border: 1px solid #dbe3ef; border-radius: 8px; background: #fff; color: #172033; min-height: 150px; padding: 16px; font-size: 30px; font-weight: 900; cursor: pointer; }
+    .option small { display: block; margin-top: 8px; font-size: 14px; color: #536173; font-weight: 500; }
+    .option.correct { border-color: #10a37f; background: #edfdf8; }
+    .option.wrong { border-color: #d92d20; background: #fff1f0; }
+    .guides { display: flex; gap: 8px; flex-wrap: wrap; }
+    .guides img { width: 110px; height: 68px; object-fit: cover; border: 1px solid #dbe3ef; border-radius: 6px; background: #f8fafc; }
+    footer { display: flex; justify-content: space-between; align-items: center; color: #536173; gap: 12px; flex-wrap: wrap; }
+    button { border: 0; border-radius: 8px; padding: 10px 14px; font-weight: 800; background: #172033; color: #fff; cursor: pointer; }
+    @media (max-width: 760px) { .layout { grid-template-columns: 1fr; } .options { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>分门别类</h1>
+      <div class="hud">
+        <span>等级 <b id="level">1</b></span>
+        <span>正确 <b id="correct">0</b></span>
+        <span>目标 <b id="target">1</b></span>
+        <span id="feedback">选择同一类别的物品</span>
+      </div>
+    </header>
+    <section class="layout">
+      <aside class="cue">
+        <strong id="cueName"></strong>
+        <span id="cueType"></span>
+      </aside>
+      <div id="options" class="options"></div>
+    </section>
+    <footer>
+      <div class="guides" aria-label="源引导图">
+        <img src="./guides/引导1.png" alt="" />
+        <img src="./guides/引导2.png" alt="" />
+        <img src="./guides/引导3.png" alt="" />
+      </div>
+      <span>源合同：数值.xlsx / 关卡配置.xlsx / 按类别归纳选择</span>
+      <button id="reset">重新开始</button>
+    </footer>
+  </main>
+  <script type="module">
+    import { buildCategoryRound, hydrateCategoryData, itemMatchesCategory, scoreCategoryLevel } from './rules.mjs';
+
+    const raw = await fetch('./data.json').then((res) => res.json());
+    const { items, levels } = hydrateCategoryData(raw);
+    let currentLevel = 1;
+    let correct = 0;
+    let round = null;
+    const refs = Object.fromEntries(['level', 'correct', 'target', 'feedback', 'cueName', 'cueType', 'options'].map((id) => [id, document.getElementById(id)]));
+
+    function typeText(item, dimension) {
+      const names = ['一级类别', '二级类别', '三级类别'];
+      const value = dimension === 0 ? item.primary : dimension === 1 ? item.secondary : item.tertiary;
+      return `${names[dimension]} ${value}`;
+    }
+    function startRound() {
+      const level = levels[currentLevel - 1];
+      round = buildCategoryRound(level, items, (correct % 10) / 10);
+      refs.level.textContent = currentLevel;
+      refs.correct.textContent = correct;
+      refs.target.textContent = level.passTarget;
+      refs.cueName.textContent = round.cue.name;
+      refs.cueType.textContent = typeText(round.cue, level.dimension);
+      refs.options.innerHTML = '';
+      for (const item of round.options) {
+        const button = document.createElement('button');
+        button.className = 'option';
+        button.innerHTML = `${item.name}<small>${typeText(item, level.dimension)}</small>`;
+        button.addEventListener('click', () => choose(button, item));
+        refs.options.append(button);
+      }
+    }
+    function choose(button, item) {
+      const level = levels[currentLevel - 1];
+      const ok = itemMatchesCategory(item, level, round.target);
+      button.classList.add(ok ? 'correct' : 'wrong');
+      if (ok) correct += 1;
+      refs.feedback.textContent = ok ? '正确' : '错误';
+      if (correct >= level.passTarget) {
+        const result = scoreCategoryLevel({ level, correctCount: correct, remainingTime: level.stageTime });
+        currentLevel = result.passed ? Math.min(100, currentLevel + 1) : currentLevel;
+        correct = 0;
+      }
+      window.setTimeout(startRound, 420);
+    }
+    document.getElementById('reset').addEventListener('click', () => { currentLevel = 1; correct = 0; startRound(); });
+    startRound();
+  </script>
+</body>
+</html>

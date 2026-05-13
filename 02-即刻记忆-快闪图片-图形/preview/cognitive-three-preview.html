@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>认知训练三游戏预览</title>
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: "Microsoft YaHei", Arial, sans-serif;
+        color: #172033;
+        background: #f4f7fb;
+      }
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 16px 24px;
+        background: rgba(255, 255, 255, 0.94);
+        border-bottom: 1px solid #dfe6f2;
+        backdrop-filter: blur(12px);
+      }
+      h1 {
+        margin: 0;
+        font-size: 20px;
+      }
+      nav {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      nav button, .action {
+        border: 1px solid #c9d5e8;
+        border-radius: 6px;
+        background: #fff;
+        color: #1d2b45;
+        padding: 9px 12px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      nav button.active, .action.primary {
+        border-color: #315dbe;
+        background: #315dbe;
+        color: #fff;
+      }
+      main {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 24px;
+      }
+      .panel { display: none; }
+      .panel.active { display: block; }
+      .game-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+        gap: 18px;
+        align-items: start;
+      }
+      .surface, .side {
+        background: #fff;
+        border: 1px solid #dce4f0;
+        border-radius: 8px;
+        padding: 18px;
+      }
+      .surface {
+        min-height: 560px;
+      }
+      h2 {
+        margin: 0 0 8px;
+        font-size: 28px;
+      }
+      .sub {
+        margin: 0 0 18px;
+        color: #607089;
+        line-height: 1.6;
+      }
+      .status {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+        margin-bottom: 18px;
+      }
+      .metric {
+        border: 1px solid #e0e8f4;
+        border-radius: 6px;
+        padding: 10px;
+        background: #f9fbfe;
+      }
+      .metric b {
+        display: block;
+        font-size: 22px;
+      }
+      .arena {
+        display: grid;
+        place-items: center;
+        min-height: 330px;
+        border: 1px solid #d9e2ef;
+        border-radius: 8px;
+        background: linear-gradient(180deg, #f9fbff, #eef4fb);
+        overflow: hidden;
+      }
+      .stimulus {
+        display: grid;
+        place-items: center;
+        width: min(72vw, 360px);
+        aspect-ratio: 1;
+      }
+      .stimulus img {
+        max-width: 100%;
+        max-height: 100%;
+      }
+      .choices {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 16px;
+      }
+      .choice {
+        min-height: 48px;
+        border: 1px solid #bfcee3;
+        border-radius: 6px;
+        background: #fff;
+        font-size: 18px;
+        font-weight: 800;
+        cursor: pointer;
+      }
+      .choice:hover { border-color: #315dbe; }
+      .feedback {
+        min-height: 26px;
+        margin-top: 12px;
+        font-weight: 800;
+      }
+      .good { color: #15803d; }
+      .bad { color: #b91c1c; }
+      .grid-assets {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+        gap: 10px;
+      }
+      .asset-tile {
+        display: grid;
+        gap: 6px;
+        place-items: center;
+        border: 1px solid #dce4f0;
+        border-radius: 6px;
+        padding: 8px;
+        background: #fff;
+        min-height: 104px;
+      }
+      .asset-tile img {
+        width: 64px;
+        height: 64px;
+        object-fit: contain;
+      }
+      .asset-tile span {
+        font-size: 11px;
+        color: #52647c;
+        text-align: center;
+        overflow-wrap: anywhere;
+      }
+      .flash-board {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 92px));
+        gap: 12px;
+        justify-content: center;
+      }
+      .flash-card {
+        display: grid;
+        place-items: center;
+        width: 92px;
+        height: 92px;
+        border: 1px solid #cad6e7;
+        border-radius: 8px;
+        background: #fff;
+      }
+      .flash-card img { width: 72px; height: 72px; }
+      .hole-board {
+        display: grid;
+        grid-template-columns: repeat(4, 96px);
+        gap: 16px;
+        justify-content: center;
+        padding: 20px 0;
+      }
+      .hole {
+        display: grid;
+        place-items: center;
+        width: 96px;
+        height: 96px;
+        border: 1px solid #bed0e7;
+        border-radius: 8px;
+        background: #e9f1dc;
+        cursor: pointer;
+      }
+      .hole img {
+        width: 74px;
+        height: 74px;
+        object-fit: contain;
+      }
+      @media (max-width: 860px) {
+        header { align-items: flex-start; flex-direction: column; }
+        .game-layout { grid-template-columns: 1fr; }
+        .status { grid-template-columns: 1fr; }
+        .hole-board, .flash-board { grid-template-columns: repeat(3, 88px); }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>认知训练三游戏预览</h1>
+      <nav>
+        <button class="active" data-tab="stroop">幻色图形</button>
+        <button data-tab="flash">快闪图形</button>
+        <button data-tab="eye">眼疾手快</button>
+      </nav>
+    </header>
+    <main>
+      <section class="panel active" id="stroop">
+        <div class="game-layout">
+          <div class="surface">
+            <h2>幻色图形</h2>
+            <p class="sub">看左侧图形的颜色/层级，选择对应楼层。这里用验收包里的 27 个核心 SVG 做可点预览。</p>
+            <div class="status">
+              <div class="metric"><span>当前题</span><b id="stroopRound">1</b></div>
+              <div class="metric"><span>正确</span><b id="stroopScore">0</b></div>
+              <div class="metric"><span>image2</span><b>24</b></div>
+            </div>
+            <div class="arena"><div class="stimulus"><img id="stroopImg" alt="幻色图形刺激" /></div></div>
+            <div class="choices" id="stroopChoices"></div>
+            <div class="feedback" id="stroopFeedback"></div>
+          </div>
+          <aside class="side">
+            <h2>资源抽样</h2>
+            <div class="grid-assets" id="stroopAssets"></div>
+          </aside>
+        </div>
+      </section>
+      <section class="panel" id="flash">
+        <div class="game-layout">
+          <div class="surface">
+            <h2>快闪图形</h2>
+            <p class="sub">短暂记住 8 个图形，随后选择刚才出现过的目标。这里直接加载 120 个正式 SVG 里的随机组合。</p>
+            <div class="status">
+              <div class="metric"><span>回合</span><b id="flashRound">1</b></div>
+              <div class="metric"><span>正确</span><b id="flashScore">0</b></div>
+              <div class="metric"><span>image2</span><b>33</b></div>
+            </div>
+            <div class="arena"><div class="flash-board" id="flashBoard"></div></div>
+            <div class="choices" id="flashChoices"></div>
+            <div class="feedback" id="flashFeedback"></div>
+          </div>
+          <aside class="side">
+            <h2>资源抽样</h2>
+            <div class="grid-assets" id="flashAssets"></div>
+          </aside>
+        </div>
+      </section>
+      <section class="panel" id="eye">
+        <div class="game-layout">
+          <div class="surface">
+            <h2>眼疾手快</h2>
+            <p class="sub">点普通地鼠得分，避开炸弹和干扰角色。这里用最终包的 12 个生产 SVG 做可点预览。</p>
+            <div class="status">
+              <div class="metric"><span>回合</span><b id="eyeRound">1</b></div>
+              <div class="metric"><span>得分</span><b id="eyeScore">0</b></div>
+              <div class="metric"><span>image2</span><b>28</b></div>
+            </div>
+            <div class="arena"><div class="hole-board" id="eyeBoard"></div></div>
+            <button class="action primary" id="eyeNext">换一组</button>
+            <div class="feedback" id="eyeFeedback"></div>
+          </div>
+          <aside class="side">
+            <h2>资源抽样</h2>
+            <div class="grid-assets" id="eyeAssets"></div>
+          </aside>
+        </div>
+      </section>
+    </main>
+    <script>
+      const $ = (selector) => document.querySelector(selector);
+      const sample = (items, count) => [...items].sort(() => Math.random() - 0.5).slice(0, count);
+
+      const stroopByShape = {
+        circle: Array.from({ length: 8 }, (_, i) => `/training-assets/image2/stroop/circle_${String(i + 1).padStart(2, '0')}.png`),
+        square: Array.from({ length: 8 }, (_, i) => `/training-assets/image2/stroop/square_${String(i + 1).padStart(2, '0')}.png`),
+        triangle: Array.from({ length: 8 }, (_, i) => `/training-assets/image2/stroop/triangle_${String(i + 1).padStart(2, '0')}.png`),
+      };
+      const stroopFiles = Object.values(stroopByShape).flat();
+      const flashFiles = [
+        ...Array.from({ length: 4 }, (_, r) => Array.from({ length: 7 }, (_, c) => `/training-assets/image2/flash/badge_r${String(r + 1).padStart(2, '0')}_c${String(c + 1).padStart(2, '0')}.png`)).flat(),
+        ...Array.from({ length: 5 }, (_, i) => `/training-assets/image2/flash/badge_large_${String(i + 1).padStart(2, '0')}.png`),
+      ];
+      const eyeTargets = [
+        '/training-assets/image2/eye/mole_normal_idle.png',
+        '/training-assets/image2/eye/mole_normal_appear_1.png',
+        '/training-assets/image2/eye/mole_normal_appear_2.png',
+        '/training-assets/image2/eye/mole_normal_escape_1.png',
+        '/training-assets/image2/eye/mole_normal_escape_2.png',
+        '/training-assets/image2/eye/mole_exposed_idle.png',
+        '/training-assets/image2/eye/mole_helmet_idle.png',
+      ];
+      const eyeHazards = [
+        '/training-assets/image2/eye/bomb_idle.png',
+        '/training-assets/image2/eye/bomb_fuse.png',
+        '/training-assets/image2/eye/bomb_explode.png',
+        '/training-assets/image2/eye/cat_guard_idle.png',
+        '/training-assets/image2/eye/cat_guard_happy.png',
+        '/training-assets/image2/eye/rabbit_decoy_idle.png',
+        '/training-assets/image2/eye/rabbit_decoy_jump.png',
+        '/training-assets/image2/eye/panda_decoy_idle.png',
+        '/training-assets/image2/eye/panda_decoy_wave.png',
+      ];
+      const eyeFiles = [...eyeTargets, ...eyeHazards];
+
+      function renderAssets(node, files) {
+        node.innerHTML = sample(files, Math.min(files.length, 18))
+          .map((src) => `<div class="asset-tile"><img src="${src}" alt="" /><span>${src.split('/').pop()}</span></div>`)
+          .join('');
+      }
+
+      document.querySelectorAll('nav button').forEach((button) => {
+        button.addEventListener('click', () => {
+          document.querySelectorAll('nav button').forEach((b) => b.classList.remove('active'));
+          document.querySelectorAll('.panel').forEach((p) => p.classList.remove('active'));
+          button.classList.add('active');
+          document.getElementById(button.dataset.tab).classList.add('active');
+        });
+      });
+
+      let stroopRound = 0;
+      let stroopScore = 0;
+      function nextStroop() {
+        stroopRound += 1;
+        const answer = Math.ceil(Math.random() * 8);
+        const shape = sample(['circle', 'square', 'triangle'], 1)[0];
+        $('#stroopImg').src = stroopByShape[shape][answer - 1];
+        $('#stroopRound').textContent = stroopRound;
+        const options = sample([...new Set([answer, Math.ceil(Math.random() * 8), Math.ceil(Math.random() * 8), Math.ceil(Math.random() * 8)])], 4);
+        while (options.length < 4) options.push(Math.ceil(Math.random() * 8));
+        $('#stroopChoices').innerHTML = sample(options, 4).map((n) => `<button class="choice" data-answer="${n}">${n} 层</button>`).join('');
+        $('#stroopFeedback').textContent = '';
+        document.querySelectorAll('#stroopChoices button').forEach((button) => {
+          button.addEventListener('click', () => {
+            const ok = Number(button.dataset.answer) === answer;
+            if (ok) stroopScore += 1;
+            $('#stroopScore').textContent = stroopScore;
+            $('#stroopFeedback').className = `feedback ${ok ? 'good' : 'bad'}`;
+            $('#stroopFeedback').textContent = ok ? '正确' : `错误，答案是 ${answer} 层`;
+            setTimeout(nextStroop, 700);
+          });
+        });
+      }
+
+      let flashRound = 0;
+      let flashScore = 0;
+      function nextFlash() {
+        flashRound += 1;
+        $('#flashRound').textContent = flashRound;
+        const shown = sample(flashFiles, 8);
+        const answer = shown[Math.floor(Math.random() * shown.length)];
+        const distractors = sample(flashFiles.filter((src) => !shown.includes(src)), 3);
+        $('#flashBoard').innerHTML = shown.map((src) => `<div class="flash-card"><img src="${src}" alt="" /></div>`).join('');
+        $('#flashChoices').innerHTML = sample([answer, ...distractors], 4)
+          .map((src) => `<button class="choice" data-src="${src}"><img src="${src}" alt="" width="40" height="40" /></button>`)
+          .join('');
+        $('#flashFeedback').textContent = '记住上面的图形，然后选出现过的那个。';
+        document.querySelectorAll('#flashChoices button').forEach((button) => {
+          button.addEventListener('click', () => {
+            const ok = button.dataset.src === answer;
+            if (ok) flashScore += 1;
+            $('#flashScore').textContent = flashScore;
+            $('#flashFeedback').className = `feedback ${ok ? 'good' : 'bad'}`;
+            $('#flashFeedback').textContent = ok ? '正确' : '错误';
+            setTimeout(nextFlash, 800);
+          });
+        });
+      }
+
+      let eyeRound = 0;
+      let eyeScore = 0;
+      function nextEye() {
+        eyeRound += 1;
+        $('#eyeRound').textContent = eyeRound;
+        const items = sample([...sample(eyeTargets, 4), ...sample(eyeHazards, 4)], 8);
+        $('#eyeBoard').innerHTML = items.map((src) => `<button class="hole" data-target="${eyeTargets.includes(src)}"><img src="${src}" alt="" /></button>`).join('');
+        $('#eyeFeedback').textContent = '';
+        document.querySelectorAll('#eyeBoard button').forEach((button) => {
+          button.addEventListener('click', () => {
+            const ok = button.dataset.target === 'true';
+            eyeScore += ok ? 1 : -1;
+            $('#eyeScore').textContent = eyeScore;
+            $('#eyeFeedback').className = `feedback ${ok ? 'good' : 'bad'}`;
+            $('#eyeFeedback').textContent = ok ? '命中' : '误点';
+            button.disabled = true;
+            button.style.opacity = '0.35';
+          });
+        });
+      }
+
+      $('#eyeNext').addEventListener('click', nextEye);
+      renderAssets($('#stroopAssets'), stroopFiles);
+      renderAssets($('#flashAssets'), flashFiles);
+      renderAssets($('#eyeAssets'), eyeFiles);
+      nextStroop();
+      nextFlash();
+      nextEye();
+    </script>
+  </body>
+</html>

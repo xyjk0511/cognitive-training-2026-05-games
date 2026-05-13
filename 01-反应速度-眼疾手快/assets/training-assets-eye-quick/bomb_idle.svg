@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="bomb" cx="34%" cy="26%" r="70%">
+      <stop offset="0" stop-color="#5e6e86"/>
+      <stop offset=".45" stop-color="#263349"/>
+      <stop offset="1" stop-color="#111827"/>
+    </radialGradient>
+  </defs>
+  <ellipse cx="256" cy="420" rx="124" ry="26" fill="#172033" opacity=".16"/>
+  <circle cx="246" cy="304" r="116" fill="url(#bomb)" stroke="#101827" stroke-width="10"/>
+  <circle cx="204" cy="258" r="28" fill="#fff" opacity=".24"/>
+  <rect x="270" y="142" width="78" height="58" rx="18" fill="#4b5568" stroke="#111827" stroke-width="8" transform="rotate(18 309 171)"/>
+  <path d="M318 134c33-41 67-44 93-73" fill="none" stroke="#7a4c25" stroke-width="13" stroke-linecap="round"/>
+  <path d="M410 58l14-29M424 75l34-11M392 44l-10-30" stroke="#ffb703" stroke-width="9" stroke-linecap="round"/>
+  <circle cx="410" cy="58" r="19" fill="#ff7a2f" stroke="#b83220" stroke-width="6"/>
+  <path d="M186 330c28 18 87 25 128-5" fill="none" stroke="#0b1220" stroke-width="8" opacity=".28" stroke-linecap="round"/>
+</svg>

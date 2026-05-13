@@ -1,0 +1,889 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>规律小火车｜彩虹火车站</title>
+  <style>
+    :root{
+      --cream:#fff7e8;
+      --cream-2:#fffdf7;
+      --sky:#d9f2ff;
+      --mint:#bfe8d1;
+      --mint-deep:#4e9d80;
+      --yellow:#ffd978;
+      --orange:#ffae73;
+      --coral:#ff8f8f;
+      --blue:#77c8ee;
+      --purple:#c7a8ea;
+      --ink:#355167;
+      --soft:#6d7d89;
+      --shadow:0 16px 38px rgba(69, 92, 112, .16);
+      --shadow2:0 8px 18px rgba(69, 92, 112, .14);
+      --radius:28px;
+      --focus:0 0 0 5px rgba(255, 196, 82, .45);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,#dff6ff,#fff7e8);font-family:"PingFang SC","Microsoft YaHei",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);}
+    body{overflow:hidden;}
+    button{font:inherit;color:inherit;border:0;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+    button:focus-visible{outline:none;box-shadow:var(--focus)!important;}
+    .app{height:100vh;width:100vw;overflow:hidden;position:relative;}
+    .screen{position:absolute;inset:0;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:22px;}
+    .soft-bg{background:radial-gradient(circle at 12% 6%,#fff 0 0,#fff8 13%,transparent 36%),linear-gradient(180deg,#dbf4ff 0%,#fff7e8 70%);}
+    .top-toggle{position:absolute;right:18px;top:16px;z-index:10;background:rgba(255,255,255,.82);border:2px solid rgba(255,255,255,.9);box-shadow:var(--shadow2);border-radius:999px;padding:10px 14px;font-size:16px;color:#496272;display:flex;gap:8px;align-items:center;}
+    .top-toggle input{width:18px;height:18px;accent-color:#64b894;}
+    .home-shell{width:min(1120px,96vw);display:grid;grid-template-columns:minmax(310px,1.08fr) minmax(300px,.92fr);gap:24px;align-items:stretch;}
+    .home-card{background:rgba(255,255,255,.86);border-radius:34px;box-shadow:var(--shadow);overflow:hidden;border:2px solid rgba(255,255,255,.78);position:relative;min-height:580px;}
+    .home-card img{width:100%;height:58%;object-fit:cover;display:block;}
+    .home-info{padding:26px 30px 30px;position:relative;}
+    .badge-line{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 18px;}
+    .badge{background:#eef9f2;border:1px solid #d3eadb;color:#47735c;border-radius:999px;padding:7px 12px;font-size:16px;font-weight:700;}
+    h1,h2,h3,p{margin:0;}
+    .title-xl{font-size:clamp(40px,6vw,76px);line-height:1.02;letter-spacing:.04em;color:#315066;text-shadow:0 2px 0 rgba(255,255,255,.8);}
+    .subtitle{font-size:22px;line-height:1.55;color:#536a78;margin-top:14px;}
+    .btn-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:24px;align-items:center;}
+    .btn{border-radius:999px;padding:16px 28px;min-height:58px;font-weight:900;font-size:22px;box-shadow:var(--shadow2);transition:transform .12s ease, filter .12s ease;background:#fff;border:2px solid rgba(255,255,255,.7);}
+    .btn:hover{transform:translateY(-1px);filter:brightness(1.02)}
+    .btn:active{transform:scale(.98)}
+    .btn.primary{background:linear-gradient(180deg,#ffe497,#ffc75f);color:#3f5665;}
+    .btn.secondary{background:linear-gradient(180deg,#fff,#f0fbf4);color:#486474;}
+    .btn.small{font-size:17px;min-height:44px;padding:10px 16px;}
+    .info-panel{background:rgba(255,255,255,.82);border:2px solid rgba(255,255,255,.86);border-radius:34px;padding:28px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:18px;}
+    .info-block{background:rgba(255,250,238,.88);border:2px dashed rgba(255,190,99,.52);border-radius:26px;padding:22px;}
+    .info-block h3{font-size:26px;margin-bottom:10px;color:#3b6074;}
+    .info-block p{font-size:20px;line-height:1.55;color:#536a78;}
+    .progress-note{font-size:18px;color:#5c7585;background:#eef9ff;border-radius:18px;padding:14px 16px;line-height:1.5;}
+
+    .modal-like{width:min(850px,94vw);max-height:94vh;overflow:auto;background:rgba(255,255,255,.92);border:2px solid rgba(255,255,255,.9);box-shadow:var(--shadow);border-radius:36px;padding:24px;}
+    .detail-grid{display:grid;grid-template-columns:310px 1fr;gap:24px;align-items:center;}
+    .detail-grid img{width:100%;aspect-ratio:1;border-radius:28px;object-fit:cover;box-shadow:var(--shadow2);}
+    .section-title{font-size:clamp(30px,4vw,46px);line-height:1.1;margin-bottom:10px;color:#315066;}
+    .text-lg{font-size:21px;line-height:1.65;color:#536a78;}
+    .mini-list{display:grid;gap:10px;margin-top:16px;}
+    .mini-line{background:#f3fbf6;border-radius:18px;padding:13px 15px;font-size:18px;color:#526c7d;}
+
+    .cover-shell{position:absolute;inset:0;background-size:cover;background-position:center;display:flex;align-items:center;justify-content:flex-end;padding:44px;}
+    .cover-panel{width:min(560px,92vw);background:rgba(255,255,255,.86);border:2px solid rgba(255,255,255,.92);box-shadow:var(--shadow);border-radius:36px;padding:34px;backdrop-filter:blur(6px);}
+    .cover-panel .title-xl{font-size:clamp(42px,6vw,72px);}
+
+    .scene{position:absolute;inset:0;background-size:cover;background-position:center;display:grid;grid-template-rows:auto 1fr auto;gap:10px;padding:18px 18px 20px;}
+    .scene::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,247,232,.18));pointer-events:none;}
+    .scene > *{position:relative;z-index:2;}
+    .hud{display:grid;grid-template-columns:1fr auto 1fr;align-items:start;gap:12px;min-height:82px;}
+    .hud-left,.hud-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+    .hud-right{justify-content:flex-end;}
+    .hud-pill{background:rgba(255,255,255,.88);border:2px solid rgba(255,255,255,.92);box-shadow:var(--shadow2);border-radius:999px;padding:10px 15px;font-weight:900;font-size:18px;color:#425e70;min-height:46px;display:flex;align-items:center;gap:8px;}
+    .hud-pill.challenge{background:#fff4fb;border-color:#eed3f5;color:#704d83;}
+    .target-card{width:min(800px,70vw);min-height:78px;background:rgba(255,255,255,.9);border:3px solid rgba(255,214,124,.8);box-shadow:var(--shadow2);border-radius:28px;padding:13px 20px;text-align:center;margin-inline:auto;}
+    .target-title{font-size:20px;font-weight:900;color:#4d6980;margin-bottom:6px;}
+    .target-seq{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;font-size:28px;font-weight:900;min-height:42px;}
+    .target-hint{font-size:16px;font-weight:800;color:#6f7c88;margin-top:6px;}
+    .scene-main{display:grid;grid-template-columns:minmax(0,1fr) minmax(250px,320px);gap:16px;align-items:end;min-height:0;}
+    .play-zone{min-height:360px;background:rgba(255,255,255,.16);border-radius:30px;display:flex;align-items:flex-end;justify-content:center;padding:10px 10px 22px;position:relative;overflow:hidden;}
+    .guide-card{align-self:end;background:rgba(255,255,255,.9);border:2px solid rgba(255,255,255,.95);box-shadow:var(--shadow);border-radius:30px;padding:22px;min-height:260px;display:flex;flex-direction:column;justify-content:space-between;}
+    .bunny-face{width:104px;height:104px;border-radius:50%;background:linear-gradient(180deg,#fff,#fff6f1);border:4px solid #f1d8c9;box-shadow:var(--shadow2);position:relative;margin-bottom:12px;}
+    .bunny-face::before,.bunny-face::after{content:"";position:absolute;width:30px;height:74px;background:#fffaf6;border:4px solid #f1d8c9;border-radius:30px;top:-54px;}
+    .bunny-face::before{left:18px;transform:rotate(-12deg)}
+    .bunny-face::after{right:18px;transform:rotate(12deg)}
+    .bunny-eyes{position:absolute;left:27px;right:27px;top:42px;display:flex;justify-content:space-between;}
+    .bunny-eyes i{display:block;width:10px;height:14px;border-radius:50%;background:#533b32;}
+    .bunny-mouth{position:absolute;left:44px;top:64px;width:20px;height:12px;border-bottom:4px solid #cc7770;border-radius:0 0 30px 30px;}
+    .speech{font-size:20px;line-height:1.55;color:#536a78;font-weight:800;}
+    .train-wrap{width:100%;padding:10px;}
+    .train-row{display:flex;align-items:end;gap:8px;overflow-x:auto;padding:8px 10px 8px;scrollbar-width:thin;}
+    .rails{height:22px;border-radius:999px;background:linear-gradient(180deg,#ab7a56 0 34%,#7d604e 34% 50%,#ab7a56 50% 84%,transparent 84%);box-shadow:0 10px 0 rgba(139,104,78,.16);margin:0 14px;position:relative;}
+    .rails::before{content:"";position:absolute;inset:7px 0 auto;height:5px;background:repeating-linear-gradient(90deg,rgba(255,243,218,.75) 0 20px,transparent 20px 40px);}
+    .engine-css{flex:0 0 130px;height:116px;position:relative;margin-bottom:8px;}
+    .engine-css .body{position:absolute;left:30px;right:6px;bottom:18px;height:72px;background:linear-gradient(180deg,#73c6ef,#4c9cd1);border:4px solid #f6c763;border-radius:24px 22px 14px 14px;box-shadow:var(--shadow2);}
+    .engine-css .front{position:absolute;left:2px;bottom:18px;width:58px;height:58px;background:linear-gradient(180deg,#ffb47b,#ef806c);border:4px solid #f6c763;border-radius:34px 12px 12px 34px;}
+    .engine-css .stack{position:absolute;left:43px;top:6px;width:28px;height:38px;border-radius:12px 12px 7px 7px;background:#f08b6a;border:4px solid #f6c763;}
+    .wheel{position:absolute;bottom:0;width:28px;height:28px;border-radius:50%;background:#5c514f;border:5px solid #e7bd72;}
+    .engine-css .w1{left:32px}.engine-css .w2{right:20px}
+    .car{flex:0 0 126px;height:102px;position:relative;margin-bottom:8px;border-radius:24px 24px 16px 16px;background:var(--carColor,#ffd978);border:4px solid rgba(255,255,255,.68);box-shadow:var(--shadow2);display:flex;align-items:center;justify-content:center;}
+    .car::before{content:"";position:absolute;left:16px;right:16px;top:24px;bottom:24px;background:rgba(255,253,246,.92);border:3px solid rgba(119,96,70,.14);border-radius:18px;}
+    .car::after{content:"";position:absolute;left:19px;right:19px;bottom:-14px;height:28px;background:radial-gradient(circle at 20% 50%,#5b514d 0 10px,#e8c57b 11px 16px,transparent 17px),radial-gradient(circle at 80% 50%,#5b514d 0 10px,#e8c57b 11px 16px,transparent 17px);}
+    .car-content{position:relative;z-index:1;font-size:38px;font-weight:1000;color:#355167;line-height:1;display:flex;align-items:center;justify-content:center;gap:5px;text-shadow:0 2px 0 rgba(255,255,255,.8);}
+    .car.unknown{background:rgba(255,246,190,.55);border:4px dashed #ffd15c;box-shadow:0 0 0 6px rgba(255,210,100,.18),var(--shadow2);}
+    .car.unknown .car-content{font-size:44px;color:#d28a39;}
+    .color-swatch{width:54px;height:54px;border-radius:50%;border:5px solid rgba(255,255,255,.85);box-shadow:inset 0 -6px 0 rgba(0,0,0,.08),0 2px 0 rgba(255,255,255,.7);position:relative;}
+    .color-swatch::after{content:"";position:absolute;inset:8px;border-radius:inherit;border:3px solid rgba(255,255,255,.35);}
+    .dots{display:grid;grid-template-columns:repeat(3,16px);gap:5px;justify-content:center;align-items:center;}
+    .dot{width:15px;height:15px;border-radius:50%;background:#5daed6;box-shadow:inset 0 -3px 0 rgba(0,0,0,.1);}
+    .mini{min-width:44px;height:40px;border-radius:16px;background:#fff6df;border:2px solid #f0d38c;display:inline-flex;align-items:center;justify-content:center;font-size:24px;font-weight:1000;color:#395a70;padding:0 9px;}
+    .mini.color{min-width:40px;width:40px;border-radius:50%;font-size:0;border:4px solid #fff;box-shadow:0 0 0 2px rgba(0,0,0,.05)}
+    .mini.shape{gap:2px;}
+    .candidate-platform{display:flex;justify-content:center;gap:14px;align-items:end;flex-wrap:wrap;padding:12px;background:rgba(255,255,255,.66);border:2px solid rgba(255,255,255,.9);border-radius:30px;box-shadow:var(--shadow2);min-height:134px;}
+    .candidate-btn{background:transparent;border-radius:24px;padding:8px;min-width:136px;min-height:112px;position:relative;}
+    .candidate-btn:hover .car{transform:translateY(-3px);}
+    .candidate-btn:active .car{transform:scale(.98);}
+    .candidate-btn .car{transition:transform .14s ease;}
+    .candidate-index{position:absolute;left:12px;top:8px;background:#fff;border:2px solid #e8d3a0;border-radius:999px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-weight:900;color:#6a5b48;z-index:3;}
+    .tap-hand{position:absolute;width:94px;height:94px;z-index:8;right:calc(50% - 80px);bottom:138px;animation:tapFloat 1.1s infinite ease-in-out;filter:drop-shadow(0 8px 10px rgba(80,80,80,.16));}
+    .tap-hand img{width:100%;height:100%;object-fit:contain;border-radius:18px;}
+    @keyframes tapFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(12px) scale(.96)}}
+    .feedback{position:absolute;left:50%;top:22%;transform:translateX(-50%);z-index:20;background:#fff8d8;border:3px solid #ffd36b;border-radius:999px;padding:15px 24px;box-shadow:var(--shadow);font-size:26px;font-weight:1000;color:#4a6575;animation:pop .55s ease both;}
+    .feedback.hint{background:#f5efff;border-color:#d9c2f0;color:#655081;font-size:22px;}
+    @keyframes pop{0%{opacity:0;transform:translateX(-50%) translateY(12px) scale(.9)}100%{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}}
+    .practice-label{position:absolute;left:18px;top:94px;background:rgba(255,255,255,.86);border:2px solid #ffe0a0;border-radius:999px;padding:10px 16px;font-weight:900;z-index:5;}
+    .ready-overlay,.pause-overlay{position:absolute;inset:0;background:rgba(61,75,86,.28);display:flex;align-items:center;justify-content:center;z-index:30;padding:22px;}
+    .ready-card{width:min(620px,92vw);background:rgba(255,255,255,.95);border:3px solid rgba(255,255,255,.95);border-radius:36px;box-shadow:var(--shadow);padding:34px;text-align:center;}
+    .ready-card h2{font-size:42px;color:#315066;margin-bottom:14px;}
+    .ready-card p{font-size:21px;line-height:1.65;color:#536a78;}
+    .countdown{position:absolute;inset:0;z-index:24;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;}
+    .count-number{width:170px;height:170px;border-radius:50%;background:linear-gradient(180deg,#fff9dc,#ffd979);display:flex;align-items:center;justify-content:center;font-size:86px;font-weight:1000;color:#426176;border:6px solid rgba(255,255,255,.9);box-shadow:var(--shadow);animation:countPop .8s ease both;}
+    @keyframes countPop{0%{transform:scale(.76);opacity:0}40%{transform:scale(1.08);opacity:1}100%{transform:scale(1);opacity:1}}
+    .result-shell{width:min(1060px,96vw);display:grid;grid-template-columns:330px 1fr;gap:24px;align-items:stretch;}
+    .result-badge{background:rgba(255,255,255,.88);border-radius:36px;padding:24px;box-shadow:var(--shadow);border:2px solid rgba(255,255,255,.9);text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+    .result-badge img{width:min(250px,70vw);border-radius:24px;object-fit:cover;}
+    .stars-big{font-size:40px;letter-spacing:4px;margin-top:10px;color:#e9a834;text-shadow:0 2px 0 #fff;}
+    .result-panel{background:rgba(255,255,255,.9);border:2px solid rgba(255,255,255,.95);border-radius:36px;box-shadow:var(--shadow);padding:30px;}
+    .stat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:22px 0;}
+    .stat{background:#fff9ed;border:2px solid #ffe0a0;border-radius:22px;padding:16px;}
+    .stat b{display:block;font-size:28px;color:#315066;margin-bottom:4px;}
+    .stat span{font-size:16px;color:#687b87;font-weight:800;}
+    .recommend-box{background:#eef9f2;border:2px solid #cfead9;border-radius:24px;padding:20px;font-size:21px;line-height:1.55;color:#4e6b5b;}
+    .hidden{display:none!important;}
+    .no-motion *{animation:none!important;transition:none!important;scroll-behavior:auto!important;}
+
+    @media (max-width:900px){
+      body{overflow:auto}.app{min-height:100vh;height:auto;overflow:auto}.screen{position:relative;min-height:100vh;overflow:auto}.home-shell,.detail-grid,.result-shell{grid-template-columns:1fr}.home-card{min-height:auto}.home-card img{height:300px}.scene{min-height:100vh;position:relative}.hud{grid-template-columns:1fr;gap:8px}.hud-left,.hud-right{justify-content:center}.target-card{width:100%}.scene-main{grid-template-columns:1fr}.guide-card{min-height:auto}.play-zone{min-height:330px}.car{flex-basis:104px;height:90px}.engine-css{flex-basis:112px;transform:scale(.9);transform-origin:bottom left}.candidate-btn{min-width:120px}.cover-shell{position:relative;min-height:100vh;justify-content:center;padding:24px}.cover-panel{margin-top:90px}.top-toggle{position:fixed}.result-badge img{width:220px}.stat-grid{grid-template-columns:1fr}.title-xl{font-size:46px}
+    }
+  </style>
+  <link rel="stylesheet" href="../shared/unified.css">
+</head>
+<body>
+  <div id="app" class="app" aria-live="polite"></div>
+  <script>
+    const ASSETS = {
+      home: "assets/home-card.png",
+      detail: "assets/detail-cover.png",
+      cover: "assets/cover-poster.png",
+      tutorial1: "assets/tutorial-1.png",
+      tutorial2: "assets/tutorial-2.png",
+      tutorial3: "assets/tutorial-3.png",
+      bg: "assets/background.png",
+      bgLow: "assets/background-low.png",
+      hand: "assets/hand.png",
+      targetCard: "assets/target-card.png",
+      success: "assets/success-sticker.png",
+      hint: "assets/hint-sticker.png",
+      result: "assets/result-badge.png",
+      bunny: "assets/bunny.png",
+      engine: "assets/engine.png",
+      carYellow: "assets/car-yellow.png",
+      carPurple: "assets/car-purple.png",
+      sceneCard: "assets/scene-card.png"
+    };
+
+    Object.values(ASSETS).forEach(src => { const img = new Image(); img.src = src; });
+
+    const PROGRESS_KEY = "14_number_sequence_progress_v1";
+    const LOW_KEY = "14_number_sequence_low_stimulation";
+    const app = document.getElementById("app");
+    let tickTimer = null;
+    let afterTimer = null;
+
+    const colors = {
+      red: { name: "红", value: "#ff8f8f" },
+      blue: { name: "蓝", value: "#77c8ee" },
+      yellow: { name: "黄", value: "#ffd978" },
+      green: { name: "绿", value: "#8bd394" },
+      purple: { name: "紫", value: "#c7a8ea" }
+    };
+
+    const levelConfig = {
+      1: { duration: 45, passCorrect: 4, candidates: 2, label: "轻松起步" },
+      2: { duration: 45, passCorrect: 5, candidates: 2, label: "轻松起步" },
+      3: { duration: 50, passCorrect: 5, candidates: 3, label: "轻松起步" },
+      4: { duration: 60, passCorrect: 7, candidates: 3, label: "稳定训练" },
+      5: { duration: 60, passCorrect: 8, candidates: 3, label: "稳定训练" },
+      6: { duration: 60, passCorrect: 9, candidates: 4, label: "稳定训练" },
+      7: { duration: 75, passCorrect: 10, candidates: 4, label: "进阶挑战" },
+      8: { duration: 75, passCorrect: 11, candidates: 4, label: "进阶挑战" },
+      9: { duration: 75, passCorrect: 12, candidates: 5, label: "进阶挑战" },
+      10: { duration: 90, passCorrect: 14, candidates: 5, label: "进阶挑战" }
+    };
+
+    const practiceProblems = [
+      makeNumberProblem(1, 1, 3, 2, "号码每次多 1。"),
+      makeColorRepeatProblem(["red", "blue"], 4, 2, "颜色轮流出现。"),
+      makeNumberProblem(2, 2, 3, 2, "号码每次多 2。")
+    ];
+
+    let state = {
+      screen: "home",
+      lowStim: localStorage.getItem(LOW_KEY) === "1",
+      tutorialStep: 0,
+      tutorialHint: "",
+      practiceIndex: 0,
+      problem: null,
+      feedback: null,
+      locked: false,
+      level: loadProgress().nextLevel || 1,
+      timeLeft: 0,
+      stats: freshStats(loadProgress().nextLevel || 1),
+      lastResult: null,
+      paused: false,
+      countdown: 3
+    };
+
+    function freshStats(level){
+      return { level, correct: 0, attempts: 0, misses: 0, hints: 0, score: 0, totalReaction: 0, reactionCount: 0, streak: 0, bestStreak: 0, startedAt: Date.now(), trials: [] };
+    }
+
+    function loadProgress(){
+      try{
+        const raw = localStorage.getItem(PROGRESS_KEY);
+        if(!raw) return { nextLevel: 1, sessions: [], tutorialDone: false };
+        const data = JSON.parse(raw);
+        return { nextLevel: clamp(Number(data.nextLevel) || 1, 1, 10), sessions: Array.isArray(data.sessions) ? data.sessions : [], tutorialDone: !!data.tutorialDone };
+      }catch(e){ return { nextLevel: 1, sessions: [], tutorialDone: false }; }
+    }
+
+    function saveProgress(p){ localStorage.setItem(PROGRESS_KEY, JSON.stringify(p)); }
+    function markTutorialDone(){ const p = loadProgress(); p.tutorialDone = true; saveProgress(p); }
+    function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
+    function rand(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+    function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+    function shuffle(arr){ return arr.map(v=>[Math.random(),v]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]); }
+    function sameItem(a,b){ return JSON.stringify(a) === JSON.stringify(b); }
+    function uniqItems(items){
+      const seen = new Set(); const out = [];
+      for(const item of items){ const key = JSON.stringify(item); if(!seen.has(key)){ seen.add(key); out.push(item); } }
+      return out;
+    }
+
+    function toggleLowStim(){
+      state.lowStim = !state.lowStim;
+      localStorage.setItem(LOW_KEY, state.lowStim ? "1" : "0");
+      document.body.classList.toggle("no-motion", state.lowStim);
+      render();
+    }
+
+    function clearTimers(){ if(tickTimer){ clearInterval(tickTimer); tickTimer = null; } if(afterTimer){ clearTimeout(afterTimer); afterTimer = null; } }
+    function go(screen){ clearTimers(); state.screen = screen; state.feedback = null; state.locked = false; render(); }
+
+    function difficultyName(level){
+      const cfg = levelConfig[level] || levelConfig[1];
+      return `第 ${level} 级 · ${cfg.label}`;
+    }
+
+    function itemText(item){
+      if(!item) return "问号";
+      if(item.kind === "number") return `号码 ${item.value}`;
+      if(item.kind === "color") return `${colors[item.color].name}色车厢`;
+      if(item.kind === "shape") return `${item.count} 个圆点`;
+      return "车厢";
+    }
+
+    function miniItemHtml(item, unknown=false){
+      if(unknown) return `<span class="mini">?</span>`;
+      if(item.kind === "number") return `<span class="mini">${item.value}</span>`;
+      if(item.kind === "color") return `<span class="mini color" title="${colors[item.color].name}色" style="background:${colors[item.color].value}"></span>`;
+      if(item.kind === "shape") return `<span class="mini shape">${item.count}点</span>`;
+      return `<span class="mini">?</span>`;
+    }
+
+    function dotsHtml(count){
+      return `<span class="dots">${Array.from({length: count}).map(()=>`<i class="dot"></i>`).join("")}</span>`;
+    }
+
+    function carHtml(item, extraClass=""){
+      let color = "#ffd978";
+      let content = "?";
+      if(item && item.kind === "number"){
+        color = item.carColor || pick(["#ffd978", "#8bd394", "#77c8ee", "#c7a8ea", "#ffae73"]);
+        content = String(item.value);
+      }else if(item && item.kind === "color"){
+        color = colors[item.color].value;
+        content = `<span class="color-swatch" style="background:${colors[item.color].value}"></span>`;
+      }else if(item && item.kind === "shape"){
+        color = "#bfe8d1";
+        content = dotsHtml(item.count);
+      }
+      return `<div class="car ${extraClass}" style="--carColor:${color}"><div class="car-content">${content}</div></div>`;
+    }
+
+    function targetCardHtml(problem, title="找下一节车厢", hint=""){
+      const seq = problem ? [...problem.visible.map(x=>miniItemHtml(x)), miniItemHtml(null, true)].join(`<span style="font-weight:1000;color:#9c8b7a">→</span>`) : "";
+      return `<section class="target-card" aria-live="polite">
+        <div class="target-title">${title}</div>
+        <div class="target-seq">${seq}</div>
+        ${hint ? `<div class="target-hint">${hint}</div>` : ""}
+      </section>`;
+    }
+
+    function hudHtml(mode="training"){
+      const cfg = levelConfig[state.level] || levelConfig[1];
+      const challenge = state.level >= 7;
+      const stars = "★".repeat(Math.min(3, Math.floor(state.stats.correct / 3))) + "☆".repeat(3 - Math.min(3, Math.floor(state.stats.correct / 3)));
+      const leftButton = mode === "training" ? `<button class="hud-pill" onclick="pauseTraining()">暂停</button>` : "";
+      return `<header class="hud">
+        <div class="hud-left">
+          ${leftButton}
+          <div class="hud-pill ${challenge ? "challenge" : ""}">${difficultyName(state.level)}</div>
+        </div>
+        ${targetCardHtml(state.problem, "目标是什么：找下一节车厢", state.problem?.hint || "目标卡会一直在这里")}
+        <div class="hud-right">
+          ${mode === "training" ? `<div class="hud-pill">倒计时 ${state.timeLeft} 秒</div>` : ""}
+          <div class="hud-pill">分数 ${state.stats.score}</div>
+          <div class="hud-pill">星星 ${stars}</div>
+        </div>
+      </header>`;
+    }
+
+    function trainTrackHtml(problem, showUnknown=true){
+      const known = problem ? problem.visible : [];
+      return `<div class="train-wrap">
+        <div class="train-row" aria-label="当前车厢序列">
+          <div class="engine-css" aria-hidden="true"><div class="stack"></div><div class="front"></div><div class="body"></div><i class="wheel w1"></i><i class="wheel w2"></i></div>
+          ${known.map(item=>carHtml(item)).join("")}
+          ${showUnknown ? carHtml(null,"unknown") : ""}
+        </div>
+        <div class="rails" aria-hidden="true"></div>
+      </div>`;
+    }
+
+    function candidatesHtml(problem, handler="chooseCandidate"){
+      if(!problem) return "";
+      return `<div class="candidate-platform" role="group" aria-label="候选车厢">
+        ${problem.candidates.map((item, i)=>`<button class="candidate-btn" onclick="${handler}(${i})" aria-label="第 ${i+1} 个候选，${itemText(item)}">
+          <span class="candidate-index">${i+1}</span>${carHtml(item)}
+        </button>`).join("")}
+      </div>`;
+    }
+
+    function sceneHtml(opts){
+      const bg = opts.bg || (state.lowStim ? ASSETS.bgLow : ASSETS.bg);
+      const hand = opts.hand ? `<div class="tap-hand"><img src="${ASSETS.hand}" alt="点击手势"></div>` : "";
+      const feedback = state.feedback ? `<div class="feedback ${state.feedback.type === "hint" ? "hint" : ""}">${state.feedback.text}</div>` : "";
+      const label = opts.label ? `<div class="practice-label">${opts.label}</div>` : "";
+      return `<main class="scene" style="background-image:url('${bg}')">
+        ${opts.hud || `<header class="hud"><div></div>${targetCardHtml(opts.problem, opts.targetTitle || "目标是什么：找下一节车厢", opts.targetHint || "看前面的车厢规律") }<div></div></header>`}
+        ${label}
+        <section class="scene-main">
+          <div class="play-zone">
+            ${trainTrackHtml(opts.problem, opts.showUnknown !== false)}
+            ${hand}
+            ${feedback}
+          </div>
+          <aside class="guide-card">
+            <div>
+              <div class="bunny-face" aria-hidden="true"><span class="bunny-eyes"><i></i><i></i></span><span class="bunny-mouth"></span></div>
+              <p class="speech">${opts.speech || "站长小兔会一直陪你。"}</p>
+            </div>
+            ${opts.controls || ""}
+          </aside>
+        </section>
+        ${opts.candidates || ""}
+      </main>`;
+    }
+
+    function renderHome(){
+      const p = loadProgress();
+      app.innerHTML = `<section class="screen soft-bg">
+        <label class="top-toggle"><input type="checkbox" ${state.lowStim ? "checked" : ""} onchange="toggleLowStim()">低刺激模式</label>
+        <div class="home-shell">
+          <article class="home-card">
+            <img src="${ASSETS.home}" alt="彩虹火车站大厅卡片">
+            <div class="home-info">
+              <h1 class="title-xl">规律小火车</h1>
+              <p class="subtitle">帮站长小兔观察车厢的小规律，找到下一节车厢，让小火车顺利进站。</p>
+              <div class="badge-line"><span class="badge">数字序列</span><span class="badge">找规律</span><span class="badge">彩虹火车站</span></div>
+              <div class="progress-note">下轮推荐：${difficultyName(p.nextLevel || 1)}。1–3 级很轻松，适合先热身。</div>
+              <div class="btn-row"><button class="btn primary" onclick="go('detail')">进入车站</button><button class="btn secondary" onclick="resetProgress()">重置记录</button></div>
+            </div>
+          </article>
+          <aside class="info-panel">
+            <div class="info-block"><h3>怎么玩</h3><p>先看车厢队伍，再看目标卡。发现号码、颜色或圆点的排列规律后，点击底部最合适的下一节车厢。</p></div>
+            <div class="info-block"><h3>目标是什么</h3><p>目标是帮小火车接上正确车厢。目标卡会一直显示当前规律，正式训练时右上角会显示倒计时、分数和星星。</p></div>
+            <div class="info-block"><h3>难度怎么变</h3><p>每轮结束后会记录本轮表现。正确率高且用时短，下轮会稍微变难；需要更多提示时，下轮会变简单。</p></div>
+          </aside>
+        </div>
+      </section>`;
+    }
+
+    function renderDetail(){
+      app.innerHTML = `<section class="screen soft-bg">
+        <label class="top-toggle"><input type="checkbox" ${state.lowStim ? "checked" : ""} onchange="toggleLowStim()">低刺激模式</label>
+        <div class="modal-like">
+          <div class="detail-grid">
+            <img src="${ASSETS.detail}" alt="站长小兔和车厢说明图">
+            <div>
+              <h2 class="section-title">说明</h2>
+              <p class="text-lg"><b>怎么玩：</b>观察已经排好的车厢，看看号码是不是每次多一点，颜色是不是轮流出现，或圆点数量是不是在变化。然后点击下一节车厢。</p>
+              <p class="text-lg" style="margin-top:12px"><b>目标是什么：</b>把正确车厢接到小火车后面。每接上一节，分数和星星都会增加。</p>
+              <div class="mini-list">
+                <div class="mini-line">教学会在真实车站场景里演示，不会直接开局。</div>
+                <div class="mini-line">低压练习不计时，先慢慢熟悉。</div>
+                <div class="mini-line">第 7 级以后会标为“进阶挑战”。</div>
+              </div>
+              <div class="btn-row"><button class="btn secondary" onclick="go('home')">返回首页</button><button class="btn primary" onclick="go('cover')">看封面</button></div>
+            </div>
+          </div>
+        </div>
+      </section>`;
+    }
+
+    function renderCover(){
+      const p = loadProgress();
+      app.innerHTML = `<section class="screen" style="padding:0">
+        <label class="top-toggle"><input type="checkbox" ${state.lowStim ? "checked" : ""} onchange="toggleLowStim()">低刺激模式</label>
+        <div class="cover-shell" style="background-image:url('${ASSETS.cover}')">
+          <div class="cover-panel">
+            <h1 class="title-xl">规律小火车</h1>
+            <p class="subtitle">彩虹火车站今天要接好多车厢。先看小兔演示，再开始训练。</p>
+            <div class="mini-list">
+              <div class="mini-line"><b>怎么玩：</b>看规律，点下一节车厢。</div>
+              <div class="mini-line"><b>目标是什么：</b>让小火车顺利接上正确车厢。</div>
+              <div class="mini-line">当前推荐：${difficultyName(p.nextLevel || 1)}</div>
+            </div>
+            <div class="btn-row"><button class="btn secondary" onclick="go('detail')">返回说明</button><button class="btn primary" onclick="startTutorial()">进入教学</button>${p.tutorialDone ? `<button class="btn secondary" onclick="startPractice()">直接低压练习</button>` : ""}</div>
+          </div>
+        </div>
+      </section>`;
+    }
+
+    const tutorialProblems = [
+      makeNumberProblem(1, 1, 3, 2, "今天的任务：帮小火车接车厢。"),
+      makeNumberProblem(1, 1, 3, 2, "号码一个一个往上走。"),
+      makeNumberProblem(1, 1, 3, 2, "看见合适的车厢，就轻轻点它一次。"),
+      { ...makeNumberProblem(1, 1, 4, 2, "已接上：1 节。"), visible: [{kind:"number",value:1,carColor:"#ffae73"},{kind:"number",value:2,carColor:"#ffd978"},{kind:"number",value:3,carColor:"#77c8ee"},{kind:"number",value:4,carColor:"#8bd394"}] },
+      makeColorRepeatProblem(["red","blue"], 4, 3, "颜色也会排队。"),
+      makeNumberProblem(2, 2, 3, 2, "先轻松练 3 次，再进入正式训练。")
+    ];
+
+    const tutorialCopy = [
+      { bg: ASSETS.tutorial1, title: "目标是什么：帮小火车接车厢", speech: "欢迎来到彩虹火车站。我们要帮小火车找到下一节车厢。", button: "我准备好了" },
+      { bg: ASSETS.tutorial2, title: "看前面：1，2，3，？", speech: "车厢号码一个一个往上走。下一节会是谁呢？", button: "继续看" },
+      { bg: ASSETS.tutorial2, title: "怎么玩：看见合适的车厢就点一次", speech: "看见合适的车厢，就轻轻点它一次。手指会先演示。", button: "看它接上", hand: true },
+      { bg: ASSETS.tutorial3, title: "已接上：1 节", speech: "接上啦！每发现一节并点一次，右上角的小星星就会增加。", button: "我懂了", success: true },
+      { bg: ASSETS.tutorial2, title: "换一种规律：红，蓝，红，蓝，？", speech: "有时规律藏在颜色里。请你亲自点一下下一节车厢。", interactive: true },
+      { bg: ASSETS.tutorial1, title: "接下来：先轻松练 3 次", speech: "很好。先不计时，慢慢找规律。练完后再进入正式训练。", button: "开始低压练习" }
+    ];
+
+    function startTutorial(){ clearTimers(); state.tutorialStep = 0; state.tutorialHint = ""; state.screen = "tutorial"; render(); }
+    function nextTutorial(){
+      state.tutorialHint = "";
+      state.feedback = null;
+      if(state.tutorialStep < 5){ state.tutorialStep += 1; render(); }
+      else { markTutorialDone(); startPractice(); }
+    }
+    function chooseTutorialCandidate(i){
+      const problem = tutorialProblems[4];
+      if(sameItem(problem.candidates[i], problem.answer)){
+        state.feedback = {type:"success", text:"接上啦"};
+        render();
+        afterTimer = setTimeout(()=>{ state.feedback = null; state.tutorialStep = 5; render(); }, state.lowStim ? 360 : 760);
+      }else{
+        state.feedback = {type:"hint", text:"再看颜色是不是轮流出现。"};
+        render();
+        afterTimer = setTimeout(()=>{ state.feedback = null; render(); }, 900);
+      }
+    }
+
+    function renderTutorial(){
+      const step = tutorialCopy[state.tutorialStep];
+      const problem = tutorialProblems[state.tutorialStep];
+      if(step.success) state.feedback = {type:"success", text:"星星 +1"};
+      const controls = step.interactive ? `<div class="progress-note">请点击下一节车厢。目标卡会一直在上方。</div>` : `<div class="btn-row"><button class="btn primary" onclick="nextTutorial()">${step.button}</button><button class="btn secondary" onclick="go('cover')">返回封面</button></div>`;
+      let candidates = "";
+      if(state.tutorialStep === 1 || state.tutorialStep === 2 || state.tutorialStep === 4){
+        candidates = candidatesHtml(problem, state.tutorialStep === 4 ? "chooseTutorialCandidate" : "noopTutorialCandidate");
+      }
+      app.innerHTML = sceneHtml({
+        bg: step.bg,
+        problem,
+        targetTitle: step.title,
+        targetHint: problem.hint,
+        speech: step.speech,
+        controls,
+        candidates,
+        hand: !!step.hand,
+        showUnknown: state.tutorialStep !== 3
+      });
+    }
+
+    function noopTutorialCandidate(){
+      state.feedback = {type:"hint", text:"这一屏先看演示。"};
+      render(); afterTimer = setTimeout(()=>{ state.feedback=null; render(); }, 700);
+    }
+
+    function startPractice(){
+      clearTimers(); markTutorialDone(); state.screen = "practice"; state.practiceIndex = 0; state.problem = practiceProblems[0]; state.feedback = null; state.locked = false; render();
+    }
+
+    function choosePracticeCandidate(i){
+      if(state.locked) return;
+      const item = state.problem.candidates[i];
+      if(sameItem(item, state.problem.answer)){
+        state.locked = true;
+        state.feedback = {type:"success", text:"接上啦"};
+        render();
+        afterTimer = setTimeout(()=>{
+          state.feedback = null;
+          state.locked = false;
+          if(state.practiceIndex >= practiceProblems.length - 1){ showReadyModal(); }
+          else { state.practiceIndex += 1; state.problem = practiceProblems[state.practiceIndex]; render(); }
+        }, state.lowStim ? 420 : 760);
+      }else{
+        state.feedback = {type:"hint", text:"再看前面的小规律。"};
+        render();
+        afterTimer = setTimeout(()=>{ state.feedback = null; render(); }, 850);
+      }
+    }
+
+    function showReadyModal(){ clearTimers(); state.screen = "ready"; state.problem = practiceProblems[practiceProblems.length-1]; render(); }
+
+    function renderPractice(showReady=false){
+      app.innerHTML = sceneHtml({
+        bg: state.lowStim ? ASSETS.bgLow : ASSETS.bg,
+        problem: state.problem,
+        targetTitle: "低压练习：找下一节车厢",
+        targetHint: state.problem.hint,
+        speech: "先不计时，慢慢找。点到别的车厢也没关系，小兔会给你提示。",
+        label: `低压练习 ${state.practiceIndex + 1} / 3`,
+        controls: `<div class="progress-note"><b>怎么玩：</b>看上方目标卡，再点底部候选车厢。</div><div class="btn-row"><button class="btn secondary" onclick="startTutorial()">重新演示</button></div>`,
+        candidates: candidatesHtml(state.problem, "choosePracticeCandidate")
+      });
+    }
+
+    function renderReady(){
+      app.innerHTML = sceneHtml({
+        bg: state.lowStim ? ASSETS.bgLow : ASSETS.bg,
+        problem: state.problem || practiceProblems[2],
+        targetTitle: "目标是什么：找下一节车厢",
+        targetHint: "正式训练里目标卡会一直显示。",
+        speech: "低压练习完成了。现在可以进入正式训练。",
+        controls: `<div class="progress-note">训练中可以随时暂停。</div>`,
+        candidates: ""
+      }) + `<div class="ready-overlay"><div class="ready-card">
+        <h2>准备开始训练吧！</h2>
+        <p>正式训练里，目标卡会一直在上方。找到下一节车厢，就轻轻点一下。答对会接上车厢、增加星星。</p>
+        <div class="btn-row" style="justify-content:center"><button class="btn secondary" onclick="startTutorial()">重新演示</button><button class="btn primary" onclick="startTrainingCountdown()">进入训练</button></div>
+        <p style="font-size:16px;margin-top:14px;color:#71818b">训练中可以随时暂停。</p>
+      </div></div>`;
+    }
+
+    function startTrainingCountdown(){
+      clearTimers();
+      const p = loadProgress();
+      state.level = clamp(p.nextLevel || 1, 1, 10);
+      state.stats = freshStats(state.level);
+      state.timeLeft = (levelConfig[state.level] || levelConfig[1]).duration;
+      state.countdown = 3;
+      state.screen = "countdown";
+      state.problem = generateProblem(state.level);
+      render();
+      runCountdown();
+    }
+
+    function runCountdown(){
+      clearTimeout(afterTimer);
+      if(state.countdown <= 0){ startTrainingActive(); return; }
+      afterTimer = setTimeout(()=>{ state.countdown -= 1; render(); runCountdown(); }, 850);
+    }
+
+    function startTrainingActive(){
+      clearTimers();
+      state.screen = "training";
+      state.problem = generateProblem(state.level);
+      state.roundStart = Date.now();
+      state.feedback = null;
+      state.locked = false;
+      render();
+      startTick();
+    }
+
+    function startTick(){
+      if(tickTimer) clearInterval(tickTimer);
+      tickTimer = setInterval(()=>{
+        if(state.screen !== "training" || state.paused) return;
+        state.timeLeft -= 1;
+        if(state.timeLeft <= 0){ finishTraining("时间到，小火车完成本轮进站。") }
+        else render();
+      }, 1000);
+    }
+
+    function pauseTraining(){
+      if(state.screen !== "training") return;
+      state.paused = true;
+      clearInterval(tickTimer); tickTimer = null;
+      render();
+    }
+
+    function resumeTraining(){
+      state.paused = false;
+      state.roundStart = Date.now();
+      render(); startTick();
+    }
+
+    function chooseCandidate(i){
+      if(state.screen !== "training" || state.locked || state.paused) return;
+      const item = state.problem.candidates[i];
+      state.stats.attempts += 1;
+      const reaction = Math.max(300, Date.now() - (state.roundStart || Date.now()));
+      const correctChoice = sameItem(item, state.problem.answer);
+      state.stats.trials.push({
+        trialId:`number-sequence-${Date.now()}-${state.stats.attempts}`,
+        gameId:'number-sequence',
+        domain:'language',
+        taskFamily:'number-series',
+        mode:'training',
+        level:state.level,
+        stimulus:{kind:state.problem.kind, visible:state.problem.visible, candidates:state.problem.candidates, missingIndex:state.problem.visible.length},
+        condition:{ruleType:state.problem.kind, visibleCount:state.problem.visible.length, candidateCount:state.problem.candidates.length, timeLeft:state.timeLeft, passCorrect:(levelConfig[state.level] || levelConfig[1]).passCorrect},
+        correctAnswer:state.problem.answer,
+        response:item,
+        correct:correctChoice,
+        rtMs:reaction,
+        errorType:correctChoice ? null : 'wrong_candidate',
+        difficultyParams:{level:state.level, config:levelConfig[state.level] || levelConfig[1]}
+      });
+      if(correctChoice){
+        state.stats.correct += 1;
+        state.stats.score += 10;
+        state.stats.totalReaction += reaction;
+        state.stats.reactionCount += 1;
+        state.stats.streak += 1;
+        state.stats.bestStreak = Math.max(state.stats.bestStreak, state.stats.streak);
+        if(state.stats.streak > 0 && state.stats.streak % 3 === 0){ state.stats.score += 5; }
+        state.feedback = {type:"success", text: state.stats.streak % 3 === 0 ? "小火车越来越顺 +15" : "接上啦 +10"};
+        state.locked = true;
+        render();
+        afterTimer = setTimeout(()=>{
+          const pass = (levelConfig[state.level] || levelConfig[1]).passCorrect;
+          if(state.stats.correct >= pass){ finishTraining("已接好本轮目标车厢。"); return; }
+          state.feedback = null; state.locked = false; state.problem = generateProblem(state.level); state.roundStart = Date.now(); render();
+        }, state.lowStim ? 420 : 720);
+      }else{
+        state.stats.misses += 1;
+        state.stats.streak = 0;
+        state.feedback = {type:"hint", text: hintForProblem(state.problem)};
+        render();
+        afterTimer = setTimeout(()=>{ state.feedback = null; render(); }, 900);
+      }
+    }
+
+    function hintForProblem(problem){
+      state.stats.hints += 1;
+      if(problem.kind === "number") return "可以先看最后两节车厢，号码差多少。";
+      if(problem.kind === "color") return "看看颜色是不是轮流出现。";
+      if(problem.kind === "shape") return "数一数圆点，每节多几个。";
+      return "再看前面的小规律。";
+    }
+
+    function finishTraining(reason){
+      clearTimers();
+      const result = buildResult(reason);
+      const progress = loadProgress();
+      const nextLevel = recommendNextLevel(result);
+      result.nextLevel = nextLevel;
+      progress.nextLevel = nextLevel;
+      progress.tutorialDone = true;
+      progress.sessions = [result, ...(progress.sessions || [])].slice(0, 10);
+      saveProgress(progress);
+      window.CognitiveGameRecorder?.record('number-sequence', {
+        domain:'language',
+        taskFamily:'number-series',
+        mode:'training',
+        level:state.stats.level,
+        startedAt:new Date(state.stats.startedAt).toISOString(),
+        completedAt:new Date().toISOString(),
+        summary:result,
+        trials:state.stats.trials,
+        adaptive:{recommendedLevel:nextLevel, reason:recommendReason(result)}
+      });
+      state.lastResult = result;
+      state.screen = "result";
+      state.paused = false;
+      render();
+    }
+
+    function buildResult(reason){
+      const s = state.stats;
+      const accuracy = s.attempts ? s.correct / s.attempts : 0;
+      const avgMs = s.reactionCount ? s.totalReaction / s.reactionCount : 0;
+      return {
+        reason,
+        level: s.level,
+        correct: s.correct,
+        attempts: s.attempts,
+        misses: s.misses,
+        hints: s.hints,
+        score: s.score,
+        accuracy,
+        avgMs,
+        bestStreak: s.bestStreak,
+        endedAt: new Date().toISOString()
+      };
+    }
+
+    function recommendNextLevel(result){
+      const level = result.level;
+      const avg = result.avgMs || 9999;
+      if(result.accuracy >= .85 && avg <= 3600 && result.correct >= Math.max(4, (levelConfig[level] || levelConfig[1]).passCorrect - 1)) return clamp(level + 1, 1, 10);
+      if(result.accuracy < .58 || avg >= 8500 || result.hints >= Math.max(3, result.correct)) return clamp(level <= 3 ? level : level - 1, 1, 10);
+      return level;
+    }
+
+    function recommendReason(result){
+      if(result.nextLevel > result.level) return "本轮正确率很稳、用时较快，下轮会稍微增加一点挑战。";
+      if(result.nextLevel < result.level) return "下轮会先变简单一些，让规律更清楚，继续轻松接车厢。";
+      return "下轮保持当前节奏，继续巩固这一类规律。";
+    }
+
+    function renderCountdown(){
+      app.innerHTML = sceneHtml({
+        bg: state.lowStim ? ASSETS.bgLow : ASSETS.bg,
+        hud: hudHtml("training"),
+        problem: state.problem,
+        speech: "准备好，倒数结束后开始找下一节车厢。",
+        controls: `<div class="progress-note">目标卡会一直显示。用数字键 1–5 也可以选择候选。</div>`,
+        candidates: candidatesHtml(state.problem, "chooseCandidate")
+      }) + `<div class="countdown"><div class="count-number">${state.countdown || "开始"}</div></div>`;
+    }
+
+    function renderTraining(){
+      app.innerHTML = sceneHtml({
+        bg: state.lowStim ? ASSETS.bgLow : ASSETS.bg,
+        hud: hudHtml("training"),
+        problem: state.problem,
+        speech: `${state.level >= 7 ? "进阶挑战：" : ""}观察目标卡里的车厢队伍，点击下一节。`,
+        controls: `<div class="progress-note"><b>怎么玩：</b>每发现一节合适车厢，点击一次。<br><b>目标是什么：</b>接上足够多的正确车厢。</div>`,
+        candidates: candidatesHtml(state.problem, "chooseCandidate")
+      }) + (state.paused ? `<div class="pause-overlay"><div class="ready-card"><h2>已暂停</h2><p>当前题目会保留。继续后，目标卡仍在上方。</p><div class="btn-row" style="justify-content:center"><button class="btn primary" onclick="resumeTraining()">继续训练</button><button class="btn secondary" onclick="go('cover')">回到封面</button></div></div></div>` : "");
+    }
+
+    function renderResult(){
+      const r = state.lastResult || loadProgress().sessions?.[0] || buildResult("本轮已完成。");
+      const accuracyText = `${Math.round((r.accuracy || 0) * 100)}%`;
+      const avgText = r.avgMs ? `${(r.avgMs / 1000).toFixed(1)} 秒` : "暂无";
+      const stars = r.accuracy >= .85 ? "★★★" : r.accuracy >= .65 ? "★★☆" : "★☆☆";
+      app.innerHTML = `<section class="screen soft-bg">
+        <label class="top-toggle"><input type="checkbox" ${state.lowStim ? "checked" : ""} onchange="toggleLowStim()">低刺激模式</label>
+        <div class="result-shell">
+          <aside class="result-badge">
+            <img src="${ASSETS.result}" alt="结算徽章">
+            <div class="stars-big">${stars}</div>
+            <p class="subtitle">小火车顺利进站</p>
+          </aside>
+          <main class="result-panel">
+            <h1 class="section-title">结算</h1>
+            <p class="text-lg">${r.reason || "本轮完成。"}</p>
+            <h2 style="font-size:30px;margin-top:22px">本轮表现</h2>
+            <div class="stat-grid">
+              <div class="stat"><b>${difficultyName(r.level)}</b><span>本轮难度</span></div>
+              <div class="stat"><b>${r.score}</b><span>分数</span></div>
+              <div class="stat"><b>${r.correct} / ${Math.max(1,r.attempts)}</b><span>正确接上 / 尝试</span></div>
+              <div class="stat"><b>${accuracyText}</b><span>正确率</span></div>
+              <div class="stat"><b>${avgText}</b><span>平均用时</span></div>
+              <div class="stat"><b>${r.bestStreak || 0}</b><span>最长连续接上</span></div>
+            </div>
+            <div class="recommend-box"><b>下轮推荐难度：${difficultyName(r.nextLevel || loadProgress().nextLevel || 1)}</b><br>${recommendReason(r)}</div>
+            <div class="btn-row"><button class="btn primary" onclick="startTrainingCountdown()">按推荐再玩一局</button><button class="btn secondary" onclick="startPractice()">先低压练习</button><button class="btn secondary" onclick="go('home')">回首页</button></div>
+          </main>
+        </div>
+      </section>`;
+    }
+
+    function resetProgress(){
+      localStorage.removeItem(PROGRESS_KEY);
+      state.level = 1;
+      state.stats = freshStats(1);
+      render();
+    }
+
+    function generateProblem(level){
+      if(level <= 1) return Math.random() < .7 ? makeNumberProblem(rand(1,3), 1, 3, 2, "号码每次多 1。") : makeShapeProblem(1, 3, 2, "圆点每次多 1。");
+      if(level === 2) return Math.random() < .55 ? makeColorRepeatProblem(["red","blue"], 4, 2, "颜色轮流出现。") : makeNumberProblem(rand(1,5), 1, 3, 2, "号码每次多 1。");
+      if(level === 3) return Math.random() < .65 ? makeNumberProblem(rand(2,6), 2, 3, 3, "号码每次多 2。") : makeColorRepeatProblem(["red","blue","yellow"], 4, 3, "三个颜色轮流出现。");
+      if(level === 4) return Math.random() < .5 ? makeNumberProblem(rand(3,8), 3, 4, 3, "看看号码每次多几。") : makeShapeProblem(1, 4, 3, "圆点数量在变多。");
+      if(level === 5) return Math.random() < .5 ? makeColorRepeatProblem(["red","red","blue"], 5, 3, "颜色有重复的小节奏。") : makeNumberProblem(rand(12,18), -1, 4, 3, "号码每次少 1。");
+      if(level === 6) return Math.random() < .5 ? makeNumberProblem(rand(2,7), pick([2,4,-2]), 5, 4, "找出固定的变化。") : makeColorRepeatProblem(["green","purple","green","yellow"], 5, 4, "颜色按一组一组循环。");
+      if(level === 7) return Math.random() < .6 ? makeAlternatingProblem(rand(1,4), 5, 4, "进阶挑战：变化会轮流出现。") : makeColorRepeatProblem(["red","blue","blue"], 5, 4, "进阶挑战：有重复节奏。") ;
+      if(level === 8) return Math.random() < .6 ? makeMultiplyProblem(rand(1,3), 5, 4, "进阶挑战：号码会变成两倍。") : makeNumberProblem(rand(18,28), -2, 5, 4, "进阶挑战：号码往回走。") ;
+      if(level === 9) return Math.random() < .5 ? makeAlternatingProblem(rand(2,6), 6, 5, "进阶挑战：看相邻两次变化。") : makeShapeProblem(2, 5, 5, "进阶挑战：圆点数量继续变化。") ;
+      return Math.random() < .5 ? makeAlternatingProblem(rand(3,8), 6, 5, "进阶挑战：两种变化交替。") : makeMultiplyProblem(rand(2,4), 6, 5, "进阶挑战：号码快速变化。") ;
+    }
+
+    function makeNumberProblem(start, step, visibleLen, candidateCount, hint){
+      const visible = Array.from({length: visibleLen}, (_,i)=>({kind:"number", value:start + i*step, carColor: ["#ffae73","#ffd978","#8bd394","#77c8ee","#c7a8ea"][i%5]}));
+      const answer = {kind:"number", value:start + visibleLen*step, carColor:"#8bd394"};
+      const candidates = makeNumberCandidates(answer, candidateCount, Math.abs(step) || 1);
+      return { id: Math.random().toString(36).slice(2), kind:"number", visible, answer, candidates, hint };
+    }
+
+    function makeNumberCandidates(answer, count, step){
+      const base = answer.value;
+      let pool = [answer, {kind:"number", value:base + step, carColor:"#c7a8ea"}, {kind:"number", value:base - step, carColor:"#ffae73"}, {kind:"number", value:base + step*2, carColor:"#77c8ee"}, {kind:"number", value:base + 1, carColor:"#ffd978"}, {kind:"number", value:Math.max(1, base - 1), carColor:"#8bd394"}];
+      pool = uniqItems(pool.filter(x => x.value >= 0));
+      while(pool.length < count){ pool.push({kind:"number", value:base + rand(2,9), carColor:"#ffd978"}); pool = uniqItems(pool); }
+      return shuffle([answer, ...shuffle(pool.filter(x=>!sameItem(x, answer))).slice(0, count-1)]);
+    }
+
+    function makeColorRepeatProblem(pattern, visibleLen, candidateCount, hint){
+      const visible = Array.from({length: visibleLen}, (_,i)=>({kind:"color", color: pattern[i % pattern.length]}));
+      const answer = {kind:"color", color: pattern[visibleLen % pattern.length]};
+      const all = Object.keys(colors).map(c => ({kind:"color", color:c}));
+      const candidates = shuffle([answer, ...shuffle(all.filter(x=>!sameItem(x, answer))).slice(0, candidateCount-1)]);
+      return { id: Math.random().toString(36).slice(2), kind:"color", visible, answer, candidates, hint };
+    }
+
+    function makeShapeProblem(startCount, visibleLen, candidateCount, hint){
+      const visible = Array.from({length: visibleLen}, (_,i)=>({kind:"shape", count:startCount+i}));
+      const answer = {kind:"shape", count:startCount+visibleLen};
+      const pool = uniqItems([answer, {kind:"shape", count:Math.max(1,answer.count-1)}, {kind:"shape", count:answer.count+1}, {kind:"shape", count:Math.max(1,answer.count-2)}, {kind:"shape", count:answer.count+2}]);
+      const candidates = shuffle([answer, ...shuffle(pool.filter(x=>!sameItem(x, answer))).slice(0, candidateCount-1)]);
+      return { id: Math.random().toString(36).slice(2), kind:"shape", visible, answer, candidates, hint };
+    }
+
+    function makeAlternatingProblem(start, visibleLen, candidateCount, hint){
+      const steps = [1,2];
+      const nums = [start];
+      for(let i=1;i<visibleLen+1;i++){ nums.push(nums[i-1] + steps[(i-1)%2]); }
+      const visible = nums.slice(0, visibleLen).map((n,i)=>({kind:"number", value:n, carColor:["#ffd978","#77c8ee","#ffd978","#77c8ee","#ffd978","#77c8ee"][i%6]}));
+      const answer = {kind:"number", value:nums[visibleLen], carColor:"#8bd394"};
+      const candidates = makeNumberCandidates(answer, candidateCount, 1);
+      return { id: Math.random().toString(36).slice(2), kind:"number", visible, answer, candidates, hint };
+    }
+
+    function makeMultiplyProblem(start, visibleLen, candidateCount, hint){
+      const nums = Array.from({length: visibleLen+1}, (_,i)=>start * Math.pow(2,i));
+      const visible = nums.slice(0,visibleLen).map((n,i)=>({kind:"number", value:n, carColor:["#8bd394","#77c8ee","#c7a8ea","#ffd978","#ffae73"][i%5]}));
+      const answer = {kind:"number", value:nums[visibleLen], carColor:"#8bd394"};
+      const candidates = makeNumberCandidates(answer, candidateCount, Math.max(2, Math.floor(answer.value/4)));
+      return { id: Math.random().toString(36).slice(2), kind:"number", visible, answer, candidates, hint };
+    }
+
+    function render(){
+      document.body.classList.toggle("no-motion", state.lowStim);
+      if(state.screen === "home") return renderHome();
+      if(state.screen === "detail") return renderDetail();
+      if(state.screen === "cover") return renderCover();
+      if(state.screen === "tutorial") return renderTutorial();
+      if(state.screen === "practice") return renderPractice();
+      if(state.screen === "ready") return renderReady();
+      if(state.screen === "countdown") return renderCountdown();
+      if(state.screen === "training") return renderTraining();
+      if(state.screen === "result") return renderResult();
+      renderHome();
+    }
+
+    document.addEventListener("keydown", (e)=>{
+      if(e.key >= "1" && e.key <= "5"){
+        const idx = Number(e.key) - 1;
+        if(state.screen === "training") chooseCandidate(idx);
+        if(state.screen === "practice") choosePracticeCandidate(idx);
+        if(state.screen === "tutorial" && state.tutorialStep === 4) chooseTutorialCandidate(idx);
+      }
+      if(e.key === "Escape" && state.screen === "training") state.paused ? resumeTraining() : pauseTraining();
+    });
+
+    window.addEventListener("beforeunload", clearTimers);
+    render();
+  </script>
+  <script src="../shared/unified.js"></script>
+</body>
+</html>

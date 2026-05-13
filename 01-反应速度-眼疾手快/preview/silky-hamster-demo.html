@@ -1,0 +1,1193 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>丝滑打地鼠 Demo</title>
+    <!-- 动画手感样机，不是正式眼疾手快规则实现；正式逻辑在 app/src/game/eyeQuickSource.js 中按 data.json 运行。 -->
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #f9fffb;
+        --teal-900: #133f40;
+        --teal-700: #2d8580;
+        --teal-500: #71c6bd;
+        --field: #a9d1bf;
+        --field-light: #c7e0d4;
+        --warning: #f2bd78;
+        --danger: #f07958;
+        --good: #ffe16a;
+        --shadow: rgba(32, 63, 58, 0.26);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        min-height: 100%;
+      }
+
+      body {
+        margin: 0;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at 20% 12%, rgba(255, 255, 255, 0.75), transparent 23%),
+          radial-gradient(circle at 80% 88%, rgba(97, 166, 143, 0.26), transparent 26%),
+          linear-gradient(180deg, #ecf6f2 0%, #d7eee5 48%, #c6e0d7 100%);
+        font-family:
+          "Trebuchet MS",
+          "Microsoft YaHei",
+          "PingFang SC",
+          sans-serif;
+      }
+
+      button {
+        font: inherit;
+      }
+
+      .shell {
+        width: min(1280px, calc(100vw - 34px));
+        padding: clamp(12px, 2.4vw, 28px);
+      }
+
+      .game-card {
+        position: relative;
+        overflow: hidden;
+        aspect-ratio: 16 / 9.6;
+        min-height: 560px;
+        border: 5px solid #151d1b;
+        border-radius: 8px;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.18), transparent 17%),
+          linear-gradient(180deg, var(--teal-500) 0 13%, rgba(74, 153, 145, 0.55) 13% 15%, var(--field-light) 15% 18%, var(--field) 18% 100%);
+        box-shadow:
+          0 34px 70px rgba(31, 57, 51, 0.25),
+          0 10px 22px rgba(31, 57, 51, 0.16),
+          inset 0 1px 0 rgba(255, 255, 255, 0.5);
+      }
+
+      .game-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background:
+          repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 44px),
+          radial-gradient(circle at 25% 64%, rgba(255, 255, 255, 0.12), transparent 18%),
+          radial-gradient(circle at 70% 66%, rgba(35, 102, 90, 0.11), transparent 22%);
+        mix-blend-mode: soft-light;
+      }
+
+      .hud {
+        position: absolute;
+        z-index: 5;
+        top: 18px;
+        left: clamp(18px, 3vw, 42px);
+        right: clamp(18px, 3vw, 42px);
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        color: var(--ink);
+        text-shadow: 0 4px 10px rgba(20, 48, 47, 0.28);
+      }
+
+      .pause {
+        width: 70px;
+        height: 70px;
+        display: grid;
+        place-items: center;
+        border: 6px solid rgba(255, 255, 255, 0.94);
+        border-radius: 999px;
+        background: transparent;
+        color: white;
+        cursor: pointer;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+        transition: transform 160ms cubic-bezier(0.2, 1.5, 0.4, 1), filter 160ms ease;
+      }
+
+      .pause:hover {
+        transform: scale(1.04);
+        filter: brightness(1.08);
+      }
+
+      .pause span {
+        width: 20px;
+        height: 28px;
+        background:
+          linear-gradient(90deg, currentColor 0 35%, transparent 35% 65%, currentColor 65% 100%);
+      }
+
+      .level {
+        min-width: 176px;
+        font-size: clamp(24px, 3.2vw, 40px);
+        font-weight: 900;
+        letter-spacing: 0;
+      }
+
+      .spacer {
+        flex: 1;
+      }
+
+      .pill {
+        min-width: 172px;
+        height: 72px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        padding: 0 24px;
+        border-radius: 7px;
+        background: rgba(29, 80, 80, 0.42);
+        box-shadow:
+          inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+          0 10px 24px rgba(26, 70, 68, 0.16);
+        font-size: clamp(25px, 3vw, 38px);
+        font-weight: 900;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .icon-clock,
+      .icon-star {
+        width: 42px;
+        height: 42px;
+        flex: 0 0 auto;
+        border: 4px solid white;
+        border-radius: 999px;
+        position: relative;
+      }
+
+      .icon-clock::before,
+      .icon-clock::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 4px;
+        border-radius: 99px;
+        background: white;
+        transform-origin: 50% 100%;
+      }
+
+      .icon-clock::before {
+        height: 15px;
+        transform: translate(-50%, -100%) rotate(0deg);
+      }
+
+      .icon-clock::after {
+        height: 12px;
+        transform: translate(-50%, -100%) rotate(118deg);
+      }
+
+      .icon-star::before {
+        content: "★";
+        position: absolute;
+        inset: -3px 0 0;
+        display: grid;
+        place-items: center;
+        font-size: 25px;
+        line-height: 1;
+      }
+
+      .sign {
+        position: absolute;
+        z-index: 2;
+        top: 74px;
+        width: 218px;
+        height: 68px;
+        border-radius: 7px;
+        background:
+          repeating-linear-gradient(116deg, #f0cf92 0 31px, #6f7f95 31px 62px);
+        box-shadow:
+          inset 0 -5px 0 rgba(28, 39, 48, 0.12),
+          0 11px 20px rgba(45, 73, 76, 0.12);
+      }
+
+      .sign::before,
+      .sign::after {
+        content: "";
+        position: absolute;
+        bottom: -43px;
+        width: 13px;
+        height: 44px;
+        border-radius: 0 0 7px 7px;
+        background: #bd7e48;
+      }
+
+      .sign::before {
+        left: 34px;
+      }
+
+      .sign::after {
+        right: 34px;
+      }
+
+      .sign.left {
+        left: 19%;
+      }
+
+      .sign.right {
+        right: 19%;
+      }
+
+      .arena {
+        position: absolute;
+        inset: 152px 58px 58px;
+        z-index: 3;
+        display: grid;
+        place-items: center;
+      }
+
+      .board {
+        width: min(890px, 88vw);
+        height: min(520px, 43vw);
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+        column-gap: clamp(34px, 5vw, 72px);
+        row-gap: clamp(32px, 4.7vw, 64px);
+      }
+
+      .hole {
+        position: relative;
+        display: grid;
+        place-items: end center;
+        min-width: 0;
+        border: 0;
+        padding: 0;
+        background: transparent;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .hole:focus-visible {
+        outline: 4px solid rgba(255, 255, 255, 0.9);
+        outline-offset: 6px;
+        border-radius: 24px;
+      }
+
+      .hole::before {
+        content: "";
+        position: absolute;
+        left: 9%;
+        right: 9%;
+        bottom: 4%;
+        height: 31%;
+        border-radius: 50%;
+        background:
+          radial-gradient(ellipse at 50% 66%, #895035 0 54%, #4c332b 55% 72%, rgba(76, 51, 43, 0) 73%),
+          radial-gradient(ellipse at 50% 22%, rgba(255, 255, 255, 0.08), transparent 58%);
+        box-shadow:
+          inset 0 9px 16px rgba(28, 20, 15, 0.36),
+          0 -10px 0 rgba(78, 131, 116, 0.6),
+          0 -15px 0 rgba(58, 109, 97, 0.35),
+          -42px 8px 0 -34px #889895,
+          44px 2px 0 -36px #9aa4a0,
+          70px 14px 0 -60px #7d8d89;
+      }
+
+      .actor-wrap {
+        position: absolute;
+        left: 4%;
+        right: 4%;
+        bottom: 0;
+        height: 118%;
+        display: grid;
+        place-items: end center;
+        pointer-events: none;
+        transform-origin: 50% 92%;
+        will-change: transform, opacity;
+      }
+
+      .actor {
+        width: min(154px, 86%);
+        aspect-ratio: 1;
+        background-position: 0 0;
+        background-repeat: no-repeat;
+        background-size: contain;
+        filter: drop-shadow(0 12px 12px rgba(38, 47, 45, 0.22));
+        transform-origin: 50% 88%;
+        will-change: transform, opacity, background-position;
+      }
+
+      .actor.sprite {
+        background-size: auto 100%;
+      }
+
+      .actor.appear {
+        width: min(166px, 90%);
+        background-image: url("/training-assets/eye-quick/mole_normal_appear_sheet.svg");
+        background-size: 300% 100%;
+        animation:
+          sheet3 255ms steps(3) both,
+          rise-in 255ms cubic-bezier(0.16, 1.42, 0.32, 1) both;
+      }
+
+      .actor.idle {
+        background-image: url("/training-assets/eye-quick/mole_normal_idle.svg");
+        animation: breathe 850ms ease-in-out infinite;
+      }
+
+      .actor.hit {
+        width: min(166px, 90%);
+        background-image: url("/training-assets/eye-quick/mole_normal_hit_sheet.svg");
+        background-size: 600% 100%;
+        animation:
+          sheet6 360ms steps(6) both,
+          hit-pop 360ms cubic-bezier(0.16, 1.28, 0.42, 1) both;
+      }
+
+      .actor.escape {
+        width: min(166px, 90%);
+        background-image: url("/training-assets/eye-quick/mole_normal_escape_sheet.svg");
+        background-size: 300% 100%;
+        animation:
+          sheet3 230ms steps(3) both,
+          sink-out 230ms cubic-bezier(0.5, 0, 0.85, 0.25) both;
+      }
+
+      .actor.helmet {
+        background-image: url("/training-assets/eye-quick/mole_helmet_idle.svg");
+        animation: breathe 850ms ease-in-out infinite;
+      }
+
+      .actor.break {
+        width: min(166px, 90%);
+        background-image: url("/training-assets/eye-quick/mole_helmet_break_sheet.svg");
+        background-size: 400% 100%;
+        animation:
+          sheet4 320ms steps(4) both,
+          hit-pop 320ms cubic-bezier(0.16, 1.28, 0.42, 1) both;
+      }
+
+      .actor.cat {
+        background-image: url("/training-assets/eye-quick/cat_guard_idle.svg");
+        animation: danger-pop 240ms cubic-bezier(0.14, 1.4, 0.36, 1) both, breathe 920ms ease-in-out 250ms infinite;
+      }
+
+      .actor.rabbit {
+        background-image: url("/training-assets/eye-quick/rabbit_decoy_idle.svg");
+        animation: danger-pop 240ms cubic-bezier(0.14, 1.4, 0.36, 1) both, hop-idle 760ms ease-in-out 250ms infinite;
+      }
+
+      .actor.panda {
+        background-image: url("/training-assets/eye-quick/panda_decoy_idle.svg");
+        animation: danger-pop 240ms cubic-bezier(0.14, 1.4, 0.36, 1) both, breathe 930ms ease-in-out 250ms infinite;
+      }
+
+      .actor.bomb {
+        background-image: url("/training-assets/eye-quick/bomb_idle.svg");
+        animation: danger-pop 230ms cubic-bezier(0.14, 1.4, 0.36, 1) both, fuse-wiggle 420ms ease-in-out 260ms infinite;
+      }
+
+      .actor.explode {
+        width: min(166px, 90%);
+        background-image: url("/training-assets/eye-quick/bomb_explode_sheet.svg");
+        background-size: 600% 100%;
+        animation:
+          sheet6 430ms steps(6) both,
+          blast 430ms cubic-bezier(0.18, 0.96, 0.25, 1) both;
+      }
+
+      .float-score {
+        position: absolute;
+        left: 50%;
+        bottom: 72%;
+        z-index: 6;
+        min-width: 58px;
+        transform: translateX(-50%);
+        color: white;
+        font-size: clamp(28px, 3vw, 42px);
+        font-weight: 1000;
+        text-shadow: 0 4px 10px rgba(36, 69, 68, 0.35);
+        pointer-events: none;
+        animation: float-up 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+
+      .float-score.bad {
+        color: #ffe8dd;
+      }
+
+      .ripple {
+        position: absolute;
+        left: 50%;
+        bottom: 22%;
+        width: 36px;
+        height: 18px;
+        border: 4px solid rgba(255, 255, 255, 0.62);
+        border-radius: 50%;
+        transform: translate(-50%, 0);
+        pointer-events: none;
+        animation: ripple 420ms ease-out both;
+      }
+
+      .guide {
+        position: absolute;
+        z-index: 8;
+        left: 50%;
+        top: 118px;
+        transform: translateX(-50%);
+        min-width: min(560px, 78vw);
+        padding: 18px 30px;
+        border-radius: 8px;
+        color: white;
+        background: rgba(255, 255, 255, 0.13);
+        box-shadow:
+          inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+          0 16px 30px rgba(33, 75, 70, 0.12);
+        text-align: center;
+        font-size: clamp(24px, 3vw, 38px);
+        font-weight: 1000;
+        text-shadow: 0 4px 12px rgba(28, 69, 67, 0.32);
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .guide.show {
+        animation: guide 1500ms ease both;
+      }
+
+      .controls {
+        position: absolute;
+        z-index: 9;
+        right: 34px;
+        bottom: 18px;
+        display: flex;
+        gap: 12px;
+      }
+
+      .control-btn {
+        min-height: 52px;
+        padding: 0 22px;
+        border: 0;
+        border-radius: 8px;
+        color: #eefbf8;
+        background: rgba(38, 83, 80, 0.55);
+        box-shadow:
+          inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+          0 14px 24px rgba(24, 58, 55, 0.16);
+        font-weight: 900;
+        cursor: pointer;
+        transition: transform 150ms cubic-bezier(0.2, 1.4, 0.35, 1), background 150ms ease;
+      }
+
+      .control-btn:hover {
+        transform: translateY(-2px);
+        background: rgba(33, 75, 72, 0.68);
+      }
+
+      .cone {
+        position: absolute;
+        z-index: 2;
+        width: 54px;
+        height: 86px;
+        pointer-events: none;
+      }
+
+      .cone::before {
+        content: "";
+        position: absolute;
+        left: 11px;
+        top: 0;
+        width: 32px;
+        height: 74px;
+        clip-path: polygon(50% 0, 100% 100%, 0 100%);
+        background:
+          linear-gradient(180deg, transparent 0 28%, rgba(255, 255, 255, 0.88) 28% 43%, transparent 43% 61%, rgba(255, 255, 255, 0.88) 61% 75%, transparent 75%),
+          linear-gradient(180deg, #fb7766, #b84a3d);
+        border-radius: 18px 18px 8px 8px;
+      }
+
+      .cone::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 18px;
+        border-radius: 50%;
+        background: #b94f43;
+        box-shadow: 0 7px 12px rgba(80, 65, 55, 0.14);
+      }
+
+      .cone.tl {
+        left: 16px;
+        top: 190px;
+      }
+
+      .cone.tr {
+        right: 16px;
+        top: 176px;
+      }
+
+      .cone.bl {
+        left: 18px;
+        bottom: 4px;
+      }
+
+      .cone.bl2 {
+        left: 82px;
+        bottom: 4px;
+      }
+
+      .cone.br {
+        right: 18px;
+        bottom: 4px;
+      }
+
+      .cone.br2 {
+        right: 82px;
+        bottom: 4px;
+      }
+
+      .countdown {
+        position: absolute;
+        inset: 0;
+        z-index: 20;
+        display: grid;
+        place-items: center;
+        background: rgba(14, 42, 40, 0.68);
+        color: white;
+        font-size: clamp(90px, 13vw, 170px);
+        font-weight: 1000;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .countdown.show {
+        animation: countdown-pulse 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+
+      .shake {
+        animation: soft-mistake 260ms ease both;
+      }
+
+      @keyframes sheet3 {
+        to {
+          background-position: -300% 0;
+        }
+      }
+
+      @keyframes sheet4 {
+        to {
+          background-position: -400% 0;
+        }
+      }
+
+      @keyframes sheet6 {
+        to {
+          background-position: -600% 0;
+        }
+      }
+
+      @keyframes rise-in {
+        0% {
+          opacity: 0;
+          transform: translateY(46%) scale(0.82, 0.58);
+        }
+        62% {
+          opacity: 1;
+          transform: translateY(-4%) scale(1.08, 1.05);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      @keyframes sink-out {
+        0% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+        100% {
+          opacity: 0.35;
+          transform: translateY(45%) scale(0.9, 0.72);
+        }
+      }
+
+      @keyframes danger-pop {
+        0% {
+          opacity: 0;
+          transform: translateY(46%) scale(0.84, 0.58);
+        }
+        70% {
+          opacity: 1;
+          transform: translateY(-5%) scale(1.05, 1.08);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      @keyframes breathe {
+        0%,
+        100% {
+          transform: translateY(0) scale(1);
+        }
+        50% {
+          transform: translateY(-2%) scale(1.018, 0.994);
+        }
+      }
+
+      @keyframes hop-idle {
+        0%,
+        100% {
+          transform: translateY(0) scale(1);
+        }
+        45% {
+          transform: translateY(-5%) scale(1.02, 0.98);
+        }
+      }
+
+      @keyframes fuse-wiggle {
+        0%,
+        100% {
+          transform: rotate(0deg);
+        }
+        35% {
+          transform: rotate(-3deg);
+        }
+        70% {
+          transform: rotate(3deg);
+        }
+      }
+
+      @keyframes hit-pop {
+        0% {
+          transform: translateY(0) scale(1);
+        }
+        35% {
+          transform: translateY(-8%) scale(1.12, 0.94);
+        }
+        100% {
+          transform: translateY(2%) scale(0.98, 1.03);
+        }
+      }
+
+      @keyframes blast {
+        0% {
+          opacity: 1;
+          transform: scale(0.9);
+        }
+        45% {
+          opacity: 1;
+          transform: scale(1.16);
+        }
+        100% {
+          opacity: 0.12;
+          transform: scale(1.24);
+        }
+      }
+
+      @keyframes float-up {
+        0% {
+          opacity: 0;
+          transform: translate(-50%, 12px) scale(0.86);
+        }
+        20% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+          transform: translate(-50%, -74px) scale(1.08);
+        }
+      }
+
+      @keyframes ripple {
+        from {
+          opacity: 0.8;
+          transform: translate(-50%, 0) scale(0.45);
+        }
+        to {
+          opacity: 0;
+          transform: translate(-50%, 0) scale(2.35);
+        }
+      }
+
+      @keyframes guide {
+        0% {
+          opacity: 0;
+          transform: translate(-50%, -8px);
+        }
+        14%,
+        78% {
+          opacity: 1;
+          transform: translate(-50%, 0);
+        }
+        100% {
+          opacity: 0;
+          transform: translate(-50%, -8px);
+        }
+      }
+
+      @keyframes countdown-pulse {
+        0% {
+          opacity: 0;
+          transform: scale(0.88);
+        }
+        20%,
+        75% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: scale(1.18);
+        }
+      }
+
+      @keyframes soft-mistake {
+        0%,
+        100% {
+          box-shadow:
+            0 34px 70px rgba(31, 57, 51, 0.25),
+            0 10px 22px rgba(31, 57, 51, 0.16),
+            inset 0 1px 0 rgba(255, 255, 255, 0.5);
+        }
+        45% {
+          box-shadow:
+            0 34px 70px rgba(31, 57, 51, 0.25),
+            0 10px 22px rgba(31, 57, 51, 0.16),
+            inset 0 0 0 8px rgba(240, 121, 88, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.5);
+        }
+      }
+
+      @media (max-width: 760px) {
+        body {
+          overflow: auto;
+        }
+
+        .shell {
+          width: 100vw;
+          padding: 0;
+        }
+
+        .game-card {
+          min-height: 100svh;
+          border: 0;
+          border-radius: 0;
+        }
+
+        .hud {
+          top: 12px;
+          left: 12px;
+          right: 12px;
+          gap: 8px;
+        }
+
+        .pause {
+          width: 54px;
+          height: 54px;
+          border-width: 5px;
+        }
+
+        .level {
+          min-width: 104px;
+        }
+
+        .pill {
+          min-width: 104px;
+          height: 54px;
+          padding: 0 12px;
+          gap: 8px;
+        }
+
+        .icon-clock,
+        .icon-star {
+          width: 30px;
+          height: 30px;
+          border-width: 3px;
+        }
+
+        .sign {
+          display: none;
+        }
+
+        .arena {
+          inset: 116px 18px 88px;
+        }
+
+        .board {
+          width: min(94vw, 520px);
+          height: min(118vw, 620px);
+          row-gap: 22px;
+          column-gap: 18px;
+        }
+
+        .controls {
+          left: 18px;
+          right: 18px;
+          bottom: 18px;
+          justify-content: flex-end;
+        }
+
+        .control-btn {
+          min-height: 46px;
+          padding: 0 15px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 1ms !important;
+          animation-iteration-count: 1 !important;
+          scroll-behavior: auto !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <section class="game-card" id="game">
+        <div class="hud">
+          <button class="pause" id="pauseBtn" type="button" aria-label="暂停"><span></span></button>
+          <div class="level" id="levelText">难度 12</div>
+          <div class="spacer"></div>
+          <div class="pill"><span class="icon-clock" aria-hidden="true"></span><span id="timeText">01:00</span></div>
+          <div class="pill"><span class="icon-star" aria-hidden="true"></span><span id="scoreText">0</span></div>
+        </div>
+
+        <div class="sign left" aria-hidden="true"></div>
+        <div class="sign right" aria-hidden="true"></div>
+        <div class="cone tl" aria-hidden="true"></div>
+        <div class="cone tr" aria-hidden="true"></div>
+        <div class="cone bl" aria-hidden="true"></div>
+        <div class="cone bl2" aria-hidden="true"></div>
+        <div class="cone br" aria-hidden="true"></div>
+        <div class="cone br2" aria-hidden="true"></div>
+
+        <div class="guide show" id="guide">点普通地鼠，避开小猫和炸弹</div>
+        <div class="arena">
+          <div class="board" id="board" aria-label="丝滑打地鼠演示棋盘"></div>
+        </div>
+        <div class="controls">
+          <button class="control-btn" id="difficultyBtn" type="button">切换难度</button>
+          <button class="control-btn" id="restartBtn" type="button">重新开始</button>
+        </div>
+        <div class="countdown" id="countdown">3</div>
+      </section>
+    </main>
+
+    <script>
+      const board = document.querySelector("#board");
+      const game = document.querySelector("#game");
+      const guide = document.querySelector("#guide");
+      const scoreText = document.querySelector("#scoreText");
+      const timeText = document.querySelector("#timeText");
+      const levelText = document.querySelector("#levelText");
+      const restartBtn = document.querySelector("#restartBtn");
+      const difficultyBtn = document.querySelector("#difficultyBtn");
+      const pauseBtn = document.querySelector("#pauseBtn");
+      const countdown = document.querySelector("#countdown");
+
+      const assets = [
+        "/training-assets/eye-quick/mole_normal_idle.svg",
+        "/training-assets/eye-quick/mole_normal_appear_sheet.svg",
+        "/training-assets/eye-quick/mole_normal_escape_sheet.svg",
+        "/training-assets/eye-quick/mole_normal_hit_sheet.svg",
+        "/training-assets/eye-quick/mole_helmet_idle.svg",
+        "/training-assets/eye-quick/mole_helmet_break_sheet.svg",
+        "/training-assets/eye-quick/cat_guard_idle.svg",
+        "/training-assets/eye-quick/rabbit_decoy_idle.svg",
+        "/training-assets/eye-quick/panda_decoy_idle.svg",
+        "/training-assets/eye-quick/bomb_idle.svg",
+        "/training-assets/eye-quick/bomb_explode_sheet.svg",
+      ];
+
+      const kinds = {
+        mole: { good: true, idle: "idle", points: 50 },
+        helmet: { good: true, idle: "helmet", points: 90, armored: true },
+        bomb: { good: false, idle: "bomb", points: -80 },
+        cat: { good: false, idle: "cat", points: -60 },
+        rabbit: { good: false, idle: "rabbit", points: -45 },
+        panda: { good: false, idle: "panda", points: -45 },
+      };
+
+      const difficulty = [
+        { label: "难度 4", interval: 1550, life: 2200, maxLive: 2, hazardRate: 0.15 },
+        { label: "难度 7", interval: 1250, life: 1800, maxLive: 2, hazardRate: 0.24 },
+        { label: "难度 10", interval: 980, life: 1500, maxLive: 3, hazardRate: 0.32 },
+      ];
+
+      let level = 0;
+      let running = false;
+      let paused = false;
+      let score = 0;
+      let timeLeft = 60;
+      let spawnTimer = 0;
+      let clockTimer = 0;
+      let actorSeq = 0;
+      const slots = [];
+      const live = new Map();
+
+      function preload() {
+        assets.forEach((src) => {
+          const image = new Image();
+          image.src = src;
+        });
+      }
+
+      function makeBoard() {
+        board.innerHTML = "";
+        slots.length = 0;
+        for (let i = 0; i < 9; i += 1) {
+          const button = document.createElement("button");
+          button.className = "hole";
+          button.type = "button";
+          button.setAttribute("aria-label", `洞位 ${i + 1}`);
+          button.addEventListener("pointerdown", () => hit(i));
+          board.appendChild(button);
+          slots.push(button);
+        }
+      }
+
+      function formatTime(value) {
+        const minutes = Math.floor(value / 60);
+        const seconds = value % 60;
+        return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+      }
+
+      function updateHud() {
+        scoreText.textContent = String(score);
+        timeText.textContent = formatTime(timeLeft);
+        levelText.textContent = difficulty[level].label;
+      }
+
+      function weightedKind() {
+        const cfg = difficulty[level];
+        if (Math.random() < cfg.hazardRate) {
+          const hazards = ["bomb", "cat", "rabbit", "panda"];
+          return hazards[Math.floor(Math.random() * hazards.length)];
+        }
+        return Math.random() < 0.18 ? "helmet" : "mole";
+      }
+
+      function randomFreeSlot() {
+        const free = slots.map((_, index) => index).filter((index) => !live.has(index));
+        if (!free.length) return null;
+        return free[Math.floor(Math.random() * free.length)];
+      }
+
+      function addRipple(slot) {
+        const ripple = document.createElement("span");
+        ripple.className = "ripple";
+        slot.appendChild(ripple);
+        ripple.addEventListener("animationend", () => ripple.remove(), { once: true });
+      }
+
+      function floatScore(slot, value) {
+        const bubble = document.createElement("span");
+        bubble.className = value > 0 ? "float-score" : "float-score bad";
+        bubble.textContent = value > 0 ? `+${value}` : String(value);
+        slot.appendChild(bubble);
+        bubble.addEventListener("animationend", () => bubble.remove(), { once: true });
+      }
+
+      function setActorClass(record, className) {
+        record.actor.className = `actor sprite ${className}`;
+      }
+
+      function spawn() {
+        const cfg = difficulty[level];
+        if (!running || paused || live.size >= cfg.maxLive) return;
+        const slotIndex = randomFreeSlot();
+        if (slotIndex === null) return;
+
+        const kindName = weightedKind();
+        const id = ++actorSeq;
+        const slot = slots[slotIndex];
+        const wrap = document.createElement("span");
+        const actor = document.createElement("span");
+        wrap.className = "actor-wrap";
+        actor.className = "actor sprite appear";
+        wrap.appendChild(actor);
+        slot.appendChild(wrap);
+
+        const record = {
+          id,
+          kindName,
+          slot,
+          wrap,
+          actor,
+          hit: false,
+          armoredHits: 0,
+          timeout: 0,
+        };
+        live.set(slotIndex, record);
+
+        window.setTimeout(() => {
+          if (!live.has(slotIndex) || record.hit) return;
+          setActorClass(record, kinds[kindName].idle);
+        }, 260);
+
+        record.timeout = window.setTimeout(() => miss(slotIndex, id), cfg.life);
+      }
+
+      function miss(slotIndex, id) {
+        const record = live.get(slotIndex);
+        if (!record || record.id !== id || record.hit) return;
+        record.hit = true;
+        if (kinds[record.kindName].good) {
+          score = Math.max(0, score - 20);
+          floatScore(record.slot, -20);
+          updateHud();
+        }
+        setActorClass(record, "escape");
+        cleanup(slotIndex, 240);
+      }
+
+      function hit(slotIndex) {
+        const record = live.get(slotIndex);
+        const slot = slots[slotIndex];
+        if (!running || paused) return;
+        addRipple(slot);
+        if (!record || record.hit) {
+          score = Math.max(0, score - 25);
+          floatScore(slot, -25);
+          game.classList.remove("shake");
+          void game.offsetWidth;
+          game.classList.add("shake");
+          updateHud();
+          return;
+        }
+
+        const kind = kinds[record.kindName];
+        if (kind.armored && record.armoredHits === 0) {
+          record.armoredHits = 1;
+          clearTimeout(record.timeout);
+          setActorClass(record, "break");
+          record.timeout = window.setTimeout(() => miss(slotIndex, record.id), 760);
+          return;
+        }
+
+        record.hit = true;
+        clearTimeout(record.timeout);
+        score = Math.max(0, score + kind.points);
+        floatScore(record.slot, kind.points);
+        updateHud();
+
+        if (kind.good) {
+          setActorClass(record, "hit");
+          cleanup(slotIndex, 380);
+          return;
+        }
+
+        if (record.kindName === "bomb") {
+          setActorClass(record, "explode");
+        }
+        game.classList.remove("shake");
+        void game.offsetWidth;
+        game.classList.add("shake");
+        cleanup(slotIndex, 430);
+      }
+
+      function cleanup(slotIndex, delay) {
+        const record = live.get(slotIndex);
+        if (!record) return;
+        window.setTimeout(() => {
+          const current = live.get(slotIndex);
+          if (!current || current.id !== record.id) return;
+          current.wrap.remove();
+          live.delete(slotIndex);
+        }, delay);
+      }
+
+      function clearLive() {
+        live.forEach((record) => {
+          clearTimeout(record.timeout);
+          record.wrap.remove();
+        });
+        live.clear();
+      }
+
+      function showGuide(text) {
+        guide.textContent = text;
+        guide.classList.remove("show");
+        void guide.offsetWidth;
+        guide.classList.add("show");
+      }
+
+      function stopTimers() {
+        clearInterval(spawnTimer);
+        clearInterval(clockTimer);
+      }
+
+      function startTimers() {
+        const cfg = difficulty[level];
+        spawnTimer = window.setInterval(() => {
+          spawn();
+        }, cfg.interval);
+        clockTimer = window.setInterval(() => {
+          if (paused) return;
+          timeLeft -= 1;
+          updateHud();
+          if (timeLeft <= 0) {
+            endRound();
+          }
+        }, 1000);
+      }
+
+      function endRound() {
+        running = false;
+        stopTimers();
+        clearLive();
+        showGuide(`结束，得分 ${score}`);
+      }
+
+      function pulseCountdown(value) {
+        countdown.textContent = value;
+        countdown.classList.remove("show");
+        void countdown.offsetWidth;
+        countdown.classList.add("show");
+      }
+
+      async function start() {
+        running = false;
+        paused = false;
+        stopTimers();
+        clearLive();
+        score = 0;
+        timeLeft = 60;
+        updateHud();
+        showGuide("点普通地鼠，避开小猫和炸弹");
+
+        for (const value of ["3", "2", "1"]) {
+          pulseCountdown(value);
+          await new Promise((resolve) => window.setTimeout(resolve, 760));
+        }
+        pulseCountdown("GO");
+        running = true;
+        startTimers();
+        spawn();
+      }
+
+      function togglePause() {
+        if (!running) return;
+        paused = !paused;
+        pauseBtn.style.opacity = paused ? "0.52" : "1";
+        showGuide(paused ? "暂停中" : "继续");
+      }
+
+      restartBtn.addEventListener("click", start);
+      pauseBtn.addEventListener("click", togglePause);
+      difficultyBtn.addEventListener("click", () => {
+        level = (level + 1) % difficulty.length;
+        updateHud();
+        start();
+      });
+
+      preload();
+      makeBoard();
+      updateHud();
+      start();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,67 @@
+{
+  "01-eye-quick": {
+    "implementationFolder": "01-反应速度-眼疾手快",
+    "entry": "01-反应速度-眼疾手快/playable-games/eye-quick/index.html",
+    "selectedSource": ["cognitive-training-2026-05/01 感知觉/01 反应速度-眼疾手快/data.json", "cognitive-training-2026-05/01 感知觉/01 反应速度-眼疾手快/P2眼疾手快.xlsm"],
+    "requiredAssets": ["training-assets/eye-quick/mole_normal_idle.svg", "training-assets/eye-quick/mole_helmet_idle.svg", "training-assets/eye-quick/bomb_idle.svg"],
+    "rejectedSource": ["01-反应速度-眼疾手快/preview/silky-hamster-demo.html"],
+    "verification": ["node --test tests/designParityRules.test.mjs"]
+  },
+  "02-flash-shapes": {
+    "implementationFolder": "02-即刻记忆-快闪图片-图形",
+    "entry": "02-即刻记忆-快闪图片-图形/playable-games/flash-shapes/index.html",
+    "selectedSource": ["cognitive-training-2026-05/02 记忆力/01 即刻记忆-快闪图片-图形/data.json", "cognitive-training-2026-05/02 记忆力/01 即刻记忆-快闪图片-图形/P2快闪图形.xlsm"],
+    "requiredAssets": ["02-即刻记忆-快闪图片-图形/assets/training-assets-flash/flashShapeStimulusCatalog.json"],
+    "verification": ["node --test tests/designParityRules.test.mjs"]
+  },
+  "03-strong-memory": {
+    "implementationFolder": "03-位置记忆-强力记忆",
+    "entry": "03-位置记忆-强力记忆/playable-games/strong-memory/index.html",
+    "selectedSource": ["cognitive-training-2026-05/02 记忆力/02 位置记忆-强力记忆/data.json", "cognitive-training-2026-05/02 记忆力/02 位置记忆-强力记忆/最强记忆数值(3).xlsm"],
+    "requiredAssets": ["03-位置记忆-强力记忆/playable-games/shared/unified.css", "03-位置记忆-强力记忆/playable-games/shared/unified.js"],
+    "verification": ["node --test tests/designParityRules.test.mjs"]
+  },
+  "04-number-ladder": {
+    "implementationFolder": "04-记忆广度-数字阶梯-reference",
+    "entry": "04-记忆广度-数字阶梯-reference/playable-games/number-ladder/index.html",
+    "selectedSource": ["cognitive-training-2026-05/02 记忆力/03 记忆广度-数字阶梯/P1数字阶梯数值.xlsm"],
+    "rejectedSource": ["04-记忆广度-数字阶梯-reference/playable-games/number-sequence/index.html"],
+    "requiredAssets": ["cognitive-training-2026-05/02 记忆力/03 记忆广度-数字阶梯/数字阶梯策划文档.xlsx", "cognitive-training-2026-05/02 记忆力/03 记忆广度-数字阶梯/数字阶梯导图2/欢迎来到数字阶梯-1.png"],
+    "verification": ["node --test tests/designParityRules.test.mjs"]
+  },
+  "05-parcel-shipping": {
+    "implementationFolder": "05-分配注意-包裹出库",
+    "entry": "05-分配注意-包裹出库/external-games/parcel-shipping/index.html",
+    "selectedSource": ["cognitive-training-2026-05/03  注意力/01 分配注意-包裹出库/LevelConfig.json", "cognitive-training-2026-05/03  注意力/01 分配注意-包裹出库/MapConfig.json", "cognitive-training-2026-05/03  注意力/01 分配注意-包裹出库/包裹出库策划案.docx"],
+    "rejectedSource": ["edited spreadsheet variants when conflicting with JSON contract"],
+    "verification": ["node --test tests/designParityRules.test.mjs"]
+  },
+  "06-stroop-shapes": {
+    "implementationFolder": "06-反应抑制-幻色图形",
+    "entry": "06-反应抑制-幻色图形/playable-games/stroop-shapes/index.html",
+    "selectedSource": ["cognitive-training-2026-05/04 执行能力/01 反应抑制-幻色图形/data.json", "cognitive-training-2026-05/04 执行能力/01 反应抑制-幻色图形/P2幻色图形.xlsm", "cognitive-training-2026-05/04 执行能力/01 反应抑制-幻色图形/逻辑修改内容.docx"],
+    "verification": ["node --test tests/designParityRules.test.mjs"]
+  },
+  "07-poker-sum": {
+    "implementationFolder": "07-表象计算-扑克求和",
+    "entry": "07-表象计算-扑克求和/external-games/poker-sum/index.html",
+    "selectedSource": ["cognitive-training-2026-05/04 执行能力/02 表象计算-求和类/扑克求和/P1扑克求和数值.xlsm"],
+    "acceptedDifferences": ["source package has no standalone card image set; implementation uses CSS/card rendering"],
+    "verification": ["node --test tests/designParityRules.test.mjs"]
+  },
+  "08-dice-sum": {
+    "implementationFolder": "08-表象计算-骰子求和",
+    "entry": "08-表象计算-骰子求和/external-games/dice-sum/index.html",
+    "selectedSource": ["cognitive-training-2026-05/04 执行能力/02 表象计算-求和类/骰子求和/P1骰子求和数值.xlsm"],
+    "acceptedDifferences": ["source package has no standalone dice-face image set; implementation renders dice faces in CSS"],
+    "verification": ["node --test tests/designParityRules.test.mjs"]
+  },
+  "09-category-sort": {
+    "implementationFolder": "09-识别归纳-分门别类",
+    "entry": "09-识别归纳-分门别类/external-games/category-sort/index.html",
+    "selectedSource": ["cognitive-training-2026-05/05 社会认知/识别归纳-分门别类/数值.xlsx", "cognitive-training-2026-05/05 社会认知/识别归纳-分门别类/关卡配置.xlsx"],
+    "requiredAssets": ["09-识别归纳-分门别类/external-games/category-sort/guides/引导1.png", "09-识别归纳-分门别类/external-games/category-sort/guides/引导2.png", "09-识别归纳-分门别类/external-games/category-sort/guides/引导3.png"],
+    "acceptedDifferences": ["source package has guide images but no per-item image atlas; implementation exposes text item cards instead of emoji fallback"],
+    "verification": ["node --test tests/designParityRules.test.mjs"]
+  }
+}

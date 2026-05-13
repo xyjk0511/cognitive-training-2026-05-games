@@ -1,0 +1,1539 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>强力记忆</title>
+  <link rel="stylesheet" href="../shared/unified.css" />
+  <style>
+    :root {
+      --paper: rgba(255, 253, 246, 0.94);
+      --paper-strong: rgba(255, 255, 255, 0.97);
+      --ink: #334155;
+      --title: #3d2b21;
+      --muted: #64748b;
+      --line: rgba(93, 74, 52, 0.16);
+      --green: #42d883;
+      --green-dark: #1b8f54;
+      --blue: #70bcff;
+      --blue-dark: #266fb8;
+      --red: #ff6b6b;
+      --yellow: #ffc857;
+      --shadow: 0 22px 60px rgba(68, 49, 31, 0.14);
+      --soft-shadow: 0 10px 26px rgba(68, 49, 31, 0.1);
+      font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      min-height: 100%;
+      margin: 0;
+      color: var(--ink);
+      background: linear-gradient(180deg, #eaf9ff 0%, #fff8df 100%);
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button, select { font: inherit; }
+    button { border: 0; cursor: pointer; color: inherit; }
+    button:disabled { cursor: not-allowed; opacity: 0.66; }
+
+    .app {
+      position: relative;
+      min-height: 100vh;
+      overflow: hidden;
+      padding: 62px 22px 34px;
+    }
+
+    .scene {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(180deg, rgba(236, 251, 255, 0.84), rgba(255, 248, 224, 0.92)),
+        linear-gradient(135deg, #dbf5ff 0%, #f0fff0 54%, #fff1d5 100%);
+    }
+
+    .scene svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.9;
+    }
+
+    .screen {
+      position: relative;
+      z-index: 1;
+      display: none;
+      min-height: calc(100vh - 96px);
+    }
+
+    .screen.is-active {
+      display: grid;
+      place-items: center;
+    }
+
+    .cover-card,
+    .tutorial-shell,
+    .game-shell,
+    .result-card {
+      width: min(1100px, 100%);
+      border: 1px solid rgba(255, 255, 255, 0.82);
+      border-radius: 28px;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .cover-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(320px, 0.82fr);
+      gap: 30px;
+      padding: 36px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      min-height: 36px;
+      padding: 7px 14px;
+      border-radius: 999px;
+      background: #daf7e7;
+      color: #25734b;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    h1, h2, h3, p { margin: 0; }
+
+    h1 {
+      margin-top: 18px;
+      color: var(--title);
+      font-size: clamp(48px, 5vw, 78px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      margin-top: 18px;
+      max-width: 650px;
+      color: #536a7c;
+      font-size: 25px;
+      line-height: 1.72;
+      font-weight: 800;
+    }
+
+    .chips, .cover-actions, .tutorial-actions, .game-actions, .result-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .chips { margin-top: 24px; gap: 10px; }
+    .cover-actions, .tutorial-actions, .game-actions, .result-actions { margin-top: 26px; }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 6px 13px;
+      border-radius: 999px;
+      border: 1px solid rgba(37, 115, 75, 0.16);
+      background: rgba(225, 250, 237, 0.82);
+      color: #2c7b53;
+      font-weight: 900;
+    }
+
+    .btn {
+      min-height: 52px;
+      padding: 12px 22px;
+      border-radius: 999px;
+      background: #e8f6ff;
+      color: #28537a;
+      box-shadow: 0 8px 20px rgba(64, 122, 160, 0.13);
+      font-weight: 1000;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 26px rgba(64, 122, 160, 0.18);
+    }
+
+    .btn.primary {
+      background: linear-gradient(180deg, #ffd880, #ffb547);
+      color: #673b00;
+    }
+
+    .btn.green {
+      background: #dff8ea;
+      color: #237148;
+    }
+
+    .btn.ghost {
+      background: rgba(255, 255, 255, 0.8);
+      color: #52667a;
+      border: 1px solid rgba(82, 102, 122, 0.14);
+      box-shadow: none;
+    }
+
+    .level-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+      align-items: center;
+      color: #5f7384;
+      font-weight: 900;
+    }
+
+    .level-row select {
+      min-height: 42px;
+      border: 1px solid rgba(82, 102, 122, 0.18);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.86);
+      color: var(--ink);
+      padding: 0 12px;
+      font-weight: 900;
+    }
+
+    .hero-visual {
+      position: relative;
+      min-height: 420px;
+      border-radius: 26px;
+      overflow: hidden;
+      background: linear-gradient(180deg, #bcefff, #fff1cd);
+      box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.72), var(--soft-shadow);
+    }
+
+    .hero-visual svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      min-height: 420px;
+    }
+
+    .panel-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 28px;
+      max-width: 650px;
+    }
+
+    .panel {
+      min-height: 112px;
+      padding: 18px;
+      border-radius: 20px;
+      background: var(--paper-strong);
+      box-shadow: var(--soft-shadow);
+    }
+
+    .panel h3 {
+      color: var(--title);
+      font-size: 18px;
+      line-height: 1.25;
+    }
+
+    .panel p {
+      margin-top: 8px;
+      color: #607488;
+      font-weight: 800;
+      line-height: 1.6;
+    }
+
+    .tutorial-shell, .game-shell { padding: 28px; }
+
+    .tutorial-layout, .game-layout {
+      display: grid;
+      grid-template-columns: minmax(350px, 0.9fr) minmax(360px, 1.1fr);
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .tutorial-card, .side-card, .play-card {
+      border-radius: 24px;
+      background: var(--paper-strong);
+      box-shadow: var(--soft-shadow);
+    }
+
+    .tutorial-card, .side-card { padding: 24px; }
+
+    .tutorial-card h2, .side-card h2 {
+      color: var(--title);
+      font-size: 36px;
+      line-height: 1.15;
+    }
+
+    .tutorial-card p, .side-card p {
+      margin-top: 14px;
+      color: #5b7184;
+      font-size: 20px;
+      line-height: 1.72;
+      font-weight: 800;
+    }
+
+    .play-card {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-height: 560px;
+      padding: 24px;
+      overflow: hidden;
+    }
+
+    .demo-wrap, .board-wrap {
+      position: relative;
+      width: min(100%, var(--board-size, 540px));
+    }
+
+    .memory-board {
+      display: grid;
+      gap: var(--gap, 10px);
+      width: 100%;
+      aspect-ratio: var(--cols, 3) / var(--rows, 3);
+      padding: var(--board-pad, 14px);
+      border-radius: 24px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 248, 229, 0.88)),
+        repeating-linear-gradient(90deg, transparent 0 38px, rgba(101, 82, 55, 0.05) 39px 40px);
+      border: 2px solid rgba(255, 201, 104, 0.42);
+      box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.72), var(--soft-shadow);
+      grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+    }
+
+    .tile {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-width: 0;
+      min-height: 0;
+      aspect-ratio: 1;
+      border-radius: 18px;
+      border: 2px solid rgba(83, 96, 113, 0.1);
+      background: linear-gradient(180deg, #f9fbff, #dfe8ef);
+      box-shadow: inset 0 -5px 0 rgba(83, 96, 113, 0.12);
+      transform-origin: center;
+      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .tile.is-opening {
+      animation: tile-pop 0.5s ease both;
+      animation-delay: var(--delay, 0ms);
+    }
+
+    .tile.is-flipping {
+      animation: tile-flip 0.58s ease both;
+    }
+
+    .tile.is-target, .tile.is-found {
+      border-color: rgba(27, 143, 84, 0.52);
+      background: linear-gradient(180deg, #7cf0aa, #25c96d);
+      box-shadow: inset 0 -7px 0 rgba(25, 119, 75, 0.18);
+    }
+
+    .tile.is-blue, .tile.is-blue.is-found {
+      border-color: rgba(38, 111, 184, 0.48);
+      background: linear-gradient(180deg, #a9dcff, #57a9f5);
+      box-shadow: inset 0 -7px 0 rgba(38, 111, 184, 0.18);
+    }
+
+    .tile.is-wrong {
+      border-color: rgba(255, 107, 107, 0.72);
+      background: linear-gradient(180deg, #ffd8d8, #ff8d8d);
+    }
+
+    .tile.is-wrong::before, .tile.is-wrong::after {
+      content: "";
+      position: absolute;
+      width: 56%;
+      height: 8px;
+      border-radius: 999px;
+      background: #b42323;
+    }
+
+    .tile.is-wrong::before { transform: rotate(45deg); }
+    .tile.is-wrong::after { transform: rotate(-45deg); }
+
+    .tile.is-success::before {
+      content: "";
+      width: 44%;
+      height: 24%;
+      border-left: 8px solid #ffffff;
+      border-bottom: 8px solid #ffffff;
+      transform: rotate(-45deg) translate(3px, -2px);
+      border-radius: 3px;
+    }
+
+    .tile.is-pending:hover { transform: translateY(-2px); }
+
+    .tile.is-hint {
+      animation: hint-wave 0.8s ease infinite;
+    }
+
+    .pointer {
+      position: absolute;
+      z-index: 3;
+      width: 46px;
+      height: 46px;
+      border-radius: 50% 50% 50% 12px;
+      background: #fff7d9;
+      border: 4px solid #ffbd59;
+      box-shadow: 0 8px 18px rgba(130, 83, 12, 0.18);
+      transform: translate(-50%, -50%) rotate(-18deg);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .pointer.is-on {
+      opacity: 1;
+      transition: left 0.35s ease, top 0.35s ease, opacity 0.2s ease;
+    }
+
+    @keyframes tile-pop {
+      0% { transform: scale(0); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes tile-flip {
+      0% { transform: scaleX(1); }
+      42% { transform: scaleX(0.05); }
+      100% { transform: scaleX(1); }
+    }
+
+    @keyframes hint-wave {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    .hud {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hud-item {
+      min-height: 72px;
+      padding: 12px 13px;
+      border-radius: 18px;
+      background: rgba(248, 252, 255, 0.94);
+      border: 1px solid rgba(83, 96, 113, 0.08);
+      box-shadow: 0 8px 18px rgba(83, 96, 113, 0.08);
+    }
+
+    .hud-label {
+      color: #728293;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .hud-value {
+      margin-top: 3px;
+      color: var(--title);
+      font-size: 22px;
+      font-weight: 1000;
+      line-height: 1.15;
+    }
+
+    .progress-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+      align-items: center;
+    }
+
+    .marker {
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #edf4f8;
+      color: #718393;
+      font-weight: 1000;
+    }
+
+    .marker.pass { background: #dff8ea; color: #167047; }
+    .marker.fail { background: #ffe0e0; color: #b42323; }
+
+    .status {
+      margin-top: 18px;
+      min-height: 56px;
+      padding: 13px 16px;
+      border-radius: 18px;
+      background: #eaf8ff;
+      color: #41637a;
+      font-weight: 900;
+      line-height: 1.55;
+    }
+
+    .toggle {
+      position: fixed;
+      right: 18px;
+      top: 16px;
+      z-index: 4;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.86);
+      border: 1px solid rgba(98, 130, 156, 0.16);
+      box-shadow: 0 8px 22px rgba(70, 99, 120, 0.12);
+      color: #536a7c;
+      font-weight: 900;
+    }
+
+    .toggle input { width: 18px; height: 18px; margin: 0; }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      display: none;
+      place-items: center;
+      padding: 22px;
+      background: rgba(248, 253, 255, 0.72);
+      backdrop-filter: blur(12px);
+    }
+
+    .overlay.is-open { display: grid; }
+
+    .modal {
+      width: min(560px, 100%);
+      padding: 28px;
+      border-radius: 26px;
+      background: var(--paper-strong);
+      box-shadow: var(--shadow);
+    }
+
+    .modal h2 {
+      color: var(--title);
+      font-size: 38px;
+      line-height: 1.15;
+    }
+
+    .modal p {
+      margin-top: 12px;
+      color: #5b7184;
+      font-size: 19px;
+      line-height: 1.68;
+      font-weight: 800;
+    }
+
+    .settings {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .settings button {
+      min-height: 56px;
+      border-radius: 18px;
+      background: #f1f9ff;
+      color: #28537a;
+      font-weight: 1000;
+    }
+
+    .settings button.is-on {
+      background: #dff8ea;
+      color: #237148;
+    }
+
+    .result-card {
+      max-width: 760px;
+      padding: 36px;
+    }
+
+    .result-card h2 {
+      color: var(--title);
+      font-size: 48px;
+      line-height: 1.15;
+    }
+
+    .result-card p {
+      margin-top: 14px;
+      color: #5b7184;
+      font-size: 22px;
+      line-height: 1.7;
+      font-weight: 800;
+    }
+
+    .result-stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .stat {
+      min-height: 98px;
+      padding: 16px;
+      border-radius: 20px;
+      background: #f7fbff;
+      box-shadow: var(--soft-shadow);
+    }
+
+    .stat strong {
+      display: block;
+      color: var(--title);
+      font-size: 26px;
+      line-height: 1.15;
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 5px;
+      color: #728293;
+      font-weight: 900;
+    }
+
+    .is-low-stim .scene svg { opacity: 0.48; }
+    .is-low-stim .tile, .is-low-stim .btn { transition: none; }
+    .hidden { display: none !important; }
+
+    @media (max-width: 980px) {
+      .cover-card, .tutorial-layout, .game-layout { grid-template-columns: 1fr; }
+      .panel-grid, .result-stats { grid-template-columns: 1fr; }
+      .hud { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .hero-visual, .hero-visual svg { min-height: 320px; }
+      .play-card { min-height: 420px; }
+    }
+
+    @media (max-width: 620px) {
+      .app { padding: 66px 12px 22px; }
+      .cover-card, .tutorial-shell, .game-shell, .result-card { border-radius: 22px; padding: 20px; }
+      h1 { font-size: 44px; }
+      .lead, .tutorial-card p, .side-card p, .result-card p { font-size: 18px; }
+      .memory-board { --gap: 7px; --board-pad: 10px; }
+      .tile { border-radius: 12px; }
+      .hud, .settings { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <label class="toggle">
+    <input id="lowStim" type="checkbox" />
+    低刺激模式
+  </label>
+
+  <main class="app" id="app">
+    <div class="scene" aria-hidden="true">
+      <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+        <path d="M0 690 C210 610 330 710 520 650 C760 575 920 690 1125 620 C1305 560 1460 610 1600 560 L1600 900 L0 900 Z" fill="#d8f6df" opacity=".68" />
+        <path d="M0 790 C290 720 460 835 760 760 C1040 690 1270 770 1600 720 L1600 900 L0 900 Z" fill="#ecfbdf" opacity=".9" />
+        <path d="M610 900 C650 820 720 742 828 700 C920 666 1016 700 1060 780 C1100 852 1070 898 1066 900 Z" fill="#ffe4ab" opacity=".8" />
+        <g opacity=".86">
+          <rect x="170" y="560" width="56" height="220" rx="28" fill="#cbe2e5" />
+          <path d="M154 552 L198 468 L242 552 Z" fill="#ffda68" stroke="#fff8dc" stroke-width="10" />
+          <rect x="1365" y="540" width="54" height="230" rx="27" fill="#cbe2e5" />
+          <path d="M1348 532 L1392 448 L1438 532 Z" fill="#ffda68" stroke="#fff8dc" stroke-width="10" />
+        </g>
+        <g opacity=".7" fill="#fff">
+          <path d="M280 145 C303 96 374 98 392 146 C430 146 454 169 454 199 C454 225 432 244 402 244 L270 244 C232 244 210 223 210 196 C210 168 237 145 280 145Z" />
+          <path d="M1198 184 C1220 145 1277 146 1294 185 C1328 184 1349 204 1349 229 C1349 252 1331 267 1304 267 L1188 267 C1155 267 1137 251 1137 228 C1137 203 1160 184 1198 184Z" />
+        </g>
+        <g transform="translate(1170 606)">
+          <ellipse cx="80" cy="112" rx="84" ry="30" fill="#9bd8a8" opacity=".55" />
+          <circle cx="78" cy="55" r="48" fill="#ffffff" />
+          <circle cx="59" cy="48" r="6" fill="#3f2d22" />
+          <circle cx="97" cy="48" r="6" fill="#3f2d22" />
+          <path d="M68 68 Q78 78 90 68" fill="none" stroke="#3f2d22" stroke-width="5" stroke-linecap="round" />
+          <path d="M38 28 L22 8 L54 17Z" fill="#fff" />
+          <path d="M118 28 L135 8 L102 17Z" fill="#fff" />
+          <rect x="40" y="98" width="78" height="64" rx="23" fill="#9fe7c4" />
+          <path d="M48 114 C72 132 90 132 112 114" fill="none" stroke="#54b47a" stroke-width="8" stroke-linecap="round" />
+        </g>
+      </svg>
+    </div>
+
+    <section class="screen is-active" id="coverScreen">
+      <div class="cover-card" id="welcomeCard">
+        <div>
+          <div class="eyebrow">绿格记忆训练</div>
+          <h1>强力记忆</h1>
+          <p class="lead">记住翻出的绿色方块。方块翻回灰色后，点回原来的位置。</p>
+          <div class="chips">
+            <span class="chip">视觉记忆</span>
+            <span class="chip">位置回忆</span>
+            <span class="chip">60 级</span>
+            <span class="chip">3 关过级</span>
+          </div>
+          <div class="panel-grid">
+            <article class="panel">
+              <h3>怎么玩</h3>
+              <p>先看绿色方块，再点回刚才的位置。</p>
+            </article>
+            <article class="panel">
+              <h3>规则</h3>
+              <p>每关 15 秒，可错 1 次；三关全过升一级。</p>
+            </article>
+            <article class="panel">
+              <h3>难度</h3>
+              <p>从 3x3 到 6x6，目标从 2 个增到 9 个。</p>
+            </article>
+          </div>
+          <div class="level-row">
+            <span>选择关卡</span>
+            <select id="levelSelect" aria-label="选择关卡">
+              <option value="1">第 1 级</option>
+            </select>
+            <span id="recommendLabel">正在读取推荐</span>
+          </div>
+          <div class="cover-actions">
+            <button class="btn primary" id="continueButton">点击进入</button>
+            <button class="btn green" id="startButton">开始训练</button>
+            <button class="btn" id="teachButton">先看教学</button>
+            <button class="btn ghost" id="practiceButton">低压练习</button>
+          </div>
+        </div>
+        <div class="hero-visual" aria-hidden="true">
+          <svg viewBox="0 0 520 520" role="img">
+            <rect width="520" height="520" fill="#b7ecff" />
+            <path d="M0 382 C80 335 142 365 210 338 C302 303 382 346 520 306 L520 520 L0 520Z" fill="#d9f4c4" />
+            <path d="M88 420 C118 380 176 360 240 382 C322 411 384 378 432 346 C466 324 500 322 520 330 L520 520 L84 520 C46 496 58 458 88 420Z" fill="#fff4cf" />
+            <g transform="translate(86 68)">
+              <rect x="0" y="0" width="260" height="260" rx="42" fill="#fffdf6" stroke="#ffd174" stroke-width="8" />
+              <g transform="translate(32 32)">
+                <rect x="0" y="0" width="52" height="52" rx="14" fill="#45d986" />
+                <rect x="72" y="0" width="52" height="52" rx="14" fill="#edf6fb" />
+                <rect x="144" y="0" width="52" height="52" rx="14" fill="#45d986" />
+                <rect x="0" y="72" width="52" height="52" rx="14" fill="#edf6fb" />
+                <rect x="72" y="72" width="52" height="52" rx="14" fill="#45d986" />
+                <rect x="144" y="72" width="52" height="52" rx="14" fill="#edf6fb" />
+                <rect x="0" y="144" width="52" height="52" rx="14" fill="#edf6fb" />
+                <rect x="72" y="144" width="52" height="52" rx="14" fill="#edf6fb" />
+                <rect x="144" y="144" width="52" height="52" rx="14" fill="#45d986" />
+              </g>
+            </g>
+            <g transform="translate(306 278)">
+              <ellipse cx="82" cy="122" rx="88" ry="28" fill="#95d99f" opacity=".55" />
+              <circle cx="82" cy="55" r="52" fill="#fff" />
+              <path d="M45 30 L26 4 L62 17Z" fill="#fff" />
+              <path d="M119 30 L141 4 L102 17Z" fill="#fff" />
+              <circle cx="62" cy="50" r="6" fill="#3d2b21" />
+              <circle cx="101" cy="50" r="6" fill="#3d2b21" />
+              <path d="M72 70 Q84 80 96 70" fill="none" stroke="#3d2b21" stroke-width="6" stroke-linecap="round" />
+              <rect x="40" y="105" width="86" height="70" rx="25" fill="#9eebc4" />
+            </g>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="tutorialScreen">
+      <div class="tutorial-shell">
+        <div class="tutorial-layout">
+          <article class="tutorial-card">
+            <div class="eyebrow">新手引导</div>
+            <h2 id="tutorialTitle">记住绿色方块</h2>
+            <p id="tutorialText">小猫会先示范一次。看清楚绿色方块的位置，等它们变回灰色后再点回来。</p>
+            <div class="tutorial-actions">
+              <button class="btn primary" id="tutorialReplay">重新演示</button>
+              <button class="btn green hidden" id="tutorialStart">进入训练</button>
+              <button class="btn ghost" id="tutorialBack">回到封面</button>
+            </div>
+          </article>
+          <div class="play-card">
+            <div class="demo-wrap" id="tutorialWrap">
+              <div class="memory-board" id="tutorialBoard" aria-label="强力记忆引导棋盘"></div>
+              <div class="pointer" id="tutorialPointer" aria-hidden="true"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="gameScreen">
+      <div class="game-shell">
+        <div class="game-layout">
+          <aside class="side-card">
+            <div class="eyebrow" id="modeLabel">正式训练</div>
+            <h2 id="gameTitle">强力记忆</h2>
+            <p id="gamePrompt">先看亮起的绿色方块。它们翻回灰色后，点回原来的位置。</p>
+            <div class="hud">
+              <div class="hud-item"><div class="hud-label">难度</div><div class="hud-value" id="hudLevel">1</div></div>
+              <div class="hud-item"><div class="hud-label">关卡</div><div class="hud-value" id="hudRound">1/3</div></div>
+              <div class="hud-item"><div class="hud-label">本关倒计时</div><div class="hud-value" id="hudTime">15.0</div></div>
+              <div class="hud-item"><div class="hud-label">训练时长</div><div class="hud-value" id="hudSession">0:00</div></div>
+              <div class="hud-item"><div class="hud-label">积分</div><div class="hud-value" id="hudScore">0</div></div>
+              <div class="hud-item"><div class="hud-label">容错</div><div class="hud-value" id="hudFault">1/1</div></div>
+            </div>
+            <div class="progress-row" id="progressMarkers"></div>
+            <div class="status" id="statusBox">正在准备本轮。</div>
+            <div class="game-actions">
+              <button class="btn primary" id="pauseButton">暂停</button>
+              <button class="btn ghost" id="quitButton">回到封面</button>
+            </div>
+          </aside>
+          <div class="play-card">
+            <div class="board-wrap" id="boardWrap">
+              <div class="memory-board" id="memoryBoard" aria-label="强力记忆棋盘"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="resultScreen">
+      <div class="result-card">
+        <div class="eyebrow" id="resultBadge">训练完成</div>
+        <h2 id="resultTitle">完成</h2>
+        <p id="resultText">本次训练记录已经保存。</p>
+        <div class="result-stats">
+          <div class="stat"><strong id="statPass">0/3</strong><span>通过关卡</span></div>
+          <div class="stat"><strong id="statScore">0</strong><span>得分</span></div>
+          <div class="stat"><strong id="statBrain">100</strong><span>脑力</span></div>
+          <div class="stat"><strong id="statNext">1</strong><span>下次难度</span></div>
+        </div>
+        <div class="result-actions">
+          <button class="btn primary" id="nextButton">继续</button>
+          <button class="btn" id="retryButton">重新训练</button>
+          <button class="btn ghost" id="resultBack">回到封面</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <section class="overlay" id="pauseOverlay" aria-modal="true" role="dialog">
+    <div class="modal">
+      <div class="eyebrow">暂停中</div>
+      <h2>休息一下</h2>
+      <p>计时已经暂停，继续后会回到刚才的关卡、倒计时和容错状态。</p>
+      <div class="settings">
+        <button id="soundButton" type="button">音效：开</button>
+        <button id="musicButton" type="button">音乐：开</button>
+      </div>
+      <div class="result-actions">
+        <button class="btn primary" id="resumeButton">继续游戏</button>
+        <button class="btn" id="helpButton">帮助</button>
+        <button class="btn ghost" id="pauseQuitButton">回到封面</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="overlay" id="helpOverlay" aria-modal="true" role="dialog">
+    <div class="modal">
+      <div class="eyebrow">帮助</div>
+      <h2>怎么玩</h2>
+      <p>绿色方块会先翻开，之后全部变回灰色。你需要点出刚才所有绿色方块的位置。点错超过容错次数或倒计时结束，本关失败。</p>
+      <div class="result-actions">
+        <button class="btn primary" id="closeHelpButton">回到暂停</button>
+      </div>
+    </div>
+  </section>
+
+  <script src="../shared/unified.js"></script>
+  <script type="module">
+    import {
+      STRONG_MEMORY_MAX_LEVEL,
+      brainValue,
+      clamp,
+      evaluateDifficultyAttempt,
+      hydrateStrongMemoryData,
+      roundScore
+    } from './rules.mjs';
+
+    const DATA_URL = './data.json';
+    const STORAGE_KEY = 'strongMemoryProgressV2';
+
+    const screens = {
+      cover: document.getElementById('coverScreen'),
+      tutorial: document.getElementById('tutorialScreen'),
+      game: document.getElementById('gameScreen'),
+      result: document.getElementById('resultScreen')
+    };
+
+    const levelSelect = document.getElementById('levelSelect');
+    const recommendLabel = document.getElementById('recommendLabel');
+    const lowStim = document.getElementById('lowStim');
+    const tutorialBoard = document.getElementById('tutorialBoard');
+    const tutorialPointer = document.getElementById('tutorialPointer');
+    const tutorialWrap = document.getElementById('tutorialWrap');
+    const memoryBoard = document.getElementById('memoryBoard');
+    const statusBox = document.getElementById('statusBox');
+    const pauseOverlay = document.getElementById('pauseOverlay');
+    const helpOverlay = document.getElementById('helpOverlay');
+
+    let levels = [];
+    let progress = loadProgress();
+    let active = null;
+    let timers = [];
+    let intervalId = null;
+    let tutorial = null;
+    let audioContext = null;
+
+    function playCue(kind) {
+      if (!progress.soundOn) return;
+      const AudioCtor = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtor) return;
+      audioContext = audioContext || new AudioCtor();
+      const tones = { found: 660, wrong: 180, pass: 820, fail: 140 };
+      const osc = audioContext.createOscillator();
+      const gain = audioContext.createGain();
+      const now = audioContext.currentTime;
+      osc.type = kind === 'wrong' || kind === 'fail' ? 'sawtooth' : 'sine';
+      osc.frequency.setValueAtTime(tones[kind] || 440, now);
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.exponentialRampToValueAtTime(0.18, now + 0.015);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.16);
+      osc.connect(gain).connect(audioContext.destination);
+      osc.start(now);
+      osc.stop(now + 0.18);
+    }
+
+    lowStim.checked = Boolean(progress.lowStim);
+    document.body.classList.toggle('is-low-stim', lowStim.checked);
+
+    document.getElementById('continueButton').addEventListener('click', continueFromWelcome);
+    document.getElementById('startButton').addEventListener('click', () => startOrTeach(Number(levelSelect.value) || progress.recommendedLevel || 1));
+    document.getElementById('teachButton').addEventListener('click', startTutorial);
+    document.getElementById('practiceButton').addEventListener('click', () => startTraining(1, 'practice'));
+    document.getElementById('tutorialReplay').addEventListener('click', startTutorial);
+    document.getElementById('tutorialStart').addEventListener('click', enterTrainingAfterTutorial);
+    document.getElementById('tutorialBack').addEventListener('click', () => showScreen('cover'));
+    document.getElementById('pauseButton').addEventListener('click', pauseGame);
+    document.getElementById('resumeButton').addEventListener('click', resumeGame);
+    document.getElementById('helpButton').addEventListener('click', openHelp);
+    document.getElementById('closeHelpButton').addEventListener('click', closeHelp);
+    document.getElementById('quitButton').addEventListener('click', quitToCover);
+    document.getElementById('pauseQuitButton').addEventListener('click', quitToCover);
+    document.getElementById('resultBack').addEventListener('click', () => showScreen('cover'));
+    document.getElementById('nextButton').addEventListener('click', () => startOrTeach(progress.recommendedLevel || 1));
+    document.getElementById('retryButton').addEventListener('click', () => startTraining(progress.lastResult?.level || progress.recommendedLevel || 1, 'normal'));
+    document.getElementById('soundButton').addEventListener('click', () => toggleSetting('soundOn'));
+    document.getElementById('musicButton').addEventListener('click', () => toggleSetting('musicOn'));
+    lowStim.addEventListener('change', () => {
+      progress.lowStim = lowStim.checked;
+      document.body.classList.toggle('is-low-stim', lowStim.checked);
+      saveProgress();
+    });
+
+    boot();
+
+    async function boot() {
+      setLoadingState('正在读取数值表');
+      try {
+        const response = await fetch(DATA_URL, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+        const hydrated = hydrateStrongMemoryData(data);
+        levels = hydrated.levels;
+        if (levels.length !== STRONG_MEMORY_MAX_LEVEL) throw new Error(`关卡数量不是 ${STRONG_MEMORY_MAX_LEVEL}`);
+        progress.recommendedLevel = clamp(progress.recommendedLevel || 1, 1, levels.length);
+        saveProgress();
+        populateLevelSelect();
+        setLoadingState('');
+      } catch (error) {
+        recommendLabel.textContent = `没有读到 data.json：${error.message}`;
+        document.getElementById('continueButton').disabled = true;
+        document.getElementById('startButton').disabled = true;
+        document.getElementById('practiceButton').disabled = true;
+      }
+      updateSettingsButtons();
+    }
+
+    function populateLevelSelect() {
+      levelSelect.innerHTML = '';
+      for (const level of levels) {
+        const option = document.createElement('option');
+        option.value = String(level.level);
+        option.textContent = `第 ${level.level} 级`;
+        levelSelect.appendChild(option);
+      }
+      levelSelect.value = String(progress.recommendedLevel || 1);
+      recommendLabel.textContent = `推荐第 ${progress.recommendedLevel || 1} 级`;
+    }
+
+    function continueFromWelcome() {
+      startOrTeach(progress.recommendedLevel || Number(levelSelect.value) || 1);
+    }
+
+    function startOrTeach(levelNumber) {
+      if (!progress.tutorialDone && Number(levelNumber) === 1) {
+        startTutorial();
+        return;
+      }
+      startTraining(levelNumber, 'normal');
+    }
+
+    function startTutorial() {
+      clearAllTimers();
+      tutorial = {
+        phase: 'demo2',
+        targets: ['1,1', '2,2'],
+        found: new Set(),
+        hintTimer: null
+      };
+      document.getElementById('tutorialStart').classList.add('hidden');
+      document.getElementById('tutorialTitle').textContent = '记住绿色方块';
+      document.getElementById('tutorialText').textContent = '先看 2x2 示范。手指会帮你点回刚才绿色方块的位置。';
+      showScreen('tutorial');
+      renderTutorialBoard(2, 2, tutorial.targets, true, false);
+      after(1200, () => renderTutorialBoard(2, 2, tutorial.targets, false, false));
+      after(1700, () => autoPointerClick(['1,1', '2,2'], () => startInteractiveTutorial()));
+    }
+
+    function startInteractiveTutorial() {
+      tutorial = {
+        phase: 'play3',
+        targets: ['1,1', '2,2', '3,3'],
+        found: new Set(),
+        hintTimer: null
+      };
+      document.getElementById('tutorialTitle').textContent = '轮到你了';
+      document.getElementById('tutorialText').textContent = '记住对角线上的三个绿色方块，等它们变回灰色后点出来。';
+      renderTutorialBoard(3, 3, tutorial.targets, true, false);
+      after(1600, () => {
+        renderTutorialBoard(3, 3, tutorial.targets, false, true);
+        armTutorialHint();
+      });
+    }
+
+    function renderTutorialBoard(rows, cols, targets, showTargets, interactive) {
+      tutorialBoard.innerHTML = '';
+      tutorialBoard.style.setProperty('--rows', rows);
+      tutorialBoard.style.setProperty('--cols', cols);
+      tutorialWrap.style.setProperty('--board-size', rows === 2 ? '300px' : '390px');
+      const targetSet = new Set(targets);
+      for (let row = 1; row <= rows; row += 1) {
+        for (let col = 1; col <= cols; col += 1) {
+          const key = `${row},${col}`;
+          const tile = createTile(key, row, col, targetSet.has(key) && showTargets ? 'target' : 'idle', row + col);
+          if (interactive) tile.addEventListener('click', () => handleTutorialClick(tile, key));
+          tutorialBoard.appendChild(tile);
+        }
+      }
+    }
+
+    function autoPointerClick(keys, done) {
+      let index = 0;
+      const step = () => {
+        if (index >= keys.length) {
+          tutorialPointer.classList.remove('is-on');
+          done();
+          return;
+        }
+        const tile = tutorialBoard.querySelector(`[data-key="${keys[index]}"]`);
+        if (tile) {
+          const wrapRect = tutorialWrap.getBoundingClientRect();
+          const tileRect = tile.getBoundingClientRect();
+          tutorialPointer.style.left = `${tileRect.left - wrapRect.left + tileRect.width * 0.58}px`;
+          tutorialPointer.style.top = `${tileRect.top - wrapRect.top + tileRect.height * 0.58}px`;
+          tutorialPointer.classList.add('is-on');
+          tile.classList.add('is-found', 'is-flipping');
+        }
+        index += 1;
+        after(650, step);
+      };
+      step();
+    }
+
+    function armTutorialHint() {
+      if (tutorial?.hintTimer) window.clearTimeout(tutorial.hintTimer);
+      tutorial.hintTimer = window.setTimeout(() => {
+        if (!tutorial || tutorial.phase !== 'play3') return;
+        for (const key of tutorial.targets) {
+          if (!tutorial.found.has(key)) {
+            tutorialBoard.querySelector(`[data-key="${key}"]`)?.classList.add('is-hint');
+          }
+        }
+      }, 5000);
+    }
+
+    function handleTutorialClick(tile, key) {
+      if (!tutorial || tutorial.phase !== 'play3') return;
+      if (!tutorial.targets.includes(key)) return;
+      tutorial.found.add(key);
+      tile.classList.remove('is-hint');
+      tile.classList.add('is-found', 'is-flipping');
+      if (tutorial.found.size >= tutorial.targets.length) {
+        tutorial.phase = 'done';
+        if (tutorial.hintTimer) window.clearTimeout(tutorial.hintTimer);
+        document.getElementById('tutorialTitle').textContent = '引导完成';
+        document.getElementById('tutorialText').textContent = '已经会玩了。可以重新演示，或直接进入正式训练。';
+        document.getElementById('tutorialStart').classList.remove('hidden');
+        progress.tutorialDone = true;
+        saveProgress();
+      }
+    }
+
+    function enterTrainingAfterTutorial() {
+      progress.tutorialDone = true;
+      saveProgress();
+      startTraining(Number(levelSelect.value) || progress.recommendedLevel || 1, 'normal');
+    }
+
+    function startTraining(levelNumber, mode) {
+      if (!levels.length) return;
+      clearAllTimers();
+      pauseOverlay.classList.remove('is-open');
+      const level = levels.find((item) => item.level === Number(levelNumber)) || levels[0];
+      active = {
+        mode,
+        state: 'idle',
+        startedAt: Date.now(),
+        level,
+        roundIndex: 0,
+        outcomes: [],
+        trials: [],
+        clickEvents: [],
+        score: 0,
+        found: new Set(),
+        wrong: 0,
+        round: null,
+        roundRemaining: mode === 'practice' ? Math.max(25, level.time + 8) : level.time,
+        sessionElapsed: 0,
+        sessionLastTick: Date.now(),
+        previousFailures: mode === 'normal' ? Number(progress.consecutiveFailures || 0) : 0,
+        paused: false
+      };
+      document.getElementById('modeLabel').textContent = mode === 'practice' ? '低压练习' : '正式训练';
+      document.getElementById('gameTitle').textContent = `强力记忆 第 ${level.level} 级`;
+      showScreen('game');
+      renderProgressMarkers();
+      nextRound();
+    }
+
+    function nextRound() {
+      if (!active) return;
+      clearAllTimers();
+      if (active.roundIndex >= active.level.missionNum) {
+        finishDifficulty();
+        return;
+      }
+      active.roundIndex += 1;
+      active.wrong = 0;
+      active.found = new Set();
+      active.roundRemaining = active.mode === 'practice' ? Math.max(25, active.level.time + 8) : active.level.time;
+      active.round = chooseFloor(active.level.floorPool);
+      active.round.trialId = `strong-memory-${Date.now()}-${active.roundIndex}`;
+      active.round.startedAt = Date.now();
+      active.state = 'opening';
+      renderBoard('opening');
+      updateHud();
+      statusBox.textContent = `第 ${active.roundIndex} 关：方块出现中。`;
+      after(650, () => {
+        active.state = 'preview';
+        renderBoard('preview');
+        updateHud();
+        statusBox.textContent = '记住绿色方块的位置。';
+      });
+      after(650 + previewDuration(active.round, active.mode), () => startRecall());
+    }
+
+    function startRecall() {
+      if (!active || !active.round || active.paused) return;
+      active.state = 'recall';
+      active.sessionLastTick = Date.now();
+      renderBoard('recall');
+      updateHud();
+      statusBox.textContent = `开始点选：找回 ${active.round.targets.length} 个位置。`;
+      intervalId = window.setInterval(tick, 100);
+    }
+
+    function tick() {
+      if (!active || active.paused || active.state !== 'recall') return;
+      const now = Date.now();
+      const delta = (now - active.sessionLastTick) / 1000;
+      active.sessionLastTick = now;
+      active.sessionElapsed += delta;
+      active.roundRemaining = Math.max(0, active.roundRemaining - delta);
+      updateHud();
+      if (active.roundRemaining <= 0) {
+        failRound('时间到了，本关失败。');
+      }
+    }
+
+    function renderBoard(mode) {
+      if (!active || !active.round) return;
+      const round = active.round;
+      memoryBoard.innerHTML = '';
+      memoryBoard.style.setProperty('--rows', round.rows);
+      memoryBoard.style.setProperty('--cols', round.cols);
+      document.getElementById('boardWrap').style.setProperty('--board-size', `${Math.min(610, 260 + round.cols * 72)}px`);
+      const targetMap = new Map(round.targets.map((target) => [`${target.row},${target.col}`, target]));
+      for (let row = 1; row <= round.rows; row += 1) {
+        for (let col = 1; col <= round.cols; col += 1) {
+          const key = `${row},${col}`;
+          const target = targetMap.get(key);
+          let state = 'idle';
+          if (mode === 'preview' && target) state = target.type === 1 && active.level.blockTypeNum > 1 ? 'blue' : 'target';
+          if (mode === 'recall' && active.found.has(key)) state = target?.type === 1 && active.level.blockTypeNum > 1 ? 'blueFound' : 'found';
+          const tile = createTile(key, row, col, state, row + col);
+          if (mode === 'recall' && active.state === 'recall') {
+            tile.classList.add('is-pending');
+            tile.addEventListener('click', () => handleTileClick(tile, key));
+          }
+          memoryBoard.appendChild(tile);
+        }
+      }
+    }
+
+    function createTile(key, row, col, state, delayIndex) {
+      const tile = document.createElement('button');
+      tile.type = 'button';
+      tile.className = 'tile';
+      tile.dataset.key = key;
+      tile.style.setProperty('--delay', `${(delayIndex % 5) * 55}ms`);
+      tile.setAttribute('aria-label', `第 ${row} 行第 ${col} 列`);
+      tile.classList.add('is-opening');
+      if (state === 'target') tile.classList.add('is-target', 'is-flipping');
+      if (state === 'blue') tile.classList.add('is-blue', 'is-flipping');
+      if (state === 'found') tile.classList.add('is-found', 'is-flipping');
+      if (state === 'blueFound') tile.classList.add('is-blue', 'is-found', 'is-flipping');
+      return tile;
+    }
+
+    function handleTileClick(tile, key) {
+      if (!active || active.state !== 'recall') return;
+      if (active.found.has(key)) return;
+      const target = active.round.targets.find((item) => `${item.row},${item.col}` === key);
+      active.clickEvents.push({ type: 'click', trialId: active.round.trialId, key, target: Boolean(target), elapsedMs: Date.now() - active.round.startedAt });
+      if (target) {
+        playCue('found');
+        active.found.add(key);
+        tile.classList.remove('is-pending');
+        tile.classList.add(target.type === 1 && active.level.blockTypeNum > 1 ? 'is-blue' : 'is-found', 'is-flipping');
+        statusBox.textContent = `找到了 ${active.found.size}/${active.round.targets.length} 个。`;
+        if (active.found.size >= active.round.targets.length) passRound(tile);
+        return;
+      }
+      active.wrong += 1;
+      playCue('wrong');
+      tile.classList.remove('is-pending');
+      tile.classList.add('is-wrong', 'is-flipping');
+      updateHud();
+      if (active.wrong > active.level.fault) {
+        failRound('错点超过容错次数，本关失败。');
+      } else {
+        statusBox.textContent = `这个位置不对，还能错 ${Math.max(0, active.level.fault - active.wrong)} 次。`;
+      }
+    }
+
+    function buildTrialResult(outcome, gainedScore, message) {
+      const targetKeys = active.round.targets.map((item) => `${item.row},${item.col}`);
+      const foundKeys = Array.from(active.found);
+      const events = active.clickEvents.filter((event) => event.trialId === active.round.trialId);
+      const falseAlarms = events.filter((event) => !event.target).map((event) => event.key);
+      const misses = targetKeys.filter((key) => !active.found.has(key));
+      return {
+        trialId: active.round.trialId,
+        gameId: 'strong-memory',
+        domain: 'memory',
+        taskFamily: 'spatial-recall',
+        mode: active.mode === 'practice' ? 'training-practice' : 'training',
+        level: active.level.level,
+        round: active.roundIndex,
+        floorId: active.round.floorId,
+        gridSize: `${active.round.cols}x${active.round.rows}`,
+        stimulus: { floorId: active.round.floorId, rows: active.round.rows, cols: active.round.cols, targets: targetKeys },
+        condition: { targetCount: targetKeys.length, previewMs: previewDuration(active.round, active.mode), recallTimeMs: active.level.time * 1000, faultAllowance: active.level.fault, blockTypeNum: active.level.blockTypeNum },
+        targets: targetKeys,
+        clicked: events.map((event) => event.key),
+        correctAnswer: targetKeys,
+        response: events.map((event) => event.key),
+        hits: foundKeys,
+        falseAlarms,
+        misses,
+        orderErrors: 0,
+        previewMs: previewDuration(active.round, active.mode),
+        recallTimeMs: active.level.time * 1000,
+        rtMs: Date.now() - active.round.startedAt,
+        perfect: outcome === 'pass' && falseAlarms.length === 0,
+        correct: outcome === 'pass',
+        errorType: outcome === 'pass' ? null : message || 'round_failed',
+        score: gainedScore || 0,
+        difficultyParams: {
+          level: active.level.level,
+          faultAllowance: active.level.fault,
+          missionNum: active.level.missionNum,
+          blockTypeNum: active.level.blockTypeNum
+        }
+      };
+    }
+
+    function passRound(lastTile) {
+      if (!active || active.state === 'ending') return;
+      clearIntervalOnly();
+      active.state = 'ending';
+      lastTile?.classList.add('is-success');
+      const gained = roundScore(active.level.level, active.roundRemaining, active.level.time);
+      active.score += gained;
+      active.trials.push(buildTrialResult('pass', gained));
+      active.outcomes.push('pass');
+      renderProgressMarkers();
+      updateHud();
+      statusBox.textContent = `本关通过，获得 ${gained} 分。`;
+      after(850, nextRound);
+    }
+
+    function failRound(message) {
+      if (!active || active.state === 'ending') return;
+      clearIntervalOnly();
+      active.state = 'ending';
+      active.trials.push(buildTrialResult('fail', 0, message));
+      active.outcomes.push('fail');
+      renderProgressMarkers();
+      updateHud();
+      statusBox.textContent = message;
+      after(950, nextRound);
+    }
+
+    function finishDifficulty() {
+      if (!active) return;
+      const passedRounds = active.outcomes.filter((item) => item === 'pass').length;
+      const movement = evaluateDifficultyAttempt({
+        level: active.level,
+        passedRounds,
+        previousConsecutiveFailures: active.previousFailures,
+        maxLevel: levels.length
+      });
+      const result = {
+        level: active.level.level,
+        passed: movement.passed,
+        passedRounds,
+        missionNum: active.level.missionNum,
+        score: active.score,
+        brain: brainValue(active.level.level),
+        nextLevel: movement.nextLevel,
+        maxCompleted: movement.maxCompleted,
+        trend: movement.maxCompleted ? '通关' : movement.passed ? '升级' : movement.nextLevel < active.level.level ? '降级' : '重试'
+      };
+      if (active.mode === 'normal') {
+        progress.recommendedLevel = result.nextLevel;
+        progress.consecutiveFailures = movement.consecutiveFailures;
+        progress.lastResult = result;
+        if (movement.maxCompleted) {
+          progress.tutorialDone = true;
+          progress.recommendedLevel = 1;
+          progress.consecutiveFailures = 0;
+        }
+        saveProgress();
+      }
+      if (window.CognitiveGameRecorder) {
+        window.CognitiveGameRecorder.record('strong-memory', {
+          domain: 'memory',
+          taskFamily: 'spatial-recall',
+          mode: active.mode === 'practice' ? 'training-practice' : 'training',
+          level: active.level.level,
+          startedAt: new Date(active.startedAt).toISOString(),
+          completedAt: new Date().toISOString(),
+          summary: {
+            passed: result.passed,
+            passedRounds,
+            missionNum: result.missionNum,
+            score: result.score,
+            brain: result.brain,
+            nextLevel: result.nextLevel,
+            trend: result.trend,
+            maxCompleted: result.maxCompleted
+          },
+          trials: active.trials,
+          events: active.clickEvents,
+          adaptive: {
+            previousLevel: active.level.level,
+            recommendedLevel: result.nextLevel,
+            passed: result.passed,
+            passedRounds,
+            missionNum: result.missionNum,
+            trend: result.trend
+          }
+        });
+      }
+      populateLevelSelect();
+      playCue(result.passed ? 'pass' : 'fail');
+      showResult(result);
+    }
+
+    function showResult(result) {
+      document.getElementById('resultBadge').textContent = result.maxCompleted ? '通关啦' : result.passed ? '完成' : '继续练习';
+      document.getElementById('resultTitle').textContent = result.maxCompleted ? '60 级全部通过' : result.passed ? '完成' : '本次未过级';
+      document.getElementById('resultText').textContent = result.maxCompleted
+        ? '已经完成最高难度。下次会从第 1 级重新开始。'
+        : `本次趋势：${result.trend}。本地记录会作为下次推荐难度。`;
+      document.getElementById('statPass').textContent = `${result.passedRounds}/${result.missionNum}`;
+      document.getElementById('statScore').textContent = String(result.score);
+      document.getElementById('statBrain').textContent = String(result.brain);
+      document.getElementById('statNext').textContent = `第 ${result.nextLevel} 级`;
+      showScreen('result');
+    }
+
+    function pauseGame() {
+      if (!active || active.paused || active.state !== 'recall') return;
+      active.paused = true;
+      clearIntervalOnly();
+      pauseOverlay.classList.add('is-open');
+      updateSettingsButtons();
+    }
+
+    function resumeGame() {
+      if (!active || !active.paused) return;
+      active.paused = false;
+      active.sessionLastTick = Date.now();
+      pauseOverlay.classList.remove('is-open');
+      intervalId = window.setInterval(tick, 100);
+      updateHud();
+    }
+
+    function openHelp() {
+      pauseOverlay.classList.remove('is-open');
+      helpOverlay.classList.add('is-open');
+    }
+
+    function closeHelp() {
+      helpOverlay.classList.remove('is-open');
+      pauseOverlay.classList.add('is-open');
+    }
+
+    function quitToCover() {
+      clearAllTimers();
+      active = null;
+      pauseOverlay.classList.remove('is-open');
+      helpOverlay.classList.remove('is-open');
+      showScreen('cover');
+    }
+
+    function toggleSetting(key) {
+      progress[key] = !progress[key];
+      saveProgress();
+      updateSettingsButtons();
+    }
+
+    function updateSettingsButtons() {
+      document.getElementById('soundButton').textContent = `音效：${progress.soundOn ? '开' : '关'}`;
+      document.getElementById('musicButton').textContent = `音乐：${progress.musicOn ? '开' : '关'}`;
+      document.getElementById('soundButton').classList.toggle('is-on', progress.soundOn);
+      document.getElementById('musicButton').classList.toggle('is-on', progress.musicOn);
+    }
+
+    function updateHud() {
+      if (!active) return;
+      document.getElementById('hudLevel').textContent = active.level.level;
+      document.getElementById('hudRound').textContent = `${Math.min(active.roundIndex, active.level.missionNum)}/${active.level.missionNum}`;
+      document.getElementById('hudTime').textContent = active.state === 'preview' || active.state === 'opening'
+        ? '看'
+        : active.roundRemaining.toFixed(1);
+      document.getElementById('hudSession').textContent = formatTime(active.sessionElapsed);
+      document.getElementById('hudScore').textContent = active.score;
+      document.getElementById('hudFault').textContent = `${Math.max(0, active.level.fault - active.wrong)}/${active.level.fault}`;
+    }
+
+    function renderProgressMarkers() {
+      const box = document.getElementById('progressMarkers');
+      box.innerHTML = '';
+      if (!active) return;
+      for (let i = 0; i < active.level.missionNum; i += 1) {
+        const marker = document.createElement('div');
+        marker.className = 'marker';
+        const outcome = active.outcomes[i];
+        if (outcome === 'pass') {
+          marker.classList.add('pass');
+          marker.textContent = '✓';
+        } else if (outcome === 'fail') {
+          marker.classList.add('fail');
+          marker.textContent = '×';
+        } else {
+          marker.textContent = String(i + 1);
+        }
+        box.appendChild(marker);
+      }
+    }
+
+    function chooseFloor(pool) {
+      return pool[Math.floor(Math.random() * pool.length)];
+    }
+
+    function previewDuration(round, mode) {
+      const base = 1200 + round.targets.length * 230 + round.rows * 90;
+      return mode === 'practice' ? base + 900 : base;
+    }
+
+    function showScreen(name) {
+      Object.entries(screens).forEach(([key, screen]) => {
+        screen.classList.toggle('is-active', key === name);
+      });
+      if (name === 'cover') {
+        clearAllTimers();
+        active = null;
+      }
+    }
+
+    function setLoadingState(text) {
+      recommendLabel.textContent = text || `推荐第 ${progress.recommendedLevel || 1} 级`;
+      document.getElementById('continueButton').disabled = Boolean(text);
+      document.getElementById('startButton').disabled = Boolean(text);
+      document.getElementById('practiceButton').disabled = Boolean(text);
+    }
+
+    function clearIntervalOnly() {
+      if (intervalId) {
+        window.clearInterval(intervalId);
+        intervalId = null;
+      }
+    }
+
+    function clearAllTimers() {
+      clearIntervalOnly();
+      timers.forEach((timer) => window.clearTimeout(timer));
+      timers = [];
+      if (tutorial?.hintTimer) window.clearTimeout(tutorial.hintTimer);
+    }
+
+    function after(ms, fn) {
+      const id = window.setTimeout(() => {
+        timers = timers.filter((timer) => timer !== id);
+        fn();
+      }, ms);
+      timers.push(id);
+      return id;
+    }
+
+    function formatTime(seconds) {
+      const total = Math.floor(seconds);
+      const min = Math.floor(total / 60);
+      const sec = String(total % 60).padStart(2, '0');
+      return `${min}:${sec}`;
+    }
+
+    function loadProgress() {
+      try {
+        const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+        return {
+          recommendedLevel: Number(parsed.recommendedLevel) || 1,
+          consecutiveFailures: Number(parsed.consecutiveFailures) || 0,
+          tutorialDone: Boolean(parsed.tutorialDone),
+          lowStim: Boolean(parsed.lowStim),
+          soundOn: parsed.soundOn !== false,
+          musicOn: parsed.musicOn !== false,
+          lastResult: parsed.lastResult || null
+        };
+      } catch {
+        return {
+          recommendedLevel: 1,
+          consecutiveFailures: 0,
+          tutorialDone: false,
+          lowStim: false,
+          soundOn: true,
+          musicOn: true,
+          lastResult: null
+        };
+      }
+    }
+
+    function saveProgress() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+    }
+  </script>
+</body>
+</html>

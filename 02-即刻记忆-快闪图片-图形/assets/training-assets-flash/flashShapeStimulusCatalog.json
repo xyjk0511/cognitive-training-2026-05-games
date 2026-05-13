@@ -1,0 +1,1082 @@
+[
+  {
+    "id": 111,
+    "colorId": 1,
+    "shapeId": 1,
+    "textureId": 1,
+    "iconName": "Icon_c01_s01_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c01_s01_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"1\" data-shape-id=\"1\" data-texture-id=\"1\" data-icon-name=\"Icon_c01_s01_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=1 s=1 t=1 -->\n  <defs>\n    <mask id=\"mask_c01_s01_t01\"><polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"white\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#2F80ED\" mask=\"url(#mask_c01_s01_t01)\"/>\n  <polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 112,
+    "colorId": 1,
+    "shapeId": 1,
+    "textureId": 2,
+    "iconName": "Icon_c01_s01_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c01_s01_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"1\" data-shape-id=\"1\" data-texture-id=\"2\" data-icon-name=\"Icon_c01_s01_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=1 s=1 t=2 -->\n  <defs>\n    <mask id=\"mask_c01_s01_t02\"><polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c01_s01_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#2F80ED\" mask=\"url(#mask_c01_s01_t02)\"/>\n  <polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c01_s01_t02)\" mask=\"url(#mask_c01_s01_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 113,
+    "colorId": 1,
+    "shapeId": 1,
+    "textureId": 3,
+    "iconName": "Icon_c01_s01_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c01_s01_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"1\" data-shape-id=\"1\" data-texture-id=\"3\" data-icon-name=\"Icon_c01_s01_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=1 s=1 t=3 -->\n  <defs>\n    <mask id=\"mask_c01_s01_t03\"><polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c01_s01_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#2F80ED\" mask=\"url(#mask_c01_s01_t03)\"/>\n  <polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c01_s01_t03)\" mask=\"url(#mask_c01_s01_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 121,
+    "colorId": 1,
+    "shapeId": 2,
+    "textureId": 1,
+    "iconName": "Icon_c01_s02_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c01_s02_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"1\" data-shape-id=\"2\" data-texture-id=\"1\" data-icon-name=\"Icon_c01_s02_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=1 s=2 t=1 -->\n  <defs>\n    <mask id=\"mask_c01_s02_t01\"><circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"white\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"black\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#2F80ED\" mask=\"url(#mask_c01_s02_t01)\"/>\n  <circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 122,
+    "colorId": 1,
+    "shapeId": 2,
+    "textureId": 2,
+    "iconName": "Icon_c01_s02_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c01_s02_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"1\" data-shape-id=\"2\" data-texture-id=\"2\" data-icon-name=\"Icon_c01_s02_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=1 s=2 t=2 -->\n  <defs>\n    <mask id=\"mask_c01_s02_t02\"><circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"white\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"black\"/></mask>\n    <pattern id=\"pattern_c01_s02_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#2F80ED\" mask=\"url(#mask_c01_s02_t02)\"/>\n  <circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c01_s02_t02)\" mask=\"url(#mask_c01_s02_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 123,
+    "colorId": 1,
+    "shapeId": 2,
+    "textureId": 3,
+    "iconName": "Icon_c01_s02_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c01_s02_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"1\" data-shape-id=\"2\" data-texture-id=\"3\" data-icon-name=\"Icon_c01_s02_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=1 s=2 t=3 -->\n  <defs>\n    <mask id=\"mask_c01_s02_t03\"><circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"white\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"black\"/></mask>\n    <pattern id=\"pattern_c01_s02_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#2F80ED\" mask=\"url(#mask_c01_s02_t03)\"/>\n  <circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c01_s02_t03)\" mask=\"url(#mask_c01_s02_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 131,
+    "colorId": 1,
+    "shapeId": 3,
+    "textureId": 1,
+    "iconName": "Icon_c01_s03_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c01_s03_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"1\" data-shape-id=\"3\" data-texture-id=\"1\" data-icon-name=\"Icon_c01_s03_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=1 s=3 t=1 -->\n  <defs>\n    <mask id=\"mask_c01_s03_t01\"><polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"white\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#2F80ED\" mask=\"url(#mask_c01_s03_t01)\"/>\n  <polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 132,
+    "colorId": 1,
+    "shapeId": 3,
+    "textureId": 2,
+    "iconName": "Icon_c01_s03_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c01_s03_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"1\" data-shape-id=\"3\" data-texture-id=\"2\" data-icon-name=\"Icon_c01_s03_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=1 s=3 t=2 -->\n  <defs>\n    <mask id=\"mask_c01_s03_t02\"><polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c01_s03_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#2F80ED\" mask=\"url(#mask_c01_s03_t02)\"/>\n  <polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c01_s03_t02)\" mask=\"url(#mask_c01_s03_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 133,
+    "colorId": 1,
+    "shapeId": 3,
+    "textureId": 3,
+    "iconName": "Icon_c01_s03_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c01_s03_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"1\" data-shape-id=\"3\" data-texture-id=\"3\" data-icon-name=\"Icon_c01_s03_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=1 s=3 t=3 -->\n  <defs>\n    <mask id=\"mask_c01_s03_t03\"><polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c01_s03_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#2F80ED\" mask=\"url(#mask_c01_s03_t03)\"/>\n  <polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c01_s03_t03)\" mask=\"url(#mask_c01_s03_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 141,
+    "colorId": 1,
+    "shapeId": 4,
+    "textureId": 1,
+    "iconName": "Icon_c01_s04_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c01_s04_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"1\" data-shape-id=\"4\" data-texture-id=\"1\" data-icon-name=\"Icon_c01_s04_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=1 s=4 t=1 -->\n  <defs>\n    <mask id=\"mask_c01_s04_t01\"><polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"white\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#2F80ED\" mask=\"url(#mask_c01_s04_t01)\"/>\n  <polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 142,
+    "colorId": 1,
+    "shapeId": 4,
+    "textureId": 2,
+    "iconName": "Icon_c01_s04_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c01_s04_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"1\" data-shape-id=\"4\" data-texture-id=\"2\" data-icon-name=\"Icon_c01_s04_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=1 s=4 t=2 -->\n  <defs>\n    <mask id=\"mask_c01_s04_t02\"><polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c01_s04_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#2F80ED\" mask=\"url(#mask_c01_s04_t02)\"/>\n  <polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c01_s04_t02)\" mask=\"url(#mask_c01_s04_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 143,
+    "colorId": 1,
+    "shapeId": 4,
+    "textureId": 3,
+    "iconName": "Icon_c01_s04_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c01_s04_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"1\" data-shape-id=\"4\" data-texture-id=\"3\" data-icon-name=\"Icon_c01_s04_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=1 s=4 t=3 -->\n  <defs>\n    <mask id=\"mask_c01_s04_t03\"><polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c01_s04_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#2F80ED\" mask=\"url(#mask_c01_s04_t03)\"/>\n  <polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c01_s04_t03)\" mask=\"url(#mask_c01_s04_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 151,
+    "colorId": 1,
+    "shapeId": 5,
+    "textureId": 1,
+    "iconName": "Icon_c01_s05_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c01_s05_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"1\" data-shape-id=\"5\" data-texture-id=\"1\" data-icon-name=\"Icon_c01_s05_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=1 s=5 t=1 -->\n  <defs>\n    <mask id=\"mask_c01_s05_t01\"><polygon points=\"128,28 226,220 30,220\" fill=\"white\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#2F80ED\" mask=\"url(#mask_c01_s05_t01)\"/>\n  <polygon points=\"128,28 226,220 30,220\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 152,
+    "colorId": 1,
+    "shapeId": 5,
+    "textureId": 2,
+    "iconName": "Icon_c01_s05_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c01_s05_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"1\" data-shape-id=\"5\" data-texture-id=\"2\" data-icon-name=\"Icon_c01_s05_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=1 s=5 t=2 -->\n  <defs>\n    <mask id=\"mask_c01_s05_t02\"><polygon points=\"128,28 226,220 30,220\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c01_s05_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#2F80ED\" mask=\"url(#mask_c01_s05_t02)\"/>\n  <polygon points=\"128,28 226,220 30,220\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c01_s05_t02)\" mask=\"url(#mask_c01_s05_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 153,
+    "colorId": 1,
+    "shapeId": 5,
+    "textureId": 3,
+    "iconName": "Icon_c01_s05_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c01_s05_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"1\" data-shape-id=\"5\" data-texture-id=\"3\" data-icon-name=\"Icon_c01_s05_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=1 s=5 t=3 -->\n  <defs>\n    <mask id=\"mask_c01_s05_t03\"><polygon points=\"128,28 226,220 30,220\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c01_s05_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#2F80ED\" mask=\"url(#mask_c01_s05_t03)\"/>\n  <polygon points=\"128,28 226,220 30,220\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c01_s05_t03)\" mask=\"url(#mask_c01_s05_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 211,
+    "colorId": 2,
+    "shapeId": 1,
+    "textureId": 1,
+    "iconName": "Icon_c02_s01_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c02_s01_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"2\" data-shape-id=\"1\" data-texture-id=\"1\" data-icon-name=\"Icon_c02_s01_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=2 s=1 t=1 -->\n  <defs>\n    <mask id=\"mask_c02_s01_t01\"><polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"white\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#8E8E93\" mask=\"url(#mask_c02_s01_t01)\"/>\n  <polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 212,
+    "colorId": 2,
+    "shapeId": 1,
+    "textureId": 2,
+    "iconName": "Icon_c02_s01_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c02_s01_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"2\" data-shape-id=\"1\" data-texture-id=\"2\" data-icon-name=\"Icon_c02_s01_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=2 s=1 t=2 -->\n  <defs>\n    <mask id=\"mask_c02_s01_t02\"><polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c02_s01_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#8E8E93\" mask=\"url(#mask_c02_s01_t02)\"/>\n  <polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c02_s01_t02)\" mask=\"url(#mask_c02_s01_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 213,
+    "colorId": 2,
+    "shapeId": 1,
+    "textureId": 3,
+    "iconName": "Icon_c02_s01_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c02_s01_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"2\" data-shape-id=\"1\" data-texture-id=\"3\" data-icon-name=\"Icon_c02_s01_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=2 s=1 t=3 -->\n  <defs>\n    <mask id=\"mask_c02_s01_t03\"><polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c02_s01_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#8E8E93\" mask=\"url(#mask_c02_s01_t03)\"/>\n  <polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c02_s01_t03)\" mask=\"url(#mask_c02_s01_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 221,
+    "colorId": 2,
+    "shapeId": 2,
+    "textureId": 1,
+    "iconName": "Icon_c02_s02_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c02_s02_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"2\" data-shape-id=\"2\" data-texture-id=\"1\" data-icon-name=\"Icon_c02_s02_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=2 s=2 t=1 -->\n  <defs>\n    <mask id=\"mask_c02_s02_t01\"><circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"white\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"black\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#8E8E93\" mask=\"url(#mask_c02_s02_t01)\"/>\n  <circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 222,
+    "colorId": 2,
+    "shapeId": 2,
+    "textureId": 2,
+    "iconName": "Icon_c02_s02_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c02_s02_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"2\" data-shape-id=\"2\" data-texture-id=\"2\" data-icon-name=\"Icon_c02_s02_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=2 s=2 t=2 -->\n  <defs>\n    <mask id=\"mask_c02_s02_t02\"><circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"white\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"black\"/></mask>\n    <pattern id=\"pattern_c02_s02_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#8E8E93\" mask=\"url(#mask_c02_s02_t02)\"/>\n  <circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c02_s02_t02)\" mask=\"url(#mask_c02_s02_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 223,
+    "colorId": 2,
+    "shapeId": 2,
+    "textureId": 3,
+    "iconName": "Icon_c02_s02_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c02_s02_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"2\" data-shape-id=\"2\" data-texture-id=\"3\" data-icon-name=\"Icon_c02_s02_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=2 s=2 t=3 -->\n  <defs>\n    <mask id=\"mask_c02_s02_t03\"><circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"white\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"black\"/></mask>\n    <pattern id=\"pattern_c02_s02_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#8E8E93\" mask=\"url(#mask_c02_s02_t03)\"/>\n  <circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c02_s02_t03)\" mask=\"url(#mask_c02_s02_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 231,
+    "colorId": 2,
+    "shapeId": 3,
+    "textureId": 1,
+    "iconName": "Icon_c02_s03_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c02_s03_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"2\" data-shape-id=\"3\" data-texture-id=\"1\" data-icon-name=\"Icon_c02_s03_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=2 s=3 t=1 -->\n  <defs>\n    <mask id=\"mask_c02_s03_t01\"><polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"white\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#8E8E93\" mask=\"url(#mask_c02_s03_t01)\"/>\n  <polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 232,
+    "colorId": 2,
+    "shapeId": 3,
+    "textureId": 2,
+    "iconName": "Icon_c02_s03_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c02_s03_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"2\" data-shape-id=\"3\" data-texture-id=\"2\" data-icon-name=\"Icon_c02_s03_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=2 s=3 t=2 -->\n  <defs>\n    <mask id=\"mask_c02_s03_t02\"><polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c02_s03_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#8E8E93\" mask=\"url(#mask_c02_s03_t02)\"/>\n  <polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c02_s03_t02)\" mask=\"url(#mask_c02_s03_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 233,
+    "colorId": 2,
+    "shapeId": 3,
+    "textureId": 3,
+    "iconName": "Icon_c02_s03_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c02_s03_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"2\" data-shape-id=\"3\" data-texture-id=\"3\" data-icon-name=\"Icon_c02_s03_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=2 s=3 t=3 -->\n  <defs>\n    <mask id=\"mask_c02_s03_t03\"><polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c02_s03_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#8E8E93\" mask=\"url(#mask_c02_s03_t03)\"/>\n  <polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c02_s03_t03)\" mask=\"url(#mask_c02_s03_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 241,
+    "colorId": 2,
+    "shapeId": 4,
+    "textureId": 1,
+    "iconName": "Icon_c02_s04_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c02_s04_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"2\" data-shape-id=\"4\" data-texture-id=\"1\" data-icon-name=\"Icon_c02_s04_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=2 s=4 t=1 -->\n  <defs>\n    <mask id=\"mask_c02_s04_t01\"><polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"white\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#8E8E93\" mask=\"url(#mask_c02_s04_t01)\"/>\n  <polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 242,
+    "colorId": 2,
+    "shapeId": 4,
+    "textureId": 2,
+    "iconName": "Icon_c02_s04_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c02_s04_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"2\" data-shape-id=\"4\" data-texture-id=\"2\" data-icon-name=\"Icon_c02_s04_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=2 s=4 t=2 -->\n  <defs>\n    <mask id=\"mask_c02_s04_t02\"><polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c02_s04_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#8E8E93\" mask=\"url(#mask_c02_s04_t02)\"/>\n  <polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c02_s04_t02)\" mask=\"url(#mask_c02_s04_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 243,
+    "colorId": 2,
+    "shapeId": 4,
+    "textureId": 3,
+    "iconName": "Icon_c02_s04_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c02_s04_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"2\" data-shape-id=\"4\" data-texture-id=\"3\" data-icon-name=\"Icon_c02_s04_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=2 s=4 t=3 -->\n  <defs>\n    <mask id=\"mask_c02_s04_t03\"><polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c02_s04_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#8E8E93\" mask=\"url(#mask_c02_s04_t03)\"/>\n  <polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c02_s04_t03)\" mask=\"url(#mask_c02_s04_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 251,
+    "colorId": 2,
+    "shapeId": 5,
+    "textureId": 1,
+    "iconName": "Icon_c02_s05_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c02_s05_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"2\" data-shape-id=\"5\" data-texture-id=\"1\" data-icon-name=\"Icon_c02_s05_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=2 s=5 t=1 -->\n  <defs>\n    <mask id=\"mask_c02_s05_t01\"><polygon points=\"128,28 226,220 30,220\" fill=\"white\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#8E8E93\" mask=\"url(#mask_c02_s05_t01)\"/>\n  <polygon points=\"128,28 226,220 30,220\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 252,
+    "colorId": 2,
+    "shapeId": 5,
+    "textureId": 2,
+    "iconName": "Icon_c02_s05_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c02_s05_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"2\" data-shape-id=\"5\" data-texture-id=\"2\" data-icon-name=\"Icon_c02_s05_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=2 s=5 t=2 -->\n  <defs>\n    <mask id=\"mask_c02_s05_t02\"><polygon points=\"128,28 226,220 30,220\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c02_s05_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#8E8E93\" mask=\"url(#mask_c02_s05_t02)\"/>\n  <polygon points=\"128,28 226,220 30,220\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c02_s05_t02)\" mask=\"url(#mask_c02_s05_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 253,
+    "colorId": 2,
+    "shapeId": 5,
+    "textureId": 3,
+    "iconName": "Icon_c02_s05_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c02_s05_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"2\" data-shape-id=\"5\" data-texture-id=\"3\" data-icon-name=\"Icon_c02_s05_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=2 s=5 t=3 -->\n  <defs>\n    <mask id=\"mask_c02_s05_t03\"><polygon points=\"128,28 226,220 30,220\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c02_s05_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#8E8E93\" mask=\"url(#mask_c02_s05_t03)\"/>\n  <polygon points=\"128,28 226,220 30,220\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c02_s05_t03)\" mask=\"url(#mask_c02_s05_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 311,
+    "colorId": 3,
+    "shapeId": 1,
+    "textureId": 1,
+    "iconName": "Icon_c03_s01_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c03_s01_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"3\" data-shape-id=\"1\" data-texture-id=\"1\" data-icon-name=\"Icon_c03_s01_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=3 s=1 t=1 -->\n  <defs>\n    <mask id=\"mask_c03_s01_t01\"><polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"white\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#27AE60\" mask=\"url(#mask_c03_s01_t01)\"/>\n  <polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 312,
+    "colorId": 3,
+    "shapeId": 1,
+    "textureId": 2,
+    "iconName": "Icon_c03_s01_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c03_s01_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"3\" data-shape-id=\"1\" data-texture-id=\"2\" data-icon-name=\"Icon_c03_s01_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=3 s=1 t=2 -->\n  <defs>\n    <mask id=\"mask_c03_s01_t02\"><polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c03_s01_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#27AE60\" mask=\"url(#mask_c03_s01_t02)\"/>\n  <polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c03_s01_t02)\" mask=\"url(#mask_c03_s01_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 313,
+    "colorId": 3,
+    "shapeId": 1,
+    "textureId": 3,
+    "iconName": "Icon_c03_s01_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c03_s01_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"3\" data-shape-id=\"1\" data-texture-id=\"3\" data-icon-name=\"Icon_c03_s01_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=3 s=1 t=3 -->\n  <defs>\n    <mask id=\"mask_c03_s01_t03\"><polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c03_s01_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#27AE60\" mask=\"url(#mask_c03_s01_t03)\"/>\n  <polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c03_s01_t03)\" mask=\"url(#mask_c03_s01_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 321,
+    "colorId": 3,
+    "shapeId": 2,
+    "textureId": 1,
+    "iconName": "Icon_c03_s02_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c03_s02_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"3\" data-shape-id=\"2\" data-texture-id=\"1\" data-icon-name=\"Icon_c03_s02_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=3 s=2 t=1 -->\n  <defs>\n    <mask id=\"mask_c03_s02_t01\"><circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"white\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"black\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#27AE60\" mask=\"url(#mask_c03_s02_t01)\"/>\n  <circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 322,
+    "colorId": 3,
+    "shapeId": 2,
+    "textureId": 2,
+    "iconName": "Icon_c03_s02_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c03_s02_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"3\" data-shape-id=\"2\" data-texture-id=\"2\" data-icon-name=\"Icon_c03_s02_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=3 s=2 t=2 -->\n  <defs>\n    <mask id=\"mask_c03_s02_t02\"><circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"white\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"black\"/></mask>\n    <pattern id=\"pattern_c03_s02_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#27AE60\" mask=\"url(#mask_c03_s02_t02)\"/>\n  <circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c03_s02_t02)\" mask=\"url(#mask_c03_s02_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 323,
+    "colorId": 3,
+    "shapeId": 2,
+    "textureId": 3,
+    "iconName": "Icon_c03_s02_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c03_s02_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"3\" data-shape-id=\"2\" data-texture-id=\"3\" data-icon-name=\"Icon_c03_s02_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=3 s=2 t=3 -->\n  <defs>\n    <mask id=\"mask_c03_s02_t03\"><circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"white\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"black\"/></mask>\n    <pattern id=\"pattern_c03_s02_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#27AE60\" mask=\"url(#mask_c03_s02_t03)\"/>\n  <circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c03_s02_t03)\" mask=\"url(#mask_c03_s02_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 331,
+    "colorId": 3,
+    "shapeId": 3,
+    "textureId": 1,
+    "iconName": "Icon_c03_s03_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c03_s03_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"3\" data-shape-id=\"3\" data-texture-id=\"1\" data-icon-name=\"Icon_c03_s03_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=3 s=3 t=1 -->\n  <defs>\n    <mask id=\"mask_c03_s03_t01\"><polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"white\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#27AE60\" mask=\"url(#mask_c03_s03_t01)\"/>\n  <polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 332,
+    "colorId": 3,
+    "shapeId": 3,
+    "textureId": 2,
+    "iconName": "Icon_c03_s03_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c03_s03_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"3\" data-shape-id=\"3\" data-texture-id=\"2\" data-icon-name=\"Icon_c03_s03_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=3 s=3 t=2 -->\n  <defs>\n    <mask id=\"mask_c03_s03_t02\"><polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c03_s03_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#27AE60\" mask=\"url(#mask_c03_s03_t02)\"/>\n  <polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c03_s03_t02)\" mask=\"url(#mask_c03_s03_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 333,
+    "colorId": 3,
+    "shapeId": 3,
+    "textureId": 3,
+    "iconName": "Icon_c03_s03_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c03_s03_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"3\" data-shape-id=\"3\" data-texture-id=\"3\" data-icon-name=\"Icon_c03_s03_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=3 s=3 t=3 -->\n  <defs>\n    <mask id=\"mask_c03_s03_t03\"><polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c03_s03_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#27AE60\" mask=\"url(#mask_c03_s03_t03)\"/>\n  <polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c03_s03_t03)\" mask=\"url(#mask_c03_s03_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 341,
+    "colorId": 3,
+    "shapeId": 4,
+    "textureId": 1,
+    "iconName": "Icon_c03_s04_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c03_s04_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"3\" data-shape-id=\"4\" data-texture-id=\"1\" data-icon-name=\"Icon_c03_s04_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=3 s=4 t=1 -->\n  <defs>\n    <mask id=\"mask_c03_s04_t01\"><polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"white\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#27AE60\" mask=\"url(#mask_c03_s04_t01)\"/>\n  <polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 342,
+    "colorId": 3,
+    "shapeId": 4,
+    "textureId": 2,
+    "iconName": "Icon_c03_s04_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c03_s04_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"3\" data-shape-id=\"4\" data-texture-id=\"2\" data-icon-name=\"Icon_c03_s04_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=3 s=4 t=2 -->\n  <defs>\n    <mask id=\"mask_c03_s04_t02\"><polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c03_s04_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#27AE60\" mask=\"url(#mask_c03_s04_t02)\"/>\n  <polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c03_s04_t02)\" mask=\"url(#mask_c03_s04_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 343,
+    "colorId": 3,
+    "shapeId": 4,
+    "textureId": 3,
+    "iconName": "Icon_c03_s04_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c03_s04_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"3\" data-shape-id=\"4\" data-texture-id=\"3\" data-icon-name=\"Icon_c03_s04_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=3 s=4 t=3 -->\n  <defs>\n    <mask id=\"mask_c03_s04_t03\"><polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c03_s04_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#27AE60\" mask=\"url(#mask_c03_s04_t03)\"/>\n  <polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c03_s04_t03)\" mask=\"url(#mask_c03_s04_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 351,
+    "colorId": 3,
+    "shapeId": 5,
+    "textureId": 1,
+    "iconName": "Icon_c03_s05_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c03_s05_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"3\" data-shape-id=\"5\" data-texture-id=\"1\" data-icon-name=\"Icon_c03_s05_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=3 s=5 t=1 -->\n  <defs>\n    <mask id=\"mask_c03_s05_t01\"><polygon points=\"128,28 226,220 30,220\" fill=\"white\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#27AE60\" mask=\"url(#mask_c03_s05_t01)\"/>\n  <polygon points=\"128,28 226,220 30,220\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 352,
+    "colorId": 3,
+    "shapeId": 5,
+    "textureId": 2,
+    "iconName": "Icon_c03_s05_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c03_s05_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"3\" data-shape-id=\"5\" data-texture-id=\"2\" data-icon-name=\"Icon_c03_s05_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=3 s=5 t=2 -->\n  <defs>\n    <mask id=\"mask_c03_s05_t02\"><polygon points=\"128,28 226,220 30,220\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c03_s05_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#27AE60\" mask=\"url(#mask_c03_s05_t02)\"/>\n  <polygon points=\"128,28 226,220 30,220\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c03_s05_t02)\" mask=\"url(#mask_c03_s05_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 353,
+    "colorId": 3,
+    "shapeId": 5,
+    "textureId": 3,
+    "iconName": "Icon_c03_s05_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c03_s05_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"3\" data-shape-id=\"5\" data-texture-id=\"3\" data-icon-name=\"Icon_c03_s05_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=3 s=5 t=3 -->\n  <defs>\n    <mask id=\"mask_c03_s05_t03\"><polygon points=\"128,28 226,220 30,220\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c03_s05_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#27AE60\" mask=\"url(#mask_c03_s05_t03)\"/>\n  <polygon points=\"128,28 226,220 30,220\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c03_s05_t03)\" mask=\"url(#mask_c03_s05_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 411,
+    "colorId": 4,
+    "shapeId": 1,
+    "textureId": 1,
+    "iconName": "Icon_c04_s01_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c04_s01_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"4\" data-shape-id=\"1\" data-texture-id=\"1\" data-icon-name=\"Icon_c04_s01_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=4 s=1 t=1 -->\n  <defs>\n    <mask id=\"mask_c04_s01_t01\"><polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"white\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F2994A\" mask=\"url(#mask_c04_s01_t01)\"/>\n  <polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 412,
+    "colorId": 4,
+    "shapeId": 1,
+    "textureId": 2,
+    "iconName": "Icon_c04_s01_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c04_s01_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"4\" data-shape-id=\"1\" data-texture-id=\"2\" data-icon-name=\"Icon_c04_s01_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=4 s=1 t=2 -->\n  <defs>\n    <mask id=\"mask_c04_s01_t02\"><polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c04_s01_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F2994A\" mask=\"url(#mask_c04_s01_t02)\"/>\n  <polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c04_s01_t02)\" mask=\"url(#mask_c04_s01_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 413,
+    "colorId": 4,
+    "shapeId": 1,
+    "textureId": 3,
+    "iconName": "Icon_c04_s01_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c04_s01_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"4\" data-shape-id=\"1\" data-texture-id=\"3\" data-icon-name=\"Icon_c04_s01_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=4 s=1 t=3 -->\n  <defs>\n    <mask id=\"mask_c04_s01_t03\"><polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c04_s01_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F2994A\" mask=\"url(#mask_c04_s01_t03)\"/>\n  <polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c04_s01_t03)\" mask=\"url(#mask_c04_s01_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 421,
+    "colorId": 4,
+    "shapeId": 2,
+    "textureId": 1,
+    "iconName": "Icon_c04_s02_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c04_s02_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"4\" data-shape-id=\"2\" data-texture-id=\"1\" data-icon-name=\"Icon_c04_s02_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=4 s=2 t=1 -->\n  <defs>\n    <mask id=\"mask_c04_s02_t01\"><circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"white\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"black\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F2994A\" mask=\"url(#mask_c04_s02_t01)\"/>\n  <circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 422,
+    "colorId": 4,
+    "shapeId": 2,
+    "textureId": 2,
+    "iconName": "Icon_c04_s02_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c04_s02_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"4\" data-shape-id=\"2\" data-texture-id=\"2\" data-icon-name=\"Icon_c04_s02_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=4 s=2 t=2 -->\n  <defs>\n    <mask id=\"mask_c04_s02_t02\"><circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"white\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"black\"/></mask>\n    <pattern id=\"pattern_c04_s02_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F2994A\" mask=\"url(#mask_c04_s02_t02)\"/>\n  <circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c04_s02_t02)\" mask=\"url(#mask_c04_s02_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 423,
+    "colorId": 4,
+    "shapeId": 2,
+    "textureId": 3,
+    "iconName": "Icon_c04_s02_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c04_s02_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"4\" data-shape-id=\"2\" data-texture-id=\"3\" data-icon-name=\"Icon_c04_s02_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=4 s=2 t=3 -->\n  <defs>\n    <mask id=\"mask_c04_s02_t03\"><circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"white\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"black\"/></mask>\n    <pattern id=\"pattern_c04_s02_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F2994A\" mask=\"url(#mask_c04_s02_t03)\"/>\n  <circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c04_s02_t03)\" mask=\"url(#mask_c04_s02_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 431,
+    "colorId": 4,
+    "shapeId": 3,
+    "textureId": 1,
+    "iconName": "Icon_c04_s03_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c04_s03_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"4\" data-shape-id=\"3\" data-texture-id=\"1\" data-icon-name=\"Icon_c04_s03_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=4 s=3 t=1 -->\n  <defs>\n    <mask id=\"mask_c04_s03_t01\"><polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"white\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F2994A\" mask=\"url(#mask_c04_s03_t01)\"/>\n  <polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 432,
+    "colorId": 4,
+    "shapeId": 3,
+    "textureId": 2,
+    "iconName": "Icon_c04_s03_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c04_s03_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"4\" data-shape-id=\"3\" data-texture-id=\"2\" data-icon-name=\"Icon_c04_s03_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=4 s=3 t=2 -->\n  <defs>\n    <mask id=\"mask_c04_s03_t02\"><polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c04_s03_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F2994A\" mask=\"url(#mask_c04_s03_t02)\"/>\n  <polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c04_s03_t02)\" mask=\"url(#mask_c04_s03_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 433,
+    "colorId": 4,
+    "shapeId": 3,
+    "textureId": 3,
+    "iconName": "Icon_c04_s03_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c04_s03_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"4\" data-shape-id=\"3\" data-texture-id=\"3\" data-icon-name=\"Icon_c04_s03_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=4 s=3 t=3 -->\n  <defs>\n    <mask id=\"mask_c04_s03_t03\"><polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c04_s03_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F2994A\" mask=\"url(#mask_c04_s03_t03)\"/>\n  <polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c04_s03_t03)\" mask=\"url(#mask_c04_s03_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 441,
+    "colorId": 4,
+    "shapeId": 4,
+    "textureId": 1,
+    "iconName": "Icon_c04_s04_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c04_s04_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"4\" data-shape-id=\"4\" data-texture-id=\"1\" data-icon-name=\"Icon_c04_s04_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=4 s=4 t=1 -->\n  <defs>\n    <mask id=\"mask_c04_s04_t01\"><polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"white\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F2994A\" mask=\"url(#mask_c04_s04_t01)\"/>\n  <polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 442,
+    "colorId": 4,
+    "shapeId": 4,
+    "textureId": 2,
+    "iconName": "Icon_c04_s04_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c04_s04_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"4\" data-shape-id=\"4\" data-texture-id=\"2\" data-icon-name=\"Icon_c04_s04_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=4 s=4 t=2 -->\n  <defs>\n    <mask id=\"mask_c04_s04_t02\"><polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c04_s04_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F2994A\" mask=\"url(#mask_c04_s04_t02)\"/>\n  <polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c04_s04_t02)\" mask=\"url(#mask_c04_s04_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 443,
+    "colorId": 4,
+    "shapeId": 4,
+    "textureId": 3,
+    "iconName": "Icon_c04_s04_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c04_s04_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"4\" data-shape-id=\"4\" data-texture-id=\"3\" data-icon-name=\"Icon_c04_s04_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=4 s=4 t=3 -->\n  <defs>\n    <mask id=\"mask_c04_s04_t03\"><polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c04_s04_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F2994A\" mask=\"url(#mask_c04_s04_t03)\"/>\n  <polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c04_s04_t03)\" mask=\"url(#mask_c04_s04_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 451,
+    "colorId": 4,
+    "shapeId": 5,
+    "textureId": 1,
+    "iconName": "Icon_c04_s05_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c04_s05_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"4\" data-shape-id=\"5\" data-texture-id=\"1\" data-icon-name=\"Icon_c04_s05_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=4 s=5 t=1 -->\n  <defs>\n    <mask id=\"mask_c04_s05_t01\"><polygon points=\"128,28 226,220 30,220\" fill=\"white\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F2994A\" mask=\"url(#mask_c04_s05_t01)\"/>\n  <polygon points=\"128,28 226,220 30,220\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 452,
+    "colorId": 4,
+    "shapeId": 5,
+    "textureId": 2,
+    "iconName": "Icon_c04_s05_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c04_s05_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"4\" data-shape-id=\"5\" data-texture-id=\"2\" data-icon-name=\"Icon_c04_s05_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=4 s=5 t=2 -->\n  <defs>\n    <mask id=\"mask_c04_s05_t02\"><polygon points=\"128,28 226,220 30,220\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c04_s05_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F2994A\" mask=\"url(#mask_c04_s05_t02)\"/>\n  <polygon points=\"128,28 226,220 30,220\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c04_s05_t02)\" mask=\"url(#mask_c04_s05_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 453,
+    "colorId": 4,
+    "shapeId": 5,
+    "textureId": 3,
+    "iconName": "Icon_c04_s05_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c04_s05_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"4\" data-shape-id=\"5\" data-texture-id=\"3\" data-icon-name=\"Icon_c04_s05_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=4 s=5 t=3 -->\n  <defs>\n    <mask id=\"mask_c04_s05_t03\"><polygon points=\"128,28 226,220 30,220\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c04_s05_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F2994A\" mask=\"url(#mask_c04_s05_t03)\"/>\n  <polygon points=\"128,28 226,220 30,220\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c04_s05_t03)\" mask=\"url(#mask_c04_s05_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 511,
+    "colorId": 5,
+    "shapeId": 1,
+    "textureId": 1,
+    "iconName": "Icon_c05_s01_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c05_s01_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"5\" data-shape-id=\"1\" data-texture-id=\"1\" data-icon-name=\"Icon_c05_s01_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=5 s=1 t=1 -->\n  <defs>\n    <mask id=\"mask_c05_s01_t01\"><polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"white\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F78AB5\" mask=\"url(#mask_c05_s01_t01)\"/>\n  <polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 512,
+    "colorId": 5,
+    "shapeId": 1,
+    "textureId": 2,
+    "iconName": "Icon_c05_s01_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c05_s01_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"5\" data-shape-id=\"1\" data-texture-id=\"2\" data-icon-name=\"Icon_c05_s01_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=5 s=1 t=2 -->\n  <defs>\n    <mask id=\"mask_c05_s01_t02\"><polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c05_s01_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F78AB5\" mask=\"url(#mask_c05_s01_t02)\"/>\n  <polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c05_s01_t02)\" mask=\"url(#mask_c05_s01_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 513,
+    "colorId": 5,
+    "shapeId": 1,
+    "textureId": 3,
+    "iconName": "Icon_c05_s01_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c05_s01_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"5\" data-shape-id=\"1\" data-texture-id=\"3\" data-icon-name=\"Icon_c05_s01_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=5 s=1 t=3 -->\n  <defs>\n    <mask id=\"mask_c05_s01_t03\"><polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c05_s01_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F78AB5\" mask=\"url(#mask_c05_s01_t03)\"/>\n  <polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c05_s01_t03)\" mask=\"url(#mask_c05_s01_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 521,
+    "colorId": 5,
+    "shapeId": 2,
+    "textureId": 1,
+    "iconName": "Icon_c05_s02_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c05_s02_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"5\" data-shape-id=\"2\" data-texture-id=\"1\" data-icon-name=\"Icon_c05_s02_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=5 s=2 t=1 -->\n  <defs>\n    <mask id=\"mask_c05_s02_t01\"><circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"white\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"black\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F78AB5\" mask=\"url(#mask_c05_s02_t01)\"/>\n  <circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 522,
+    "colorId": 5,
+    "shapeId": 2,
+    "textureId": 2,
+    "iconName": "Icon_c05_s02_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c05_s02_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"5\" data-shape-id=\"2\" data-texture-id=\"2\" data-icon-name=\"Icon_c05_s02_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=5 s=2 t=2 -->\n  <defs>\n    <mask id=\"mask_c05_s02_t02\"><circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"white\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"black\"/></mask>\n    <pattern id=\"pattern_c05_s02_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F78AB5\" mask=\"url(#mask_c05_s02_t02)\"/>\n  <circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c05_s02_t02)\" mask=\"url(#mask_c05_s02_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 523,
+    "colorId": 5,
+    "shapeId": 2,
+    "textureId": 3,
+    "iconName": "Icon_c05_s02_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c05_s02_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"5\" data-shape-id=\"2\" data-texture-id=\"3\" data-icon-name=\"Icon_c05_s02_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=5 s=2 t=3 -->\n  <defs>\n    <mask id=\"mask_c05_s02_t03\"><circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"white\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"black\"/></mask>\n    <pattern id=\"pattern_c05_s02_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F78AB5\" mask=\"url(#mask_c05_s02_t03)\"/>\n  <circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c05_s02_t03)\" mask=\"url(#mask_c05_s02_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 531,
+    "colorId": 5,
+    "shapeId": 3,
+    "textureId": 1,
+    "iconName": "Icon_c05_s03_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c05_s03_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"5\" data-shape-id=\"3\" data-texture-id=\"1\" data-icon-name=\"Icon_c05_s03_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=5 s=3 t=1 -->\n  <defs>\n    <mask id=\"mask_c05_s03_t01\"><polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"white\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F78AB5\" mask=\"url(#mask_c05_s03_t01)\"/>\n  <polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 532,
+    "colorId": 5,
+    "shapeId": 3,
+    "textureId": 2,
+    "iconName": "Icon_c05_s03_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c05_s03_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"5\" data-shape-id=\"3\" data-texture-id=\"2\" data-icon-name=\"Icon_c05_s03_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=5 s=3 t=2 -->\n  <defs>\n    <mask id=\"mask_c05_s03_t02\"><polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c05_s03_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F78AB5\" mask=\"url(#mask_c05_s03_t02)\"/>\n  <polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c05_s03_t02)\" mask=\"url(#mask_c05_s03_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 533,
+    "colorId": 5,
+    "shapeId": 3,
+    "textureId": 3,
+    "iconName": "Icon_c05_s03_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c05_s03_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"5\" data-shape-id=\"3\" data-texture-id=\"3\" data-icon-name=\"Icon_c05_s03_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=5 s=3 t=3 -->\n  <defs>\n    <mask id=\"mask_c05_s03_t03\"><polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c05_s03_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F78AB5\" mask=\"url(#mask_c05_s03_t03)\"/>\n  <polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c05_s03_t03)\" mask=\"url(#mask_c05_s03_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 541,
+    "colorId": 5,
+    "shapeId": 4,
+    "textureId": 1,
+    "iconName": "Icon_c05_s04_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c05_s04_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"5\" data-shape-id=\"4\" data-texture-id=\"1\" data-icon-name=\"Icon_c05_s04_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=5 s=4 t=1 -->\n  <defs>\n    <mask id=\"mask_c05_s04_t01\"><polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"white\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F78AB5\" mask=\"url(#mask_c05_s04_t01)\"/>\n  <polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 542,
+    "colorId": 5,
+    "shapeId": 4,
+    "textureId": 2,
+    "iconName": "Icon_c05_s04_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c05_s04_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"5\" data-shape-id=\"4\" data-texture-id=\"2\" data-icon-name=\"Icon_c05_s04_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=5 s=4 t=2 -->\n  <defs>\n    <mask id=\"mask_c05_s04_t02\"><polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c05_s04_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F78AB5\" mask=\"url(#mask_c05_s04_t02)\"/>\n  <polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c05_s04_t02)\" mask=\"url(#mask_c05_s04_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 543,
+    "colorId": 5,
+    "shapeId": 4,
+    "textureId": 3,
+    "iconName": "Icon_c05_s04_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c05_s04_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"5\" data-shape-id=\"4\" data-texture-id=\"3\" data-icon-name=\"Icon_c05_s04_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=5 s=4 t=3 -->\n  <defs>\n    <mask id=\"mask_c05_s04_t03\"><polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c05_s04_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F78AB5\" mask=\"url(#mask_c05_s04_t03)\"/>\n  <polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c05_s04_t03)\" mask=\"url(#mask_c05_s04_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 551,
+    "colorId": 5,
+    "shapeId": 5,
+    "textureId": 1,
+    "iconName": "Icon_c05_s05_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c05_s05_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"5\" data-shape-id=\"5\" data-texture-id=\"1\" data-icon-name=\"Icon_c05_s05_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=5 s=5 t=1 -->\n  <defs>\n    <mask id=\"mask_c05_s05_t01\"><polygon points=\"128,28 226,220 30,220\" fill=\"white\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F78AB5\" mask=\"url(#mask_c05_s05_t01)\"/>\n  <polygon points=\"128,28 226,220 30,220\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 552,
+    "colorId": 5,
+    "shapeId": 5,
+    "textureId": 2,
+    "iconName": "Icon_c05_s05_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c05_s05_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"5\" data-shape-id=\"5\" data-texture-id=\"2\" data-icon-name=\"Icon_c05_s05_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=5 s=5 t=2 -->\n  <defs>\n    <mask id=\"mask_c05_s05_t02\"><polygon points=\"128,28 226,220 30,220\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c05_s05_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F78AB5\" mask=\"url(#mask_c05_s05_t02)\"/>\n  <polygon points=\"128,28 226,220 30,220\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c05_s05_t02)\" mask=\"url(#mask_c05_s05_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 553,
+    "colorId": 5,
+    "shapeId": 5,
+    "textureId": 3,
+    "iconName": "Icon_c05_s05_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c05_s05_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"5\" data-shape-id=\"5\" data-texture-id=\"3\" data-icon-name=\"Icon_c05_s05_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=5 s=5 t=3 -->\n  <defs>\n    <mask id=\"mask_c05_s05_t03\"><polygon points=\"128,28 226,220 30,220\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c05_s05_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F78AB5\" mask=\"url(#mask_c05_s05_t03)\"/>\n  <polygon points=\"128,28 226,220 30,220\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c05_s05_t03)\" mask=\"url(#mask_c05_s05_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 611,
+    "colorId": 6,
+    "shapeId": 1,
+    "textureId": 1,
+    "iconName": "Icon_c06_s01_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c06_s01_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"6\" data-shape-id=\"1\" data-texture-id=\"1\" data-icon-name=\"Icon_c06_s01_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=6 s=1 t=1 -->\n  <defs>\n    <mask id=\"mask_c06_s01_t01\"><polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"white\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#9B51E0\" mask=\"url(#mask_c06_s01_t01)\"/>\n  <polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 612,
+    "colorId": 6,
+    "shapeId": 1,
+    "textureId": 2,
+    "iconName": "Icon_c06_s01_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c06_s01_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"6\" data-shape-id=\"1\" data-texture-id=\"2\" data-icon-name=\"Icon_c06_s01_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=6 s=1 t=2 -->\n  <defs>\n    <mask id=\"mask_c06_s01_t02\"><polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c06_s01_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#9B51E0\" mask=\"url(#mask_c06_s01_t02)\"/>\n  <polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c06_s01_t02)\" mask=\"url(#mask_c06_s01_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 613,
+    "colorId": 6,
+    "shapeId": 1,
+    "textureId": 3,
+    "iconName": "Icon_c06_s01_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c06_s01_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"6\" data-shape-id=\"1\" data-texture-id=\"3\" data-icon-name=\"Icon_c06_s01_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=6 s=1 t=3 -->\n  <defs>\n    <mask id=\"mask_c06_s01_t03\"><polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c06_s01_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#9B51E0\" mask=\"url(#mask_c06_s01_t03)\"/>\n  <polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c06_s01_t03)\" mask=\"url(#mask_c06_s01_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 621,
+    "colorId": 6,
+    "shapeId": 2,
+    "textureId": 1,
+    "iconName": "Icon_c06_s02_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c06_s02_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"6\" data-shape-id=\"2\" data-texture-id=\"1\" data-icon-name=\"Icon_c06_s02_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=6 s=2 t=1 -->\n  <defs>\n    <mask id=\"mask_c06_s02_t01\"><circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"white\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"black\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#9B51E0\" mask=\"url(#mask_c06_s02_t01)\"/>\n  <circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 622,
+    "colorId": 6,
+    "shapeId": 2,
+    "textureId": 2,
+    "iconName": "Icon_c06_s02_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c06_s02_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"6\" data-shape-id=\"2\" data-texture-id=\"2\" data-icon-name=\"Icon_c06_s02_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=6 s=2 t=2 -->\n  <defs>\n    <mask id=\"mask_c06_s02_t02\"><circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"white\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"black\"/></mask>\n    <pattern id=\"pattern_c06_s02_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#9B51E0\" mask=\"url(#mask_c06_s02_t02)\"/>\n  <circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c06_s02_t02)\" mask=\"url(#mask_c06_s02_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 623,
+    "colorId": 6,
+    "shapeId": 2,
+    "textureId": 3,
+    "iconName": "Icon_c06_s02_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c06_s02_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"6\" data-shape-id=\"2\" data-texture-id=\"3\" data-icon-name=\"Icon_c06_s02_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=6 s=2 t=3 -->\n  <defs>\n    <mask id=\"mask_c06_s02_t03\"><circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"white\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"black\"/></mask>\n    <pattern id=\"pattern_c06_s02_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#9B51E0\" mask=\"url(#mask_c06_s02_t03)\"/>\n  <circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c06_s02_t03)\" mask=\"url(#mask_c06_s02_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 631,
+    "colorId": 6,
+    "shapeId": 3,
+    "textureId": 1,
+    "iconName": "Icon_c06_s03_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c06_s03_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"6\" data-shape-id=\"3\" data-texture-id=\"1\" data-icon-name=\"Icon_c06_s03_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=6 s=3 t=1 -->\n  <defs>\n    <mask id=\"mask_c06_s03_t01\"><polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"white\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#9B51E0\" mask=\"url(#mask_c06_s03_t01)\"/>\n  <polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 632,
+    "colorId": 6,
+    "shapeId": 3,
+    "textureId": 2,
+    "iconName": "Icon_c06_s03_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c06_s03_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"6\" data-shape-id=\"3\" data-texture-id=\"2\" data-icon-name=\"Icon_c06_s03_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=6 s=3 t=2 -->\n  <defs>\n    <mask id=\"mask_c06_s03_t02\"><polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c06_s03_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#9B51E0\" mask=\"url(#mask_c06_s03_t02)\"/>\n  <polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c06_s03_t02)\" mask=\"url(#mask_c06_s03_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 633,
+    "colorId": 6,
+    "shapeId": 3,
+    "textureId": 3,
+    "iconName": "Icon_c06_s03_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c06_s03_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"6\" data-shape-id=\"3\" data-texture-id=\"3\" data-icon-name=\"Icon_c06_s03_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=6 s=3 t=3 -->\n  <defs>\n    <mask id=\"mask_c06_s03_t03\"><polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c06_s03_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#9B51E0\" mask=\"url(#mask_c06_s03_t03)\"/>\n  <polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c06_s03_t03)\" mask=\"url(#mask_c06_s03_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 641,
+    "colorId": 6,
+    "shapeId": 4,
+    "textureId": 1,
+    "iconName": "Icon_c06_s04_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c06_s04_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"6\" data-shape-id=\"4\" data-texture-id=\"1\" data-icon-name=\"Icon_c06_s04_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=6 s=4 t=1 -->\n  <defs>\n    <mask id=\"mask_c06_s04_t01\"><polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"white\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#9B51E0\" mask=\"url(#mask_c06_s04_t01)\"/>\n  <polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 642,
+    "colorId": 6,
+    "shapeId": 4,
+    "textureId": 2,
+    "iconName": "Icon_c06_s04_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c06_s04_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"6\" data-shape-id=\"4\" data-texture-id=\"2\" data-icon-name=\"Icon_c06_s04_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=6 s=4 t=2 -->\n  <defs>\n    <mask id=\"mask_c06_s04_t02\"><polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c06_s04_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#9B51E0\" mask=\"url(#mask_c06_s04_t02)\"/>\n  <polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c06_s04_t02)\" mask=\"url(#mask_c06_s04_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 643,
+    "colorId": 6,
+    "shapeId": 4,
+    "textureId": 3,
+    "iconName": "Icon_c06_s04_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c06_s04_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"6\" data-shape-id=\"4\" data-texture-id=\"3\" data-icon-name=\"Icon_c06_s04_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=6 s=4 t=3 -->\n  <defs>\n    <mask id=\"mask_c06_s04_t03\"><polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c06_s04_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#9B51E0\" mask=\"url(#mask_c06_s04_t03)\"/>\n  <polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c06_s04_t03)\" mask=\"url(#mask_c06_s04_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 651,
+    "colorId": 6,
+    "shapeId": 5,
+    "textureId": 1,
+    "iconName": "Icon_c06_s05_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c06_s05_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"6\" data-shape-id=\"5\" data-texture-id=\"1\" data-icon-name=\"Icon_c06_s05_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=6 s=5 t=1 -->\n  <defs>\n    <mask id=\"mask_c06_s05_t01\"><polygon points=\"128,28 226,220 30,220\" fill=\"white\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#9B51E0\" mask=\"url(#mask_c06_s05_t01)\"/>\n  <polygon points=\"128,28 226,220 30,220\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 652,
+    "colorId": 6,
+    "shapeId": 5,
+    "textureId": 2,
+    "iconName": "Icon_c06_s05_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c06_s05_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"6\" data-shape-id=\"5\" data-texture-id=\"2\" data-icon-name=\"Icon_c06_s05_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=6 s=5 t=2 -->\n  <defs>\n    <mask id=\"mask_c06_s05_t02\"><polygon points=\"128,28 226,220 30,220\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c06_s05_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#9B51E0\" mask=\"url(#mask_c06_s05_t02)\"/>\n  <polygon points=\"128,28 226,220 30,220\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c06_s05_t02)\" mask=\"url(#mask_c06_s05_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 653,
+    "colorId": 6,
+    "shapeId": 5,
+    "textureId": 3,
+    "iconName": "Icon_c06_s05_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c06_s05_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"6\" data-shape-id=\"5\" data-texture-id=\"3\" data-icon-name=\"Icon_c06_s05_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=6 s=5 t=3 -->\n  <defs>\n    <mask id=\"mask_c06_s05_t03\"><polygon points=\"128,28 226,220 30,220\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c06_s05_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#9B51E0\" mask=\"url(#mask_c06_s05_t03)\"/>\n  <polygon points=\"128,28 226,220 30,220\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c06_s05_t03)\" mask=\"url(#mask_c06_s05_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 711,
+    "colorId": 7,
+    "shapeId": 1,
+    "textureId": 1,
+    "iconName": "Icon_c07_s01_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c07_s01_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"7\" data-shape-id=\"1\" data-texture-id=\"1\" data-icon-name=\"Icon_c07_s01_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=7 s=1 t=1 -->\n  <defs>\n    <mask id=\"mask_c07_s01_t01\"><polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"white\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#EB5757\" mask=\"url(#mask_c07_s01_t01)\"/>\n  <polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 712,
+    "colorId": 7,
+    "shapeId": 1,
+    "textureId": 2,
+    "iconName": "Icon_c07_s01_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c07_s01_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"7\" data-shape-id=\"1\" data-texture-id=\"2\" data-icon-name=\"Icon_c07_s01_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=7 s=1 t=2 -->\n  <defs>\n    <mask id=\"mask_c07_s01_t02\"><polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c07_s01_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#EB5757\" mask=\"url(#mask_c07_s01_t02)\"/>\n  <polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c07_s01_t02)\" mask=\"url(#mask_c07_s01_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 713,
+    "colorId": 7,
+    "shapeId": 1,
+    "textureId": 3,
+    "iconName": "Icon_c07_s01_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c07_s01_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"7\" data-shape-id=\"1\" data-texture-id=\"3\" data-icon-name=\"Icon_c07_s01_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=7 s=1 t=3 -->\n  <defs>\n    <mask id=\"mask_c07_s01_t03\"><polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c07_s01_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#EB5757\" mask=\"url(#mask_c07_s01_t03)\"/>\n  <polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c07_s01_t03)\" mask=\"url(#mask_c07_s01_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 721,
+    "colorId": 7,
+    "shapeId": 2,
+    "textureId": 1,
+    "iconName": "Icon_c07_s02_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c07_s02_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"7\" data-shape-id=\"2\" data-texture-id=\"1\" data-icon-name=\"Icon_c07_s02_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=7 s=2 t=1 -->\n  <defs>\n    <mask id=\"mask_c07_s02_t01\"><circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"white\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"black\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#EB5757\" mask=\"url(#mask_c07_s02_t01)\"/>\n  <circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 722,
+    "colorId": 7,
+    "shapeId": 2,
+    "textureId": 2,
+    "iconName": "Icon_c07_s02_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c07_s02_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"7\" data-shape-id=\"2\" data-texture-id=\"2\" data-icon-name=\"Icon_c07_s02_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=7 s=2 t=2 -->\n  <defs>\n    <mask id=\"mask_c07_s02_t02\"><circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"white\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"black\"/></mask>\n    <pattern id=\"pattern_c07_s02_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#EB5757\" mask=\"url(#mask_c07_s02_t02)\"/>\n  <circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c07_s02_t02)\" mask=\"url(#mask_c07_s02_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 723,
+    "colorId": 7,
+    "shapeId": 2,
+    "textureId": 3,
+    "iconName": "Icon_c07_s02_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c07_s02_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"7\" data-shape-id=\"2\" data-texture-id=\"3\" data-icon-name=\"Icon_c07_s02_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=7 s=2 t=3 -->\n  <defs>\n    <mask id=\"mask_c07_s02_t03\"><circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"white\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"black\"/></mask>\n    <pattern id=\"pattern_c07_s02_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#EB5757\" mask=\"url(#mask_c07_s02_t03)\"/>\n  <circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c07_s02_t03)\" mask=\"url(#mask_c07_s02_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 731,
+    "colorId": 7,
+    "shapeId": 3,
+    "textureId": 1,
+    "iconName": "Icon_c07_s03_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c07_s03_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"7\" data-shape-id=\"3\" data-texture-id=\"1\" data-icon-name=\"Icon_c07_s03_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=7 s=3 t=1 -->\n  <defs>\n    <mask id=\"mask_c07_s03_t01\"><polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"white\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#EB5757\" mask=\"url(#mask_c07_s03_t01)\"/>\n  <polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 732,
+    "colorId": 7,
+    "shapeId": 3,
+    "textureId": 2,
+    "iconName": "Icon_c07_s03_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c07_s03_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"7\" data-shape-id=\"3\" data-texture-id=\"2\" data-icon-name=\"Icon_c07_s03_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=7 s=3 t=2 -->\n  <defs>\n    <mask id=\"mask_c07_s03_t02\"><polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c07_s03_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#EB5757\" mask=\"url(#mask_c07_s03_t02)\"/>\n  <polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c07_s03_t02)\" mask=\"url(#mask_c07_s03_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 733,
+    "colorId": 7,
+    "shapeId": 3,
+    "textureId": 3,
+    "iconName": "Icon_c07_s03_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c07_s03_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"7\" data-shape-id=\"3\" data-texture-id=\"3\" data-icon-name=\"Icon_c07_s03_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=7 s=3 t=3 -->\n  <defs>\n    <mask id=\"mask_c07_s03_t03\"><polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c07_s03_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#EB5757\" mask=\"url(#mask_c07_s03_t03)\"/>\n  <polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c07_s03_t03)\" mask=\"url(#mask_c07_s03_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 741,
+    "colorId": 7,
+    "shapeId": 4,
+    "textureId": 1,
+    "iconName": "Icon_c07_s04_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c07_s04_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"7\" data-shape-id=\"4\" data-texture-id=\"1\" data-icon-name=\"Icon_c07_s04_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=7 s=4 t=1 -->\n  <defs>\n    <mask id=\"mask_c07_s04_t01\"><polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"white\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#EB5757\" mask=\"url(#mask_c07_s04_t01)\"/>\n  <polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 742,
+    "colorId": 7,
+    "shapeId": 4,
+    "textureId": 2,
+    "iconName": "Icon_c07_s04_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c07_s04_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"7\" data-shape-id=\"4\" data-texture-id=\"2\" data-icon-name=\"Icon_c07_s04_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=7 s=4 t=2 -->\n  <defs>\n    <mask id=\"mask_c07_s04_t02\"><polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c07_s04_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#EB5757\" mask=\"url(#mask_c07_s04_t02)\"/>\n  <polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c07_s04_t02)\" mask=\"url(#mask_c07_s04_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 743,
+    "colorId": 7,
+    "shapeId": 4,
+    "textureId": 3,
+    "iconName": "Icon_c07_s04_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c07_s04_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"7\" data-shape-id=\"4\" data-texture-id=\"3\" data-icon-name=\"Icon_c07_s04_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=7 s=4 t=3 -->\n  <defs>\n    <mask id=\"mask_c07_s04_t03\"><polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c07_s04_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#EB5757\" mask=\"url(#mask_c07_s04_t03)\"/>\n  <polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c07_s04_t03)\" mask=\"url(#mask_c07_s04_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 751,
+    "colorId": 7,
+    "shapeId": 5,
+    "textureId": 1,
+    "iconName": "Icon_c07_s05_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c07_s05_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"7\" data-shape-id=\"5\" data-texture-id=\"1\" data-icon-name=\"Icon_c07_s05_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=7 s=5 t=1 -->\n  <defs>\n    <mask id=\"mask_c07_s05_t01\"><polygon points=\"128,28 226,220 30,220\" fill=\"white\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#EB5757\" mask=\"url(#mask_c07_s05_t01)\"/>\n  <polygon points=\"128,28 226,220 30,220\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 752,
+    "colorId": 7,
+    "shapeId": 5,
+    "textureId": 2,
+    "iconName": "Icon_c07_s05_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c07_s05_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"7\" data-shape-id=\"5\" data-texture-id=\"2\" data-icon-name=\"Icon_c07_s05_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=7 s=5 t=2 -->\n  <defs>\n    <mask id=\"mask_c07_s05_t02\"><polygon points=\"128,28 226,220 30,220\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c07_s05_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#EB5757\" mask=\"url(#mask_c07_s05_t02)\"/>\n  <polygon points=\"128,28 226,220 30,220\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c07_s05_t02)\" mask=\"url(#mask_c07_s05_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 753,
+    "colorId": 7,
+    "shapeId": 5,
+    "textureId": 3,
+    "iconName": "Icon_c07_s05_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c07_s05_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"7\" data-shape-id=\"5\" data-texture-id=\"3\" data-icon-name=\"Icon_c07_s05_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=7 s=5 t=3 -->\n  <defs>\n    <mask id=\"mask_c07_s05_t03\"><polygon points=\"128,28 226,220 30,220\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c07_s05_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#EB5757\" mask=\"url(#mask_c07_s05_t03)\"/>\n  <polygon points=\"128,28 226,220 30,220\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c07_s05_t03)\" mask=\"url(#mask_c07_s05_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 811,
+    "colorId": 8,
+    "shapeId": 1,
+    "textureId": 1,
+    "iconName": "Icon_c08_s01_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c08_s01_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"8\" data-shape-id=\"1\" data-texture-id=\"1\" data-icon-name=\"Icon_c08_s01_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=8 s=1 t=1 -->\n  <defs>\n    <mask id=\"mask_c08_s01_t01\"><polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"white\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F2C94C\" mask=\"url(#mask_c08_s01_t01)\"/>\n  <polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 812,
+    "colorId": 8,
+    "shapeId": 1,
+    "textureId": 2,
+    "iconName": "Icon_c08_s01_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c08_s01_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"8\" data-shape-id=\"1\" data-texture-id=\"2\" data-icon-name=\"Icon_c08_s01_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=8 s=1 t=2 -->\n  <defs>\n    <mask id=\"mask_c08_s01_t02\"><polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c08_s01_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F2C94C\" mask=\"url(#mask_c08_s01_t02)\"/>\n  <polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c08_s01_t02)\" mask=\"url(#mask_c08_s01_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 813,
+    "colorId": 8,
+    "shapeId": 1,
+    "textureId": 3,
+    "iconName": "Icon_c08_s01_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c08_s01_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"8\" data-shape-id=\"1\" data-texture-id=\"3\" data-icon-name=\"Icon_c08_s01_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=8 s=1 t=3 -->\n  <defs>\n    <mask id=\"mask_c08_s01_t03\"><polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c08_s01_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F2C94C\" mask=\"url(#mask_c08_s01_t03)\"/>\n  <polygon points=\"128,30 224,100 187,222 69,222 32,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c08_s01_t03)\" mask=\"url(#mask_c08_s01_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 821,
+    "colorId": 8,
+    "shapeId": 2,
+    "textureId": 1,
+    "iconName": "Icon_c08_s02_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c08_s02_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"8\" data-shape-id=\"2\" data-texture-id=\"1\" data-icon-name=\"Icon_c08_s02_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=8 s=2 t=1 -->\n  <defs>\n    <mask id=\"mask_c08_s02_t01\"><circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"white\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"black\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F2C94C\" mask=\"url(#mask_c08_s02_t01)\"/>\n  <circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 822,
+    "colorId": 8,
+    "shapeId": 2,
+    "textureId": 2,
+    "iconName": "Icon_c08_s02_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c08_s02_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"8\" data-shape-id=\"2\" data-texture-id=\"2\" data-icon-name=\"Icon_c08_s02_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=8 s=2 t=2 -->\n  <defs>\n    <mask id=\"mask_c08_s02_t02\"><circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"white\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"black\"/></mask>\n    <pattern id=\"pattern_c08_s02_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F2C94C\" mask=\"url(#mask_c08_s02_t02)\"/>\n  <circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c08_s02_t02)\" mask=\"url(#mask_c08_s02_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 823,
+    "colorId": 8,
+    "shapeId": 2,
+    "textureId": 3,
+    "iconName": "Icon_c08_s02_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c08_s02_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"8\" data-shape-id=\"2\" data-texture-id=\"3\" data-icon-name=\"Icon_c08_s02_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=8 s=2 t=3 -->\n  <defs>\n    <mask id=\"mask_c08_s02_t03\"><circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"white\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"black\"/></mask>\n    <pattern id=\"pattern_c08_s02_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F2C94C\" mask=\"url(#mask_c08_s02_t03)\"/>\n  <circle cx=\"128\" cy=\"128\" r=\"88\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/><rect x=\"98\" y=\"98\" width=\"60\" height=\"60\" rx=\"4\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c08_s02_t03)\" mask=\"url(#mask_c08_s02_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 831,
+    "colorId": 8,
+    "shapeId": 3,
+    "textureId": 1,
+    "iconName": "Icon_c08_s03_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c08_s03_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"8\" data-shape-id=\"3\" data-texture-id=\"1\" data-icon-name=\"Icon_c08_s03_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=8 s=3 t=1 -->\n  <defs>\n    <mask id=\"mask_c08_s03_t01\"><polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"white\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F2C94C\" mask=\"url(#mask_c08_s03_t01)\"/>\n  <polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 832,
+    "colorId": 8,
+    "shapeId": 3,
+    "textureId": 2,
+    "iconName": "Icon_c08_s03_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c08_s03_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"8\" data-shape-id=\"3\" data-texture-id=\"2\" data-icon-name=\"Icon_c08_s03_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=8 s=3 t=2 -->\n  <defs>\n    <mask id=\"mask_c08_s03_t02\"><polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c08_s03_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F2C94C\" mask=\"url(#mask_c08_s03_t02)\"/>\n  <polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c08_s03_t02)\" mask=\"url(#mask_c08_s03_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 833,
+    "colorId": 8,
+    "shapeId": 3,
+    "textureId": 3,
+    "iconName": "Icon_c08_s03_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c08_s03_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"8\" data-shape-id=\"3\" data-texture-id=\"3\" data-icon-name=\"Icon_c08_s03_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=8 s=3 t=3 -->\n  <defs>\n    <mask id=\"mask_c08_s03_t03\"><polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c08_s03_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F2C94C\" mask=\"url(#mask_c08_s03_t03)\"/>\n  <polygon points=\"128,22 158,91 233,97 176,147 193,220 128,182 63,220 80,147 23,97 98,91\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c08_s03_t03)\" mask=\"url(#mask_c08_s03_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 841,
+    "colorId": 8,
+    "shapeId": 4,
+    "textureId": 1,
+    "iconName": "Icon_c08_s04_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c08_s04_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"8\" data-shape-id=\"4\" data-texture-id=\"1\" data-icon-name=\"Icon_c08_s04_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=8 s=4 t=1 -->\n  <defs>\n    <mask id=\"mask_c08_s04_t01\"><polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"white\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F2C94C\" mask=\"url(#mask_c08_s04_t01)\"/>\n  <polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 842,
+    "colorId": 8,
+    "shapeId": 4,
+    "textureId": 2,
+    "iconName": "Icon_c08_s04_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c08_s04_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"8\" data-shape-id=\"4\" data-texture-id=\"2\" data-icon-name=\"Icon_c08_s04_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=8 s=4 t=2 -->\n  <defs>\n    <mask id=\"mask_c08_s04_t02\"><polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c08_s04_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F2C94C\" mask=\"url(#mask_c08_s04_t02)\"/>\n  <polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c08_s04_t02)\" mask=\"url(#mask_c08_s04_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 843,
+    "colorId": 8,
+    "shapeId": 4,
+    "textureId": 3,
+    "iconName": "Icon_c08_s04_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c08_s04_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"8\" data-shape-id=\"4\" data-texture-id=\"3\" data-icon-name=\"Icon_c08_s04_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=8 s=4 t=3 -->\n  <defs>\n    <mask id=\"mask_c08_s04_t03\"><polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c08_s04_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F2C94C\" mask=\"url(#mask_c08_s04_t03)\"/>\n  <polygon points=\"100,30 156,30 156,100 226,100 226,156 156,156 156,226 100,226 100,156 30,156 30,100 100,100\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c08_s04_t03)\" mask=\"url(#mask_c08_s04_t03)\"/>\n</svg>\n"
+  },
+  {
+    "id": 851,
+    "colorId": 8,
+    "shapeId": 5,
+    "textureId": 1,
+    "iconName": "Icon_c08_s05_t01",
+    "assetUrl": "/training-assets/flash/core/flash_c08_s05_t01.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"8\" data-shape-id=\"5\" data-texture-id=\"1\" data-icon-name=\"Icon_c08_s05_t01\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=8 s=5 t=1 -->\n  <defs>\n    <mask id=\"mask_c08_s05_t01\"><polygon points=\"128,28 226,220 30,220\" fill=\"white\"/></mask>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F2C94C\" mask=\"url(#mask_c08_s05_t01)\"/>\n  <polygon points=\"128,28 226,220 30,220\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  \n</svg>\n"
+  },
+  {
+    "id": 852,
+    "colorId": 8,
+    "shapeId": 5,
+    "textureId": 2,
+    "iconName": "Icon_c08_s05_t02",
+    "assetUrl": "/training-assets/flash/core/flash_c08_s05_t02.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"8\" data-shape-id=\"5\" data-texture-id=\"2\" data-icon-name=\"Icon_c08_s05_t02\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=8 s=5 t=2 -->\n  <defs>\n    <mask id=\"mask_c08_s05_t02\"><polygon points=\"128,28 226,220 30,220\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c08_s05_t02\" patternUnits=\"userSpaceOnUse\" width=\"32\" height=\"32\">\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#FFFFFF\" stroke-opacity=\"0.55\" stroke-width=\"5\"/>\n      <path d=\"M0 0H32V32H0Z\" fill=\"none\" stroke=\"#111827\" stroke-opacity=\"0.18\" stroke-width=\"1.5\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F2C94C\" mask=\"url(#mask_c08_s05_t02)\"/>\n  <polygon points=\"128,28 226,220 30,220\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c08_s05_t02)\" mask=\"url(#mask_c08_s05_t02)\"/>\n</svg>\n"
+  },
+  {
+    "id": 853,
+    "colorId": 8,
+    "shapeId": 5,
+    "textureId": 3,
+    "iconName": "Icon_c08_s05_t03",
+    "assetUrl": "/training-assets/flash/core/flash_c08_s05_t03.svg",
+    "fallbackSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\" role=\"img\" aria-label=\"flash shape stimulus\" data-color-id=\"8\" data-shape-id=\"5\" data-texture-id=\"3\" data-icon-name=\"Icon_c08_s05_t03\">\n  <!-- generated default core stimulus; original abstract geometry; not based on any source artwork; c=8 s=5 t=3 -->\n  <defs>\n    <mask id=\"mask_c08_s05_t03\"><polygon points=\"128,28 226,220 30,220\" fill=\"white\"/></mask>\n    <pattern id=\"pattern_c08_s05_t03\" patternUnits=\"userSpaceOnUse\" width=\"28\" height=\"28\" patternTransform=\"rotate(45)\">\n      <rect x=\"0\" y=\"0\" width=\"28\" height=\"28\" fill=\"none\"/>\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"28\" fill=\"#FFFFFF\" fill-opacity=\"0.48\"/>\n      <rect x=\"12\" y=\"0\" width=\"3\" height=\"28\" fill=\"#111827\" fill-opacity=\"0.14\"/>\n    </pattern>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"#F2C94C\" mask=\"url(#mask_c08_s05_t03)\"/>\n  <polygon points=\"128,28 226,220 30,220\" fill=\"none\" stroke=\"#252A31\" stroke-width=\"8\" stroke-linejoin=\"round\"/>\n  <rect x=\"0\" y=\"0\" width=\"256\" height=\"256\" fill=\"url(#pattern_c08_s05_t03)\" mask=\"url(#mask_c08_s05_t03)\"/>\n</svg>\n"
+  }
+]
