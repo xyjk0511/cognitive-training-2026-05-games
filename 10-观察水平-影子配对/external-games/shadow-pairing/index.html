@@ -1,0 +1,1611 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>影子配对｜完整版游戏</title>
+  <style>
+    :root {
+      --bg-0: #f8efe4;
+      --bg-1: #ffe9cf;
+      --panel: rgba(255, 255, 255, 0.88);
+      --panel-solid: #fffaf4;
+      --ink: #2f2a26;
+      --muted: #7b6e62;
+      --accent: #e56a58;
+      --accent-2: #ffb44d;
+      --accent-3: #58a4b0;
+      --good: #24a16b;
+      --bad: #d84a4a;
+      --shadow: #25262c;
+      --line: rgba(47, 42, 38, 0.12);
+      --ring: rgba(229, 106, 88, 0.28);
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --drop: 0 18px 45px rgba(65, 45, 30, 0.16);
+      --drop-small: 0 8px 24px rgba(65, 45, 30, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: ui-rounded, "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 12%, rgba(255, 206, 124, 0.56), transparent 26%),
+        radial-gradient(circle at 86% 18%, rgba(88, 164, 176, 0.26), transparent 28%),
+        linear-gradient(135deg, var(--bg-0), var(--bg-1));
+      overflow: hidden;
+      user-select: none;
+    }
+
+    button, select, input { font: inherit; }
+    button { cursor: pointer; }
+    button:disabled { cursor: not-allowed; opacity: 0.62; }
+
+    .screen {
+      position: fixed;
+      inset: 0;
+      display: none;
+      overflow: auto;
+      padding: 22px;
+    }
+    .screen.active { display: block; }
+
+    .shell {
+      width: min(1180px, 100%);
+      min-height: calc(100vh - 44px);
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .hero {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 22px;
+      align-items: center;
+      padding: clamp(8px, 1vw, 18px) 0;
+    }
+
+    .hero-card, .panel {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--drop);
+      backdrop-filter: blur(14px);
+    }
+    .hero-card {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(24px, 4vw, 52px);
+      min-height: 560px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      width: 320px;
+      height: 320px;
+      right: -120px;
+      bottom: -110px;
+      background: radial-gradient(circle, rgba(229,106,88,0.22), transparent 70%);
+      pointer-events: none;
+    }
+
+    .title-kicker {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(229, 106, 88, 0.12);
+      color: #a94639;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+    h1 {
+      font-size: clamp(48px, 7vw, 86px);
+      line-height: 0.94;
+      margin: 22px 0 12px;
+      letter-spacing: -0.06em;
+    }
+    .subtitle {
+      max-width: 650px;
+      margin: 0;
+      font-size: clamp(18px, 2.2vw, 25px);
+      line-height: 1.55;
+      color: var(--muted);
+      font-weight: 650;
+    }
+
+    .demo-row {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(140px, 220px) 62px minmax(140px, 220px);
+      align-items: center;
+      gap: 18px;
+      margin-top: 34px;
+      max-width: 560px;
+    }
+    .demo-card {
+      min-height: 230px;
+      border-radius: 24px;
+      background: var(--panel-solid);
+      box-shadow: var(--drop-small);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+      border: 1px solid var(--line);
+    }
+    .demo-arrow {
+      display: grid;
+      place-items: center;
+      width: 62px;
+      height: 62px;
+      border-radius: 999px;
+      color: white;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 10px 22px rgba(229, 106, 88, 0.22);
+      font-size: 30px;
+      font-weight: 900;
+    }
+
+    .setup-panel {
+      padding: clamp(22px, 3vw, 34px);
+    }
+    .setup-panel h2 { margin: 0 0 8px; font-size: 30px; letter-spacing: -0.03em; }
+    .setup-panel p { margin: 0 0 24px; color: var(--muted); line-height: 1.6; }
+
+    .form-grid {
+      display: grid;
+      gap: 14px;
+      margin: 18px 0 22px;
+    }
+    .field {
+      display: grid;
+      gap: 8px;
+      font-weight: 800;
+    }
+    .field span { color: var(--muted); font-size: 14px; }
+    select {
+      width: 100%;
+      min-height: 48px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      color: var(--ink);
+      padding: 0 14px;
+      outline: none;
+      box-shadow: inset 0 0 0 999px transparent;
+    }
+    select:focus { border-color: rgba(229, 106, 88, 0.7); box-shadow: 0 0 0 4px var(--ring); }
+
+    .btn-row { display: flex; gap: 12px; flex-wrap: wrap; }
+    .primary, .secondary, .ghost {
+      border: 0;
+      min-height: 48px;
+      border-radius: 16px;
+      padding: 0 20px;
+      font-weight: 900;
+      letter-spacing: 0.01em;
+      transition: transform 140ms ease, box-shadow 140ms ease, background 140ms ease;
+    }
+    .primary {
+      color: white;
+      background: linear-gradient(135deg, var(--accent), #f08a54);
+      box-shadow: 0 12px 26px rgba(229, 106, 88, 0.26);
+    }
+    .secondary {
+      color: #6b4536;
+      background: #fff3e2;
+      border: 1px solid rgba(229, 106, 88, 0.18);
+    }
+    .ghost {
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.74);
+      border: 1px solid var(--line);
+    }
+    .primary:hover, .secondary:hover, .ghost:hover { transform: translateY(-1px); }
+    .primary:active, .secondary:active, .ghost:active { transform: translateY(1px); }
+
+    .record-card {
+      margin-top: 18px;
+      border: 1px dashed rgba(47, 42, 38, 0.18);
+      background: rgba(255,255,255,0.54);
+      border-radius: 18px;
+      padding: 14px 16px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+    .record-card strong { color: var(--ink); }
+
+    .rule-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .rule-item {
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.58);
+      border: 1px solid var(--line);
+    }
+    .rule-num {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      background: rgba(88, 164, 176, 0.16);
+      color: #286a73;
+      font-weight: 950;
+    }
+    .rule-item b { display: block; margin-bottom: 2px; }
+    .rule-item small { color: var(--muted); line-height: 1.5; }
+
+    .game-shell {
+      min-height: calc(100vh - 44px);
+      width: min(1260px, 100%);
+      margin: 0 auto;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 16px;
+    }
+    .topbar {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 24px;
+      padding: 12px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 12px;
+      align-items: center;
+      box-shadow: var(--drop-small);
+      backdrop-filter: blur(14px);
+    }
+    .hud {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(84px, 1fr));
+      gap: 8px;
+    }
+    .hud-item {
+      border-radius: 16px;
+      padding: 8px 10px;
+      background: rgba(255,255,255,0.72);
+      border: 1px solid var(--line);
+      min-height: 52px;
+    }
+    .hud-label { display: block; color: var(--muted); font-size: 12px; font-weight: 800; }
+    .hud-value { display: block; font-size: 20px; line-height: 1.1; font-weight: 950; letter-spacing: -0.03em; }
+    .hud-value.good { color: var(--good); }
+    .hud-value.bad { color: var(--bad); }
+
+    .game-board {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(300px, 0.9fr) minmax(420px, 1.2fr);
+      gap: 18px;
+    }
+    .question-panel, .answer-panel {
+      position: relative;
+      min-height: 0;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--drop);
+      overflow: hidden;
+      backdrop-filter: blur(14px);
+    }
+    .question-panel {
+      padding: clamp(16px, 2vw, 28px);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .answer-panel {
+      padding: clamp(16px, 2vw, 26px);
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 16px;
+    }
+    .panel-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .panel-title { margin: 0; font-size: clamp(22px, 2.5vw, 34px); letter-spacing: -0.04em; }
+    .panel-sub { margin: 4px 0 0; color: var(--muted); line-height: 1.45; font-weight: 650; }
+
+    .stage-progress {
+      overflow: hidden;
+      width: 100%;
+      height: 14px;
+      border-radius: 999px;
+      background: rgba(47, 42, 38, 0.09);
+      border: 1px solid rgba(47, 42, 38, 0.08);
+    }
+    .stage-progress > div {
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--accent-3), var(--accent-2), var(--accent));
+      transition: width 280ms linear;
+    }
+
+    .robot-card {
+      flex: 1;
+      min-height: 310px;
+      display: grid;
+      place-items: center;
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at 50% 42%, rgba(255,255,255,0.9), rgba(255,255,255,0.48) 48%, rgba(255, 241, 223, 0.72)),
+        repeating-linear-gradient(135deg, rgba(47,42,38,0.035), rgba(47,42,38,0.035) 8px, transparent 8px, transparent 18px);
+      border: 1px solid var(--line);
+      box-shadow: inset 0 0 0 8px rgba(255,255,255,0.25);
+      padding: 16px;
+    }
+    .robot-card svg { width: min(100%, 330px); height: auto; filter: drop-shadow(0 12px 16px rgba(64,44,34,0.18)); }
+
+    .hint-bubble {
+      position: relative;
+      border-radius: 18px;
+      padding: 13px 14px;
+      background: #fff8ed;
+      border: 1px solid rgba(229, 106, 88, 0.18);
+      color: #755340;
+      line-height: 1.45;
+      font-weight: 750;
+      animation: bubble 1.8s ease-in-out infinite;
+    }
+    .hint-bubble::before {
+      content: "";
+      position: absolute;
+      left: 32px;
+      top: -9px;
+      width: 18px;
+      height: 18px;
+      transform: rotate(45deg);
+      background: #fff8ed;
+      border-left: 1px solid rgba(229, 106, 88, 0.18);
+      border-top: 1px solid rgba(229, 106, 88, 0.18);
+    }
+    @keyframes bubble { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+
+    .options-grid {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-auto-rows: minmax(170px, 1fr);
+      gap: 14px;
+      align-content: stretch;
+    }
+    .option-card {
+      position: relative;
+      border: 2px solid transparent;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.84);
+      display: grid;
+      place-items: center;
+      padding: 12px;
+      min-height: 170px;
+      box-shadow: var(--drop-small);
+      transform-origin: center;
+      transition: transform 150ms ease, border-color 150ms ease, box-shadow 150ms ease, background 150ms ease;
+      animation: flyIn 280ms ease both;
+    }
+    .option-card:nth-child(2) { animation-delay: 45ms; }
+    .option-card:nth-child(3) { animation-delay: 90ms; }
+    .option-card:nth-child(4) { animation-delay: 135ms; }
+    @keyframes flyIn { from { opacity: 0; transform: translateY(14px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    .option-card:hover { transform: translateY(-2px); box-shadow: 0 16px 30px rgba(65,45,30,0.16); }
+    .option-card:focus-visible { outline: 0; border-color: rgba(229, 106, 88, 0.8); box-shadow: 0 0 0 6px var(--ring), var(--drop-small); }
+    .option-card svg { width: min(100%, 185px); height: auto; filter: drop-shadow(0 12px 11px rgba(37,38,44,0.18)); }
+    .option-card.correct { border-color: rgba(36, 161, 107, 0.85); background: rgba(236, 255, 246, 0.95); animation: popCorrect 520ms ease both; }
+    .option-card.wrong { border-color: rgba(216, 74, 74, 0.88); background: rgba(255, 238, 238, 0.95); animation: shake 360ms ease both; }
+    .option-card.wrong::after, .option-card.correct::after {
+      position: absolute;
+      right: 12px;
+      top: 10px;
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      color: white;
+      font-weight: 950;
+      box-shadow: var(--drop-small);
+    }
+    .option-card.correct::after { content: "✓"; background: var(--good); }
+    .option-card.wrong::after { content: "×"; background: var(--bad); }
+    @keyframes popCorrect { 0% { transform: scale(1); } 45% { transform: scale(1.06); } 100% { transform: scale(1); } }
+    @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 50% { transform: translateX(7px); } 75% { transform: translateX(-4px); } }
+
+    .feedback {
+      pointer-events: none;
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) scale(0.96);
+      z-index: 30;
+      opacity: 0;
+      padding: 16px 24px;
+      border-radius: 999px;
+      color: white;
+      font-size: clamp(22px, 3vw, 38px);
+      font-weight: 950;
+      letter-spacing: -0.04em;
+      box-shadow: 0 18px 45px rgba(47, 42, 38, 0.2);
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+    .feedback.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    .feedback.good { background: rgba(36, 161, 107, 0.94); }
+    .feedback.bad { background: rgba(216, 74, 74, 0.94); }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: none;
+      place-items: center;
+      background: rgba(47, 42, 38, 0.38);
+      backdrop-filter: blur(8px);
+      padding: 18px;
+    }
+    .modal-backdrop.show { display: grid; }
+    .modal-card {
+      width: min(620px, 100%);
+      max-height: min(720px, calc(100vh - 36px));
+      overflow: auto;
+      border-radius: 28px;
+      background: var(--panel-solid);
+      border: 1px solid rgba(255,255,255,0.72);
+      box-shadow: 0 30px 70px rgba(47, 42, 38, 0.28);
+      padding: clamp(20px, 3vw, 34px);
+      animation: modalIn 180ms ease both;
+    }
+    @keyframes modalIn { from { opacity: 0; transform: translateY(14px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    .modal-card h2 { margin: 0 0 8px; font-size: clamp(28px, 4vw, 44px); letter-spacing: -0.05em; }
+    .modal-card p { color: var(--muted); line-height: 1.62; }
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 18px 0 20px;
+    }
+    .result-cell {
+      border-radius: 18px;
+      background: rgba(255,255,255,0.78);
+      border: 1px solid var(--line);
+      padding: 13px 14px;
+    }
+    .result-cell span { display: block; color: var(--muted); font-size: 13px; font-weight: 800; }
+    .result-cell b { font-size: 24px; letter-spacing: -0.04em; }
+    .guide-steps {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0;
+    }
+    .guide-step {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.78);
+      border: 1px solid var(--line);
+    }
+    .guide-step div:first-child {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 15px;
+      background: linear-gradient(135deg, rgba(229,106,88,0.18), rgba(255,180,77,0.22));
+      color: #a94639;
+      font-size: 22px;
+      font-weight: 950;
+    }
+    .guide-step b { display: block; margin-bottom: 3px; }
+    .guide-step small { color: var(--muted); line-height: 1.5; }
+
+    .confetti {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+    }
+
+    .visually-hidden {
+      position: absolute !important;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0,0,0,0);
+      white-space: nowrap; border: 0;
+    }
+
+    @media (max-width: 980px) {
+      body { overflow: auto; }
+      .screen { overflow: visible; position: static; min-height: 100vh; }
+      .hero, .game-board { grid-template-columns: 1fr; }
+      .hero-card { min-height: 0; }
+      .topbar { grid-template-columns: 1fr; }
+      .topbar .btn-row { justify-content: space-between; }
+      .hud { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .robot-card { min-height: 250px; }
+    }
+    @media (max-width: 620px) {
+      .screen { padding: 12px; }
+      .shell, .game-shell { min-height: calc(100vh - 24px); }
+      .hero-card, .setup-panel, .question-panel, .answer-panel { border-radius: 22px; }
+      .demo-row { grid-template-columns: 1fr; }
+      .demo-arrow { transform: rotate(90deg); margin: 0 auto; }
+      .hud { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .options-grid { grid-template-columns: 1fr; grid-auto-rows: minmax(150px, auto); }
+      .result-grid { grid-template-columns: 1fr; }
+      .btn-row > button { flex: 1 1 auto; }
+      h1 { font-size: clamp(42px, 14vw, 64px); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 1ms !important; transition-duration: 1ms !important; scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <section id="startScreen" class="screen active">
+    <div class="shell">
+      <div class="hero">
+        <div class="hero-card">
+          <div>
+            <div class="title-kicker">感知觉训练 · 影子识别</div>
+            <h1>影子配对</h1>
+            <p class="subtitle">根据左侧机器人图示，找出轮廓完全一致的影子。答对后自动刷新题目，倒计时结束后按目标数结算。</p>
+          </div>
+          <div class="demo-row" aria-hidden="true">
+            <div class="demo-card" id="demoRobot"></div>
+            <div class="demo-arrow">→</div>
+            <div class="demo-card" id="demoShadow"></div>
+          </div>
+        </div>
+
+        <div class="panel setup-panel">
+          <h2>开始训练</h2>
+          <p>已内置策划案规则、100 级数值配置和 32 组机器人影子数据。没有外部素材依赖，打开文件即可运行。</p>
+          <div class="form-grid">
+            <label class="field">
+              <span>起始难度</span>
+              <select id="startLevelSelect" aria-label="起始难度"></select>
+            </label>
+            <label class="field">
+              <span>训练时长</span>
+              <select id="durationSelect" aria-label="训练时长">
+                <option value="60">1 分钟</option>
+                <option value="180" selected>3 分钟</option>
+                <option value="300">5 分钟</option>
+                <option value="600">10 分钟</option>
+                <option value="900">15 分钟</option>
+              </select>
+            </label>
+          </div>
+          <div class="btn-row">
+            <button id="startBtn" class="primary">开始游戏</button>
+            <button id="guideBtn" class="secondary">新手引导</button>
+            <button id="helpBtn" class="ghost">帮助</button>
+          </div>
+          <div class="record-card" id="recordCard">正在读取上次记录……</div>
+          <div class="rule-list">
+            <div class="rule-item"><div class="rule-num">1</div><div><b>正确条件</b><small>点击与图示轮廓相同的影子。</small></div></div>
+            <div class="rule-item"><div class="rule-num">2</div><div><b>小关目标</b><small>实际成功数 ≥ 当前等级目标数即过关。</small></div></div>
+            <div class="rule-item"><div class="rule-num">3</div><div><b>难度变化</b><small>过关升 1 级；连续失败按规则停留、下降 1 级或下降 3 级。</small></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="gameScreen" class="screen">
+    <div class="game-shell">
+      <header class="topbar">
+        <div class="btn-row">
+          <button id="pauseBtn" class="ghost">暂停</button>
+          <button id="quitBtn" class="ghost">返回</button>
+        </div>
+        <div class="hud" aria-live="polite">
+          <div class="hud-item"><span class="hud-label">总时间</span><span id="totalTimeText" class="hud-value">--:--</span></div>
+          <div class="hud-item"><span class="hud-label">小关时间</span><span id="stageTimeText" class="hud-value">--</span></div>
+          <div class="hud-item"><span class="hud-label">等级</span><span id="levelText" class="hud-value">1</span></div>
+          <div class="hud-item"><span class="hud-label">目标</span><span id="targetText" class="hud-value">0/0</span></div>
+          <div class="hud-item"><span class="hud-label">连续错误</span><span id="wrongText" class="hud-value bad">0</span></div>
+          <div class="hud-item"><span class="hud-label">积分</span><span id="scoreText" class="hud-value good">0</span></div>
+        </div>
+        <button id="gameHelpBtn" class="secondary">帮助</button>
+      </header>
+
+      <main class="game-board">
+        <section class="question-panel">
+          <div class="panel-head">
+            <div>
+              <h2 class="panel-title">观察机器人</h2>
+              <p class="panel-sub" id="robotCaption">找出它的正确影子。</p>
+            </div>
+            <div class="stage-progress" aria-hidden="true"><div id="stageBar"></div></div>
+          </div>
+          <div class="robot-card" id="robotStage" aria-label="机器人图示"></div>
+          <div class="hint-bubble" id="hintBubble">提示：先看头部、手臂方向、配件和陪伴物，再比较轮廓。</div>
+        </section>
+
+        <section class="answer-panel">
+          <div class="panel-head">
+            <div>
+              <h2 class="panel-title">选择正确影子</h2>
+              <p class="panel-sub" id="optionCaption">答错可继续选择；连续错 2 次且未达目标会提前结算。</p>
+            </div>
+          </div>
+          <div class="options-grid" id="optionsGrid" role="list"></div>
+        </section>
+      </main>
+    </div>
+  </section>
+
+  <div id="feedback" class="feedback" aria-live="assertive"></div>
+  <canvas id="confettiCanvas" class="confetti"></canvas>
+
+  <div id="stageModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="stageTitle">
+    <div class="modal-card">
+      <h2 id="stageTitle">小关结算</h2>
+      <p id="stageSummary">本关完成。</p>
+      <div class="result-grid" id="stageResultGrid"></div>
+      <div class="btn-row">
+        <button id="nextStageBtn" class="primary">进入下一小关</button>
+        <button id="stageQuitBtn" class="ghost">结束训练</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="finalModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="finalTitle">
+    <div class="modal-card">
+      <h2 id="finalTitle">大结算</h2>
+      <p id="finalSummary">训练结束。</p>
+      <div class="result-grid" id="finalResultGrid"></div>
+      <div class="btn-row">
+        <button id="restartBtn" class="primary">再玩一次</button>
+        <button id="backStartBtn" class="ghost">返回首页</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="helpModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+    <div class="modal-card">
+      <h2 id="helpTitle">帮助</h2>
+      <p>影子配对用于训练图形轮廓辨认、空间想象和细节观察。每个小关都有独立倒计时和通关目标。</p>
+      <div class="guide-steps">
+        <div class="guide-step"><div>看</div><div><b>观察图示</b><small>重点观察头部形状、手臂方向、持握物、陪伴物和底座。</small></div></div>
+        <div class="guide-step"><div>选</div><div><b>点击影子</b><small>正确影子与图示轮廓完全一致；干扰影子可能缺少部件、多部件或方向不同。</small></div></div>
+        <div class="guide-step"><div>算</div><div><b>小关结算</b><small>倒计时结束后，成功数达到目标即过关。过关积分 = 过关积分 + 超额成功数 × 奖励积分 + 10；未过关固定 10 分。</small></div></div>
+        <div class="guide-step"><div>变</div><div><b>难度变化</b><small>过关后难度 +1；失败 1 次保持原难度，连续失败 2 次难度 -1，连续失败 3 次难度 -3 并重新累计。</small></div></div>
+      </div>
+      <div class="btn-row"><button id="closeHelpBtn" class="primary">知道了</button></div>
+    </div>
+  </div>
+
+  <div id="guideModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="guideTitle">
+    <div class="modal-card">
+      <h2 id="guideTitle">新手引导</h2>
+      <p>第一步看左侧机器人，第二步从右侧影子里找同样的轮廓。正确答案会出现绿色标记，错误答案会出现红色标记。</p>
+      <div class="guide-steps">
+        <div class="guide-step"><div>1</div><div><b>先比较大轮廓</b><small>机器人种类、头部、身体和底座是否一致。</small></div></div>
+        <div class="guide-step"><div>2</div><div><b>再比较动作</b><small>双手向上、向下、左手向上、右手向上都属于不同轮廓。</small></div></div>
+        <div class="guide-step"><div>3</div><div><b>最后比较细节</b><small>花、冰淇淋、小狗、小猫、触角、小圆点都会影响影子。</small></div></div>
+      </div>
+      <div class="btn-row"><button id="closeGuideBtn" class="primary">开始准备</button></div>
+    </div>
+  </div>
+
+  <div id="pauseModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="pauseTitle">
+    <div class="modal-card">
+      <h2 id="pauseTitle">已暂停</h2>
+      <p>暂停期间不会扣除训练时间。继续后回到当前小关。</p>
+      <div class="btn-row">
+        <button id="resumeBtn" class="primary">继续游戏</button>
+        <button id="pauseQuitBtn" class="ghost">结束训练</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const LEVEL_CONFIG = [{"Level":1,"ErrorType":0,"ErrorNum":1,"PassTarget":1,"StageTime":15,"PassScore":100,"RewardScore":10},{"Level":2,"ErrorType":0,"ErrorNum":1,"PassTarget":1,"StageTime":15,"PassScore":115,"RewardScore":10},{"Level":3,"ErrorType":0,"ErrorNum":1,"PassTarget":1,"StageTime":15,"PassScore":130,"RewardScore":10},{"Level":4,"ErrorType":0,"ErrorNum":1,"PassTarget":1,"StageTime":15,"PassScore":145,"RewardScore":10},{"Level":5,"ErrorType":1,"ErrorNum":1,"PassTarget":1,"StageTime":15,"PassScore":160,"RewardScore":10},{"Level":6,"ErrorType":1,"ErrorNum":1,"PassTarget":1,"StageTime":15,"PassScore":190,"RewardScore":11},{"Level":7,"ErrorType":1,"ErrorNum":2,"PassTarget":1,"StageTime":15,"PassScore":206,"RewardScore":11},{"Level":8,"ErrorType":1,"ErrorNum":2,"PassTarget":1,"StageTime":15,"PassScore":222,"RewardScore":11},{"Level":9,"ErrorType":1,"ErrorNum":2,"PassTarget":1,"StageTime":15,"PassScore":238,"RewardScore":11},{"Level":10,"ErrorType":1,"ErrorNum":2,"PassTarget":1,"StageTime":15,"PassScore":254,"RewardScore":11},{"Level":11,"ErrorType":0,"ErrorNum":2,"PassTarget":2,"StageTime":20,"PassScore":290,"RewardScore":12},{"Level":12,"ErrorType":0,"ErrorNum":2,"PassTarget":2,"StageTime":20,"PassScore":298,"RewardScore":12},{"Level":13,"ErrorType":0,"ErrorNum":2,"PassTarget":2,"StageTime":20,"PassScore":306,"RewardScore":12},{"Level":14,"ErrorType":0,"ErrorNum":2,"PassTarget":2,"StageTime":20,"PassScore":314,"RewardScore":12},{"Level":15,"ErrorType":1,"ErrorNum":2,"PassTarget":2,"StageTime":20,"PassScore":322,"RewardScore":12},{"Level":16,"ErrorType":1,"ErrorNum":2,"PassTarget":2,"StageTime":20,"PassScore":351,"RewardScore":13},{"Level":17,"ErrorType":1,"ErrorNum":2,"PassTarget":2,"StageTime":20,"PassScore":360,"RewardScore":13},{"Level":18,"ErrorType":1,"ErrorNum":2,"PassTarget":2,"StageTime":20,"PassScore":368,"RewardScore":13},{"Level":19,"ErrorType":1,"ErrorNum":2,"PassTarget":2,"StageTime":20,"PassScore":376,"RewardScore":13},{"Level":20,"ErrorType":1,"ErrorNum":2,"PassTarget":2,"StageTime":20,"PassScore":384,"RewardScore":13},{"Level":21,"ErrorType":1,"ErrorNum":2,"PassTarget":2,"StageTime":20,"PassScore":415,"RewardScore":14},{"Level":22,"ErrorType":1,"ErrorNum":2,"PassTarget":2,"StageTime":20,"PassScore":424,"RewardScore":14},{"Level":23,"ErrorType":1,"ErrorNum":2,"PassTarget":2,"StageTime":20,"PassScore":432,"RewardScore":14},{"Level":24,"ErrorType":1,"ErrorNum":2,"PassTarget":2,"StageTime":20,"PassScore":441,"RewardScore":14},{"Level":25,"ErrorType":1,"ErrorNum":2,"PassTarget":2,"StageTime":20,"PassScore":449,"RewardScore":14},{"Level":26,"ErrorType":1,"ErrorNum":2,"PassTarget":2,"StageTime":20,"PassScore":481,"RewardScore":15},{"Level":27,"ErrorType":1,"ErrorNum":2,"PassTarget":2,"StageTime":20,"PassScore":490,"RewardScore":15},{"Level":28,"ErrorType":1,"ErrorNum":2,"PassTarget":2,"StageTime":20,"PassScore":499,"RewardScore":15},{"Level":29,"ErrorType":1,"ErrorNum":2,"PassTarget":2,"StageTime":20,"PassScore":508,"RewardScore":15},{"Level":30,"ErrorType":1,"ErrorNum":2,"PassTarget":2,"StageTime":20,"PassScore":516,"RewardScore":15},{"Level":31,"ErrorType":1,"ErrorNum":2,"PassTarget":2,"StageTime":20,"PassScore":550,"RewardScore":16},{"Level":32,"ErrorType":1,"ErrorNum":2,"PassTarget":2,"StageTime":20,"PassScore":559,"RewardScore":16},{"Level":33,"ErrorType":1,"ErrorNum":2,"PassTarget":2,"StageTime":20,"PassScore":568,"RewardScore":16},{"Level":34,"ErrorType":1,"ErrorNum":2,"PassTarget":2,"StageTime":20,"PassScore":577,"RewardScore":16},{"Level":35,"ErrorType":1,"ErrorNum":3,"PassTarget":2,"StageTime":20,"PassScore":586,"RewardScore":16},{"Level":36,"ErrorType":1,"ErrorNum":3,"PassTarget":2,"StageTime":20,"PassScore":621,"RewardScore":17},{"Level":37,"ErrorType":1,"ErrorNum":3,"PassTarget":2,"StageTime":20,"PassScore":631,"RewardScore":17},{"Level":38,"ErrorType":1,"ErrorNum":3,"PassTarget":2,"StageTime":20,"PassScore":640,"RewardScore":17},{"Level":39,"ErrorType":1,"ErrorNum":3,"PassTarget":2,"StageTime":20,"PassScore":649,"RewardScore":17},{"Level":40,"ErrorType":1,"ErrorNum":3,"PassTarget":2,"StageTime":20,"PassScore":658,"RewardScore":17},{"Level":41,"ErrorType":1,"ErrorNum":3,"PassTarget":2,"StageTime":20,"PassScore":695,"RewardScore":18},{"Level":42,"ErrorType":1,"ErrorNum":3,"PassTarget":2,"StageTime":20,"PassScore":705,"RewardScore":18},{"Level":43,"ErrorType":0,"ErrorNum":3,"PassTarget":2,"StageTime":20,"PassScore":714,"RewardScore":18},{"Level":44,"ErrorType":0,"ErrorNum":3,"PassTarget":2,"StageTime":20,"PassScore":724,"RewardScore":18},{"Level":45,"ErrorType":0,"ErrorNum":3,"PassTarget":2,"StageTime":20,"PassScore":733,"RewardScore":18},{"Level":46,"ErrorType":0,"ErrorNum":3,"PassTarget":2,"StageTime":20,"PassScore":771,"RewardScore":19},{"Level":47,"ErrorType":1,"ErrorNum":3,"PassTarget":2,"StageTime":20,"PassScore":781,"RewardScore":19},{"Level":48,"ErrorType":1,"ErrorNum":3,"PassTarget":2,"StageTime":20,"PassScore":791,"RewardScore":19},{"Level":49,"ErrorType":1,"ErrorNum":3,"PassTarget":2,"StageTime":20,"PassScore":801,"RewardScore":19},{"Level":50,"ErrorType":1,"ErrorNum":3,"PassTarget":2,"StageTime":20,"PassScore":810,"RewardScore":19},{"Level":51,"ErrorType":1,"ErrorNum":3,"PassTarget":3,"StageTime":25,"PassScore":850,"RewardScore":20},{"Level":52,"ErrorType":1,"ErrorNum":3,"PassTarget":3,"StageTime":25,"PassScore":861,"RewardScore":20},{"Level":53,"ErrorType":1,"ErrorNum":3,"PassTarget":3,"StageTime":25,"PassScore":871,"RewardScore":20},{"Level":54,"ErrorType":1,"ErrorNum":3,"PassTarget":3,"StageTime":25,"PassScore":882,"RewardScore":20},{"Level":55,"ErrorType":1,"ErrorNum":3,"PassTarget":3,"StageTime":25,"PassScore":893,"RewardScore":20},{"Level":56,"ErrorType":1,"ErrorNum":3,"PassTarget":3,"StageTime":25,"PassScore":935,"RewardScore":21},{"Level":57,"ErrorType":1,"ErrorNum":3,"PassTarget":3,"StageTime":25,"PassScore":946,"RewardScore":21},{"Level":58,"ErrorType":1,"ErrorNum":3,"PassTarget":3,"StageTime":25,"PassScore":957,"RewardScore":21},{"Level":59,"ErrorType":1,"ErrorNum":3,"PassTarget":3,"StageTime":25,"PassScore":968,"RewardScore":21},{"Level":60,"ErrorType":1,"ErrorNum":3,"PassTarget":3,"StageTime":25,"PassScore":979,"RewardScore":21},{"Level":61,"ErrorType":1,"ErrorNum":3,"PassTarget":3,"StageTime":25,"PassScore":1023,"RewardScore":22},{"Level":62,"ErrorType":1,"ErrorNum":3,"PassTarget":3,"StageTime":25,"PassScore":1034,"RewardScore":22},{"Level":63,"ErrorType":1,"ErrorNum":3,"PassTarget":3,"StageTime":25,"PassScore":1045,"RewardScore":22},{"Level":64,"ErrorType":1,"ErrorNum":3,"PassTarget":3,"StageTime":25,"PassScore":1057,"RewardScore":22},{"Level":65,"ErrorType":1,"ErrorNum":3,"PassTarget":3,"StageTime":25,"PassScore":1068,"RewardScore":22},{"Level":66,"ErrorType":1,"ErrorNum":3,"PassTarget":3,"StageTime":25,"PassScore":1114,"RewardScore":23},{"Level":67,"ErrorType":1,"ErrorNum":3,"PassTarget":3,"StageTime":25,"PassScore":1125,"RewardScore":23},{"Level":68,"ErrorType":1,"ErrorNum":3,"PassTarget":3,"StageTime":25,"PassScore":1137,"RewardScore":23},{"Level":69,"ErrorType":1,"ErrorNum":3,"PassTarget":3,"StageTime":25,"PassScore":1148,"RewardScore":23},{"Level":70,"ErrorType":1,"ErrorNum":3,"PassTarget":3,"StageTime":25,"PassScore":1160,"RewardScore":23},{"Level":71,"ErrorType":1,"ErrorNum":3,"PassTarget":3,"StageTime":25,"PassScore":1207,"RewardScore":24},{"Level":72,"ErrorType":1,"ErrorNum":3,"PassTarget":3,"StageTime":25,"PassScore":1219,"RewardScore":24},{"Level":73,"ErrorType":1,"ErrorNum":3,"PassTarget":3,"StageTime":25,"PassScore":1231,"RewardScore":24},{"Level":74,"ErrorType":1,"ErrorNum":3,"PassTarget":3,"StageTime":25,"PassScore":1243,"RewardScore":24},{"Level":75,"ErrorType":1,"ErrorNum":3,"PassTarget":3,"StageTime":25,"PassScore":1255,"RewardScore":24},{"Level":76,"ErrorType":1,"ErrorNum":3,"PassTarget":3,"StageTime":25,"PassScore":1304,"RewardScore":25},{"Level":77,"ErrorType":1,"ErrorNum":3,"PassTarget":3,"StageTime":25,"PassScore":1316,"RewardScore":25},{"Level":78,"ErrorType":1,"ErrorNum":3,"PassTarget":3,"StageTime":25,"PassScore":1328,"RewardScore":25},{"Level":79,"ErrorType":1,"ErrorNum":3,"PassTarget":3,"StageTime":25,"PassScore":1340,"RewardScore":25},{"Level":80,"ErrorType":1,"ErrorNum":3,"PassTarget":3,"StageTime":25,"PassScore":1352,"RewardScore":25},{"Level":81,"ErrorType":1,"ErrorNum":3,"PassTarget":3,"StageTime":25,"PassScore":1403,"RewardScore":26},{"Level":82,"ErrorType":1,"ErrorNum":3,"PassTarget":3,"StageTime":25,"PassScore":1415,"RewardScore":26},{"Level":83,"ErrorType":1,"ErrorNum":3,"PassTarget":3,"StageTime":25,"PassScore":1428,"RewardScore":26},{"Level":84,"ErrorType":1,"ErrorNum":3,"PassTarget":3,"StageTime":25,"PassScore":1440,"RewardScore":26},{"Level":85,"ErrorType":1,"ErrorNum":3,"PassTarget":3,"StageTime":25,"PassScore":1453,"RewardScore":26},{"Level":86,"ErrorType":1,"ErrorNum":3,"PassTarget":4,"StageTime":30,"PassScore":1505,"RewardScore":27},{"Level":87,"ErrorType":1,"ErrorNum":3,"PassTarget":4,"StageTime":30,"PassScore":1537,"RewardScore":27},{"Level":88,"ErrorType":1,"ErrorNum":3,"PassTarget":4,"StageTime":30,"PassScore":1569,"RewardScore":27},{"Level":89,"ErrorType":1,"ErrorNum":3,"PassTarget":4,"StageTime":30,"PassScore":1601,"RewardScore":27},{"Level":90,"ErrorType":1,"ErrorNum":3,"PassTarget":4,"StageTime":30,"PassScore":1633,"RewardScore":27},{"Level":91,"ErrorType":1,"ErrorNum":3,"PassTarget":4,"StageTime":30,"PassScore":1710,"RewardScore":28},{"Level":92,"ErrorType":1,"ErrorNum":3,"PassTarget":4,"StageTime":30,"PassScore":1743,"RewardScore":28},{"Level":93,"ErrorType":1,"ErrorNum":3,"PassTarget":4,"StageTime":30,"PassScore":1776,"RewardScore":28},{"Level":94,"ErrorType":1,"ErrorNum":3,"PassTarget":4,"StageTime":30,"PassScore":1809,"RewardScore":28},{"Level":95,"ErrorType":1,"ErrorNum":3,"PassTarget":4,"StageTime":30,"PassScore":1842,"RewardScore":28},{"Level":96,"ErrorType":1,"ErrorNum":3,"PassTarget":5,"StageTime":35,"PassScore":1925,"RewardScore":29},{"Level":97,"ErrorType":1,"ErrorNum":3,"PassTarget":5,"StageTime":35,"PassScore":1930,"RewardScore":29},{"Level":98,"ErrorType":1,"ErrorNum":3,"PassTarget":5,"StageTime":35,"PassScore":1935,"RewardScore":29},{"Level":99,"ErrorType":1,"ErrorNum":3,"PassTarget":5,"StageTime":35,"PassScore":1940,"RewardScore":29},{"Level":100,"ErrorType":1,"ErrorNum":3,"PassTarget":5,"StageTime":35,"PassScore":1945,"RewardScore":29}];
+    const SHADOW_CONFIG = [{"robotId":1,"Answer":10,"Error":[11,12,13,14]},{"robotId":2,"Answer":20,"Error":[21,22,23,24]},{"robotId":3,"Answer":30,"Error":[31,32,33,34]},{"robotId":4,"Answer":40,"Error":[41,42,43,44]},{"robotId":5,"Answer":50,"Error":[51,52,53,54]},{"robotId":6,"Answer":60,"Error":[61,62,63,64]},{"robotId":7,"Answer":70,"Error":[71,72,73,74]},{"robotId":8,"Answer":80,"Error":[81,82,83,84]},{"robotId":9,"Answer":90,"Error":[91,92,93,94]},{"robotId":10,"Answer":100,"Error":[101,102,103,104]},{"robotId":11,"Answer":110,"Error":[111,112,113,114]},{"robotId":12,"Answer":120,"Error":[121,122,123,124]},{"robotId":13,"Answer":130,"Error":[131,132,133,134]},{"robotId":14,"Answer":140,"Error":[141,142,143,144]},{"robotId":15,"Answer":150,"Error":[151,152,153,154]},{"robotId":16,"Answer":160,"Error":[161,162,163,164]},{"robotId":17,"Answer":170,"Error":[171,172,173,174]},{"robotId":18,"Answer":180,"Error":[181,182,183,184]},{"robotId":19,"Answer":190,"Error":[191,192,193,194]},{"robotId":20,"Answer":200,"Error":[201,202,203,204]},{"robotId":21,"Answer":210,"Error":[211,212,213,214]},{"robotId":22,"Answer":220,"Error":[221,222,223,224]},{"robotId":23,"Answer":230,"Error":[231,232,233,234]},{"robotId":24,"Answer":240,"Error":[241,242,243,244]},{"robotId":25,"Answer":250,"Error":[251,252,253,254]},{"robotId":26,"Answer":260,"Error":[261,262,263,264]},{"robotId":27,"Answer":270,"Error":[271,272,273,274]},{"robotId":28,"Answer":280,"Error":[281,282,283,284]},{"robotId":29,"Answer":290,"Error":[291,292,293,294]},{"robotId":30,"Answer":300,"Error":[301,302,303,304]},{"robotId":31,"Answer":310,"Error":[311,312,313,314]},{"robotId":32,"Answer":320,"Error":[321,322,323,324]}];
+
+    const ACTION_NAMES = ["双手向下", "双手向上", "左手向上", "右手向上", "持握鲜花", "持握冰淇淋", "陪伴小狗", "陪伴小猫"];
+    const RECORD_KEY = "shadow_pairing_complete_record_v1";
+
+    const state = {
+      mode: "start",
+      active: false,
+      paused: false,
+      timerId: null,
+      totalRemaining: 0,
+      totalInitial: 0,
+      level: 1,
+      stageNo: 0,
+      score: 0,
+      maxLevel: 1,
+      passStages: 0,
+      failStages: 0,
+      failStreak: 0,
+      wrongTotal: 0,
+      current: null,
+      stage: null,
+      answerLocked: false,
+      cleared: false,
+      continuingAfterClear: false,
+      clearScore: 0,
+      lastRobotId: 0,
+      previousRecord: null,
+      helpPauseSource: null
+    };
+
+    const els = {
+      startScreen: document.getElementById("startScreen"),
+      gameScreen: document.getElementById("gameScreen"),
+      startLevelSelect: document.getElementById("startLevelSelect"),
+      durationSelect: document.getElementById("durationSelect"),
+      startBtn: document.getElementById("startBtn"),
+      guideBtn: document.getElementById("guideBtn"),
+      helpBtn: document.getElementById("helpBtn"),
+      gameHelpBtn: document.getElementById("gameHelpBtn"),
+      closeHelpBtn: document.getElementById("closeHelpBtn"),
+      closeGuideBtn: document.getElementById("closeGuideBtn"),
+      pauseBtn: document.getElementById("pauseBtn"),
+      quitBtn: document.getElementById("quitBtn"),
+      totalTimeText: document.getElementById("totalTimeText"),
+      stageTimeText: document.getElementById("stageTimeText"),
+      levelText: document.getElementById("levelText"),
+      targetText: document.getElementById("targetText"),
+      wrongText: document.getElementById("wrongText"),
+      scoreText: document.getElementById("scoreText"),
+      stageBar: document.getElementById("stageBar"),
+      robotStage: document.getElementById("robotStage"),
+      robotCaption: document.getElementById("robotCaption"),
+      optionCaption: document.getElementById("optionCaption"),
+      optionsGrid: document.getElementById("optionsGrid"),
+      hintBubble: document.getElementById("hintBubble"),
+      feedback: document.getElementById("feedback"),
+      recordCard: document.getElementById("recordCard"),
+      demoRobot: document.getElementById("demoRobot"),
+      demoShadow: document.getElementById("demoShadow"),
+      stageModal: document.getElementById("stageModal"),
+      stageTitle: document.getElementById("stageTitle"),
+      stageSummary: document.getElementById("stageSummary"),
+      stageResultGrid: document.getElementById("stageResultGrid"),
+      nextStageBtn: document.getElementById("nextStageBtn"),
+      stageQuitBtn: document.getElementById("stageQuitBtn"),
+      finalModal: document.getElementById("finalModal"),
+      finalSummary: document.getElementById("finalSummary"),
+      finalResultGrid: document.getElementById("finalResultGrid"),
+      restartBtn: document.getElementById("restartBtn"),
+      backStartBtn: document.getElementById("backStartBtn"),
+      helpModal: document.getElementById("helpModal"),
+      guideModal: document.getElementById("guideModal"),
+      pauseModal: document.getElementById("pauseModal"),
+      resumeBtn: document.getElementById("resumeBtn"),
+      pauseQuitBtn: document.getElementById("pauseQuitBtn"),
+      canvas: document.getElementById("confettiCanvas")
+    };
+
+    function init() {
+      populateLevelSelect();
+      loadRecord();
+      els.demoRobot.innerHTML = renderRobotSvg(2, false, 0, "demo-original");
+      els.demoShadow.innerHTML = renderRobotSvg(2, true, 0, "demo-shadow");
+      bindEvents();
+      updateRecordCard();
+      resizeCanvas();
+      window.addEventListener("resize", resizeCanvas);
+      document.addEventListener("keydown", handleKeydown);
+    }
+
+    function bindEvents() {
+      els.startBtn.addEventListener("click", startGame);
+      els.guideBtn.addEventListener("click", () => showGuide());
+      els.helpBtn.addEventListener("click", () => showHelp());
+      els.gameHelpBtn.addEventListener("click", () => showHelp("game"));
+      els.closeHelpBtn.addEventListener("click", closeHelp);
+      els.closeGuideBtn.addEventListener("click", closeGuide);
+      els.pauseBtn.addEventListener("click", pauseGame);
+      els.resumeBtn.addEventListener("click", resumeGame);
+      els.quitBtn.addEventListener("click", () => finishGame("quit"));
+      els.pauseQuitBtn.addEventListener("click", () => finishGame("quit"));
+      els.nextStageBtn.addEventListener("click", nextStage);
+      els.stageQuitBtn.addEventListener("click", () => finishGame("quit"));
+      els.restartBtn.addEventListener("click", () => {
+        hideModal(els.finalModal);
+        startGame();
+      });
+      els.backStartBtn.addEventListener("click", () => {
+        hideModal(els.finalModal);
+        goStart();
+      });
+    }
+
+    function populateLevelSelect() {
+      els.startLevelSelect.innerHTML = LEVEL_CONFIG.map(item => `<option value="${item.Level}">等级 ${item.Level}</option>`).join("");
+      els.startLevelSelect.value = "1";
+    }
+
+    function loadRecord() {
+      try {
+        const raw = localStorage.getItem(RECORD_KEY);
+        state.previousRecord = raw ? JSON.parse(raw) : null;
+      } catch (error) {
+        state.previousRecord = null;
+      }
+    }
+
+    function saveRecord(record) {
+      try {
+        localStorage.setItem(RECORD_KEY, JSON.stringify(record));
+        state.previousRecord = record;
+      } catch (error) {
+        state.previousRecord = record;
+      }
+    }
+
+    function updateRecordCard() {
+      const r = state.previousRecord;
+      if (!r) {
+        els.recordCard.innerHTML = "暂无上次记录。完成一次训练后，这里会显示积分、最高等级和趋势。";
+        return;
+      }
+      const date = new Date(r.finishedAt).toLocaleString("zh-CN", { hour12: false });
+      els.recordCard.innerHTML = `上次记录：<strong>${r.score}</strong> 分，最高等级 <strong>${r.maxLevel}</strong>，趋势 <strong>${r.trend}</strong><br><small>${date}</small>`;
+    }
+
+    function startGame() {
+      clearInterval(state.timerId);
+      const level = clamp(parseInt(els.startLevelSelect.value, 10) || 1, 1, 100);
+      const duration = clamp(parseInt(els.durationSelect.value, 10) || 180, 30, 3600);
+      Object.assign(state, {
+        mode: "game",
+        active: true,
+        paused: false,
+        timerId: null,
+        totalRemaining: duration,
+        totalInitial: duration,
+        level,
+        stageNo: 0,
+        score: 0,
+        maxLevel: level,
+        passStages: 0,
+        failStages: 0,
+        failStreak: 0,
+        wrongTotal: 0,
+        current: null,
+        stage: null,
+        answerLocked: false,
+        cleared: false,
+        continuingAfterClear: false,
+        clearScore: 0,
+        lastRobotId: 0,
+        helpPauseSource: null
+      });
+      switchScreen("game");
+      hideModal(els.stageModal);
+      hideModal(els.finalModal);
+      hideModal(els.pauseModal);
+      beginStage();
+      state.timerId = setInterval(tick, 1000);
+      updateHud();
+    }
+
+    function switchScreen(name) {
+      els.startScreen.classList.toggle("active", name === "start");
+      els.gameScreen.classList.toggle("active", name === "game");
+    }
+
+    function goStart() {
+      clearInterval(state.timerId);
+      state.active = false;
+      state.mode = "start";
+      state.paused = false;
+      updateRecordCard();
+      switchScreen("start");
+    }
+
+    function beginStage() {
+      const cfg = getLevelConfig(state.level);
+      state.stageNo += 1;
+      state.stage = {
+        cfg,
+        success: 0,
+        wrongStreak: 0,
+        wrongInStage: 0,
+        remaining: cfg.StageTime,
+        active: true,
+        ended: false,
+        reason: ""
+      };
+      state.answerLocked = false;
+      createQuestion();
+      updateHud();
+      showFeedback("", "");
+    }
+
+    function tick() {
+      if (!state.active || state.paused || !state.stage || !state.stage.active) return;
+      state.totalRemaining = Math.max(0, state.totalRemaining - 1);
+      state.stage.remaining = Math.max(0, state.stage.remaining - 1);
+      updateHud();
+      if (state.totalRemaining <= 0) {
+        finishGame("time");
+        return;
+      }
+      if (state.stage.remaining <= 0) {
+        endStage("timeout");
+      }
+    }
+
+    function createQuestion() {
+      if (!state.stage || !state.stage.active) return;
+      const cfg = state.stage.cfg;
+      let robotId = randomInt(1, 32);
+      if (robotId === state.lastRobotId) robotId = (robotId % 32) + 1;
+      state.lastRobotId = robotId;
+      const meta = robotMeta(robotId);
+      const options = buildOptions(robotId, cfg);
+      state.current = { robotId, options, correctId: robotId * 10 };
+      state.answerLocked = false;
+      els.robotStage.innerHTML = renderRobotSvg(robotId, false, 0, "source");
+      els.robotCaption.textContent = `${meta.name} · ${meta.actionName}。请找出轮廓完全一致的影子。`;
+      els.optionCaption.textContent = cfg.ErrorType === 0
+        ? `本级干扰：不同图案影子 × ${cfg.ErrorNum}。`
+        : `本级干扰：相似影子 × ${cfg.ErrorNum}。`;
+      els.optionsGrid.innerHTML = options.map((opt, index) => {
+        const part = parseShadowId(opt.id);
+        const label = opt.correct ? "正确影子" : "干扰影子";
+        return `<button class="option-card" role="listitem" data-id="${opt.id}" data-correct="${opt.correct ? "1" : "0"}" style="animation-delay:${index * 45}ms" aria-label="${label}">${renderRobotSvg(part.robotId, true, part.variant, "answer")}</button>`;
+      }).join("");
+      [...els.optionsGrid.querySelectorAll(".option-card")].forEach(button => {
+        button.addEventListener("click", () => handleOptionClick(button));
+      });
+    }
+
+    function buildOptions(robotId, cfg) {
+      const correct = robotId * 10;
+      const entry = SHADOW_CONFIG.find(item => item.robotId === robotId);
+      let distractorIds = [];
+      if (cfg.ErrorType === 1 && entry) {
+        distractorIds = shuffle([...entry.Error]).slice(0, cfg.ErrorNum);
+      } else {
+        const distant = SHADOW_CONFIG
+          .filter(item => item.robotId !== robotId)
+          .map(item => item.Answer);
+        distractorIds = shuffle(distant).slice(0, cfg.ErrorNum);
+      }
+      while (distractorIds.length < cfg.ErrorNum) {
+        const candidate = randomInt(1, 32) * 10;
+        if (candidate !== correct && !distractorIds.includes(candidate)) distractorIds.push(candidate);
+      }
+      return shuffle([{ id: correct, correct: true }, ...distractorIds.map(id => ({ id, correct: false }))]);
+    }
+
+    function handleOptionClick(button) {
+      if (!state.active || state.paused || !state.stage || !state.stage.active || state.answerLocked) return;
+      if (button.disabled) return;
+      const correct = button.dataset.correct === "1";
+      if (correct) {
+        state.answerLocked = true;
+        state.stage.success += 1;
+        state.stage.wrongStreak = 0;
+        button.classList.add("correct");
+        showFeedback("正确", "good");
+        burstConfetti(28);
+        updateHud();
+        setTimeout(() => {
+          if (!state.active || !state.stage || !state.stage.active) return;
+          if (state.stage.remaining > 0 && state.totalRemaining > 0) createQuestion();
+        }, 560);
+      } else {
+        button.classList.add("wrong");
+        button.disabled = true;
+        state.stage.wrongStreak += 1;
+        state.stage.wrongInStage += 1;
+        state.wrongTotal += 1;
+        showFeedback("再想想", "bad");
+        updateHud();
+        if (state.stage.wrongStreak >= 2 && state.stage.success < state.stage.cfg.PassTarget) {
+          state.answerLocked = true;
+          setTimeout(() => endStage("twoWrong"), 540);
+        }
+      }
+    }
+
+    function endStage(reason) {
+      if (!state.stage || state.stage.ended) return;
+      state.stage.ended = true;
+      state.stage.active = false;
+      state.stage.reason = reason;
+      state.answerLocked = true;
+      const cfg = state.stage.cfg;
+      const success = state.stage.success;
+      const passed = success >= cfg.PassTarget;
+      const counted = !state.continuingAfterClear;
+      let stageScore = 0;
+      let oldLevel = state.level;
+      let newLevel = state.level;
+      let title = "太可惜了";
+      let summary = "未达到本关目标，下次继续训练。";
+      let changeText = "难度保持";
+      let clearJustNow = false;
+
+      if (counted) {
+        if (passed) {
+          stageScore = Math.floor(cfg.PassScore + Math.max(0, success - cfg.PassTarget) * cfg.RewardScore + 10);
+          state.score += stageScore;
+          state.passStages += 1;
+          state.failStreak = 0;
+          if (state.level >= 100) {
+            newLevel = 100;
+            state.cleared = true;
+            state.continuingAfterClear = true;
+            state.clearScore = state.score;
+            clearJustNow = true;
+            title = "训练通关";
+            summary = "已完成最高等级。剩余训练时间将继续练习，但不再统计积分和难度变化。";
+            changeText = "已达最高等级";
+          } else {
+            newLevel = state.level + 1;
+            title = "等级提升";
+            summary = "达成本关目标，难度提升 1 级。";
+            changeText = `等级 ${oldLevel} → ${newLevel}`;
+          }
+        } else {
+          stageScore = 10;
+          state.score += stageScore;
+          state.failStages += 1;
+          state.failStreak += 1;
+          if (state.failStreak === 1) {
+            newLevel = state.level;
+            title = "太可惜了";
+            summary = "失败 1 次，保持原难度继续训练。";
+            changeText = "难度保持";
+          } else if (state.failStreak === 2) {
+            newLevel = Math.max(1, state.level - 1);
+            title = "等级下降";
+            summary = "连续失败 2 次，难度下降 1 级。";
+            changeText = `等级 ${oldLevel} → ${newLevel}`;
+          } else {
+            newLevel = Math.max(1, state.level - 3);
+            title = "等级下降";
+            summary = "连续失败 3 次，难度下降 3 级，并重新累计失败次数。";
+            changeText = `等级 ${oldLevel} → ${newLevel}`;
+            state.failStreak = 0;
+          }
+        }
+        state.level = newLevel;
+        state.maxLevel = Math.max(state.maxLevel, state.level, oldLevel);
+      } else {
+        stageScore = 0;
+        title = passed ? "练习完成" : "继续练习";
+        summary = "已通关后的练习阶段，本关不计入积分和难度。";
+        changeText = "不统计";
+      }
+
+      updateHud();
+      const reasonText = reason === "timeout" ? "倒计时结束" : reason === "twoWrong" ? "连续错误 2 次提前结束" : "小关结束";
+      showStageModal({
+        title,
+        summary,
+        reasonText,
+        oldLevel,
+        newLevel: state.level,
+        changeText,
+        passed,
+        success,
+        target: cfg.PassTarget,
+        wrong: state.stage.wrongInStage,
+        stageScore,
+        totalScore: state.score,
+        clearJustNow,
+        counted
+      });
+    }
+
+    function showStageModal(data) {
+      els.stageTitle.textContent = data.title;
+      els.stageSummary.textContent = data.summary;
+      els.stageResultGrid.innerHTML = [
+        resultCell("结束原因", data.reasonText),
+        resultCell("达成情况", `${data.success}/${data.target}`),
+        resultCell("本关错误", `${data.wrong} 次`),
+        resultCell("本关积分", data.counted ? `${data.stageScore}` : "不统计"),
+        resultCell("难度变化", data.changeText),
+        resultCell("总积分", `${data.totalScore}`)
+      ].join("");
+      els.nextStageBtn.textContent = state.totalRemaining <= 0 ? "查看大结算" : "进入下一小关";
+      showModal(els.stageModal);
+    }
+
+    function nextStage() {
+      hideModal(els.stageModal);
+      if (!state.active) return;
+      if (state.totalRemaining <= 0) {
+        finishGame("time");
+        return;
+      }
+      beginStage();
+    }
+
+    function finishGame(reason) {
+      if (!state.active && state.mode !== "game") return;
+      clearInterval(state.timerId);
+      const finalLevel = state.level;
+      const maxLevel = state.maxLevel;
+      const previous = state.previousRecord;
+      const trend = calcTrend(state.score, maxLevel, previous);
+      const record = {
+        score: state.score,
+        finalLevel,
+        maxLevel,
+        trend,
+        passStages: state.passStages,
+        failStages: state.failStages,
+        wrongTotal: state.wrongTotal,
+        cleared: state.cleared,
+        duration: state.totalInitial,
+        usedSeconds: state.totalInitial - state.totalRemaining,
+        finishedAt: Date.now()
+      };
+      saveRecord(record);
+      state.active = false;
+      state.paused = false;
+      hideModal(els.pauseModal);
+      hideModal(els.stageModal);
+      showFinalModal(reason, record, previous);
+    }
+
+    function calcTrend(score, maxLevel, previous) {
+      if (!previous) return "首次训练";
+      const lastScore = Number(previous.score) || 0;
+      const lastLevel = Number(previous.maxLevel || previous.finalLevel) || 1;
+      if (score > lastScore && maxLevel > lastLevel) return "提升";
+      if (score >= lastScore && maxLevel === lastLevel) return "持平";
+      if (score >= lastScore && maxLevel < lastLevel) return "持平";
+      if (score < lastScore && maxLevel < lastLevel) return "下降";
+      if (score < lastScore && maxLevel > lastLevel) return "提升";
+      return "持平";
+    }
+
+    function showFinalModal(reason, record, previous) {
+      let reasonText = "训练结束";
+      if (reason === "time") reasonText = "训练时间用完";
+      if (reason === "quit") reasonText = "主动结束训练";
+      const compareText = previous
+        ? `上次：${previous.score} 分 / 最高等级 ${previous.maxLevel || previous.finalLevel}`
+        : "没有上次记录";
+      els.finalSummary.textContent = `${reasonText}。${record.cleared ? "本轮已通关最高等级。" : "本轮未通关最高等级。"}`;
+      els.finalResultGrid.innerHTML = [
+        resultCell("总积分", record.score),
+        resultCell("最高等级", record.maxLevel),
+        resultCell("最终等级", record.finalLevel),
+        resultCell("趋势", record.trend),
+        resultCell("过关小关", `${record.passStages} 关`),
+        resultCell("失败小关", `${record.failStages} 关`),
+        resultCell("总错误", `${record.wrongTotal} 次`),
+        resultCell("对比记录", compareText)
+      ].join("");
+      updateRecordCard();
+      showModal(els.finalModal);
+      if (record.score > 0) burstConfetti(80);
+    }
+
+    function resultCell(label, value) {
+      return `<div class="result-cell"><span>${escapeHtml(label)}</span><b>${escapeHtml(String(value))}</b></div>`;
+    }
+
+    function pauseGame() {
+      if (!state.active || state.paused) return;
+      state.paused = true;
+      showModal(els.pauseModal);
+    }
+
+    function resumeGame() {
+      if (!state.active) return;
+      hideModal(els.pauseModal);
+      state.paused = false;
+    }
+
+    function showHelp(source) {
+      if (source === "game" && state.active) {
+        state.helpPauseSource = "game";
+        state.paused = true;
+      }
+      showModal(els.helpModal);
+    }
+
+    function closeHelp() {
+      hideModal(els.helpModal);
+      if (state.helpPauseSource === "game" && state.active) {
+        state.paused = false;
+      }
+      state.helpPauseSource = null;
+    }
+
+    function showGuide() { showModal(els.guideModal); }
+    function closeGuide() { hideModal(els.guideModal); }
+
+    function showModal(el) { el.classList.add("show"); }
+    function hideModal(el) { el.classList.remove("show"); }
+
+    function handleKeydown(event) {
+      if (event.key === "Escape") {
+        if (els.helpModal.classList.contains("show")) closeHelp();
+        else if (els.guideModal.classList.contains("show")) closeGuide();
+        else if (els.pauseModal.classList.contains("show")) resumeGame();
+      }
+      if (!state.active || state.paused || !state.stage || !state.stage.active) return;
+      const number = parseInt(event.key, 10);
+      if (!Number.isNaN(number) && number >= 1 && number <= 4) {
+        const buttons = [...els.optionsGrid.querySelectorAll(".option-card")];
+        if (buttons[number - 1]) buttons[number - 1].click();
+      }
+    }
+
+    function updateHud() {
+      const stage = state.stage;
+      const cfg = stage ? stage.cfg : getLevelConfig(state.level);
+      els.totalTimeText.textContent = formatTime(state.totalRemaining);
+      els.stageTimeText.textContent = stage ? `${stage.remaining}s` : "--";
+      els.levelText.textContent = state.continuingAfterClear ? "100✓" : String(state.level);
+      els.targetText.textContent = stage ? `${stage.success}/${cfg.PassTarget}` : `0/${cfg.PassTarget}`;
+      els.wrongText.textContent = stage ? String(stage.wrongStreak) : "0";
+      els.scoreText.textContent = String(state.score);
+      const ratio = stage ? clamp(stage.remaining / cfg.StageTime, 0, 1) : 1;
+      els.stageBar.style.width = `${ratio * 100}%`;
+      if (stage) {
+        els.hintBubble.textContent = stage.success >= cfg.PassTarget
+          ? "已经达到本关目标，可以继续答题获得额外奖励积分。"
+          : "提示：先看头部、手臂方向、配件和陪伴物，再比较轮廓。";
+      }
+    }
+
+    function formatTime(seconds) {
+      seconds = Math.max(0, Math.floor(seconds));
+      const m = Math.floor(seconds / 60);
+      const s = seconds % 60;
+      return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+    }
+
+    function getLevelConfig(level) {
+      return LEVEL_CONFIG[clamp(level, 1, LEVEL_CONFIG.length) - 1];
+    }
+
+    function robotMeta(robotId) {
+      const type = ((robotId - 1) % 4) + 1;
+      const action = Math.floor((robotId - 1) / 4) + 1;
+      return { type, action, name: `机器人${type}`, actionName: ACTION_NAMES[action - 1] || "动作" };
+    }
+
+    function parseShadowId(id) {
+      const n = Number(id);
+      return { robotId: Math.floor(n / 10), variant: n % 10 };
+    }
+
+    function renderRobotSvg(robotId, shadow, variant, cssClass) {
+      const meta = robotMeta(robotId);
+      const effectiveAction = getEffectiveAction(meta.action, shadow ? variant : 0);
+      const palette = getPalette(meta.type, shadow);
+      const body = renderBody(meta.type, palette, shadow, variant);
+      const head = renderHead(meta.type, palette, shadow, variant);
+      const base = renderBase(meta.type, palette, shadow, variant);
+      const arms = renderArms(effectiveAction, palette, shadow, variant);
+      const accessory = renderAccessory(effectiveAction, palette, shadow, variant);
+      const companion = renderCompanion(effectiveAction, palette, shadow, variant);
+      const glow = shadow ? "" : `<ellipse cx="90" cy="205" rx="62" ry="10" fill="rgba(47,42,38,.12)"/>`;
+      const aria = shadow ? `机器人${meta.type}${meta.actionName}影子` : `机器人${meta.type}${meta.actionName}`;
+      return `<svg class="${cssClass || ""}" role="img" aria-label="${aria}" viewBox="0 0 180 220" xmlns="http://www.w3.org/2000/svg">
+        ${glow}
+        <g transform="translate(0,0)">
+          ${companion}
+          ${arms}
+          ${base}
+          ${body}
+          ${head}
+          ${accessory}
+        </g>
+      </svg>`;
+    }
+
+    function getPalette(type, shadow) {
+      if (shadow) {
+        return {
+          fill: "#25262c", fill2: "#25262c", fill3: "#25262c", stroke: "#25262c",
+          dark: "#25262c", light: "#25262c", accent: "#25262c", soft: "#25262c"
+        };
+      }
+      const palettes = {
+        1: { fill: "#cf5e58", fill2: "#e98273", fill3: "#b84343", stroke: "#7f342f", dark: "#25262c", light: "#fff4e8", accent: "#f7b267", soft: "#f6c2ac" },
+        2: { fill: "#dd6d5f", fill2: "#f09582", fill3: "#c6524f", stroke: "#8d3f39", dark: "#25262c", light: "#fffaf2", accent: "#ffca57", soft: "#ffd3c2" },
+        3: { fill: "#58a4b0", fill2: "#78c3cc", fill3: "#3c7e87", stroke: "#285d66", dark: "#25262c", light: "#f2fdff", accent: "#ffb44d", soft: "#bee7ec" },
+        4: { fill: "#7a7bd1", fill2: "#9c9ce8", fill3: "#565ab4", stroke: "#37386f", dark: "#25262c", light: "#f7f5ff", accent: "#f4cd59", soft: "#d7d4ff" }
+      };
+      return palettes[type] || palettes[1];
+    }
+
+    function renderHead(type, p, shadow, variant) {
+      const bump = shadow && variant === 4;
+      if (type === 1) {
+        return `
+          ${bump ? `<circle cx="138" cy="25" r="8" fill="${p.fill}"/>` : ""}
+          <rect x="45" y="18" width="90" height="48" rx="7" fill="${p.fill3}" stroke="${p.stroke}" stroke-width="5"/>
+          ${shadow ? "" : `<rect x="56" y="27" width="68" height="26" rx="4" fill="${p.dark}" opacity=".14"/><rect x="62" y="31" width="11" height="16" rx="3" fill="${p.light}"/><rect x="101" y="31" width="11" height="16" rx="3" fill="${p.light}"/>`}
+        `;
+      }
+      if (type === 2) {
+        return `
+          <circle cx="42" cy="45" r="13" fill="${p.fill3}"/>
+          <circle cx="138" cy="45" r="13" fill="${p.fill3}"/>
+          ${bump ? `<rect x="83" y="3" width="14" height="20" rx="7" fill="${p.fill}"/>` : ""}
+          <rect x="50" y="18" width="80" height="60" rx="18" fill="${p.light}" stroke="${p.stroke}" stroke-width="5"/>
+          ${shadow ? "" : `<circle cx="72" cy="42" r="5" fill="${p.stroke}"/><circle cx="108" cy="42" r="5" fill="${p.stroke}"/><path d="M70 56 Q90 70 110 56" fill="none" stroke="${p.stroke}" stroke-width="5" stroke-linecap="round"/>`}
+        `;
+      }
+      if (type === 3) {
+        return `
+          <path d="M90 7 L90 20" stroke="${p.stroke}" stroke-width="5" stroke-linecap="round"/>
+          <circle cx="90" cy="7" r="7" fill="${p.accent}" stroke="${p.stroke}" stroke-width="3"/>
+          ${bump ? `<circle cx="64" cy="17" r="7" fill="${p.fill}"/>` : ""}
+          <path d="M46 34 Q90 9 134 34 L126 76 L54 76 Z" fill="${p.fill2}" stroke="${p.stroke}" stroke-width="5"/>
+          ${shadow ? "" : `<circle cx="74" cy="47" r="5" fill="${p.light}"/><circle cx="106" cy="47" r="5" fill="${p.light}"/><rect x="74" y="61" width="32" height="5" rx="2.5" fill="${p.stroke}" opacity=".75"/>`}
+        `;
+      }
+      return `
+        ${bump ? `<circle cx="126" cy="22" r="8" fill="${p.fill}"/>` : ""}
+        <path d="M52 25 H128 Q139 25 139 36 V66 Q139 78 127 78 H53 Q41 78 41 66 V36 Q41 25 52 25 Z" fill="${p.fill2}" stroke="${p.stroke}" stroke-width="5"/>
+        ${shadow ? "" : `<rect x="62" y="38" width="56" height="23" rx="8" fill="${p.light}"/><circle cx="78" cy="49" r="4" fill="${p.stroke}"/><circle cx="102" cy="49" r="4" fill="${p.stroke}"/>`}
+      `;
+    }
+
+    function renderBody(type, p, shadow, variant) {
+      const extra = shadow && variant === 2 && type !== 3 ? `<circle cx="139" cy="119" r="8" fill="${p.fill}"/>` : "";
+      if (type === 1) {
+        return `
+          <rect x="52" y="75" width="76" height="84" rx="7" fill="${p.fill}" stroke="${p.stroke}" stroke-width="5"/>
+          ${extra}
+          ${shadow ? "" : `<path d="M66 124 L76 98 L91 130 L103 100 L116 125" fill="none" stroke="${p.soft}" stroke-width="5" stroke-linejoin="round"/><circle cx="70" cy="145" r="5" fill="${p.stroke}" opacity=".45"/><circle cx="88" cy="145" r="5" fill="${p.stroke}" opacity=".45"/>`}
+        `;
+      }
+      if (type === 2) {
+        return `
+          <rect x="51" y="82" width="78" height="78" rx="9" fill="${p.fill}" stroke="${p.stroke}" stroke-width="5"/>
+          ${extra}
+          ${shadow ? "" : `<circle cx="76" cy="121" r="15" fill="none" stroke="${p.accent}" stroke-width="5"/><path d="M76 108 L76 122 L64 129" fill="none" stroke="${p.stroke}" stroke-width="4" stroke-linecap="round"/><circle cx="103" cy="111" r="4" fill="${p.light}"/><circle cx="116" cy="111" r="4" fill="${p.accent}"/><circle cx="104" cy="128" r="4" fill="${p.stroke}" opacity=".45"/><circle cx="117" cy="128" r="4" fill="${p.light}"/>`}
+        `;
+      }
+      if (type === 3) {
+        return `
+          <path d="M57 81 H123 L133 155 H47 Z" fill="${p.fill}" stroke="${p.stroke}" stroke-width="5"/>
+          ${shadow && variant === 2 ? `<rect x="132" y="104" width="15" height="24" rx="7" fill="${p.fill}"/>` : ""}
+          ${shadow ? "" : `<rect x="70" y="99" width="40" height="24" rx="7" fill="${p.light}" opacity=".9"/><path d="M72 139 H108" stroke="${p.stroke}" stroke-width="5" stroke-linecap="round"/><circle cx="82" cy="111" r="4" fill="${p.stroke}"/><circle cx="98" cy="111" r="4" fill="${p.stroke}"/>`}
+        `;
+      }
+      return `
+        <rect x="48" y="82" width="84" height="76" rx="18" fill="${p.fill}" stroke="${p.stroke}" stroke-width="5"/>
+        ${extra}
+        ${shadow ? "" : `<path d="M63 104 H116" stroke="${p.light}" stroke-width="6" stroke-linecap="round"/><path d="M63 123 H102" stroke="${p.light}" stroke-width="6" stroke-linecap="round" opacity=".72"/><circle cx="116" cy="128" r="7" fill="${p.accent}"/>`}
+      `;
+    }
+
+    function renderBase(type, p, shadow, variant) {
+      const footShift = shadow && variant === 4 ? 9 : 0;
+      if (type === 3) {
+        return `
+          <rect x="58" y="158" width="64" height="18" rx="8" fill="${p.fill3}" stroke="${p.stroke}" stroke-width="5"/>
+          <circle cx="90" cy="186" r="20" fill="${p.dark}" stroke="${p.stroke}" stroke-width="5"/>
+          ${shadow ? "" : `<circle cx="90" cy="186" r="8" fill="#777"/>`}
+        `;
+      }
+      return `
+        <rect x="42" y="163" width="96" height="28" rx="14" fill="${p.dark}" stroke="${p.stroke}" stroke-width="5"/>
+        <circle cx="65" cy="177" r="8" fill="${shadow ? p.fill : "#777"}"/>
+        <circle cx="91" cy="177" r="8" fill="${shadow ? p.fill : "#777"}"/>
+        <circle cx="117" cy="177" r="${8 + footShift/4}" fill="${shadow ? p.fill : "#777"}"/>
+      `;
+    }
+
+    function getEffectiveAction(action, variant) {
+      if (variant !== 3) return action;
+      const map = { 1: 2, 2: 1, 3: 4, 4: 3, 5: 6, 6: 5, 7: 8, 8: 7 };
+      return map[action] || action;
+    }
+
+    function armPoints(action, side) {
+      const left = side === "L";
+      const shoulder = left ? [49, 95] : [131, 95];
+      const poses = {
+        down: left ? [[36, 110], [39, 132]] : [[144, 110], [141, 132]],
+        up: left ? [[33, 75], [38, 54]] : [[147, 75], [142, 54]],
+        out: left ? [[29, 95], [22, 104]] : [[151, 95], [158, 104]],
+        hold: left ? [[40, 117], [52, 132]] : [[145, 104], [157, 91]]
+      };
+      let pose = "down";
+      if (action === 2) pose = "up";
+      if (action === 3) pose = left ? "up" : "down";
+      if (action === 4) pose = left ? "down" : "up";
+      if (action === 5 || action === 6) pose = left ? "down" : "hold";
+      if (action === 7 || action === 8) pose = left ? "out" : "down";
+      return [shoulder, ...poses[pose]];
+    }
+
+    function renderArms(action, p, shadow, variant) {
+      const omitRight = shadow && variant === 1 && action <= 4;
+      const omitLeft = shadow && variant === 1 && (action === 7 || action === 8);
+      const stroke = p.fill3;
+      const hand = p.fill2;
+      const left = omitLeft ? "" : renderArmPath(armPoints(action, "L"), stroke, hand, shadow);
+      const right = omitRight ? "" : renderArmPath(armPoints(action, "R"), stroke, hand, shadow);
+      return `${left}${right}`;
+    }
+
+    function renderArmPath(points, stroke, hand, shadow) {
+      const d = points.map((pt, i) => `${i === 0 ? "M" : "L"}${pt[0]} ${pt[1]}`).join(" ");
+      const end = points[points.length - 1];
+      return `<path d="${d}" fill="none" stroke="${stroke}" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="${end[0]}" cy="${end[1]}" r="7" fill="${hand}"/>`;
+    }
+
+    function renderAccessory(action, p, shadow, variant) {
+      if (action !== 5 && action !== 6) return "";
+      if (shadow && variant === 1) return "";
+      let type = action === 5 ? "flower" : "ice";
+      if (shadow && variant === 2) type = type === "flower" ? "ice" : "flower";
+      if (type === "flower") {
+        const fill = shadow ? p.fill : "#ffcf57";
+        const stem = shadow ? p.fill : "#4d9b62";
+        return `<g transform="translate(158 82)">
+          <path d="M0 24 C-2 14 2 8 7 1" fill="none" stroke="${stem}" stroke-width="5" stroke-linecap="round"/>
+          <circle cx="9" cy="0" r="6" fill="${fill}"/>
+          <circle cx="2" cy="1" r="6" fill="${fill}"/>
+          <circle cx="8" cy="8" r="6" fill="${fill}"/>
+          <circle cx="16" cy="5" r="6" fill="${fill}"/>
+          ${shadow ? "" : `<circle cx="9" cy="4" r="4" fill="#e56a58"/>`}
+        </g>`;
+      }
+      return `<g transform="translate(154 78)">
+        <path d="M6 24 L22 24 L14 48 Z" fill="${shadow ? p.fill : "#d28b55"}" stroke="${shadow ? p.fill : "#8c5631"}" stroke-width="3"/>
+        <circle cx="14" cy="17" r="14" fill="${shadow ? p.fill : "#fff0a8"}" stroke="${shadow ? p.fill : "#e8b95f"}" stroke-width="3"/>
+      </g>`;
+    }
+
+    function renderCompanion(action, p, shadow, variant) {
+      if (action !== 7 && action !== 8) return "";
+      if (shadow && variant === 1) return "";
+      let type = action === 7 ? "dog" : "cat";
+      if (shadow && variant === 2) type = type === "dog" ? "cat" : "dog";
+      const fill = shadow ? p.fill : (type === "dog" ? "#b47a4f" : "#6d6f79");
+      const stroke = shadow ? p.fill : "#4f3429";
+      if (type === "dog") {
+        return `<g transform="translate(8 131)">
+          <ellipse cx="28" cy="39" rx="22" ry="16" fill="${fill}" stroke="${stroke}" stroke-width="4"/>
+          <circle cx="12" cy="28" r="12" fill="${fill}" stroke="${stroke}" stroke-width="4"/>
+          <path d="M6 22 L-2 16 L1 31" fill="${fill}" stroke="${stroke}" stroke-width="3"/>
+          <path d="M47 31 Q61 18 65 34" fill="none" stroke="${stroke}" stroke-width="6" stroke-linecap="round"/>
+          <path d="M19 51 V61 M38 51 V61" stroke="${stroke}" stroke-width="5" stroke-linecap="round"/>
+        </g>`;
+      }
+      return `<g transform="translate(8 130)">
+        <ellipse cx="28" cy="39" rx="21" ry="16" fill="${fill}" stroke="${stroke}" stroke-width="4"/>
+        <circle cx="13" cy="27" r="13" fill="${fill}" stroke="${stroke}" stroke-width="4"/>
+        <path d="M4 16 L10 4 L16 17" fill="${fill}" stroke="${stroke}" stroke-width="3"/>
+        <path d="M17 16 L25 5 L25 21" fill="${fill}" stroke="${stroke}" stroke-width="3"/>
+        <path d="M48 34 Q63 28 58 13" fill="none" stroke="${stroke}" stroke-width="6" stroke-linecap="round"/>
+        <path d="M19 51 V61 M37 51 V61" stroke="${stroke}" stroke-width="5" stroke-linecap="round"/>
+      </g>`;
+    }
+
+    function showFeedback(text, type) {
+      if (!text) {
+        els.feedback.className = "feedback";
+        els.feedback.textContent = "";
+        return;
+      }
+      els.feedback.textContent = text;
+      els.feedback.className = `feedback ${type} show`;
+      clearTimeout(showFeedback.timer);
+      showFeedback.timer = setTimeout(() => {
+        els.feedback.classList.remove("show");
+      }, 540);
+    }
+
+    function resizeCanvas() {
+      const ratio = window.devicePixelRatio || 1;
+      els.canvas.width = Math.floor(window.innerWidth * ratio);
+      els.canvas.height = Math.floor(window.innerHeight * ratio);
+      els.canvas.style.width = `${window.innerWidth}px`;
+      els.canvas.style.height = `${window.innerHeight}px`;
+      const ctx = els.canvas.getContext("2d");
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    }
+
+    function burstConfetti(count) {
+      const ctx = els.canvas.getContext("2d");
+      const pieces = Array.from({ length: count }, () => ({
+        x: window.innerWidth / 2 + randomFloat(-80, 80),
+        y: window.innerHeight / 2 + randomFloat(-60, 30),
+        vx: randomFloat(-4.2, 4.2),
+        vy: randomFloat(-7.5, -2.4),
+        size: randomFloat(5, 10),
+        rot: randomFloat(0, Math.PI),
+        vr: randomFloat(-0.25, 0.25),
+        life: randomInt(42, 72),
+        color: ["#e56a58", "#ffb44d", "#58a4b0", "#24a16b", "#7a7bd1"][randomInt(0, 4)]
+      }));
+      let frame = 0;
+      function draw() {
+        frame += 1;
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        pieces.forEach(piece => {
+          piece.x += piece.vx;
+          piece.y += piece.vy;
+          piece.vy += 0.18;
+          piece.rot += piece.vr;
+          piece.life -= 1;
+          ctx.save();
+          ctx.globalAlpha = clamp(piece.life / 40, 0, 1);
+          ctx.translate(piece.x, piece.y);
+          ctx.rotate(piece.rot);
+          ctx.fillStyle = piece.color;
+          ctx.fillRect(-piece.size / 2, -piece.size / 2, piece.size, piece.size * 0.66);
+          ctx.restore();
+        });
+        if (pieces.some(p => p.life > 0) && frame < 90) requestAnimationFrame(draw);
+        else ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      }
+      requestAnimationFrame(draw);
+    }
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function randomFloat(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    function clamp(value, min, max) {
+      return Math.min(max, Math.max(min, value));
+    }
+
+    function escapeHtml(value) {
+      return value.replace(/[&<>'"]/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[char]));
+    }
+
+    init();
+  </script>
+</body>
+</html>

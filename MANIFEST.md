@@ -1,6 +1,6 @@
 # cognitive-training-2026-05 游戏实现归档
 
-本目录按 `cognitive-training-2026-05` 设计素材为准，归档并修复 9 个可运行训练游戏。当前选用合同见 `tools/source-contracts.json`，统一验收命令：
+本目录按 `cognitive-training-2026-05` 设计素材为准，归档并修复 11 个可运行训练游戏。当前选用合同见 `tools/source-contracts.json`，统一验收命令：
 
 ```powershell
 node .\tools\verify-design-parity.mjs
@@ -20,18 +20,19 @@ $env:NODE_PATH='C:\Users\55093\.cache\codex-runtimes\codex-primary-runtime\depen
 | `07-表象计算-扑克求和` | `external-games/poker-sum/index.html` | `04 执行能力/02 表象计算-求和类/扑克求和/P1扑克求和数值.xlsm` | 生成源数据 JSON，保留修订版求和逻辑并加计分/升降级测试 |
 | `08-表象计算-骰子求和` | `external-games/dice-sum/index.html` | `04 执行能力/02 表象计算-求和类/骰子求和/P1骰子求和数值.xlsm` | 生成源数据 JSON，修正旧时间比例计分和连续失败降级 |
 | `09-识别归纳-分门别类` | `external-games/category-sort/index.html` | `05 社会认知/识别归纳-分门别类/数值.xlsx` + `关卡配置.xlsx` | 替换调试入口，接入源引导图，移除 emoji/debug fallback |
+| `10-观察水平-影子配对` | `external-games/shadow-pairing/index.html` | `01 感知觉/02 观察水平-影子配对/数值.xlsx` + `影子配对策划案.xlsx` | 新增单文件实现，100 级 Level 和 32 组 shadow 配置与源表一致 |
+| `11-位置记忆-翻个西瓜` | `external-games/watermelon-flip/index.html` | `02 记忆力/04 位置记忆-翻个西瓜/P2翻个西瓜 - 改.xlsm` + `逻辑修改内容.docx` | 新增单文件实现，60 级 Level 和 800 条 Floor 配置与源表一致 |
 
 ## 已接受差异
 
 - `07` 源包没有独立扑克牌图片集，当前使用 CSS/卡牌渲染。
 - `08` 源包没有独立骰子面图片集，当前使用 CSS 骰面渲染。
 - `09` 源包只有引导图，没有物品图片 atlas，当前用文字物品卡替代旧 emoji fallback。
+- `10` 当前用内联 SVG 渲染机器人和影子，没有接入 Axure/线框图中的正式切图资源。
+- `11` 当前用 CSS/emoji 渲染西瓜和干扰物，没有接入 Axure/线框图中的正式切图资源。
 
 ## 仍未找到对应完整实现
 
-以下源素材条目不在本次 9 个归档游戏范围内：
-
-- `01 感知觉/02 观察水平-影子配对`
-- `02 记忆力/04 位置记忆-翻个西瓜`
+以下源素材条目不在本次 11 个归档游戏范围内：
 - `03  注意力/02 注意广度-静默池塘`
 - `03  注意力/03 持续注意-钓鱼达人`

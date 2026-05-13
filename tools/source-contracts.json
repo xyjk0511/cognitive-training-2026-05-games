@@ -63,5 +63,19 @@
     "requiredAssets": ["09-识别归纳-分门别类/external-games/category-sort/guides/引导1.png", "09-识别归纳-分门别类/external-games/category-sort/guides/引导2.png", "09-识别归纳-分门别类/external-games/category-sort/guides/引导3.png"],
     "acceptedDifferences": ["source package has guide images but no per-item image atlas; implementation exposes text item cards instead of emoji fallback"],
     "verification": ["node --test tests/designParityRules.test.mjs"]
+  },
+  "10-shadow-pairing": {
+    "implementationFolder": "10-观察水平-影子配对",
+    "entry": "10-观察水平-影子配对/external-games/shadow-pairing/index.html",
+    "selectedSource": ["cognitive-training-2026-05/01 感知觉/02 观察水平-影子配对/数值.xlsx", "cognitive-training-2026-05/01 感知觉/02 观察水平-影子配对/影子配对策划案.xlsx"],
+    "acceptedDifferences": ["implementation renders robots and shadows as inline SVG instead of source image assets"],
+    "verification": ["node .\\tools\\verify-design-parity.mjs"]
+  },
+  "11-watermelon-flip": {
+    "implementationFolder": "11-位置记忆-翻个西瓜",
+    "entry": "11-位置记忆-翻个西瓜/external-games/watermelon-flip/index.html",
+    "selectedSource": ["cognitive-training-2026-05/02 记忆力/04 位置记忆-翻个西瓜/P2翻个西瓜 - 改.xlsm", "cognitive-training-2026-05/02 记忆力/04 位置记忆-翻个西瓜/逻辑修改内容.docx"],
+    "acceptedDifferences": ["implementation renders watermelon and distractors with CSS/emoji instead of source image assets"],
+    "verification": ["node .\\tools\\verify-design-parity.mjs"]
   }
 }
