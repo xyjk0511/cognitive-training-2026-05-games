@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+<defs>
+  <linearGradient id="m" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#514071"/><stop offset=".45" stop-color="#6a577f"/><stop offset="1" stop-color="#232432"/></linearGradient>
+  <radialGradient id="c" cx="52%" cy="42%" r="56%"><stop stop-color="#fff0c2" stop-opacity=".18"/><stop offset=".55" stop-color="#8e78af" stop-opacity=".14"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+  <pattern id="d" width="150" height="150" patternUnits="userSpaceOnUse"><path d="M75 0 150 75 75 150 0 75Z" fill="#fff" opacity=".038"/></pattern>
+</defs>
+<rect width="1280" height="720" fill="url(#m)"/><rect width="1280" height="720" fill="url(#d)"/><rect width="1280" height="720" fill="url(#c)"/>
+<g opacity=".55">
+<circle cx="174" cy="132" r="6" fill="#ffd96d"/><circle cx="1054" cy="138" r="8" fill="#8effd2"/><circle cx="1118" cy="564" r="7" fill="#ff8cc8"/><circle cx="260" cy="548" r="5" fill="#93d7ff"/>
+<path d="M111 197l23-16 12 25-26 11z" fill="#8effd2" opacity=".7"/><path d="M1130 214l34 15-27 24z" fill="#ffd96d" opacity=".7"/><path d="M184 492l22 25-34 10z" fill="#ff8cc8" opacity=".7"/>
+</g>
+</svg>

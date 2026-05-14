@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+<defs>
+  <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#566377"/><stop offset=".5" stop-color="#3d4658"/><stop offset="1" stop-color="#222735"/></linearGradient>
+  <radialGradient id="glow" cx="48%" cy="18%" r="76%"><stop stop-color="#7e8da6" stop-opacity=".62"/><stop offset=".46" stop-color="#4f5c72" stop-opacity=".18"/><stop offset="1" stop-color="#202531" stop-opacity="0"/></radialGradient>
+  <pattern id="diamond" width="160" height="160" patternUnits="userSpaceOnUse"><path d="M80 0 160 80 80 160 0 80Z" fill="#ffffff" opacity=".038"/><path d="M80 0 160 80 80 160 0 80Z" fill="none" stroke="#fff" stroke-opacity=".035" stroke-width="2"/></pattern>
+  <linearGradient id="band" x1="0" x2="1"><stop stop-color="#161b27" stop-opacity=".88"/><stop offset=".5" stop-color="#26303d" stop-opacity=".86"/><stop offset="1" stop-color="#151a24" stop-opacity=".90"/></linearGradient>
+</defs>
+<rect width="1280" height="720" fill="url(#bg)"/>
+<rect width="1280" height="720" fill="url(#diamond)"/>
+<rect width="1280" height="720" fill="url(#glow)"/>
+<rect y="244" width="1280" height="258" fill="url(#band)"/>
+<circle cx="640" cy="360" r="240" fill="#9eb5c7" opacity=".06"/>
+<path d="M0 244H1280" stroke="#fff" stroke-opacity=".04"/><path d="M0 502H1280" stroke="#fff" stroke-opacity=".05"/>
+</svg>

@@ -1,0 +1,21 @@
+{
+  "name": "眼疾手快儿童版",
+  "short_name": "眼疾手快",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#72c1ba",
+  "theme_color": "#74c6bd",
+  "icons": [
+    {
+      "src": "assets/software/app_icon_512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/software/app_icon_1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png"
+    }
+  ],
+  "description": "眼疾手快三难度窗口适配版"
+}

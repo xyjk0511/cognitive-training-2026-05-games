@@ -1,6 +1,6 @@
 # cognitive-training-2026-05 游戏实现归档
 
-本目录按 `cognitive-training-2026-05` 设计素材为准，归档并修复 11 个可运行训练游戏。当前选用合同见 `tools/source-contracts.json`，统一验收命令：
+本目录按 `cognitive-training-2026-05` 设计素材为准，归档并修复 13 个可运行训练游戏。当前选用合同见 `tools/source-contracts.json`，统一验收命令：
 
 ```powershell
 node .\tools\verify-design-parity.mjs
@@ -22,6 +22,8 @@ $env:NODE_PATH='C:\Users\55093\.cache\codex-runtimes\codex-primary-runtime\depen
 | `09-识别归纳-分门别类` | `external-games/category-sort/index.html` | `05 社会认知/识别归纳-分门别类/数值.xlsx` + `关卡配置.xlsx` | 替换调试入口，接入源引导图，移除 emoji/debug fallback |
 | `10-观察水平-影子配对` | `external-games/shadow-pairing/index.html` | `01 感知觉/02 观察水平-影子配对/数值.xlsx` + `影子配对策划案.xlsx` | 新增单文件实现，100 级 Level 和 32 组 shadow 配置与源表一致 |
 | `11-位置记忆-翻个西瓜` | `external-games/watermelon-flip/index.html` | `02 记忆力/04 位置记忆-翻个西瓜/P2翻个西瓜 - 改.xlsm` + `逻辑修改内容.docx` | 新增单文件实现，60 级 Level 和 800 条 Floor 配置与源表一致 |
+| `12-注意广度-静默池塘` | `external-games/silent-pond/index.html` | `03  注意力/02 注意广度-静默池塘/P2静默池塘.xlsm` + `静默池塘文档.xlsx` | 替换为三难度版完整游戏包，含素材、data、运行脚本和 QA 记录 |
+| `13-持续注意-钓鱼达人` | `external-games/fishing-master/钓鱼达人_全部入口_单文件.html` | `03  注意力/03 持续注意-钓鱼达人/数值.xlsx` + `钓鱼达人策划案1.0.2.xlsx` | 替换为布局与教程修正版三难度入口包，保留成人版和两个儿童版单文件入口 |
 
 ## 已接受差异
 
@@ -31,8 +33,6 @@ $env:NODE_PATH='C:\Users\55093\.cache\codex-runtimes\codex-primary-runtime\depen
 - `10` 当前用内联 SVG 渲染机器人和影子，没有接入 Axure/线框图中的正式切图资源。
 - `11` 当前用 CSS/emoji 渲染西瓜和干扰物，没有接入 Axure/线框图中的正式切图资源。
 
-## 仍未找到对应完整实现
+## 完整实现补齐
 
-以下源素材条目不在本次 11 个归档游戏范围内：
-- `03  注意力/02 注意广度-静默池塘`
-- `03  注意力/03 持续注意-钓鱼达人`
+此前缺失的 `03  注意力/02 注意广度-静默池塘` 和 `03  注意力/03 持续注意-钓鱼达人` 已由本次下载交付包补齐。

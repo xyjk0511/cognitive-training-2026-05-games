@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="180" viewBox="0 0 720 180">
+<defs><linearGradient id="gold" y1="0" y2="1"><stop stop-color="#fff4b0"/><stop offset=".45" stop-color="#ffd849"/><stop offset="1" stop-color="#ec9126"/></linearGradient><filter id="glow" x="-20%" y="-40%" width="140%" height="180%"><feDropShadow dx="0" dy="8" stdDeviation="0" flood-color="#7a3a13" flood-opacity=".5"/><feDropShadow dx="0" dy="0" stdDeviation="16" flood-color="#fff2a6" flood-opacity=".45"/></filter><linearGradient id="bolt" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#9df1ff"/><stop offset="1" stop-color="#65ffb0"/></linearGradient></defs>
+<path d="M95 24l-28 58h42l-39 74 92-91h-45l38-41z" fill="url(#bolt)" stroke="#fff" stroke-width="7" stroke-linejoin="round" filter="url(#glow)"/>
+<text x="185" y="120" font-family="Noto Sans CJK SC, Microsoft YaHei, sans-serif" font-size="82" font-weight="900" letter-spacing="12" fill="url(#gold)" stroke="#5c3414" stroke-width="7" paint-order="stroke" filter="url(#glow)">快闪图形</text>
+<circle cx="636" cy="50" r="9" fill="#fff" opacity=".6"/><circle cx="662" cy="76" r="5" fill="#fff" opacity=".5"/><circle cx="610" cy="122" r="6" fill="#fff" opacity=".42"/>
+</svg>

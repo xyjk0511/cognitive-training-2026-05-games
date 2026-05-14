@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 150" role="img" aria-label="地洞">
+  <defs>
+    <radialGradient id="soil" cx="50%" cy="55%" r="62%"><stop offset="0" stop-color="#9a5631"/><stop offset=".68" stop-color="#6d3b25"/><stop offset="1" stop-color="#3c2318"/></radialGradient>
+    <linearGradient id="rim" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#5f9a91"/><stop offset="1" stop-color="#306f67"/></linearGradient>
+  </defs>
+  <ellipse cx="130" cy="108" rx="98" ry="22" fill="#31544d" opacity=".17"/>
+  <path d="M39 80 C65 38 196 38 223 80 C203 68 174 63 130 63 C87 63 59 68 39 80Z" fill="url(#rim)" opacity=".95"/>
+  <ellipse cx="130" cy="83" rx="95" ry="42" fill="url(#soil)"/>
+  <path d="M41 82 C54 114 81 126 130 126 C179 126 207 114 221 82 C202 102 174 113 130 113 C86 113 59 102 41 82Z" fill="#4c2b1d" opacity=".55"/>
+  <path d="M36 75 l-18 -12 M65 58 l-11 -22 M218 76 l20 -13 M196 58 l12 -21" stroke="#2e7068" stroke-width="6" stroke-linecap="round" opacity=".55"/>
+  <g fill="#8f9e95" opacity=".9"><path d="M22 116 l24 -6 15 9-16 12H26z"/><path d="M211 110 l23 -4 17 10-17 10-24-6z"/><path d="M70 35 l12-5 10 6-9 7-14-2z"/><path d="M174 32 l11-4 9 6-8 7-13-2z"/></g>
+</svg>

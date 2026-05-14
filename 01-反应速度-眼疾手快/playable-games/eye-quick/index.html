@@ -1,108 +1,11 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>眼疾手快</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>眼疾手快｜三难度窗口适配版</title>
   <style>
-    * { box-sizing: border-box; }
-    body { margin: 0; min-height: 100vh; font-family: "Microsoft YaHei", system-ui, sans-serif; color: #172033; background: #f4f7fb; display: grid; place-items: center; }
-    main { width: min(980px, calc(100vw - 28px)); display: grid; gap: 14px; }
-    header, section, footer { background: #fff; border: 1px solid #dbe3ef; border-radius: 8px; padding: 16px; box-shadow: 0 14px 36px rgba(20,31,48,.08); }
-    header { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
-    h1 { margin: 0; font-size: 28px; }
-    .hud { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
-    .hud b { font-size: 24px; }
-    .board { display: grid; gap: 8px; aspect-ratio: 1.25; min-height: 480px; background: #edf5ff; }
-    .cell { border: 1px solid #d2dfef; border-radius: 8px; background: #fff; display: grid; place-items: center; cursor: pointer; min-width: 0; }
-    .cell img { width: 70%; height: 70%; object-fit: contain; pointer-events: none; }
-    .effect { color: #0f7a63; font-weight: 900; }
-    footer { display: flex; justify-content: space-between; align-items: center; color: #536173; }
-    button { border: 0; border-radius: 8px; padding: 10px 14px; font-weight: 800; background: #172033; color: #fff; cursor: pointer; }
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;font-family:"PingFang SC","Microsoft YaHei",Arial,sans-serif;background:radial-gradient(circle at 20% 18%,rgba(255,239,166,.6),transparent 22%),radial-gradient(circle at 84% 16%,rgba(152,224,212,.62),transparent 26%),linear-gradient(135deg,#dff6f1,#fff2cf);color:#24404f;overflow:hidden}body::before{content:"";position:fixed;inset:-80px;background:radial-gradient(circle at 18% 74%,rgba(255,255,255,.42),transparent 18%),radial-gradient(circle at 78% 78%,rgba(255,199,79,.28),transparent 18%);animation:drift 12s ease-in-out infinite alternate;pointer-events:none}main{position:relative;width:min(920px,92vw);background:rgba(255,255,255,.86);border:6px solid rgba(255,255,255,.7);border-radius:34px;padding:38px;box-shadow:0 32px 90px rgba(42,72,88,.22),inset 0 -6px 0 rgba(149,97,39,.08);text-align:center;backdrop-filter:blur(10px)}h1{margin:0 0 10px;font-size:50px;letter-spacing:4px;color:#c43b25;text-shadow:0 4px 0 #ffe39b}.lead{line-height:1.85;font-size:18px;color:#654b35}.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;margin-top:28px}.card{position:relative;overflow:hidden;display:block;text-decoration:none;color:#24404f;border-radius:24px;padding:30px;background:linear-gradient(180deg,#fffdf4,#f7fbff);border:2px solid rgba(255,255,255,.9);box-shadow:0 16px 42px rgba(54,89,111,.13),inset 0 -4px 0 rgba(97,130,142,.08);transition:.2s}.card::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 0 35%,rgba(255,255,255,.42) 45%,transparent 55%);transform:translateX(-120%);transition:.55s}.card:hover{transform:translateY(-5px)}.card:hover::after{transform:translateX(120%)}.tag{display:inline-block;border-radius:999px;padding:7px 14px;background:#e9f7f5;color:#347066;font-size:14px;font-weight:900}.card h2{font-size:28px;margin:16px 0 8px}.card p{line-height:1.7;color:#5d7280}.note{margin-top:20px;border-radius:18px;background:#fff3ce;padding:14px 18px;color:#6a4a2e;font-weight:800}@keyframes drift{from{transform:translate(-10px,-8px)}to{transform:translate(18px,12px)}}@media(max-width:700px){.cards{grid-template-columns:1fr}h1{font-size:38px}main{padding:24px}}
   </style>
 </head>
-<body>
-  <main>
-    <header>
-      <h1>眼疾手快</h1>
-      <div class="hud">
-        <span>等级 <b id="level">1</b></span>
-        <span>目标 <b id="target">0/0</b></span>
-        <span>得分 <b id="score">0</b></span>
-        <span id="feedback">点击普通地鼠和头盔地鼠，避开干扰项</span>
-      </div>
-    </header>
-    <section id="board" class="board" aria-live="polite"></section>
-    <footer>
-      <span>源合同：data.json / 51关 / 连错两次或倒计时结束结算</span>
-      <button id="reset">重新开始</button>
-    </footer>
-  </main>
-  <script type="module">
-    import { applyEyeQuickClick, createEyeQuickSession, createNextEyeQuickSession, getEyeQuickTargetProgress, stepEyeQuickSession } from '../../implementation/eyeQuickSource.js';
-
-    const assets = {
-      normal: '../../../training-assets/eye-quick/mole_normal_idle.svg',
-      helmet: '../../../training-assets/eye-quick/mole_helmet_idle.svg',
-      bomb: '../../../training-assets/eye-quick/bomb_idle.svg',
-      whiteCat: '../../../training-assets/eye-quick/rabbit_decoy_idle.svg',
-      otherCat: '../../../training-assets/eye-quick/panda_decoy_idle.svg',
-    };
-    let session = createEyeQuickSession(1, { now: performance.now(), durationMs: 3000 });
-    const board = document.getElementById('board');
-    const feedback = document.getElementById('feedback');
-
-    function render() {
-      const config = session.config;
-      board.style.gridTemplateColumns = `repeat(${config.columns}, minmax(0, 1fr))`;
-      board.innerHTML = '';
-      const activeByCell = new Map(session.active.map((item) => [item.cellIndex, item]));
-      for (let i = 0; i < config.boardSize; i += 1) {
-        const cell = document.createElement('button');
-        cell.className = 'cell';
-        cell.type = 'button';
-        const active = activeByCell.get(i);
-        const effect = session.effects.find((item) => item.cellIndex === i);
-        if (active) {
-          const img = document.createElement('img');
-          img.src = assets[active.type];
-          img.alt = active.type;
-          cell.append(img);
-        } else if (effect) {
-          const span = document.createElement('span');
-          span.className = 'effect';
-          span.textContent = effect.label;
-          cell.append(span);
-        }
-        cell.addEventListener('click', () => {
-          session = applyEyeQuickClick(session, i, performance.now());
-          if (session.ended) finishRound();
-          render();
-        });
-        board.append(cell);
-      }
-      document.getElementById('level').textContent = session.level;
-      document.getElementById('target').textContent = getEyeQuickTargetProgress(session);
-      document.getElementById('score').textContent = session.score;
-      if (session.roundResult) feedback.textContent = `${session.roundResult.note}，奖励 ${session.roundResult.award}`;
-    }
-
-    function finishRound() {
-      session = createNextEyeQuickSession(session, { now: performance.now(), durationMs: 3000 });
-    }
-
-    function loop() {
-      session = stepEyeQuickSession(session, performance.now());
-      if (session.ended) finishRound();
-      render();
-      window.setTimeout(loop, 160);
-    }
-
-    document.getElementById('reset').addEventListener('click', () => {
-      session = createEyeQuickSession(1, { now: performance.now(), durationMs: 3000 });
-      render();
-    });
-    loop();
-  </script>
-</body>
-</html>
+<body><main><h1>眼疾手快</h1><p class="lead">三难度窗口适配版入口。儿童版与成人版均保留严格修复逻辑；新手教程改为三档难度起始、自动讲解、自动推进，玩家只需按提示完成必要点击，不再需要手动点“下一步”。</p><div class="cards"><a class="card" href="儿童版_眼疾手快_三难度窗口适配版/index.html"><span class="tag">儿童版</span><h2>儿童版训练</h2><p>较低目标、较慢节奏、较少单批出现数量。可选容易/普通/困难，分别从第 1/15/30 关开始。建议先完成自动引导教程。</p></a><a class="card" href="成人版_眼疾手快_三难度窗口适配版/index.html"><span class="tag">成人版</span><h2>成人版训练</h2><p>同字段格式，目标与节奏相对提高。可选容易/普通/困难，分别从第 1/15/30 关开始。自动引导教程流程与儿童版一致。</p></a></div><div class="note">打开任一版本后，建议先完成“自动引导新手教程”。教程会按步骤自动讲解、自动进入下一步；正式训练仍保留目标进度条、错误警戒条和结果趋势面板。</div></main></body></html>

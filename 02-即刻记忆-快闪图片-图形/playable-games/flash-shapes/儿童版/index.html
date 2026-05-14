@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>快闪图形 - 三档难度版儿童版</title>
+  <link rel="stylesheet" href="../shared/style.css">
+</head>
+<body>
+<div id="app">
+  <main class="stage" aria-label="快闪图形游戏舞台">
+    <section id="welcomeScreen" class="screen active">
+      <div class="center-stack">
+        <span class="mode-chip" id="welcomeVersion">儿童版</span>
+        <img class="title-logo" src="../assets/ui/title_logo.svg" alt="快闪图形">
+        <img class="mascot-img mascot-boot" src="../assets/mascot/xkk_wave.svg" alt="角色小康康">
+        <div class="mascot-name">小康康</div>
+        <button id="btnWelcomeStart" class="primary-btn">开始</button>
+        <div style="color:rgba(255,255,255,.76);font-weight:900">点击任意位置关闭欢迎动画并进入新手引导</div>
+      </div>
+    </section>
+
+    <section id="menuScreen" class="screen">
+      <div class="center-stack">
+        <div class="menu-card">
+          <h1>做得好！</h1>
+          <span class="mode-chip" id="menuVersion">儿童版</span>
+          <div class="panel">
+            <div style="font-size:30px;font-weight:900">准备开始训练吧！</div>
+            <img src="../assets/mascot/xkk_idle.svg" alt="小康康" style="width:118px;margin:10px auto 0;display:block;filter:drop-shadow(0 10px 10px rgba(0,0,0,.18))">
+            <div class="form-grid difficulty-form">
+              <label class="seconds-field">下发训练时长（秒）
+                <input id="trainingSeconds" type="number" min="10" max="3600" value="180">
+              </label>
+              <div class="difficulty-section">
+                <div class="difficulty-title">选择难度</div>
+                <div id="difficultyPicker" class="difficulty-picker" role="radiogroup" aria-label="选择训练难度">
+                  <button type="button" class="difficulty-option active" data-difficulty="easy" data-start-level="1" aria-pressed="true">
+                    <strong>容易</strong><span>从第1关开始</span>
+                  </button>
+                  <button type="button" class="difficulty-option" data-difficulty="normal" data-start-level="15" aria-pressed="false">
+                    <strong>普通</strong><span>从第15关开始</span>
+                  </button>
+                  <button type="button" class="difficulty-option" data-difficulty="hard" data-start-level="30" aria-pressed="false">
+                    <strong>困难</strong><span>从第30关开始</span>
+                  </button>
+                </div>
+                <div id="selectedDifficultyText" class="selected-difficulty-text">当前：容易（从第1关开始）</div>
+                <input id="startLevel" type="hidden" min="1" max="50" value="1">
+              </div>
+            </div>
+          </div>
+          <div class="menu-actions">
+            <button id="btnReplayGuide" class="primary-btn">重新演示</button>
+            <button id="btnStartTraining" class="primary-btn">进入训练</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="gameScreen" class="screen">
+      <div class="game-top">
+        <div class="top-left">
+          <button id="pauseBtn" class="pause-btn" aria-label="暂停"></button>
+          <div id="difficultyLabel" class="difficulty">难度 1</div>
+          <span class="mode-chip" id="modeLabel">儿童版</span>
+        </div>
+        <div class="top-right">
+          <div class="hud-box" aria-label="本关倒计时"><span class="icon-clock"></span><span id="levelTimer">00:00</span></div>
+          <div class="hud-box small" aria-label="总训练倒计时"><span class="hud-label">训练</span><span id="sessionTimer">00:00</span></div>
+          <div class="hud-box" aria-label="通关目标数"><span class="icon-target"></span><span id="targetCounter">0/0</span></div>
+          <div class="hud-box small" aria-label="连续选错"><span class="hud-label">连续错</span><span id="streakCounter">0/2</span></div>
+        </div>
+      </div>
+
+      <div class="question-band">
+        <div id="questionText" class="question-text">记住这张图形</div>
+      </div>
+
+      <div class="play-area">
+        <div id="card" class="card-shell" aria-live="polite"></div>
+      </div>
+
+      <div id="answerRow" class="answer-row hidden">
+        <button id="btnDifferent" class="answer-btn different" aria-label="不同">不同</button>
+        <button id="btnSame" class="answer-btn same" aria-label="相同">相同</button>
+      </div>
+
+      <div class="level-footer">
+        <div id="progressDots" class="progress-dots" aria-hidden="true"></div>
+        <div id="historyText">本关答题 0，错误 0</div>
+      </div>
+
+      <div id="floatLayer" class="float-layer"></div>
+
+      <div id="pauseOverlay" class="overlay">
+        <div class="pause-card">
+          <h2>暂停</h2>
+          <div class="pause-actions">
+            <button id="btnResume" class="secondary-btn">继续游戏</button>
+            <button id="btnSound" class="secondary-btn">音效：开</button>
+            <button id="btnMusic" class="secondary-btn">音乐：关</button>
+            <button id="btnHelp" class="secondary-btn">帮助</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="helpOverlay" class="overlay">
+        <div class="help-card">
+          <h2>帮助</h2>
+          <img class="help-illustration" src="../assets/ui/help_rule_card.svg" alt="帮助说明：相同点击绿色按钮，不同点击蓝色按钮；连续选错两次会导致关卡失败结束。">
+          <p class="help-red">连续选错两次会导致关卡失败结束哦</p>
+          <p class="help-white" style="font-size:18px">右上角显示通关目标数 N/M；小关结束后会按通关目标自动升降难度，并在总训练时间到 0 前自动继续训练。</p>
+          <div style="text-align:center;margin-top:18px"><button id="btnCloseHelp" class="primary-btn">关闭</button></div>
+        </div>
+      </div>
+
+      <div id="resultOverlay" class="overlay">
+        <div class="result-card">
+          <div id="resultRibbon" class="ribbon">完成</div>
+          <div id="resultInfo" class="result-info"></div>
+          <div class="result-actions">
+            <button id="btnContinueLevel" class="primary-btn">继续</button>
+            <button id="btnRestartTraining" class="primary-btn">重新训练</button>
+            <button id="btnResultReplayGuide" class="primary-btn">重新演示</button>
+            <button id="btnResultMenu" class="secondary-btn">返回设置</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+<script>
+window.KX_ASSET_BASE = "../assets";
+window.KX_BOOT_CONFIG = {
+  version: "child",
+  defaultTrainingSeconds: 180,
+  defaultStartLevel: 1
+};
+</script>
+<script src="../shared/data.js"></script>
+<script src="../shared/game.js"></script>
+</body>
+</html>

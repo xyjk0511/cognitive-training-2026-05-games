@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="眼疾手快软件图标">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#74c9c2"/><stop offset="1" stop-color="#8bcf8f"/></linearGradient>
+    <radialGradient id="fur" cx="42%" cy="26%" r="78%"><stop offset="0" stop-color="#ffd79a"/><stop offset=".62" stop-color="#d88d43"/><stop offset="1" stop-color="#9d5728"/></radialGradient>
+    <linearGradient id="helmet" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff39a"/><stop offset="1" stop-color="#f0a22b"/></linearGradient>
+    <filter id="s"><feDropShadow dx="0" dy="30" stdDeviation="30" flood-color="#274540" flood-opacity=".35"/></filter>
+  </defs>
+  <rect x="70" y="70" width="884" height="884" rx="210" fill="url(#bg)"/>
+  <rect x="108" y="108" width="808" height="808" rx="180" fill="none" stroke="#e6fff2" stroke-width="24" opacity=".72"/>
+  <circle cx="782" cy="242" r="92" fill="#fff9c6" opacity=".82"/>
+  <path d="M782 184l18 45 48 4-37 31 12 47-41-26-41 26 12-47-37-31 48-4z" fill="#ffd34a" stroke="#d88924" stroke-width="12"/>
+  <g filter="url(#s)">
+    <ellipse cx="512" cy="764" rx="278" ry="78" fill="#31554b" opacity=".25"/>
+    <path d="M256 675 C328 554 694 554 766 675 C710 622 602 604 512 604 C422 604 314 622 256 675Z" fill="#39756d"/>
+    <ellipse cx="512" cy="675" rx="240" ry="105" fill="#6d3d24"/>
+    <circle cx="364" cy="394" r="92" fill="#c47a35"/><circle cx="364" cy="394" r="56" fill="#ffd4b5"/>
+    <circle cx="660" cy="394" r="92" fill="#c47a35"/><circle cx="660" cy="394" r="56" fill="#ffd4b5"/>
+    <path d="M270 438 C270 282 386 208 512 208 C638 208 754 282 754 438 L728 616 C712 710 622 768 512 768 C402 768 312 710 296 616Z" fill="url(#fur)" stroke="#7f4a25" stroke-width="17"/>
+    <path d="M310 430 C344 284 432 222 512 222 C606 222 700 294 726 430 L690 456 C602 405 418 404 346 456Z" fill="url(#helmet)" stroke="#ad6a20" stroke-width="18"/>
+    <path d="M398 316 C456 270 548 266 626 324" fill="none" stroke="#fff1a8" stroke-width="28" stroke-linecap="round"/>
+    <rect x="358" y="404" width="304" height="48" rx="24" fill="#d07721" opacity=".48"/>
+    <circle cx="428" cy="500" r="26" fill="#3f2c20"/><circle cx="596" cy="500" r="26" fill="#3f2c20"/>
+    <circle cx="436" cy="492" r="8" fill="#fff"/><circle cx="604" cy="492" r="8" fill="#fff"/>
+    <ellipse cx="512" cy="552" rx="45" ry="32" fill="#5b351e"/>
+    <path d="M470 608 C492 656 532 656 554 608" fill="none" stroke="#442819" stroke-width="22" stroke-linecap="round"/>
+    <path d="M496 608 v50 M526 608 v50" stroke="#fff" stroke-width="24" stroke-linecap="round"/>
+    <circle cx="338" cy="560" r="36" fill="#ffb09c" opacity=".55"/><circle cx="686" cy="560" r="36" fill="#ffb09c" opacity=".55"/>
+  </g>
+  <g transform="translate(152 800)">
+    <rect width="720" height="96" rx="48" fill="#fff6c7" opacity=".94"/>
+    <text x="360" y="68" text-anchor="middle" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif" font-size="54" font-weight="900" fill="#8b4f1f">眼疾手快</text>
+  </g>
+</svg>

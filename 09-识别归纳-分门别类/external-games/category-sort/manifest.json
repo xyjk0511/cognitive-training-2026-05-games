@@ -1,0 +1,62 @@
+{
+  "project": "分门别类 HTML5 游戏",
+  "entry": "index.html",
+  "assets": {
+    "itemSvgs": 92,
+    "ui": [
+      "kangkang.svg",
+      "kangkang_airplane.svg",
+      "引导.jpg",
+      "帮助.jpg",
+      "整体效果图.jpg"
+    ],
+    "sfx": [
+      "tip.wav",
+      "correct.wav",
+      "wrong.wav",
+      "settlement.wav"
+    ]
+  },
+  "difficultyStartLevels": {
+    "easy": {
+      "label": "容易",
+      "startLevel": 1
+    },
+    "normal": {
+      "label": "普通",
+      "startLevel": 15
+    },
+    "hard": {
+      "label": "困难",
+      "startLevel": 30
+    }
+  },
+  "levelCount": 100,
+  "itemCount": 92,
+  "generatedFrom": [
+    "分门别类游戏策划1.0.2(2).xlsx",
+    "关卡配置(2).xlsx",
+    "数值(4).xlsx"
+  ],
+  "version": "1.0.2-review-fixed",
+  "reviewPatch": {
+    "codeReviewDocument": "docs/CODE_REVIEW_AND_CONSISTENCY.md",
+    "beginnerTutorial": "docs/BEGINNER_TUTORIAL.md",
+    "validationTool": "tools/validate_project.py",
+    "runtimeData": "source/runtime_game_data.json",
+    "mappingSummary": "source/data_mapping_summary.json"
+  },
+  "implementedRules": {
+    "stageEnd": [
+      "倒计时=0",
+      "连续选错2次"
+    ],
+    "pass": "小关结束时 correctCount >= PassTarget；达到 PassTarget 不即时结束",
+    "difficulty": "通关+1；失败1次不变；失败2次-1；失败3次-3并清空失败计数",
+    "difficultyStartLevels": {
+      "easy": 1,
+      "normal": 15,
+      "hard": 30
+    }
+  }
+}

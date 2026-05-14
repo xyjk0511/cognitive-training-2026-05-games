@@ -1,0 +1,450 @@
+{
+  "project": "静默池塘",
+  "version": "refined-assets-1.2-polished-ui",
+  "created_for": "游戏精致素材二次打磨版交付",
+  "style": "静谧池塘、半写实手绘、清透水面、低干扰高识别度",
+  "minimum_design_spec": {
+    "红鲤鱼": [
+      "assets/fish/red_koi.png",
+      "assets/fish/red_koi_swim_sheet_8x160x96.png"
+    ],
+    "池塘底图": [
+      "assets/visual/pond_water_840x410.png",
+      "assets/visual/stage_backdrop_980x640.png"
+    ],
+    "池塘修饰物": [
+      "assets/decor/decor_lotus_leaf.png",
+      "assets/decor/decor_lotus_bloom.png",
+      "assets/decor/decor_reeds.png",
+      "assets/decor/decor_algae_cluster.png",
+      "assets/decor/decor_stone_moss.png"
+    ],
+    "音效": [
+      "assets/audio/sfx_start_water_swell.wav",
+      "assets/audio/sfx_game_end_gong.wav",
+      "assets/audio/sfx_level_pass_chime.wav"
+    ],
+    "干扰鲤鱼": [
+      "assets/fish/green_koi.png",
+      "assets/fish/green_koi_swim_sheet_8x160x96.png"
+    ]
+  },
+  "runtime_extras": [
+    "投食机",
+    "食物颗粒",
+    "涟漪/水花动画帧",
+    "按钮/面板/图标",
+    "环境声"
+  ],
+  "assets": [
+    {
+      "file": "assets/visual/pond_frame_stones_980x640.png",
+      "category": "visual",
+      "purpose": "池塘/场景背景素材",
+      "dimension_or_duration": "980x640",
+      "spec_mapping": "池塘底图"
+    },
+    {
+      "file": "assets/visual/pond_water_840x410.png",
+      "category": "visual",
+      "purpose": "池塘/场景背景素材",
+      "dimension_or_duration": "840x410",
+      "spec_mapping": "池塘底图"
+    },
+    {
+      "file": "assets/visual/stage_backdrop_980x640.png",
+      "category": "visual",
+      "purpose": "池塘/场景背景素材",
+      "dimension_or_duration": "980x640",
+      "spec_mapping": "池塘底图"
+    },
+    {
+      "file": "assets/fish/black_green_koi.png",
+      "category": "fish",
+      "purpose": "鲤鱼角色与游动帧",
+      "dimension_or_duration": "160x96",
+      "spec_mapping": "红鲤鱼/绿鲤鱼"
+    },
+    {
+      "file": "assets/fish/black_green_koi_swim_sheet_8x160x96.png",
+      "category": "fish",
+      "purpose": "鲤鱼角色与游动帧",
+      "dimension_or_duration": "1280x96",
+      "spec_mapping": "红鲤鱼/绿鲤鱼"
+    },
+    {
+      "file": "assets/fish/green_koi.png",
+      "category": "fish",
+      "purpose": "鲤鱼角色与游动帧",
+      "dimension_or_duration": "160x96",
+      "spec_mapping": "红鲤鱼/绿鲤鱼"
+    },
+    {
+      "file": "assets/fish/green_koi_icon.png",
+      "category": "fish",
+      "purpose": "鲤鱼角色与游动帧",
+      "dimension_or_duration": "256x192",
+      "spec_mapping": "红鲤鱼/绿鲤鱼"
+    },
+    {
+      "file": "assets/fish/green_koi_swim_sheet_8x160x96.png",
+      "category": "fish",
+      "purpose": "鲤鱼角色与游动帧",
+      "dimension_or_duration": "1280x96",
+      "spec_mapping": "红鲤鱼/绿鲤鱼"
+    },
+    {
+      "file": "assets/fish/red_koi.png",
+      "category": "fish",
+      "purpose": "鲤鱼角色与游动帧",
+      "dimension_or_duration": "160x96",
+      "spec_mapping": "红鲤鱼/绿鲤鱼"
+    },
+    {
+      "file": "assets/fish/red_koi_icon.png",
+      "category": "fish",
+      "purpose": "鲤鱼角色与游动帧",
+      "dimension_or_duration": "256x192",
+      "spec_mapping": "红鲤鱼/绿鲤鱼"
+    },
+    {
+      "file": "assets/fish/red_koi_swim_sheet_8x160x96.png",
+      "category": "fish",
+      "purpose": "鲤鱼角色与游动帧",
+      "dimension_or_duration": "1280x96",
+      "spec_mapping": "红鲤鱼/绿鲤鱼"
+    },
+    {
+      "file": "assets/decor/decor_algae_cluster.png",
+      "category": "decor",
+      "purpose": "池塘遮挡/修饰物",
+      "dimension_or_duration": "256x256",
+      "spec_mapping": "池塘修饰物 5 类"
+    },
+    {
+      "file": "assets/decor/decor_lotus_bloom.png",
+      "category": "decor",
+      "purpose": "池塘遮挡/修饰物",
+      "dimension_or_duration": "256x256",
+      "spec_mapping": "池塘修饰物 5 类"
+    },
+    {
+      "file": "assets/decor/decor_lotus_leaf.png",
+      "category": "decor",
+      "purpose": "池塘遮挡/修饰物",
+      "dimension_or_duration": "256x256",
+      "spec_mapping": "池塘修饰物 5 类"
+    },
+    {
+      "file": "assets/decor/decor_reeds.png",
+      "category": "decor",
+      "purpose": "池塘遮挡/修饰物",
+      "dimension_or_duration": "256x256",
+      "spec_mapping": "池塘修饰物 5 类"
+    },
+    {
+      "file": "assets/decor/decor_shadow_grass.png",
+      "category": "decor",
+      "purpose": "池塘遮挡/修饰物",
+      "dimension_or_duration": "256x256",
+      "spec_mapping": "池塘修饰物 5 类"
+    },
+    {
+      "file": "assets/decor/decor_stone_moss.png",
+      "category": "decor",
+      "purpose": "池塘遮挡/修饰物",
+      "dimension_or_duration": "256x256",
+      "spec_mapping": "池塘修饰物 5 类"
+    },
+    {
+      "file": "assets/fx/food_pellet.png",
+      "category": "fx",
+      "purpose": "投食、涟漪、水花动画素材",
+      "dimension_or_duration": "96x96",
+      "spec_mapping": "投食成功/失败水面波浪"
+    },
+    {
+      "file": "assets/fx/ripple_fail_sheet_8x256.png",
+      "category": "fx",
+      "purpose": "投食、涟漪、水花动画素材",
+      "dimension_or_duration": "2048x256",
+      "spec_mapping": "投食成功/失败水面波浪"
+    },
+    {
+      "file": "assets/fx/ripple_success_sheet_8x256.png",
+      "category": "fx",
+      "purpose": "投食、涟漪、水花动画素材",
+      "dimension_or_duration": "2048x256",
+      "spec_mapping": "投食成功/失败水面波浪"
+    },
+    {
+      "file": "assets/fx/splash_fail_sheet_8x256.png",
+      "category": "fx",
+      "purpose": "投食、涟漪、水花动画素材",
+      "dimension_or_duration": "2048x256",
+      "spec_mapping": "投食成功/失败水面波浪"
+    },
+    {
+      "file": "assets/fx/splash_success_sheet_8x256.png",
+      "category": "fx",
+      "purpose": "投食、涟漪、水花动画素材",
+      "dimension_or_duration": "2048x256",
+      "spec_mapping": "投食成功/失败水面波浪"
+    },
+    {
+      "file": "assets/ui/button_danger_360x104.png",
+      "category": "ui",
+      "purpose": "界面面板、按钮、投食机",
+      "dimension_or_duration": "360x104",
+      "spec_mapping": "主游戏界面/暂停/完成界面"
+    },
+    {
+      "file": "assets/ui/button_primary_360x104.png",
+      "category": "ui",
+      "purpose": "界面面板、按钮、投食机",
+      "dimension_or_duration": "360x104",
+      "spec_mapping": "主游戏界面/暂停/完成界面"
+    },
+    {
+      "file": "assets/ui/button_secondary_360x104.png",
+      "category": "ui",
+      "purpose": "界面面板、按钮、投食机",
+      "dimension_or_duration": "360x104",
+      "spec_mapping": "主游戏界面/暂停/完成界面"
+    },
+    {
+      "file": "assets/ui/feeder_dispenser.png",
+      "category": "ui",
+      "purpose": "界面面板、按钮、投食机",
+      "dimension_or_duration": "256x180",
+      "spec_mapping": "主游戏界面/暂停/完成界面"
+    },
+    {
+      "file": "assets/ui/panel_glass_640x360.png",
+      "category": "ui",
+      "purpose": "界面面板、按钮、投食机",
+      "dimension_or_duration": "640x360",
+      "spec_mapping": "主游戏界面/暂停/完成界面"
+    },
+    {
+      "file": "assets/ui/icon_error.svg",
+      "category": "ui",
+      "purpose": "矢量图标/标题",
+      "dimension_or_duration": "vector SVG",
+      "spec_mapping": "界面图标补充"
+    },
+    {
+      "file": "assets/ui/icon_fish.svg",
+      "category": "ui",
+      "purpose": "矢量图标/标题",
+      "dimension_or_duration": "vector SVG",
+      "spec_mapping": "界面图标补充"
+    },
+    {
+      "file": "assets/ui/icon_food.svg",
+      "category": "ui",
+      "purpose": "矢量图标/标题",
+      "dimension_or_duration": "vector SVG",
+      "spec_mapping": "界面图标补充"
+    },
+    {
+      "file": "assets/ui/icon_help.svg",
+      "category": "ui",
+      "purpose": "矢量图标/标题",
+      "dimension_or_duration": "vector SVG",
+      "spec_mapping": "界面图标补充"
+    },
+    {
+      "file": "assets/ui/icon_home.svg",
+      "category": "ui",
+      "purpose": "矢量图标/标题",
+      "dimension_or_duration": "vector SVG",
+      "spec_mapping": "界面图标补充"
+    },
+    {
+      "file": "assets/ui/icon_pause.svg",
+      "category": "ui",
+      "purpose": "矢量图标/标题",
+      "dimension_or_duration": "vector SVG",
+      "spec_mapping": "界面图标补充"
+    },
+    {
+      "file": "assets/ui/icon_play.svg",
+      "category": "ui",
+      "purpose": "矢量图标/标题",
+      "dimension_or_duration": "vector SVG",
+      "spec_mapping": "界面图标补充"
+    },
+    {
+      "file": "assets/ui/icon_restart.svg",
+      "category": "ui",
+      "purpose": "矢量图标/标题",
+      "dimension_or_duration": "vector SVG",
+      "spec_mapping": "界面图标补充"
+    },
+    {
+      "file": "assets/ui/icon_score.svg",
+      "category": "ui",
+      "purpose": "矢量图标/标题",
+      "dimension_or_duration": "vector SVG",
+      "spec_mapping": "界面图标补充"
+    },
+    {
+      "file": "assets/ui/icon_sound_off.svg",
+      "category": "ui",
+      "purpose": "矢量图标/标题",
+      "dimension_or_duration": "vector SVG",
+      "spec_mapping": "界面图标补充"
+    },
+    {
+      "file": "assets/ui/icon_sound_on.svg",
+      "category": "ui",
+      "purpose": "矢量图标/标题",
+      "dimension_or_duration": "vector SVG",
+      "spec_mapping": "界面图标补充"
+    },
+    {
+      "file": "assets/ui/icon_timer.svg",
+      "category": "ui",
+      "purpose": "矢量图标/标题",
+      "dimension_or_duration": "vector SVG",
+      "spec_mapping": "界面图标补充"
+    },
+    {
+      "file": "assets/ui/logo_silent_pond.svg",
+      "category": "ui",
+      "purpose": "矢量图标/标题",
+      "dimension_or_duration": "vector SVG",
+      "spec_mapping": "界面图标补充"
+    },
+    {
+      "file": "assets/audio/ambient_pond_loop_12s.wav",
+      "category": "audio",
+      "purpose": "音效与环境声",
+      "dimension_or_duration": "12.00s mono 44100Hz",
+      "spec_mapping": "开局/结束/过关音效及操作反馈"
+    },
+    {
+      "file": "assets/audio/sfx_feed_fail_splash.wav",
+      "category": "audio",
+      "purpose": "音效与环境声",
+      "dimension_or_duration": "0.38s mono 44100Hz",
+      "spec_mapping": "开局/结束/过关音效及操作反馈"
+    },
+    {
+      "file": "assets/audio/sfx_feed_success_splash.wav",
+      "category": "audio",
+      "purpose": "音效与环境声",
+      "dimension_or_duration": "0.32s mono 44100Hz",
+      "spec_mapping": "开局/结束/过关音效及操作反馈"
+    },
+    {
+      "file": "assets/audio/sfx_food_shoot.wav",
+      "category": "audio",
+      "purpose": "音效与环境声",
+      "dimension_or_duration": "0.12s mono 44100Hz",
+      "spec_mapping": "开局/结束/过关音效及操作反馈"
+    },
+    {
+      "file": "assets/audio/sfx_game_end_gong.wav",
+      "category": "audio",
+      "purpose": "音效与环境声",
+      "dimension_or_duration": "0.90s mono 44100Hz",
+      "spec_mapping": "开局/结束/过关音效及操作反馈"
+    },
+    {
+      "file": "assets/audio/sfx_level_pass_chime.wav",
+      "category": "audio",
+      "purpose": "音效与环境声",
+      "dimension_or_duration": "0.49s mono 44100Hz",
+      "spec_mapping": "开局/结束/过关音效及操作反馈"
+    },
+    {
+      "file": "assets/audio/sfx_start_water_swell.wav",
+      "category": "audio",
+      "purpose": "音效与环境声",
+      "dimension_or_duration": "0.95s mono 44100Hz",
+      "spec_mapping": "开局/结束/过关音效及操作反馈"
+    },
+    {
+      "file": "assets/audio/sfx_ui_click.wav",
+      "category": "audio",
+      "purpose": "音效与环境声",
+      "dimension_or_duration": "0.07s mono 44100Hz",
+      "spec_mapping": "开局/结束/过关音效及操作反馈"
+    },
+    {
+      "file": "assets/ui/icon_trophy.svg",
+      "category": "ui",
+      "purpose": "矢量图标/标题",
+      "dimension_or_duration": "vector SVG",
+      "spec_mapping": "完成界面/主游戏界面图标补充"
+    },
+    {
+      "file": "assets/ui/icon_gift.svg",
+      "category": "ui",
+      "purpose": "矢量图标/标题",
+      "dimension_or_duration": "vector SVG",
+      "spec_mapping": "完成界面/主游戏界面图标补充"
+    }
+  ],
+  "runtime_fix_note": "已接入 UI 图标、按钮/面板、环境声、黑绿色干扰鲤鱼、池塘石框与成功/失败 FX 帧序列。",
+  "runtime_integration": {
+    "all_runtime_asset_paths_exist": true,
+    "runtime_asset_reference_count": 50,
+    "referenced_assets": [
+      "assets/audio/ambient_pond_loop_12s.wav",
+      "assets/audio/sfx_feed_fail_splash.wav",
+      "assets/audio/sfx_feed_success_splash.wav",
+      "assets/audio/sfx_food_shoot.wav",
+      "assets/audio/sfx_game_end_gong.wav",
+      "assets/audio/sfx_level_pass_chime.wav",
+      "assets/audio/sfx_start_water_swell.wav",
+      "assets/audio/sfx_ui_click.wav",
+      "assets/decor/decor_algae_cluster.png",
+      "assets/decor/decor_lotus_bloom.png",
+      "assets/decor/decor_lotus_leaf.png",
+      "assets/decor/decor_reeds.png",
+      "assets/decor/decor_shadow_grass.png",
+      "assets/decor/decor_stone_moss.png",
+      "assets/fish/black_green_koi.png",
+      "assets/fish/black_green_koi_swim_sheet_8x160x96.png",
+      "assets/fish/green_koi.png",
+      "assets/fish/green_koi_icon.png",
+      "assets/fish/green_koi_swim_sheet_8x160x96.png",
+      "assets/fish/red_koi.png",
+      "assets/fish/red_koi_icon.png",
+      "assets/fish/red_koi_swim_sheet_8x160x96.png",
+      "assets/fx/food_pellet.png",
+      "assets/fx/ripple_fail_sheet_8x256.png",
+      "assets/fx/ripple_success_sheet_8x256.png",
+      "assets/fx/splash_fail_sheet_8x256.png",
+      "assets/fx/splash_success_sheet_8x256.png",
+      "assets/ui/button_danger_360x104.png",
+      "assets/ui/button_primary_360x104.png",
+      "assets/ui/button_secondary_360x104.png",
+      "assets/ui/feeder_dispenser.png",
+      "assets/ui/icon_error.svg",
+      "assets/ui/icon_fish.svg",
+      "assets/ui/icon_food.svg",
+      "assets/ui/icon_gift.svg",
+      "assets/ui/icon_help.svg",
+      "assets/ui/icon_home.svg",
+      "assets/ui/icon_pause.svg",
+      "assets/ui/icon_play.svg",
+      "assets/ui/icon_restart.svg",
+      "assets/ui/icon_score.svg",
+      "assets/ui/icon_sound_off.svg",
+      "assets/ui/icon_sound_on.svg",
+      "assets/ui/icon_timer.svg",
+      "assets/ui/icon_trophy.svg",
+      "assets/ui/logo_silent_pond.svg",
+      "assets/ui/panel_glass_640x360.png",
+      "assets/visual/pond_frame_stones_980x640.png",
+      "assets/visual/pond_water_840x410.png",
+      "assets/visual/stage_backdrop_980x640.png"
+    ],
+    "naming_policy": "对玩家统一称为“干扰鲤鱼”；素材中 black_green/green 作为视觉资源保留。",
+    "ui_polish_note": "二次打磨完成界面、趋势图、积分公式、奖励状态、图层绘制顺序与按钮流式布局。"
+  }
+}

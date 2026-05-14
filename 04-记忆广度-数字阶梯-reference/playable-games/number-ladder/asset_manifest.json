@@ -1,0 +1,856 @@
+[
+  {
+    "file": "README.md",
+    "type": "MD",
+    "usage": "交付说明文档",
+    "size_bytes": 1929,
+    "sha256": "f9a79a7a03a2e2d2"
+  },
+  {
+    "file": "asset_manifest.json",
+    "type": "JSON",
+    "usage": "当前交付文件清单（自引用文件不记录哈希）",
+    "size_bytes": null,
+    "sha256": null
+  },
+  {
+    "file": "asset_preview.html",
+    "type": "HTML",
+    "usage": "素材预览页",
+    "size_bytes": 19491,
+    "sha256": "1f49846d52ca6376"
+  },
+  {
+    "file": "assets/audio/sfx_click.wav",
+    "type": "WAV",
+    "usage": "游戏音效素材",
+    "size_bytes": 8422,
+    "sha256": "728bc446a45ade86"
+  },
+  {
+    "file": "assets/audio/sfx_correct.wav",
+    "type": "WAV",
+    "usage": "游戏音效素材",
+    "size_bytes": 19006,
+    "sha256": "80a92bd450698b82"
+  },
+  {
+    "file": "assets/audio/sfx_end.wav",
+    "type": "WAV",
+    "usage": "游戏音效素材",
+    "size_bytes": 52964,
+    "sha256": "55e9e5952cc555a1"
+  },
+  {
+    "file": "assets/audio/sfx_level_pass.wav",
+    "type": "WAV",
+    "usage": "游戏音效素材",
+    "size_bytes": 59138,
+    "sha256": "32b9e77ca29dd350"
+  },
+  {
+    "file": "assets/audio/sfx_start.wav",
+    "type": "WAV",
+    "usage": "游戏音效素材",
+    "size_bytes": 43262,
+    "sha256": "680acd0b30ce024a"
+  },
+  {
+    "file": "assets/audio/sfx_tick.wav",
+    "type": "WAV",
+    "usage": "游戏音效素材",
+    "size_bytes": 7540,
+    "sha256": "260dc4105fd5318d"
+  },
+  {
+    "file": "assets/audio/sfx_wrong.wav",
+    "type": "WAV",
+    "usage": "游戏音效素材",
+    "size_bytes": 30032,
+    "sha256": "c14f18aa104c6001"
+  },
+  {
+    "file": "assets/icons/icon_check.png",
+    "type": "PNG",
+    "usage": "游戏图标素材",
+    "size_bytes": 2122,
+    "sha256": "46b9ab42805dacb5"
+  },
+  {
+    "file": "assets/icons/icon_check.svg",
+    "type": "SVG",
+    "usage": "游戏图标素材",
+    "size_bytes": 439,
+    "sha256": "76ad644fe7a3b658"
+  },
+  {
+    "file": "assets/icons/icon_close.png",
+    "type": "PNG",
+    "usage": "游戏图标素材",
+    "size_bytes": 1461,
+    "sha256": "99cadc81480510dd"
+  },
+  {
+    "file": "assets/icons/icon_close.svg",
+    "type": "SVG",
+    "usage": "游戏图标素材",
+    "size_bytes": 421,
+    "sha256": "14724d84099c7e4a"
+  },
+  {
+    "file": "assets/icons/icon_help.png",
+    "type": "PNG",
+    "usage": "游戏图标素材",
+    "size_bytes": 5539,
+    "sha256": "61c5e020853ba875"
+  },
+  {
+    "file": "assets/icons/icon_help.svg",
+    "type": "SVG",
+    "usage": "游戏图标素材",
+    "size_bytes": 553,
+    "sha256": "fb7f5a126216038b"
+  },
+  {
+    "file": "assets/icons/icon_home.png",
+    "type": "PNG",
+    "usage": "游戏图标素材",
+    "size_bytes": 1529,
+    "sha256": "9e6b459db7150b0e"
+  },
+  {
+    "file": "assets/icons/icon_home.svg",
+    "type": "SVG",
+    "usage": "游戏图标素材",
+    "size_bytes": 368,
+    "sha256": "cf606ee08500fc95"
+  },
+  {
+    "file": "assets/icons/icon_next.png",
+    "type": "PNG",
+    "usage": "游戏图标素材",
+    "size_bytes": 1196,
+    "sha256": "d01180279fb40616"
+  },
+  {
+    "file": "assets/icons/icon_next.svg",
+    "type": "SVG",
+    "usage": "游戏图标素材",
+    "size_bytes": 378,
+    "sha256": "8fa38c114150de19"
+  },
+  {
+    "file": "assets/icons/icon_pause.png",
+    "type": "PNG",
+    "usage": "游戏图标素材",
+    "size_bytes": 769,
+    "sha256": "760d76f9341e855d"
+  },
+  {
+    "file": "assets/icons/icon_pause.svg",
+    "type": "SVG",
+    "usage": "游戏图标素材",
+    "size_bytes": 409,
+    "sha256": "2e27499250c7cc04"
+  },
+  {
+    "file": "assets/icons/icon_play.png",
+    "type": "PNG",
+    "usage": "游戏图标素材",
+    "size_bytes": 1273,
+    "sha256": "e036acfa9170f9ba"
+  },
+  {
+    "file": "assets/icons/icon_play.svg",
+    "type": "SVG",
+    "usage": "游戏图标素材",
+    "size_bytes": 342,
+    "sha256": "01cecea5d823239e"
+  },
+  {
+    "file": "assets/icons/icon_retry.png",
+    "type": "PNG",
+    "usage": "游戏图标素材",
+    "size_bytes": 3434,
+    "sha256": "894a8bfae3ab8735"
+  },
+  {
+    "file": "assets/icons/icon_retry.svg",
+    "type": "SVG",
+    "usage": "游戏图标素材",
+    "size_bytes": 455,
+    "sha256": "6f690d2b4565d491"
+  },
+  {
+    "file": "assets/icons/icon_score.png",
+    "type": "PNG",
+    "usage": "游戏图标素材",
+    "size_bytes": 2267,
+    "sha256": "5782a1f62e115e8a"
+  },
+  {
+    "file": "assets/icons/icon_score.svg",
+    "type": "SVG",
+    "usage": "游戏图标素材",
+    "size_bytes": 393,
+    "sha256": "5dd13a9907d7362c"
+  },
+  {
+    "file": "assets/icons/icon_sound_off.png",
+    "type": "PNG",
+    "usage": "游戏图标素材",
+    "size_bytes": 2171,
+    "sha256": "d8d1c63f3eea3bde"
+  },
+  {
+    "file": "assets/icons/icon_sound_off.svg",
+    "type": "SVG",
+    "usage": "游戏图标素材",
+    "size_bytes": 469,
+    "sha256": "88d129c9141a3b86"
+  },
+  {
+    "file": "assets/icons/icon_sound_on.png",
+    "type": "PNG",
+    "usage": "游戏图标素材",
+    "size_bytes": 2696,
+    "sha256": "1d18597defb4d6fc"
+  },
+  {
+    "file": "assets/icons/icon_sound_on.svg",
+    "type": "SVG",
+    "usage": "游戏图标素材",
+    "size_bytes": 579,
+    "sha256": "2a506768fe640fea"
+  },
+  {
+    "file": "assets/icons/icon_timer.png",
+    "type": "PNG",
+    "usage": "游戏图标素材",
+    "size_bytes": 3948,
+    "sha256": "b022f86956e6f63f"
+  },
+  {
+    "file": "assets/icons/icon_timer.svg",
+    "type": "SVG",
+    "usage": "游戏图标素材",
+    "size_bytes": 556,
+    "sha256": "426b858b498ffed8"
+  },
+  {
+    "file": "assets/images/app_icon_1024.png",
+    "type": "PNG",
+    "usage": "封面、背景、Logo 与应用图标素材",
+    "size_bytes": 38808,
+    "sha256": "e2b70e18a4659f12"
+  },
+  {
+    "file": "assets/images/app_icon_128.png",
+    "type": "PNG",
+    "usage": "封面、背景、Logo 与应用图标素材",
+    "size_bytes": 10638,
+    "sha256": "6d4d90a8eec91b87"
+  },
+  {
+    "file": "assets/images/app_icon_256.png",
+    "type": "PNG",
+    "usage": "封面、背景、Logo 与应用图标素材",
+    "size_bytes": 23960,
+    "sha256": "5f9ab893404c2d84"
+  },
+  {
+    "file": "assets/images/app_icon_512.png",
+    "type": "PNG",
+    "usage": "封面、背景、Logo 与应用图标素材",
+    "size_bytes": 52192,
+    "sha256": "4b6b408bd17efea2"
+  },
+  {
+    "file": "assets/images/bg_cover.svg",
+    "type": "SVG",
+    "usage": "封面、背景、Logo 与应用图标素材",
+    "size_bytes": 3878,
+    "sha256": "820a03254d3b7b05"
+  },
+  {
+    "file": "assets/images/bg_cover_1920x1080.png",
+    "type": "PNG",
+    "usage": "封面、背景、Logo 与应用图标素材",
+    "size_bytes": 258526,
+    "sha256": "d575f86a75f75d91"
+  },
+  {
+    "file": "assets/images/bg_game.svg",
+    "type": "SVG",
+    "usage": "封面、背景、Logo 与应用图标素材",
+    "size_bytes": 3484,
+    "sha256": "96ce67a80264bb16"
+  },
+  {
+    "file": "assets/images/bg_game_1920x1080.png",
+    "type": "PNG",
+    "usage": "封面、背景、Logo 与应用图标素材",
+    "size_bytes": 209416,
+    "sha256": "1e37872292968744"
+  },
+  {
+    "file": "assets/images/cover_animated.gif",
+    "type": "GIF",
+    "usage": "封面、背景、Logo 与应用图标素材",
+    "size_bytes": 467813,
+    "sha256": "902531cb6b3669ad"
+  },
+  {
+    "file": "assets/images/cover_animated.svg",
+    "type": "SVG",
+    "usage": "封面、背景、Logo 与应用图标素材",
+    "size_bytes": 4845,
+    "sha256": "2d9995add619ac59"
+  },
+  {
+    "file": "assets/images/cover_static_1280x720.png",
+    "type": "PNG",
+    "usage": "封面、背景、Logo 与应用图标素材",
+    "size_bytes": 188860,
+    "sha256": "2bed1b4f836f042d"
+  },
+  {
+    "file": "assets/images/logo_title.svg",
+    "type": "SVG",
+    "usage": "封面、背景、Logo 与应用图标素材",
+    "size_bytes": 863,
+    "sha256": "b981d056ff0ee702"
+  },
+  {
+    "file": "assets/numbers/number_0.png",
+    "type": "PNG",
+    "usage": "数字与运算符素材",
+    "size_bytes": 9897,
+    "sha256": "e44b80908d308955"
+  },
+  {
+    "file": "assets/numbers/number_0.svg",
+    "type": "SVG",
+    "usage": "数字与运算符素材",
+    "size_bytes": 436,
+    "sha256": "013d9ec0848ca961"
+  },
+  {
+    "file": "assets/numbers/number_1.png",
+    "type": "PNG",
+    "usage": "数字与运算符素材",
+    "size_bytes": 2480,
+    "sha256": "3cfd4887325b85d0"
+  },
+  {
+    "file": "assets/numbers/number_1.svg",
+    "type": "SVG",
+    "usage": "数字与运算符素材",
+    "size_bytes": 436,
+    "sha256": "4208b5d9aa1987b7"
+  },
+  {
+    "file": "assets/numbers/number_2.png",
+    "type": "PNG",
+    "usage": "数字与运算符素材",
+    "size_bytes": 7690,
+    "sha256": "c970d327472fe9a9"
+  },
+  {
+    "file": "assets/numbers/number_2.svg",
+    "type": "SVG",
+    "usage": "数字与运算符素材",
+    "size_bytes": 436,
+    "sha256": "a5dabd357e1af6a3"
+  },
+  {
+    "file": "assets/numbers/number_3.png",
+    "type": "PNG",
+    "usage": "数字与运算符素材",
+    "size_bytes": 9401,
+    "sha256": "1eddbbba3fed128a"
+  },
+  {
+    "file": "assets/numbers/number_3.svg",
+    "type": "SVG",
+    "usage": "数字与运算符素材",
+    "size_bytes": 436,
+    "sha256": "795d1f52903857be"
+  },
+  {
+    "file": "assets/numbers/number_4.png",
+    "type": "PNG",
+    "usage": "数字与运算符素材",
+    "size_bytes": 4442,
+    "sha256": "44887edd51585fdb"
+  },
+  {
+    "file": "assets/numbers/number_4.svg",
+    "type": "SVG",
+    "usage": "数字与运算符素材",
+    "size_bytes": 436,
+    "sha256": "ac6cfb097c40ecba"
+  },
+  {
+    "file": "assets/numbers/number_5.png",
+    "type": "PNG",
+    "usage": "数字与运算符素材",
+    "size_bytes": 7671,
+    "sha256": "a015e5d1b263766c"
+  },
+  {
+    "file": "assets/numbers/number_5.svg",
+    "type": "SVG",
+    "usage": "数字与运算符素材",
+    "size_bytes": 436,
+    "sha256": "b2acd6c318e99d91"
+  },
+  {
+    "file": "assets/numbers/number_6.png",
+    "type": "PNG",
+    "usage": "数字与运算符素材",
+    "size_bytes": 10496,
+    "sha256": "01f6d8040a641b9b"
+  },
+  {
+    "file": "assets/numbers/number_6.svg",
+    "type": "SVG",
+    "usage": "数字与运算符素材",
+    "size_bytes": 436,
+    "sha256": "43d6ced55a4d8260"
+  },
+  {
+    "file": "assets/numbers/number_7.png",
+    "type": "PNG",
+    "usage": "数字与运算符素材",
+    "size_bytes": 5501,
+    "sha256": "f0b61beb753c067d"
+  },
+  {
+    "file": "assets/numbers/number_7.svg",
+    "type": "SVG",
+    "usage": "数字与运算符素材",
+    "size_bytes": 436,
+    "sha256": "8a6a6c7cd6ca848e"
+  },
+  {
+    "file": "assets/numbers/number_8.png",
+    "type": "PNG",
+    "usage": "数字与运算符素材",
+    "size_bytes": 11075,
+    "sha256": "951e3ef92b05d5bb"
+  },
+  {
+    "file": "assets/numbers/number_8.svg",
+    "type": "SVG",
+    "usage": "数字与运算符素材",
+    "size_bytes": 436,
+    "sha256": "eac6519c362a9209"
+  },
+  {
+    "file": "assets/numbers/number_9.png",
+    "type": "PNG",
+    "usage": "数字与运算符素材",
+    "size_bytes": 10534,
+    "sha256": "b81b954955a390f3"
+  },
+  {
+    "file": "assets/numbers/number_9.svg",
+    "type": "SVG",
+    "usage": "数字与运算符素材",
+    "size_bytes": 436,
+    "sha256": "a4799512b31d672c"
+  },
+  {
+    "file": "assets/numbers/operator_minus.png",
+    "type": "PNG",
+    "usage": "数字与运算符素材",
+    "size_bytes": 1053,
+    "sha256": "12578c5741539419"
+  },
+  {
+    "file": "assets/numbers/operator_minus.svg",
+    "type": "SVG",
+    "usage": "数字与运算符素材",
+    "size_bytes": 436,
+    "sha256": "ebf9de0fd76968d5"
+  },
+  {
+    "file": "assets/numbers/operator_plus.png",
+    "type": "PNG",
+    "usage": "数字与运算符素材",
+    "size_bytes": 1959,
+    "sha256": "8bacc83ca7e2b923"
+  },
+  {
+    "file": "assets/numbers/operator_plus.svg",
+    "type": "SVG",
+    "usage": "数字与运算符素材",
+    "size_bytes": 436,
+    "sha256": "9f03f4056a97dd6e"
+  },
+  {
+    "file": "assets/sprites/bubble_green.png",
+    "type": "PNG",
+    "usage": "气泡与炸开动画素材",
+    "size_bytes": 32581,
+    "sha256": "09aeed068486a3f9"
+  },
+  {
+    "file": "assets/sprites/bubble_green.svg",
+    "type": "SVG",
+    "usage": "气泡与炸开动画素材",
+    "size_bytes": 1104,
+    "sha256": "e510fff0d3aa90ed"
+  },
+  {
+    "file": "assets/sprites/bubble_green@2x.png",
+    "type": "PNG",
+    "usage": "气泡与炸开动画素材",
+    "size_bytes": 79676,
+    "sha256": "f902818af5fef565"
+  },
+  {
+    "file": "assets/sprites/bubble_operation_green.png",
+    "type": "PNG",
+    "usage": "气泡与炸开动画素材",
+    "size_bytes": 32781,
+    "sha256": "05bf18d4cc4d48a4"
+  },
+  {
+    "file": "assets/sprites/bubble_operation_green.svg",
+    "type": "SVG",
+    "usage": "气泡与炸开动画素材",
+    "size_bytes": 1164,
+    "sha256": "5b492d27f241dbde"
+  },
+  {
+    "file": "assets/sprites/bubble_operation_green@2x.png",
+    "type": "PNG",
+    "usage": "气泡与炸开动画素材",
+    "size_bytes": 79696,
+    "sha256": "5fa2054f94532022"
+  },
+  {
+    "file": "assets/sprites/bubble_operation_red.png",
+    "type": "PNG",
+    "usage": "气泡与炸开动画素材",
+    "size_bytes": 29112,
+    "sha256": "3e542305c06d2576"
+  },
+  {
+    "file": "assets/sprites/bubble_operation_red.svg",
+    "type": "SVG",
+    "usage": "气泡与炸开动画素材",
+    "size_bytes": 1164,
+    "sha256": "1c6e97cdb371cda1"
+  },
+  {
+    "file": "assets/sprites/bubble_operation_red@2x.png",
+    "type": "PNG",
+    "usage": "气泡与炸开动画素材",
+    "size_bytes": 69686,
+    "sha256": "e5e10f097048137a"
+  },
+  {
+    "file": "assets/sprites/bubble_operation_white.png",
+    "type": "PNG",
+    "usage": "气泡与炸开动画素材",
+    "size_bytes": 24576,
+    "sha256": "9a94536645388524"
+  },
+  {
+    "file": "assets/sprites/bubble_operation_white.svg",
+    "type": "SVG",
+    "usage": "气泡与炸开动画素材",
+    "size_bytes": 1164,
+    "sha256": "c1bafacc5fe27e3c"
+  },
+  {
+    "file": "assets/sprites/bubble_operation_white@2x.png",
+    "type": "PNG",
+    "usage": "气泡与炸开动画素材",
+    "size_bytes": 55487,
+    "sha256": "7d0e08df63918f57"
+  },
+  {
+    "file": "assets/sprites/bubble_pop_00.png",
+    "type": "PNG",
+    "usage": "气泡与炸开动画素材",
+    "size_bytes": 1631,
+    "sha256": "21b91323a0b3b3c2"
+  },
+  {
+    "file": "assets/sprites/bubble_pop_01.png",
+    "type": "PNG",
+    "usage": "气泡与炸开动画素材",
+    "size_bytes": 1634,
+    "sha256": "ec86e74a50b5bb77"
+  },
+  {
+    "file": "assets/sprites/bubble_pop_02.png",
+    "type": "PNG",
+    "usage": "气泡与炸开动画素材",
+    "size_bytes": 1850,
+    "sha256": "33d2dec26e72b011"
+  },
+  {
+    "file": "assets/sprites/bubble_pop_03.png",
+    "type": "PNG",
+    "usage": "气泡与炸开动画素材",
+    "size_bytes": 2815,
+    "sha256": "e24c799c280ef665"
+  },
+  {
+    "file": "assets/sprites/bubble_pop_04.png",
+    "type": "PNG",
+    "usage": "气泡与炸开动画素材",
+    "size_bytes": 2964,
+    "sha256": "4465c9b49952c963"
+  },
+  {
+    "file": "assets/sprites/bubble_pop_05.png",
+    "type": "PNG",
+    "usage": "气泡与炸开动画素材",
+    "size_bytes": 3109,
+    "sha256": "9ec66e08fad16eac"
+  },
+  {
+    "file": "assets/sprites/bubble_pop_06.png",
+    "type": "PNG",
+    "usage": "气泡与炸开动画素材",
+    "size_bytes": 2914,
+    "sha256": "047ded1497c86bfd"
+  },
+  {
+    "file": "assets/sprites/bubble_pop_07.png",
+    "type": "PNG",
+    "usage": "气泡与炸开动画素材",
+    "size_bytes": 601,
+    "sha256": "76dfce3fb0601656"
+  },
+  {
+    "file": "assets/sprites/bubble_pop_spritesheet.png",
+    "type": "PNG",
+    "usage": "气泡与炸开动画素材",
+    "size_bytes": 15570,
+    "sha256": "d98836e80c313119"
+  },
+  {
+    "file": "assets/sprites/bubble_red.png",
+    "type": "PNG",
+    "usage": "气泡与炸开动画素材",
+    "size_bytes": 28738,
+    "sha256": "b9ddcad6c35e4967"
+  },
+  {
+    "file": "assets/sprites/bubble_red.svg",
+    "type": "SVG",
+    "usage": "气泡与炸开动画素材",
+    "size_bytes": 1104,
+    "sha256": "56448dc8bb982285"
+  },
+  {
+    "file": "assets/sprites/bubble_red@2x.png",
+    "type": "PNG",
+    "usage": "气泡与炸开动画素材",
+    "size_bytes": 72199,
+    "sha256": "340ed16c52a8b56f"
+  },
+  {
+    "file": "assets/sprites/bubble_selected.png",
+    "type": "PNG",
+    "usage": "气泡与炸开动画素材",
+    "size_bytes": 26246,
+    "sha256": "da6d6b82513f5f86"
+  },
+  {
+    "file": "assets/sprites/bubble_selected.svg",
+    "type": "SVG",
+    "usage": "气泡与炸开动画素材",
+    "size_bytes": 1104,
+    "sha256": "19de86a8c30beaaf"
+  },
+  {
+    "file": "assets/sprites/bubble_selected@2x.png",
+    "type": "PNG",
+    "usage": "气泡与炸开动画素材",
+    "size_bytes": 63263,
+    "sha256": "cfa9e602d24a0b12"
+  },
+  {
+    "file": "assets/sprites/bubble_white.png",
+    "type": "PNG",
+    "usage": "气泡与炸开动画素材",
+    "size_bytes": 24806,
+    "sha256": "eb5302000d1abc9f"
+  },
+  {
+    "file": "assets/sprites/bubble_white.svg",
+    "type": "SVG",
+    "usage": "气泡与炸开动画素材",
+    "size_bytes": 1104,
+    "sha256": "8b87e2a45af79f78"
+  },
+  {
+    "file": "assets/sprites/bubble_white@2x.png",
+    "type": "PNG",
+    "usage": "气泡与炸开动画素材",
+    "size_bytes": 57520,
+    "sha256": "141e955ac6ca21e7"
+  },
+  {
+    "file": "assets/tutorial/tutorial_step_1.png",
+    "type": "PNG",
+    "usage": "新手引导素材",
+    "size_bytes": 139406,
+    "sha256": "37a22107a0ecafda"
+  },
+  {
+    "file": "assets/tutorial/tutorial_step_2.png",
+    "type": "PNG",
+    "usage": "新手引导素材",
+    "size_bytes": 141326,
+    "sha256": "49ffada1eca09a68"
+  },
+  {
+    "file": "assets/tutorial/tutorial_step_3.png",
+    "type": "PNG",
+    "usage": "新手引导素材",
+    "size_bytes": 142316,
+    "sha256": "37ce86e34365be59"
+  },
+  {
+    "file": "assets/ui/button_primary.png",
+    "type": "PNG",
+    "usage": "UI 面板、按钮与状态点素材",
+    "size_bytes": 6649,
+    "sha256": "d3482fec0213a647"
+  },
+  {
+    "file": "assets/ui/button_primary.svg",
+    "type": "SVG",
+    "usage": "UI 面板、按钮与状态点素材",
+    "size_bytes": 569,
+    "sha256": "f030397033fbed23"
+  },
+  {
+    "file": "assets/ui/button_secondary.png",
+    "type": "PNG",
+    "usage": "UI 面板、按钮与状态点素材",
+    "size_bytes": 5399,
+    "sha256": "20afcc555008b8f2"
+  },
+  {
+    "file": "assets/ui/button_secondary.svg",
+    "type": "SVG",
+    "usage": "UI 面板、按钮与状态点素材",
+    "size_bytes": 351,
+    "sha256": "6bf3041416920089"
+  },
+  {
+    "file": "assets/ui/dot_current.png",
+    "type": "PNG",
+    "usage": "UI 面板、按钮与状态点素材",
+    "size_bytes": 755,
+    "sha256": "e3fb4edda330e12c"
+  },
+  {
+    "file": "assets/ui/dot_empty.png",
+    "type": "PNG",
+    "usage": "UI 面板、按钮与状态点素材",
+    "size_bytes": 634,
+    "sha256": "e0a79a8e56e2e67b"
+  },
+  {
+    "file": "assets/ui/dot_fail.png",
+    "type": "PNG",
+    "usage": "UI 面板、按钮与状态点素材",
+    "size_bytes": 866,
+    "sha256": "fa6dd0e272d14d24"
+  },
+  {
+    "file": "assets/ui/dot_pass.png",
+    "type": "PNG",
+    "usage": "UI 面板、按钮与状态点素材",
+    "size_bytes": 822,
+    "sha256": "0314e8ae928a2871"
+  },
+  {
+    "file": "assets/ui/panel.png",
+    "type": "PNG",
+    "usage": "UI 面板、按钮与状态点素材",
+    "size_bytes": 22096,
+    "sha256": "e28854b0c1adbcf3"
+  },
+  {
+    "file": "assets/ui/panel.svg",
+    "type": "SVG",
+    "usage": "UI 面板、按钮与状态点素材",
+    "size_bytes": 709,
+    "sha256": "a75077597e6eb536"
+  },
+  {
+    "file": "index.html",
+    "type": "HTML",
+    "usage": "三难度终检版游戏页面",
+    "size_bytes": 118963,
+    "sha256": "b9a8561d9fc0e167"
+  },
+  {
+    "file": "qa_result.json",
+    "type": "JSON",
+    "usage": "浏览器自玩与自动检查结果",
+    "size_bytes": 13351,
+    "sha256": "36f14a21cf06da42"
+  },
+  {
+    "file": "static_validation.json",
+    "type": "JSON",
+    "usage": "静态校验与布局扫描摘要",
+    "size_bytes": 1832,
+    "sha256": "265a0569764aba0e"
+  },
+  {
+    "file": "三难度终检与自玩报告.md",
+    "type": "MD",
+    "usage": "本轮自玩与终检报告",
+    "size_bytes": 2170,
+    "sha256": "90053610727fecca"
+  },
+  {
+    "file": "自玩_困难失败后重试第30关.png",
+    "type": "PNG",
+    "usage": "浏览器自玩截图",
+    "size_bytes": 227169,
+    "sha256": "6d1ed6fb0a27330b"
+  },
+  {
+    "file": "自玩_困难第30关.png",
+    "type": "PNG",
+    "usage": "浏览器自玩截图",
+    "size_bytes": 227245,
+    "sha256": "b45eee8e62cc620f"
+  },
+  {
+    "file": "自玩_容易第1关.png",
+    "type": "PNG",
+    "usage": "浏览器自玩截图",
+    "size_bytes": 218031,
+    "sha256": "7cf1cdcfa7581720"
+  },
+  {
+    "file": "自玩_普通第15关.png",
+    "type": "PNG",
+    "usage": "浏览器自玩截图",
+    "size_bytes": 222690,
+    "sha256": "334832de0ba5541b"
+  },
+  {
+    "file": "自玩_难度选择.png",
+    "type": "PNG",
+    "usage": "浏览器自玩截图",
+    "size_bytes": 127131,
+    "sha256": "5a797c16414f2ef7"
+  }
+]

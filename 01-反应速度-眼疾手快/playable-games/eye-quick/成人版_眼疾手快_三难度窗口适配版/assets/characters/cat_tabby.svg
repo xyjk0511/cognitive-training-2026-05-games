@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 280" role="img" aria-label="花猫">
+  <defs><filter id="s"><feDropShadow dx="0" dy="10" stdDeviation="8" flood-color="#253d39" flood-opacity=".25"/></filter></defs>
+  <ellipse cx="140" cy="240" rx="92" ry="23" fill="#31554b" opacity=".25"/>
+  <g filter="url(#s)">
+    <path d="M58 104 L42 35 L101 68 M222 104 L238 35 L179 68" fill="#f3bd55" stroke="#a86d33" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M67 88 C85 42 205 42 223 88 L240 205 C245 239 223 263 188 263 H92 C57 263 35 239 40 205Z" fill="#f3bd55" stroke="#9b6735" stroke-width="7"/>
+    <path d="M88 78 C93 115 91 154 83 184 M126 62 C132 116 131 170 120 218 M176 78 C168 121 170 163 184 195" stroke="#c47a2c" stroke-width="12" stroke-linecap="round" opacity=".65"/>
+    <path d="M82 224 C102 198 119 190 140 190 C162 190 180 198 200 224 L203 261 H77Z" fill="#d88c2f" opacity=".9"/>
+    <circle cx="100" cy="130" r="10" fill="#35303a"/><circle cx="180" cy="130" r="10" fill="#35303a"/>
+    <circle cx="103" cy="126" r="4" fill="#fff"/><circle cx="183" cy="126" r="4" fill="#fff"/>
+    <path d="M140 146 l-14 14 h28Z" fill="#8a4a40"/>
+    <path d="M126 168 C132 180 138 180 140 169 C142 180 149 180 155 168" fill="none" stroke="#6d3a30" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="82" cy="164" r="18" fill="#ffe49e" opacity=".75"/><circle cx="198" cy="164" r="18" fill="#ffe49e" opacity=".75"/>
+    <path d="M65 154 H16 M66 170 H22 M65 186 H13 M215 154 H264 M214 170 H258 M215 186 H267" stroke="#79533c" stroke-width="5" stroke-linecap="round"/>
+    <path d="M82 245 C48 244 42 213 50 196" fill="none" stroke="#f3bd55" stroke-width="23" stroke-linecap="round"/>
+    <path d="M64 244 C51 244 43 239 38 230" fill="none" stroke="#ffffff" stroke-width="9" stroke-linecap="round" opacity=".75"/>
+    <path d="M72 91 C87 82 101 82 113 91 M167 91 C181 82 197 82 210 91" fill="none" stroke="#694f41" stroke-width="7" stroke-linecap="round" opacity=".8"/>
+    <path d="M80 218 C112 204 168 204 201 218" fill="none" stroke="#547a94" stroke-width="11" stroke-linecap="round"/>
+    <circle cx="140" cy="223" r="15" fill="#ffd958" stroke="#b98722" stroke-width="5"/><path d="M140 213l3 8 9 1-7 5 2 8-7-4-7 4 2-8-7-5 9-1z" fill="#fff8b0"/>
+  </g>
+</svg>

@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="theme-color" content="#65a9a4">
+  <title>《眼疾手快》成人版三难度窗口适配版</title>
+  <link rel="icon" href="assets/software/app_icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="config.js"></script>
+  <script defer src="game.js"></script>
+</head>
+<body data-mode="adult">
+  <main id="app" class="app" aria-label="眼疾手快游戏">
+    <section id="screen-splash" class="screen active">
+      <div class="scene-bg menu"></div><div class="scene-vignette"></div>
+      <div class="splash-card">
+        <img class="mascot" src="assets/characters/xiaokangkang.svg" alt="小康康">
+        <img class="logo-img" src="assets/branding/logo.svg" alt="眼疾手快">
+        <div class="loading-bar"><div class="loading-fill"></div></div>
+        <div class="loading-text">加载精致自制素材</div>
+      </div>
+    </section>
+
+    <section id="screen-welcome" class="screen">
+      <div class="scene-bg menu"></div><div class="scene-vignette"></div>
+      <div class="panel">
+        <img class="mascot" src="assets/characters/xiaokangkang.svg" alt="小康康">
+        <img class="logo-img welcome-logo" src="assets/branding/logo.svg" alt="眼疾手快">
+        <div class="tag-row"><span class="tag" id="welcomeVersion">成人版</span><span class="tag" id="currentLevelPreview"></span></div>
+        <p class="subtitle" id="welcomeNote"></p>
+        <div class="difficulty-panel" aria-label="训练难度档">
+          <div class="difficulty-header"><strong>训练难度</strong><span>选择本次训练的起始关卡</span></div>
+          <div id="difficultySelector" class="difficulty-grid" role="radiogroup" aria-label="训练难度">
+            <button type="button" class="difficulty-option" data-preset="easy" role="radio" aria-checked="false"><strong>容易</strong><span>从第 1 关开始</span></button>
+            <button type="button" class="difficulty-option" data-preset="normal" role="radio" aria-checked="false"><strong>普通</strong><span>从第 15 关开始</span></button>
+            <button type="button" class="difficulty-option" data-preset="hard" role="radio" aria-checked="false"><strong>困难</strong><span>从第 30 关开始</span></button>
+          </div>
+        </div>
+        <div class="menu-row"><label for="durationSelect"><strong>下发训练时长</strong></label><select id="durationSelect" class="select"><option value="60">1 分钟</option><option value="180">3 分钟</option><option value="300">5 分钟</option><option value="600">10 分钟</option></select></div>
+        <div class="menu-grid"><button id="btnGuide" class="btn secondary">自动引导新手教程</button><button id="btnStart" class="btn">进入训练</button><button id="btnReset" class="btn danger">重置难度</button><div class="tag rules-mini" id="ruleSummary"></div></div>
+      </div>
+    </section>
+
+    <section id="screen-tutorial" class="screen">
+      <div class="scene-bg"></div><div class="scene-vignette"></div>
+      <div class="guide-layout advanced-guide">
+        <div class="guide-top">
+          <button id="btnGuideBack" class="btn ghost guide-back">返回首页</button>
+          <div class="guide-title">自动引导新手教程</div>
+          <div class="guide-progress-card">
+            <span id="tutorialProgress">1 / 9</span>
+            <div id="tutorialAutoStatus" class="tutorial-auto-status">自动引导中</div>
+            <div class="mini-progress"><div id="tutorialProgressFill"></div></div>
+          </div>
+        </div>
+        <div class="guide-main">
+          <aside class="guide-card">
+            <div id="guideStepLabel" class="guide-step-label">第 1 步</div>
+            <h2 id="guideHeading">认识训练目标</h2>
+            <p id="guideText">跟随教程完成一次完整练习。</p>
+            <div id="guideChecklist" class="guide-checklist"></div>
+          </aside>
+          <section class="guide-playground" aria-label="教程演示区">
+            <div id="tutorialTip" class="tutorial-tip">先看清目标，再开始点击。</div>
+            <div id="tutorialBoard" class="board guide-board cols-3"></div>
+            <div class="guide-scorebar">
+              <div>练习目标 <strong id="tutorialGoal">--</strong></div>
+              <div>练习命中 <strong id="tutorialHits">0</strong></div>
+              <div>连续错误 <strong id="tutorialWrongs">0/2</strong></div>
+            </div>
+          </section>
+        </div>
+        <div class="guide-actions">
+          <button id="btnGuidePrev" class="btn secondary">上一步</button>
+          <button id="btnGuideSkip" class="btn ghost">跳过教程</button>
+          <button id="btnGuideNext" class="btn auto-next">自动引导中</button>
+          <button id="btnGuideStart" class="btn danger">直接训练</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-game" class="screen">
+      <div class="scene-bg"></div><div class="scene-vignette"></div>
+      <div id="gameStage" class="stage">
+        <header class="topbar"><div class="top-left"><button id="btnPause" class="pause-btn" aria-label="暂停">Ⅱ</button><div id="hudLevel" class="level-label">难度 1</div></div><div class="top-right"><div class="hud-card"><span class="hud-icon icon-clock"></span><span id="hudRoundTime">00:30</span></div><div class="hud-card score-card"><span class="hud-icon icon-star"></span><span class="small">预计积分</span><span id="hudScore">10</span></div><div class="hud-card target"><span class="small">目标</span><span id="hudTarget">0/0</span></div><div class="hud-card"><span class="small">错</span><span id="hudFault">0/2</span></div></div></header>
+        <div class="session-strip">训练剩余：<span id="hudSessionTime">00:00</span></div>
+        <div class="hud-progress-panel" aria-label="训练目标进度">
+          <div class="hud-progress-row"><span>目标达成进度</span><strong id="hudTargetPercent">0%</strong></div>
+          <div class="meter target-meter"><div id="hudTargetFill"></div></div>
+          <div class="hud-progress-row"><span>连续错误警戒</span><strong id="hudFaultStatus">安全</strong></div>
+          <div class="fault-pips" aria-hidden="true"><span id="faultPip1"></span><span id="faultPip2"></span></div>
+        </div>
+        <div class="board-wrap"><div id="gameBoard" class="board"></div></div>
+        <div id="countdownOverlay" class="countdown hidden">3</div><div id="toast" class="toast" role="status" aria-live="polite"></div><div id="passFlash" class="pass-flash hidden" role="status" aria-live="polite">已达成目标</div>
+      </div>
+    </section>
+
+    <div id="modalBackdrop" class="modal-backdrop hidden"><section id="modal" class="modal" tabindex="-1" role="dialog" aria-modal="true"><div id="modalTitle" class="modal-ribbon">完成</div><div class="modal-body"><div id="modalMessage" class="modal-message"></div><div id="modalResultGrid" class="result-grid hidden"></div><div id="modalExtra"></div><div id="modalButtons" class="menu-row result-actions"></div></div></section></div>
+  </main>
+</body>
+</html>

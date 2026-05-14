@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 320" role="img" aria-label="静默池塘">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e5fff0"/><stop offset="1" stop-color="#74b8ad"/></linearGradient>
+    <filter id="s" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="14" stdDeviation="12" flood-color="#04272d" flood-opacity=".38"/></filter>
+  </defs>
+  <rect x="42" y="42" width="876" height="236" rx="70" fill="#113b40" opacity=".88" filter="url(#s)"/>
+  <path d="M144 205c145-62 308 56 501-16 71-27 131-23 188 16" fill="none" stroke="#d9fff3" stroke-width="10" stroke-linecap="round" opacity=".7"/>
+  <ellipse cx="185" cy="122" rx="88" ry="44" fill="#4a9f84" opacity=".52"/>
+  <ellipse cx="760" cy="128" rx="72" ry="38" fill="#4a9f84" opacity=".4"/>
+  <text x="480" y="181" text-anchor="middle" font-family="PingFang SC, Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="96" font-weight="800" fill="url(#g)" letter-spacing="8">静默池塘</text>
+</svg>

@@ -1,0 +1,90 @@
+{
+  "version": "数字阶梯_三难度终检版",
+  "overall_passed": true,
+  "checks": {
+    "JS 语法检查": {
+      "passed": true,
+      "detail": {
+        "stderr": ""
+      }
+    },
+    "难度起始关卡配置": {
+      "passed": true,
+      "detail": {
+        "configured": {
+          "easy": 1,
+          "normal": 15,
+          "hard": 30
+        }
+      }
+    },
+    "HTML 资源引用存在": {
+      "passed": true,
+      "detail": {
+        "assetRefCount": 25,
+        "missing": []
+      }
+    },
+    "图片解码检查": {
+      "passed": true,
+      "detail": {
+        "failures": []
+      }
+    },
+    "WAV 解码检查": {
+      "passed": true,
+      "detail": {
+        "failures": []
+      }
+    },
+    "全关卡气泡碰撞扫描": {
+      "passed": true,
+      "detail": {
+        "scans": [
+          {
+            "viewport": {
+              "width": 390,
+              "height": 844
+            },
+            "failureCount": 0,
+            "failures": []
+          },
+          {
+            "viewport": {
+              "width": 320,
+              "height": 568
+            },
+            "failureCount": 0,
+            "failures": []
+          },
+          {
+            "viewport": {
+              "width": 1024,
+              "height": 768
+            },
+            "failureCount": 0,
+            "failures": []
+          }
+        ]
+      }
+    },
+    "浏览器控制台无错误/警告": {
+      "passed": true,
+      "detail": {
+        "console": []
+      }
+    }
+  },
+  "difficulty": {
+    "easy_start_level": 1,
+    "normal_start_level": 15,
+    "hard_start_level": 30
+  },
+  "self_play_screenshots": [
+    "自玩_难度选择.png",
+    "自玩_容易第1关.png",
+    "自玩_普通第15关.png",
+    "自玩_困难第30关.png",
+    "自玩_困难失败后重试第30关.png"
+  ]
+}

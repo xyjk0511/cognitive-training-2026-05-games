@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="280" height="300" viewBox="0 0 240 260" role="img" aria-label="小康康 xkk_blink">
+<defs><linearGradient id="fur" y1="0" y2="1"><stop stop-color="#fff4cd"/><stop offset=".52" stop-color="#ffd46e"/><stop offset="1" stop-color="#ffb348"/></linearGradient><linearGradient id="body" y1="0" y2="1"><stop stop-color="#7be2ff"/><stop offset="1" stop-color="#3d93ff"/></linearGradient><filter id="shadow" x="-40%" y="-30%" width="180%" height="180%"><feDropShadow dx="0" dy="14" stdDeviation="12" flood-color="#000" flood-opacity=".28"/><feDropShadow dx="0" dy="4" stdDeviation="2" flood-color="#000" flood-opacity=".20"/></filter></defs>
+<g filter="url(#shadow)">
+<ellipse cx="120" cy="238" rx="72" ry="15" fill="#000" opacity=".12"/>
+<path d="M73 62c-17-9-37-4-48 13 17 4 31 15 39 31" fill="#ffd46e" stroke="#fff" stroke-width="9"/><path d="M167 62c17-9 37-4 48 13-17 4-31 15-39 31" fill="#ffd46e" stroke="#fff" stroke-width="9"/>
+<path d="M120 18c12 0 20 8 20 19 0 9-6 16-14 18v10h-12V55c-8-2-14-9-14-18 0-11 8-19 20-19z" fill="#7df2ff" stroke="#fff" stroke-width="6"/>
+<path d="M61 66c10-38 110-38 119 0 11 6 20 29 18 56-3 48-41 74-78 74s-75-26-78-74c-2-27 7-50 19-56z" fill="url(#fur)" stroke="#fff" stroke-width="9"/>
+<path d="M73 73c26-25 91-24 116 12" stroke="#fff" stroke-width="8" opacity=".35" fill="none" stroke-linecap="round"/>
+<path d="M85 94h20" stroke="#4a2a1d" stroke-width="6" stroke-linecap="round"/><path d="M135 94h20" stroke="#4a2a1d" stroke-width="6" stroke-linecap="round"/>
+<circle cx="119" cy="104" r="7" fill="#cd7446" opacity=".65"/><path d="M108 116q12 13 25 0" stroke="#b24b2e" stroke-width="7" fill="none" stroke-linecap="round"/>
+<path d="M58 166q-34-4-50 22" stroke="#fff" stroke-width="16" stroke-linecap="round"/><path d="M182 166q34-4 50 22" stroke="#fff" stroke-width="16" stroke-linecap="round"/><path d="M58 166q-31-3-46 20" stroke="#6fc6ff" stroke-width="10" stroke-linecap="round"/><path d="M182 166q31-3 46 20" stroke="#6fc6ff" stroke-width="10" stroke-linecap="round"/>
+<path d="M62 164c0-26 20-45 58-45s58 19 58 45v44c0 17-14 31-31 31H93c-17 0-31-14-31-31z" fill="url(#body)" stroke="#fff" stroke-width="9"/>
+<path d="M96 151h48" stroke="#fff" stroke-width="8" stroke-linecap="round" opacity=".75"/><path d="M99 182h42" stroke="#1e6bd8" stroke-width="6" stroke-linecap="round" opacity=".45"/>
+<path d="M89 236h-24" stroke="#fff" stroke-width="12" stroke-linecap="round"/><path d="M151 236h24" stroke="#fff" stroke-width="12" stroke-linecap="round"/>
+</g>
+</svg>

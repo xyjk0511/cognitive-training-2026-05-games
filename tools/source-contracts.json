@@ -77,5 +77,21 @@
     "selectedSource": ["cognitive-training-2026-05/02 记忆力/04 位置记忆-翻个西瓜/P2翻个西瓜 - 改.xlsm", "cognitive-training-2026-05/02 记忆力/04 位置记忆-翻个西瓜/逻辑修改内容.docx"],
     "acceptedDifferences": ["implementation renders watermelon and distractors with CSS/emoji instead of source image assets"],
     "verification": ["node .\\tools\\verify-design-parity.mjs"]
+  },
+  "12-silent-pond": {
+    "implementationFolder": "12-注意广度-静默池塘",
+    "entry": "12-注意广度-静默池塘/external-games/silent-pond/index.html",
+    "selectedSource": ["cognitive-training-2026-05/03  注意力/02 注意广度-静默池塘/P2静默池塘.xlsm", "cognitive-training-2026-05/03  注意力/02 注意广度-静默池塘/静默池塘文档.xlsx"],
+    "requiredAssets": ["12-注意广度-静默池塘/external-games/silent-pond/data.json", "12-注意广度-静默池塘/external-games/silent-pond/game.js", "12-注意广度-静默池塘/external-games/silent-pond/styles.css"],
+    "acceptedDifferences": ["replacement package is the delivered three-difficulty static game bundle"],
+    "verification": ["node .\\tools\\smoke-games.mjs"]
+  },
+  "13-fishing-master": {
+    "implementationFolder": "13-持续注意-钓鱼达人",
+    "entry": "13-持续注意-钓鱼达人/external-games/fishing-master/钓鱼达人_全部入口_单文件.html",
+    "selectedSource": ["cognitive-training-2026-05/03  注意力/03 持续注意-钓鱼达人/数值.xlsx", "cognitive-training-2026-05/03  注意力/03 持续注意-钓鱼达人/钓鱼达人策划案1.0.2.xlsx"],
+    "requiredAssets": ["13-持续注意-钓鱼达人/external-games/fishing-master/钓鱼达人_成人版_单文件.html", "13-持续注意-钓鱼达人/external-games/fishing-master/钓鱼达人_初涉垂钓_单文件.html", "13-持续注意-钓鱼达人/external-games/fishing-master/钓鱼达人_无名渔夫_单文件.html"],
+    "acceptedDifferences": ["replacement package is the delivered layout and tutorial revision bundle with multiple single-file entries"],
+    "verification": ["node .\\tools\\smoke-games.mjs"]
   }
 }

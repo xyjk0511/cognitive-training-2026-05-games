@@ -1,0 +1,150 @@
+{
+  "title": "幻色图形素材清单",
+  "shapes": [
+    {
+      "shape": "圆形",
+      "shapeId": "circle",
+      "colors": [
+        {
+          "name": "红色",
+          "asset": "assets/shapes/circle_c01.svg"
+        },
+        {
+          "name": "黄色",
+          "asset": "assets/shapes/circle_c02.svg"
+        },
+        {
+          "name": "蓝色",
+          "asset": "assets/shapes/circle_c03.svg"
+        },
+        {
+          "name": "绿色",
+          "asset": "assets/shapes/circle_c04.svg"
+        },
+        {
+          "name": "紫色",
+          "asset": "assets/shapes/circle_c05.svg"
+        },
+        {
+          "name": "黑色",
+          "asset": "assets/shapes/circle_c06.svg"
+        },
+        {
+          "name": "灰色",
+          "asset": "assets/shapes/circle_c07.svg"
+        },
+        {
+          "name": "粉色",
+          "asset": "assets/shapes/circle_c08.svg"
+        },
+        {
+          "name": "棕色",
+          "asset": "assets/shapes/circle_c09.svg"
+        }
+      ]
+    },
+    {
+      "shape": "三角形",
+      "shapeId": "triangle",
+      "colors": [
+        {
+          "name": "红色",
+          "asset": "assets/shapes/triangle_c01.svg"
+        },
+        {
+          "name": "黄色",
+          "asset": "assets/shapes/triangle_c02.svg"
+        },
+        {
+          "name": "蓝色",
+          "asset": "assets/shapes/triangle_c03.svg"
+        },
+        {
+          "name": "绿色",
+          "asset": "assets/shapes/triangle_c04.svg"
+        },
+        {
+          "name": "紫色",
+          "asset": "assets/shapes/triangle_c05.svg"
+        },
+        {
+          "name": "黑色",
+          "asset": "assets/shapes/triangle_c06.svg"
+        },
+        {
+          "name": "灰色",
+          "asset": "assets/shapes/triangle_c07.svg"
+        },
+        {
+          "name": "粉色",
+          "asset": "assets/shapes/triangle_c08.svg"
+        },
+        {
+          "name": "棕色",
+          "asset": "assets/shapes/triangle_c09.svg"
+        }
+      ]
+    },
+    {
+      "shape": "六边形",
+      "shapeId": "hexagon",
+      "colors": [
+        {
+          "name": "红色",
+          "asset": "assets/shapes/hexagon_c01.svg"
+        },
+        {
+          "name": "黄色",
+          "asset": "assets/shapes/hexagon_c02.svg"
+        },
+        {
+          "name": "蓝色",
+          "asset": "assets/shapes/hexagon_c03.svg"
+        },
+        {
+          "name": "绿色",
+          "asset": "assets/shapes/hexagon_c04.svg"
+        },
+        {
+          "name": "紫色",
+          "asset": "assets/shapes/hexagon_c05.svg"
+        },
+        {
+          "name": "黑色",
+          "asset": "assets/shapes/hexagon_c06.svg"
+        },
+        {
+          "name": "灰色",
+          "asset": "assets/shapes/hexagon_c07.svg"
+        },
+        {
+          "name": "粉色",
+          "asset": "assets/shapes/hexagon_c08.svg"
+        },
+        {
+          "name": "棕色",
+          "asset": "assets/shapes/hexagon_c09.svg"
+        }
+      ]
+    }
+  ],
+  "ui": [
+    "assets/ui/btn_correct.svg",
+    "assets/ui/btn_wrong.svg",
+    "assets/ui/logo.svg",
+    "assets/ui/pause.svg",
+    "assets/ui/star.svg",
+    "assets/ui/target.svg",
+    "assets/ui/timer.svg"
+  ],
+  "character": "assets/characters/xiaokangkang.svg",
+  "background": "assets/bg/bg_main.svg",
+  "audio": [
+    "assets/audio/correct.wav",
+    "assets/audio/wrong.wav",
+    "assets/audio/flip.wav",
+    "assets/audio/click.wav",
+    "assets/audio/ambient.wav"
+  ],
+  "version": "1.2.0"
+}

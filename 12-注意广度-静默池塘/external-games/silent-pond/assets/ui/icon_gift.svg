@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="奖励礼盒">
+  <defs>
+    <linearGradient id="box" x1="12" y1="18" x2="52" y2="56" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#a8fff0"/>
+      <stop offset="0.52" stop-color="#2fb7ad"/>
+      <stop offset="1" stop-color="#0d6c70"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="18" y1="14" x2="46" y2="58" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fff6bf"/>
+      <stop offset="0.55" stop-color="#f0bd54"/>
+      <stop offset="1" stop-color="#c97b22"/>
+    </linearGradient>
+  </defs>
+  <path d="M12 27h40v9H12z" fill="url(#gold)" stroke="#8b5516" stroke-width="2"/>
+  <path d="M16 36h32v18H16z" fill="url(#box)" stroke="#0b555e" stroke-width="2"/>
+  <path d="M29 27h6v27h-6z" fill="#fff4b9" opacity=".92"/>
+  <path d="M24 26c-7-1-8-9-3-11 5-2 9 4 11 11" fill="none" stroke="url(#gold)" stroke-width="5" stroke-linecap="round"/>
+  <path d="M40 26c7-1 8-9 3-11-5-2-9 4-11 11" fill="none" stroke="url(#gold)" stroke-width="5" stroke-linecap="round"/>
+  <path d="M18 39h10" stroke="#dffff8" stroke-width="3" stroke-linecap="round" opacity=".58"/>
+</svg>

@@ -1,109 +1,1531 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>数字阶梯</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>数字阶梯｜三难度终检版</title>
+  <link rel="icon" href="assets/images/app_icon_128.png">
   <style>
-    * { box-sizing: border-box; }
-    body { margin: 0; min-height: 100vh; font-family: "Microsoft YaHei", system-ui, sans-serif; color: #172033; background: #f4f7fb; display: grid; place-items: center; }
-    main { width: min(980px, calc(100vw - 28px)); display: grid; grid-template-rows: auto 1fr auto; gap: 14px; }
-    header, section, footer { background: #fff; border: 1px solid #dbe3ef; border-radius: 8px; padding: 16px; box-shadow: 0 14px 36px rgba(20,31,48,.08); }
-    header { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
-    h1 { margin: 0; font-size: 28px; }
-    .board { min-height: 560px; position: relative; background: linear-gradient(#eef6ff, #f8fbff); overflow: hidden; }
-    .bubble { position: absolute; width: 74px; height: 74px; border-radius: 50%; border: 3px solid #fff; background: #1f6feb; color: #fff; font-size: 28px; font-weight: 900; box-shadow: 0 10px 22px rgba(31,111,235,.24); cursor: pointer; }
-    .bubble.done { background: #10a37f; }
-    .bubble.wrong { background: #d92d20; }
-    .hud { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
-    .hud b { font-size: 24px; }
-    footer { display: flex; justify-content: space-between; color: #536173; align-items: center; }
-    button { border: 0; border-radius: 8px; padding: 10px 14px; font-weight: 800; background: #172033; color: #fff; cursor: pointer; }
-  </style>
+:root {
+  --panel: rgba(255,255,255,.86);
+  --line: rgba(32, 74, 92, .18);
+  --text: #17313b;
+  --muted: #55717c;
+  --bubble: rgba(255,255,255,.96);
+  --bubble-border: rgba(115,190,219,.95);
+  --bubble-green: #67c779;
+  --bubble-red: #ef6b63;
+}
+* { box-sizing: border-box; }
+html, body { width: 100%; height: 100%; margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; color: var(--text); }
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 16% 18%, rgba(255,255,255,.55), transparent 18%),
+    radial-gradient(circle at 82% 24%, rgba(255,255,255,.35), transparent 20%),
+    linear-gradient(180deg, #9ed8ec 0%, #70b8d2 38%, #3e91b3 100%);
+  overflow: hidden;
+}
+.screen { position: fixed; inset: 0; display: none; }
+.screen.active { display: block; }
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.center-screen { display: none; place-items: center; padding: 24px; }
+.center-screen.active { display: grid; }
+.card {
+  width: min(680px, calc(100vw - 32px));
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  padding: 32px;
+  box-shadow: 0 18px 46px rgba(24, 72, 92, .22);
+  text-align: center;
+  backdrop-filter: blur(8px);
+}
+h1 { margin: 0 0 10px; font-size: clamp(36px, 7vw, 72px); letter-spacing: .08em; }
+h2 { margin: 0 0 12px; font-size: 30px; }
+p { line-height: 1.7; }
+button {
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  padding: 12px 22px;
+  margin: 8px;
+  background: #23566b;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(35, 86, 107, .22);
+}
+button.secondary { background: rgba(35, 86, 107, .12); color: #214858; box-shadow: none; }
+button:disabled { opacity: .5; cursor: not-allowed; }
+.small { font-size: 13px; color: var(--muted); }
+#gameScreen { padding: 18px; }
+#hud {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  align-items: center;
+  width: min(1180px, calc(100vw - 36px));
+  margin: 0 auto 10px;
+}
+.hud-item {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 10px 12px;
+  min-height: 58px;
+  box-shadow: 0 8px 20px rgba(28, 83, 107, .11);
+}
+.hud-label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 3px; }
+.hud-value { font-size: 22px; font-weight: 700; }
+#pauseBtn { width: 100%; height: 48px; margin: 0; }
+#promptBar {
+  width: min(920px, calc(100vw - 36px));
+  margin: 8px auto 12px;
+  background: rgba(255,255,255,.78);
+  border: 1px solid rgba(255,255,255,.55);
+  border-radius: 18px;
+  padding: 12px 18px;
+  font-size: 18px;
+  text-align: center;
+}
+#playArea {
+  position: relative;
+  width: min(1120px, calc(100vw - 36px));
+  height: calc(100vh - 208px);
+  min-height: 420px;
+  margin: 0 auto;
+  border-radius: 30px;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 115%, rgba(15, 92, 87, .32), transparent 52%),
+    radial-gradient(circle at 10% 80%, rgba(255,255,255,.22), transparent 16%),
+    linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.04));
+  border: 1px solid rgba(255,255,255,.42);
+  box-shadow: inset 0 0 34px rgba(255,255,255,.25), 0 18px 40px rgba(20, 83, 112, .16);
+}
+#playArea::after {
+  content: "";
+  position: absolute;
+  inset: auto -10% -14% -10%;
+  height: 28%;
+  background: radial-gradient(ellipse at center, rgba(31, 106, 85, .28), transparent 60%);
+  pointer-events: none;
+}
+.bubble {
+  position: absolute;
+  width: 82px;
+  height: 82px;
+  border-radius: 999px;
+  transform: translate(-50%, 80vh) scale(.85);
+  display: grid;
+  place-items: center;
+  padding: 8px;
+  background: var(--bubble);
+  border: 3px solid var(--bubble-border);
+  color: #14313d;
+  font-weight: 750;
+  font-size: 26px;
+  line-height: 1;
+  user-select: none;
+  cursor: pointer;
+  box-shadow: inset -9px -10px 20px rgba(94, 160, 190, .18), inset 8px 8px 16px rgba(255,255,255,.9), 0 16px 24px rgba(33, 102, 130, .22);
+  animation: rise .54s cubic-bezier(.2,.86,.22,1) forwards;
+  transition: transform .18s ease, opacity .22s ease, background .18s ease, border-color .18s ease;
+}
+.bubble::before {
+  content: "";
+  position: absolute;
+  width: 22%;
+  height: 22%;
+  left: 20%;
+  top: 17%;
+  border-radius: 50%;
+  background: rgba(255,255,255,.75);
+}
+.bubble.operation { width: 128px; border-radius: 42px; font-size: 22px; }
+.bubble.decimal { width: 104px; font-size: 23px; }
+.bubble:hover { transform: translate(-50%, -50%) scale(1.05); }
+.bubble.correct { background: var(--bubble-green); border-color: #35a84c; color: white; transform: translate(-50%, -50%) scale(1.12); }
+.bubble.wrong { background: var(--bubble-red); border-color: #d64039; color: white; transform: translate(-50%, -50%) scale(1.08); }
+.bubble.popped { opacity: 0; transform: translate(-50%, -50%) scale(.15); pointer-events: none; }
+@keyframes rise { to { transform: translate(-50%, -50%) scale(1); } }
+#statusDots {
+  position: absolute;
+  right: 28px;
+  bottom: 20px;
+  display: flex;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.72);
+  border: 1px solid var(--line);
+  box-shadow: 0 8px 20px rgba(28, 83, 107, .14);
+}
+#statusDots .dot {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 2px solid #286277;
+  color: #d9443c;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1;
+}
+#statusDots .dot.pass { background: #286277; }
+#statusDots .dot.fail { border-color: #d9443c; }
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  display: none;
+  place-items: center;
+  background: rgba(16, 49, 63, .46);
+  backdrop-filter: blur(5px);
+  z-index: 20;
+}
+.modal-backdrop.active { display: grid; }
+.modal { width: min(520px, calc(100vw - 32px)); background: var(--panel); border-radius: 26px; padding: 28px; text-align: center; box-shadow: 0 22px 52px rgba(16,49,63,.28); }
+.modal-row { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 12px 0; }
+input[type="range"] { width: 220px; }
+#guideStage { position: relative; height: 280px; margin: 10px 0 20px; border-radius: 22px; background: rgba(100, 181, 211, .2); border: 1px solid rgba(255,255,255,.45); overflow: hidden; }
+.guide-bubble { top: 52%; }
+.guide-bubble:first-child { left: 36%; }
+.guide-bubble:last-child { left: 64%; }
+.guide-highlight { outline: 5px solid rgba(255, 218, 91, .8); }
+@media (max-width: 760px) {
+  body { overflow: auto; }
+  #hud { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  #gameScreen { padding-bottom: 24px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+  #playArea {
+    height: 500px;
+    height: clamp(430px, calc(100dvh - 344px), 560px);
+    min-height: 430px;
+  }
+  #statusDots { right: 18px; bottom: 16px; }
+  .bubble { width: 68px; height: 68px; font-size: 22px; }
+  .bubble.operation { width: 104px; height: 64px; font-size: 18px; }
+  .bubble.decimal { width: 78px; height: 68px; font-size: 20px; }
+}
+
+/* 精致素材版视觉覆盖：不改变玩法逻辑，仅替换美术表现 */
+:root {
+  --panel: rgba(255,255,255,.88);
+  --line: rgba(145, 230, 239, .42);
+  --text: #143743;
+  --muted: #53727b;
+  --bubble: rgba(255,255,255,.96);
+  --bubble-border: rgba(126,219,236,.95);
+  --bubble-green: #4ed079;
+  --bubble-red: #f0645e;
+}
+body {
+  background: url("assets/images/bg_game.svg") center/cover fixed no-repeat;
+}
+.card, .modal, .hud-item, #promptBar {
+  background: rgba(255,255,255,.82);
+  border: 1px solid rgba(255,255,255,.58);
+  box-shadow: 0 24px 54px rgba(13,69,90,.22), inset 0 1px 0 rgba(255,255,255,.75);
+  backdrop-filter: blur(12px);
+}
+.game-logo { width: min(520px, 86vw); display:block; margin: 0 auto 6px; }
+h1.logo-fallback { position:absolute; left:-9999px; }
+button {
+  background: linear-gradient(135deg,#247392,#123f55);
+  box-shadow: 0 12px 26px rgba(15,76,99,.28), inset 0 1px 0 rgba(255,255,255,.24);
+  border: 1px solid rgba(255,255,255,.22);
+  font-weight: 700;
+}
+button.secondary {
+  background: rgba(255,255,255,.58);
+  border: 1px solid rgba(133,215,232,.78);
+  color: #174354;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.65);
+}
+#playArea, #guideStage {
+  background: url("assets/images/bg_game.svg") center/cover no-repeat;
+  border: 1px solid rgba(255,255,255,.46);
+  box-shadow: inset 0 0 54px rgba(255,255,255,.24), 0 22px 48px rgba(12,76,102,.21);
+}
+.bubble {
+  background: url("assets/sprites/bubble_white.svg") center/100% 100% no-repeat;
+  border: none;
+  box-shadow: none;
+  color: #143743;
+  text-shadow: 0 2px 0 rgba(255,255,255,.68);
+}
+.bubble::before { display:none; }
+.bubble.operation { background-image: url("assets/sprites/bubble_operation_white.svg"); }
+.bubble.correct { background-image: url("assets/sprites/bubble_green.svg"); color: #0d3b22; }
+.bubble.operation.correct { background-image: url("assets/sprites/bubble_operation_green.svg"); }
+.bubble.wrong { background-image: url("assets/sprites/bubble_red.svg"); color: white; text-shadow: 0 2px 0 rgba(120,20,18,.25); }
+.bubble.operation.wrong { background-image: url("assets/sprites/bubble_operation_red.svg"); }
+.guide-highlight { outline: none; filter: drop-shadow(0 0 18px rgba(255,220,88,.88)); }
+#statusDots .dot.pass { background: #286277; box-shadow: inset 0 0 0 4px rgba(255,255,255,.24); }
+#statusDots { background: rgba(255,255,255,.66); backdrop-filter: blur(8px); }
+
+
+/* 三难度终检版：保留素材接入，修复多位数字排版，并增加移动端防重叠布局 */
+#welcomeScreen {
+  background: url("assets/images/bg_cover.svg") center/cover fixed no-repeat;
+}
+.cover-hero {
+  display: block;
+  width: min(520px, 88vw);
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  margin: 10px auto 16px;
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,.72);
+  box-shadow: 0 18px 42px rgba(18,83,105,.20);
+}
+button:not(.bubble) { min-width: 122px; }
+button:focus-visible, .bubble:focus-visible {
+  outline: 4px solid rgba(255,224,102,.92);
+  outline-offset: 3px;
+}
+.bubble {
+  --bubble-scale: 1;
+  --pop-size: 118px;
+  min-width: 0;
+  margin: 0;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  overflow: visible;
+  will-change: transform, opacity;
+}
+.bubble.clicked,
+.bubble:disabled {
+  pointer-events: none;
+}
+.bubble.selected {
+  background-image: url("assets/sprites/bubble_selected.svg");
+}
+.bubble.operation.selected {
+  background-image: url("assets/sprites/bubble_operation_green.svg");
+}
+.bubble .value-token {
+  position: relative;
+  z-index: 2;
+  display: block;
+  max-width: calc(100% - 8px);
+  white-space: nowrap;
+  text-align: center;
+  color: currentColor;
+  font-family: ui-rounded, "Nunito Sans", "Inter", "Arial Rounded MT Bold", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1, "kern" 1;
+  font-weight: 900;
+  line-height: .9;
+  letter-spacing: -.045em;
+  text-rendering: geometricPrecision;
+  transform: translateY(1px);
+  pointer-events: none;
+}
+.bubble .value-token.len-1 { font-size: 31px; letter-spacing: 0; }
+.bubble .value-token.len-2 { font-size: 31px; letter-spacing: -.055em; }
+.bubble .value-token.len-3 { font-size: 27px; letter-spacing: -.06em; }
+.bubble .value-token.len-4 { font-size: 24px; letter-spacing: -.065em; }
+.bubble .value-token.len-5,
+.bubble .value-token.len-6,
+.bubble .value-token.len-7plus { font-size: 21px; letter-spacing: -.07em; }
+.bubble.decimal .value-token { font-size: 27px; letter-spacing: -.055em; }
+.bubble.operation .value-token { font-size: 25px; letter-spacing: -.06em; }
+.bubble.operation .value-token.len-5 { font-size: 23px; }
+.bubble.operation .value-token.len-6 { font-size: 21px; }
+.bubble.operation .value-token.len-7plus { font-size: 19px; letter-spacing: -.075em; }
+.pop-sprite {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--pop-size);
+  height: var(--pop-size);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 3;
+  background: url("assets/sprites/bubble_pop_spritesheet.png") 0 0 / 800% 100% no-repeat;
+  animation: bubblePopFrames .32s steps(8) forwards;
+  filter: drop-shadow(0 12px 16px rgba(39,128,158,.24));
+}
+.bubble.operation .pop-sprite { --pop-size: 148px; }
+@keyframes bubblePopFrames {
+  to { background-position: -800% 0; opacity: 0; transform: translate(-50%, -50%) scale(1.08); }
+}
+#statusDots .dot {
+  width: 28px;
+  height: 28px;
+  border: 0;
+  background: url("assets/ui/dot_empty.png") center/contain no-repeat;
+  color: transparent;
+}
+#statusDots .dot.current { background-image: url("assets/ui/dot_current.png"); }
+#statusDots .dot.pass { background: url("assets/ui/dot_pass.png") center/contain no-repeat; }
+#statusDots .dot.fail { background: url("assets/ui/dot_fail.png") center/contain no-repeat; }
+.modal { max-height: calc(100vh - 44px); overflow: auto; }
+.trend {
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 18px;
+  background: rgba(255,255,255,.58);
+  border: 1px solid rgba(128,214,232,.42);
+  text-align: left;
+}
+.trend h3 {
+  margin: 0 0 8px;
+  font-size: 16px;
+}
+.trend-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 8px 0 10px;
+}
+.trend-cell {
+  border-radius: 14px;
+  background: rgba(255,255,255,.62);
+  padding: 8px;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,.6);
+}
+.trend-cell strong { display:block; font-size: 18px; }
+.trend-strip { display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
+.trend-badge {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:28px;
+  height:28px;
+  padding:0 8px;
+  border-radius:999px;
+  background:rgba(32,98,119,.12);
+  font-size:12px;
+  font-weight:800;
+}
+.trend-badge.pass { background:rgba(62,190,111,.24); color:#12552b; }
+.trend-badge.fail { background:rgba(237,91,84,.22); color:#8e211d; }
+.difficulty-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin: 18px 0 12px;
+}
+button.difficulty-card {
+  min-width: 0;
+  width: 100%;
+  min-height: 128px;
+  margin: 0;
+  padding: 18px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 22px;
+  color: #123f55;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.88), rgba(205,248,250,.76)),
+    url("assets/ui/button_secondary.svg") center/cover no-repeat;
+  border: 1px solid rgba(255,255,255,.72);
+  box-shadow: 0 12px 28px rgba(28, 83, 107, .16), inset 0 1px 0 rgba(255,255,255,.86);
+  text-align: center;
+  white-space: normal;
+}
+button.difficulty-card:hover,
+button.difficulty-card:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 34px rgba(28, 83, 107, .24), inset 0 1px 0 rgba(255,255,255,.9);
+  outline: 3px solid rgba(103, 214, 232, .42);
+}
+.difficulty-card strong {
+  display: block;
+  font-size: clamp(22px, 4.2vw, 30px);
+  letter-spacing: .06em;
+}
+.difficulty-card span {
+  display: block;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #55717c;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.difficulty-note {
+  margin-top: 4px;
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: rgba(255,255,255,.58);
+  border: 1px solid rgba(255,255,255,.62);
+}
+@media (max-width: 760px) {
+  .cover-hero { width: min(420px, 86vw); }
+  .trend-grid { grid-template-columns: 1fr; }
+  .difficulty-grid { grid-template-columns: 1fr; }
+  button.difficulty-card { min-height: 96px; }
+  .bubble .value-token.len-1,
+  .bubble .value-token.len-2 { font-size: 29px; letter-spacing: -.045em; }
+  .bubble .value-token.len-3 { font-size: 25px; letter-spacing: -.055em; }
+  .bubble .value-token.len-4 { font-size: 22px; letter-spacing: -.06em; }
+  .bubble .value-token.len-5,
+  .bubble .value-token.len-6,
+  .bubble .value-token.len-7plus { font-size: 19px; letter-spacing: -.065em; }
+  .bubble.operation .value-token { font-size: 20px; letter-spacing: -.06em; }
+  .bubble.operation .value-token.len-6,
+  .bubble.operation .value-token.len-7plus { font-size: 18px; letter-spacing: -.07em; }
+}
+@media (max-width: 520px) {
+  .card, .modal { padding: 22px; border-radius: 22px; }
+  #hud { gap: 8px; }
+  .hud-value { font-size: 20px; }
+  #promptBar { font-size: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+}
+
+</style>
 </head>
 <body>
-  <main>
-    <header>
-      <h1>数字阶梯</h1>
-      <div class="hud">
-        <span>等级 <b id="level">1</b></span>
-        <span>正确小关 <b id="correct">0</b></span>
-        <span id="feedback">按从小到大点击气泡数字</span>
+  <section id="welcomeScreen" class="screen center-screen active" aria-label="欢迎界面">
+    <div class="card">
+      <img class="game-logo" src="assets/images/logo_title.svg" alt="数字阶梯"><h1 class="logo-fallback">数字阶梯</h1>
+      <img class="cover-hero" src="assets/images/cover_animated.gif" alt="数字阶梯动态封面">
+      <p>画面中会出现若干包含数字的气泡。请判断数字大小，并按照从小到大的顺序依次点击。</p>
+      <p class="small">点击封面或空白处关闭欢迎界面，并开启新手引导。</p>
+    </div>
+  </section>
+
+  <section id="guideScreen" class="screen center-screen" aria-label="引导演示">
+    <div class="card">
+      <h2>引导演示</h2>
+      <p id="guideText">请按照从数字小到大顺序点击气泡。</p>
+      <div id="guideStage">
+        <button id="guideBubbleSmall" class="bubble guide-bubble" style="left:36%;top:52%">2</button>
+        <button id="guideBubbleLarge" class="bubble guide-bubble" style="left:64%;top:52%">8</button>
       </div>
+      <p class="small">正确点击后气泡会炸开并消失；错误点击在正式训练中会导致本关卡失败。</p>
+    </div>
+  </section>
+
+  <section id="choiceScreen" class="screen center-screen" aria-label="难度选择">
+    <div class="card">
+      <h2>选择难度</h2>
+      <p>选择本次训练的起始关卡。玩法、排序规则和原数值表不变，只决定从哪一关开始。</p>
+      <div class="difficulty-grid" role="group" aria-label="难度选择">
+        <button type="button" class="difficulty-card" data-difficulty="easy" aria-label="容易难度，从第 1 关开始">
+          <strong>容易</strong>
+          <span>从第 1 关开始<br>基础数字排序</span>
+        </button>
+        <button type="button" class="difficulty-card" data-difficulty="normal" aria-label="普通难度，从第 15 关开始">
+          <strong>普通</strong>
+          <span>从第 15 关开始<br>更密集的气泡布局</span>
+        </button>
+        <button type="button" class="difficulty-card" data-difficulty="hard" aria-label="困难难度，从第 30 关开始">
+          <strong>困难</strong>
+          <span>从第 30 关开始<br>更高数量与复杂度</span>
+        </button>
+      </div>
+      <p class="small difficulty-note">失败后会重新挑战当前难度组；“重新训练”会回到所选难度的起始关卡。</p>
+      <button id="replayGuideBtn" class="secondary">重新演示</button>
+    </div>
+  </section>
+
+  <section id="gameScreen" class="screen" aria-label="主游戏界面">
+    <header id="hud" aria-label="区域A 系统设置">
+      <div class="hud-item"><span class="hud-label">难度 / 关卡</span><span id="difficultyValue" class="hud-value">容易 · 1/100</span></div>
+      <div class="hud-item"><span class="hud-label">关卡倒计时</span><span id="levelTimeValue" class="hud-value" aria-live="polite">0.0</span><span> 秒</span></div>
+      <div class="hud-item"><button id="pauseBtn">设置 / 暂停</button></div>
+      <div class="hud-item"><span class="hud-label">训练倒计时</span><span id="trainingTimeValue" class="hud-value" aria-live="polite">0.0</span><span> 秒</span></div>
+      <div class="hud-item"><span class="hud-label">积分</span><span id="scoreValue" class="hud-value" aria-live="polite">0</span></div>
     </header>
-    <section id="board" class="board" aria-live="polite"></section>
-    <footer>
-      <span>源合同：P1数字阶梯数值.xlsm / 100关 / 数字气泡升序点击</span>
-      <button id="reset">重新开始</button>
-    </footer>
-  </main>
-  <script type="module">
-    import { buildNumberLadderRound, completeNumberLadderLevel, hydrateNumberLadderData, nextNumberLadderLevel, selectNumberBubble } from './rules.mjs';
+    <div id="promptBar" aria-label="区域B 玩法提示语">请按照数字从小到大顺序点击气泡。</div>
+    <main id="playArea" aria-label="区域C 数字气泡">
+      <div id="statusDots" aria-label="区域D 当前难度关卡状态"></div>
+    </main>
+  </section>
 
-    const raw = await fetch('./data.json').then((res) => res.json());
-    const { floors, levels, symbols } = hydrateNumberLadderData(raw);
-    let currentLevel = 1;
-    let correctRounds = 0;
-    let wrong = 0;
-    let selected = [];
-    let round = null;
-    let failures = 0;
-    let levelStartedAt = performance.now();
-    const board = document.getElementById('board');
-    const feedback = document.getElementById('feedback');
+  <div id="modalBackdrop" class="modal-backdrop">
+    <div class="modal" role="dialog" aria-modal="true">
+      <h2 id="modalTitle"></h2>
+      <div id="modalBody"></div>
+      <div id="modalActions"></div>
+    </div>
+  </div>
+  <script>
 
-    function startRound() {
-      const level = levels[currentLevel - 1];
-      const floor = floors[(currentLevel - 1) % floors.length];
-      const symbol = symbols[(currentLevel - 1) % symbols.length];
-      selected = [];
-      levelStartedAt = performance.now();
-      round = buildNumberLadderRound(level, floor, symbol);
-      document.getElementById('level').textContent = currentLevel;
-      document.getElementById('correct').textContent = correctRounds;
-      board.innerHTML = '';
-      for (const bubble of round.bubbles) {
-        const btn = document.createElement('button');
-        btn.className = 'bubble';
-        btn.textContent = bubble.value;
-        btn.style.left = `${Math.min(88, bubble.position.col * 8)}%`;
-        btn.style.top = `${Math.min(82, bubble.position.row * 8)}%`;
-        btn.addEventListener('click', () => choose(btn, bubble.id));
-        board.append(btn);
+const GAME_DATA = {"meta": {"gameName": "数字阶梯", "sourceDesign": ["数字阶梯.xlsx", "数字阶梯策划文档.xlsx"], "sourceConfig": "P1数字阶梯数值.xlsm", "implementationNotes": {"Form": {"0": "整数", "1": "小数", "2": "正数", "3": "负数"}, "Symbol1": {"0": "无运算/单体数字", "1": "加式", "2": "减式"}, "scoreFormula": "round(Score + Scores * remainingTime / Time)", "clickRule": "按数值从小到大点击；任一错误立即失败。"}}, "Floor": [{"ID": 1, "Floor": 1, "posBlock": ["1,2", "2,4", "3,3"]}, {"ID": 2, "Floor": 1, "posBlock": ["1,3", "2,3", "3,4"]}, {"ID": 3, "Floor": 1, "posBlock": ["1,2", "2,3", "3,2"]}, {"ID": 4, "Floor": 1, "posBlock": ["1,2", "2,3", "3,3"]}, {"ID": 5, "Floor": 1, "posBlock": ["1,3", "2,3", "3,2"]}, {"ID": 6, "Floor": 1, "posBlock": ["1,4", "2,4", "3,4"]}, {"ID": 7, "Floor": 1, "posBlock": ["1,5", "2,5", "3,5"]}, {"ID": 8, "Floor": 1, "posBlock": ["1,4", "2,5", "3,5"]}, {"ID": 9, "Floor": 1, "posBlock": ["1,4", "2,3", "3,5"]}, {"ID": 10, "Floor": 1, "posBlock": ["1,3", "2,4", "3,4"]}, {"ID": 11, "Floor": 1, "posBlock": ["1,4", "2,4", "3,5"]}, {"ID": 12, "Floor": 1, "posBlock": ["1,5", "2,4", "3,4"]}, {"ID": 13, "Floor": 1, "posBlock": ["1,4", "2,3", "3,3"]}, {"ID": 14, "Floor": 1, "posBlock": ["1,6", "2,5", "3,6"]}, {"ID": 15, "Floor": 1, "posBlock": ["1,5", "2,6", "3,5"]}, {"ID": 16, "Floor": 1, "posBlock": ["1,4", "2,6", "3,5"]}, {"ID": 17, "Floor": 1, "posBlock": ["1,5", "2,5", "3,6"]}, {"ID": 18, "Floor": 1, "posBlock": ["1,5", "2,5", "3,3"]}, {"ID": 19, "Floor": 1, "posBlock": ["1,6", "2,5", "3,3"]}, {"ID": 20, "Floor": 1, "posBlock": ["1,6", "2,4", "3,6"]}, {"ID": 21, "Floor": 2, "posBlock": ["3,2", "1,3", "3,4", "1,5"]}, {"ID": 22, "Floor": 2, "posBlock": ["3,2", "1,3", "2,4", "2,5"]}, {"ID": 23, "Floor": 2, "posBlock": ["1,2", "2,3", "2,4", "3,5"]}, {"ID": 24, "Floor": 2, "posBlock": ["3,2", "2,3", "3,4", "1,5"]}, {"ID": 25, "Floor": 2, "posBlock": ["2,2", "3,3", "2,4", "1,5"]}, {"ID": 26, "Floor": 2, "posBlock": ["1,2", "3,3", "1,4", "2,5"]}, {"ID": 27, "Floor": 2, "posBlock": ["1,2", "3,3", "1,4", "3,5"]}, {"ID": 28, "Floor": 2, "posBlock": ["2,2", "3,3", "3,4", "1,5"]}, {"ID": 29, "Floor": 2, "posBlock": ["3,2", "2,3", "2,4", "2,5"]}, {"ID": 30, "Floor": 2, "posBlock": ["3,2", "1,3", "2,4", "3,5"]}, {"ID": 31, "Floor": 2, "posBlock": ["3,3", "3,4", "1,5", "3,6"]}, {"ID": 32, "Floor": 2, "posBlock": ["3,3", "3,4", "3,5", "1,6"]}, {"ID": 33, "Floor": 2, "posBlock": ["3,3", "3,4", "2,5", "2,6"]}, {"ID": 34, "Floor": 2, "posBlock": ["2,3", "1,4", "1,5", "3,6"]}, {"ID": 35, "Floor": 2, "posBlock": ["1,3", "1,4", "1,5", "1,6"]}, {"ID": 36, "Floor": 2, "posBlock": ["3,3", "1,4", "2,5", "1,6"]}, {"ID": 37, "Floor": 2, "posBlock": ["3,3", "2,4", "3,5", "2,6"]}, {"ID": 38, "Floor": 2, "posBlock": ["3,3", "2,4", "1,5", "2,6"]}, {"ID": 39, "Floor": 2, "posBlock": ["3,3", "2,4", "2,5", "3,6"]}, {"ID": 40, "Floor": 2, "posBlock": ["2,3", "2,4", "1,5", "3,6"]}, {"ID": 41, "Floor": 3, "posBlock": ["2,1", "3,2", "1,3", "1,4", "1,5"]}, {"ID": 42, "Floor": 3, "posBlock": ["2,1", "2,2", "3,3", "3,4", "3,5"]}, {"ID": 43, "Floor": 3, "posBlock": ["1,1", "1,2", "1,3", "3,4", "3,5"]}, {"ID": 44, "Floor": 3, "posBlock": ["1,1", "2,2", "1,3", "2,4", "2,5"]}, {"ID": 45, "Floor": 3, "posBlock": ["3,1", "3,2", "2,3", "2,4", "2,5"]}, {"ID": 46, "Floor": 3, "posBlock": ["2,1", "3,2", "2,3", "1,4", "3,5"]}, {"ID": 47, "Floor": 3, "posBlock": ["3,1", "2,2", "2,3", "2,4", "3,5"]}, {"ID": 48, "Floor": 3, "posBlock": ["3,1", "2,2", "3,3", "2,4", "2,5"]}, {"ID": 49, "Floor": 3, "posBlock": ["1,1", "1,2", "3,3", "2,4", "3,5"]}, {"ID": 50, "Floor": 3, "posBlock": ["3,1", "3,2", "1,3", "3,4", "3,5"]}, {"ID": 51, "Floor": 3, "posBlock": ["3,1", "3,2", "1,3", "2,4", "3,5"]}, {"ID": 52, "Floor": 3, "posBlock": ["2,1", "3,2", "3,3", "1,4", "3,5"]}, {"ID": 53, "Floor": 3, "posBlock": ["3,2", "3,3", "1,4", "1,5", "1,6"]}, {"ID": 54, "Floor": 3, "posBlock": ["3,2", "1,3", "3,4", "1,5", "3,6"]}, {"ID": 55, "Floor": 3, "posBlock": ["2,2", "3,3", "1,4", "2,5", "2,6"]}, {"ID": 56, "Floor": 3, "posBlock": ["2,2", "1,3", "1,4", "1,5", "2,6"]}, {"ID": 57, "Floor": 3, "posBlock": ["1,2", "2,3", "3,4", "3,5", "3,6"]}, {"ID": 58, "Floor": 3, "posBlock": ["3,2", "1,3", "2,4", "2,5", "3,6"]}, {"ID": 59, "Floor": 3, "posBlock": ["2,2", "1,3", "3,4", "2,5", "2,6"]}, {"ID": 60, "Floor": 3, "posBlock": ["2,2", "3,3", "3,4", "2,5", "1,6"]}, {"ID": 61, "Floor": 4, "posBlock": ["2,1", "1,2", "3,3", "1,4", "2,5", "1,6"]}, {"ID": 62, "Floor": 4, "posBlock": ["3,1", "1,2", "1,3", "3,4", "1,5", "2,6"]}, {"ID": 63, "Floor": 4, "posBlock": ["1,1", "2,2", "2,3", "3,4", "3,5", "3,6"]}, {"ID": 64, "Floor": 4, "posBlock": ["3,1", "2,2", "2,3", "2,4", "3,5", "1,6"]}, {"ID": 65, "Floor": 4, "posBlock": ["1,1", "2,2", "2,3", "2,4", "2,5", "1,6"]}, {"ID": 66, "Floor": 4, "posBlock": ["3,1", "3,2", "3,3", "1,4", "3,5", "3,6"]}, {"ID": 67, "Floor": 4, "posBlock": ["1,1", "3,2", "3,3", "2,4", "1,5", "1,6"]}, {"ID": 68, "Floor": 4, "posBlock": ["3,1", "2,2", "3,3", "3,4", "1,5", "1,6"]}, {"ID": 69, "Floor": 4, "posBlock": ["1,1", "2,2", "2,3", "1,4", "2,5", "2,6"]}, {"ID": 70, "Floor": 4, "posBlock": ["2,1", "2,2", "3,3", "3,4", "3,5", "2,6"]}, {"ID": 71, "Floor": 4, "posBlock": ["3,1", "2,2", "2,3", "3,4", "3,5", "3,6"]}, {"ID": 72, "Floor": 4, "posBlock": ["2,1", "3,2", "2,3", "1,4", "2,5", "1,6"]}, {"ID": 73, "Floor": 4, "posBlock": ["2,2", "2,3", "2,4", "2,5", "2,6", "2,7"]}, {"ID": 74, "Floor": 4, "posBlock": ["3,2", "2,3", "3,4", "3,5", "3,6", "3,7"]}, {"ID": 75, "Floor": 4, "posBlock": ["3,2", "2,3", "1,4", "2,5", "1,6", "3,7"]}, {"ID": 76, "Floor": 4, "posBlock": ["1,2", "3,3", "2,4", "2,5", "3,6", "1,7"]}, {"ID": 77, "Floor": 4, "posBlock": ["3,2", "3,3", "1,4", "2,5", "2,6", "2,7"]}, {"ID": 78, "Floor": 4, "posBlock": ["1,2", "2,3", "2,4", "1,5", "3,6", "2,7"]}, {"ID": 79, "Floor": 4, "posBlock": ["1,2", "1,3", "1,4", "3,5", "2,6", "1,7"]}, {"ID": 80, "Floor": 4, "posBlock": ["3,2", "1,3", "1,4", "2,5", "1,6", "3,7"]}, {"ID": 81, "Floor": 5, "posBlock": ["3,1", "2,2", "1,3", "3,4", "2,5", "1,6", "2,7"]}, {"ID": 82, "Floor": 5, "posBlock": ["1,1", "1,2", "3,3", "3,4", "3,5", "1,6", "1,7"]}, {"ID": 83, "Floor": 5, "posBlock": ["3,1", "1,2", "3,3", "3,4", "3,5", "3,6", "3,7"]}, {"ID": 84, "Floor": 5, "posBlock": ["2,1", "2,2", "3,3", "1,4", "1,5", "1,6", "3,7"]}, {"ID": 85, "Floor": 5, "posBlock": ["3,1", "3,2", "3,3", "1,4", "2,5", "1,6", "3,7"]}, {"ID": 86, "Floor": 5, "posBlock": ["2,1", "1,2", "1,3", "2,4", "1,5", "1,6", "3,7"]}, {"ID": 87, "Floor": 5, "posBlock": ["1,1", "2,2", "2,3", "1,4", "3,5", "2,6", "2,7"]}, {"ID": 88, "Floor": 5, "posBlock": ["1,1", "3,2", "2,3", "3,4", "2,5", "2,6", "1,7"]}, {"ID": 89, "Floor": 5, "posBlock": ["3,1", "2,2", "2,3", "1,4", "3,5", "1,6", "2,7"]}, {"ID": 90, "Floor": 5, "posBlock": ["2,1", "2,2", "2,3", "3,4", "2,5", "2,6", "3,7"]}, {"ID": 91, "Floor": 5, "posBlock": ["1,1", "3,2", "1,3", "2,4", "3,5", "2,6", "1,7"]}, {"ID": 92, "Floor": 5, "posBlock": ["2,1", "1,2", "1,3", "1,4", "3,5", "1,6", "2,7"]}, {"ID": 93, "Floor": 5, "posBlock": ["1,1", "3,2", "3,3", "2,4", "3,5", "3,6", "1,7"]}, {"ID": 94, "Floor": 5, "posBlock": ["1,1", "3,2", "3,3", "3,4", "1,5", "1,6", "2,7"]}, {"ID": 95, "Floor": 5, "posBlock": ["3,1", "1,2", "2,3", "2,4", "2,5", "1,6", "3,7"]}, {"ID": 96, "Floor": 5, "posBlock": ["1,1", "3,2", "2,3", "2,4", "2,5", "3,6", "3,7"]}, {"ID": 97, "Floor": 5, "posBlock": ["1,1", "3,2", "2,3", "1,4", "1,5", "3,6", "3,7"]}, {"ID": 98, "Floor": 5, "posBlock": ["2,1", "1,2", "2,3", "1,4", "3,5", "1,6", "2,7"]}, {"ID": 99, "Floor": 5, "posBlock": ["2,1", "3,2", "3,3", "1,4", "2,5", "1,6", "2,7"]}, {"ID": 100, "Floor": 5, "posBlock": ["3,1", "1,2", "1,3", "3,4", "1,5", "3,6", "1,7"]}, {"ID": 101, "Floor": 6, "posBlock": ["1,6", "2,2", "2,3", "2,5", "3,2", "3,3", "3,5", "2,7"]}, {"ID": 102, "Floor": 6, "posBlock": ["1,5", "2,2", "2,4", "2,5", "3,2", "3,4", "3,6", "3,7"]}, {"ID": 103, "Floor": 6, "posBlock": ["1,6", "2,1", "2,3", "2,5", "3,1", "3,4", "3,5", "1,7"]}, {"ID": 104, "Floor": 6, "posBlock": ["1,1", "1,4", "2,4", "2,5", "3,2", "3,3", "3,6", "1,7"]}, {"ID": 105, "Floor": 6, "posBlock": ["1,2", "1,4", "2,4", "2,5", "3,2", "3,4", "3,6", "1,7"]}, {"ID": 106, "Floor": 6, "posBlock": ["1,2", "1,4", "2,4", "2,6", "3,1", "3,3", "3,6", "1,7"]}, {"ID": 107, "Floor": 6, "posBlock": ["1,2", "1,4", "1,6", "2,2", "3,1", "3,3", "3,5", "1,7"]}, {"ID": 108, "Floor": 6, "posBlock": ["1,1", "1,3", "1,5", "2,1", "3,2", "3,3", "3,5", "1,7"]}, {"ID": 109, "Floor": 6, "posBlock": ["1,2", "1,4", "1,5", "2,2", "3,2", "3,3", "3,6", "2,7"]}, {"ID": 110, "Floor": 6, "posBlock": ["1,1", "1,3", "1,6", "2,1", "2,3", "2,6", "3,6", "1,7"]}, {"ID": 111, "Floor": 6, "posBlock": ["1,1", "1,4", "1,5", "2,2", "2,4", "2,5", "3,5", "1,7"]}, {"ID": 112, "Floor": 6, "posBlock": ["1,1", "1,3", "1,6", "2,2", "2,3", "2,5", "3,6", "2,7"]}, {"ID": 113, "Floor": 6, "posBlock": ["1,4", "1,6", "2,1", "2,3", "2,6", "3,1", "3,4", "3,5"]}, {"ID": 114, "Floor": 6, "posBlock": ["1,4", "1,5", "2,1", "2,4", "2,6", "3,2", "3,3", "3,5"]}, {"ID": 115, "Floor": 6, "posBlock": ["1,4", "1,5", "2,1", "2,3", "2,6", "3,1", "3,4", "3,6"]}, {"ID": 116, "Floor": 6, "posBlock": ["1,4", "1,6", "2,1", "2,4", "2,5", "3,2", "3,4", "3,7"]}, {"ID": 117, "Floor": 6, "posBlock": ["1,3", "1,6", "2,1", "2,4", "2,6", "3,2", "3,4", "2,7"]}, {"ID": 118, "Floor": 6, "posBlock": ["1,3", "1,6", "2,2", "2,4", "2,5", "3,1", "3,4", "3,7"]}, {"ID": 119, "Floor": 6, "posBlock": ["1,1", "1,5", "2,1", "2,6", "3,2", "3,4", "3,6", "2,7"]}, {"ID": 120, "Floor": 6, "posBlock": ["1,1", "1,6", "2,2", "2,6", "3,2", "3,3", "3,6", "3,7"]}, {"ID": 121, "Floor": 7, "posBlock": ["1,3", "1,5", "2,1", "2,3", "2,5", "3,1", "3,3", "3,6", "1,7"]}, {"ID": 122, "Floor": 7, "posBlock": ["1,3", "1,6", "2,2", "2,3", "2,6", "3,2", "3,3", "3,5", "3,7"]}, {"ID": 123, "Floor": 7, "posBlock": ["1,4", "1,6", "2,2", "2,3", "2,5", "3,1", "3,4", "3,5", "2,7"]}, {"ID": 124, "Floor": 7, "posBlock": ["1,1", "1,5", "2,1", "2,3", "2,6", "3,1", "3,3", "3,6", "1,7"]}, {"ID": 125, "Floor": 7, "posBlock": ["1,1", "1,6", "2,1", "2,3", "2,6", "3,1", "3,3", "3,5", "3,7"]}, {"ID": 126, "Floor": 7, "posBlock": ["1,2", "1,5", "2,1", "2,4", "2,6", "3,2", "3,4", "3,5", "2,7"]}, {"ID": 127, "Floor": 7, "posBlock": ["1,1", "1,3", "2,2", "2,3", "2,6", "3,1", "3,3", "3,5", "2,7"]}, {"ID": 128, "Floor": 7, "posBlock": ["1,1", "1,3", "2,1", "2,3", "2,5", "3,1", "3,3", "3,6", "1,7"]}, {"ID": 129, "Floor": 7, "posBlock": ["1,2", "1,4", "2,1", "2,3", "2,5", "3,1", "3,4", "3,6", "1,7"]}, {"ID": 130, "Floor": 7, "posBlock": ["1,1", "1,3", "1,6", "2,3", "2,5", "3,1", "3,3", "3,5", "1,7"]}, {"ID": 131, "Floor": 7, "posBlock": ["1,1", "1,4", "1,5", "2,3", "2,5", "3,1", "3,4", "3,6", "2,7"]}, {"ID": 132, "Floor": 7, "posBlock": ["1,2", "1,3", "1,5", "2,3", "2,6", "3,2", "3,4", "3,6", "2,7"]}, {"ID": 133, "Floor": 7, "posBlock": ["1,1", "1,3", "1,5", "2,2", "2,6", "3,1", "3,3", "3,5", "2,7"]}, {"ID": 134, "Floor": 7, "posBlock": ["1,2", "1,3", "1,6", "2,2", "2,6", "3,2", "3,3", "3,5", "1,7"]}, {"ID": 135, "Floor": 7, "posBlock": ["1,2", "1,3", "1,6", "2,2", "2,5", "3,1", "3,3", "3,5", "1,7"]}, {"ID": 136, "Floor": 7, "posBlock": ["1,1", "1,4", "1,6", "2,2", "2,4", "3,2", "3,3", "3,5", "2,7"]}, {"ID": 137, "Floor": 7, "posBlock": ["1,2", "1,4", "1,6", "2,1", "2,3", "3,2", "3,4", "3,5", "1,7"]}, {"ID": 138, "Floor": 7, "posBlock": ["1,2", "1,3", "1,6", "2,2", "2,4", "3,1", "3,3", "3,5", "1,7"]}, {"ID": 139, "Floor": 7, "posBlock": ["1,2", "1,3", "1,6", "2,2", "2,3", "2,6", "3,3", "3,5", "1,7"]}, {"ID": 140, "Floor": 7, "posBlock": ["1,1", "1,4", "1,5", "2,2", "2,3", "2,5", "3,3", "3,6", "1,7"]}, {"ID": 141, "Floor": 8, "posBlock": ["1,1", "1,4", "1,5", "2,1", "2,4", "2,5", "3,2", "3,4", "3,6", "1,7"]}, {"ID": 142, "Floor": 8, "posBlock": ["1,2", "1,4", "1,5", "2,1", "2,3", "2,6", "3,1", "3,4", "3,6", "3,7"]}, {"ID": 143, "Floor": 8, "posBlock": ["1,2", "1,3", "1,6", "2,1", "2,3", "2,6", "3,2", "3,3", "3,6", "2,7"]}, {"ID": 144, "Floor": 8, "posBlock": ["1,2", "1,4", "1,5", "2,1", "2,4", "2,6", "3,2", "3,3", "3,6", "3,7"]}, {"ID": 145, "Floor": 8, "posBlock": ["1,1", "1,4", "1,6", "2,2", "2,4", "2,6", "3,2", "3,4", "3,6", "2,7"]}, {"ID": 146, "Floor": 8, "posBlock": ["1,1", "1,3", "1,6", "2,2", "2,4", "2,6", "3,1", "3,3", "3,6", "1,7"]}, {"ID": 147, "Floor": 8, "posBlock": ["1,1", "1,4", "1,5", "2,2", "2,4", "2,6", "3,2", "3,4", "3,6", "3,7"]}, {"ID": 148, "Floor": 8, "posBlock": ["1,1", "1,4", "1,6", "2,2", "2,3", "2,6", "3,2", "3,3", "3,5", "2,7"]}, {"ID": 149, "Floor": 8, "posBlock": ["1,1", "1,3", "1,6", "2,2", "2,4", "2,6", "3,1", "3,4", "3,5", "3,7"]}, {"ID": 150, "Floor": 8, "posBlock": ["1,1", "1,4", "1,6", "2,1", "2,3", "2,5", "3,1", "3,3", "3,5", "1,7"]}, {"ID": 151, "Floor": 8, "posBlock": ["1,2", "1,4", "1,5", "2,1", "2,4", "2,6", "3,2", "3,4", "3,5", "1,7"]}, {"ID": 152, "Floor": 8, "posBlock": ["1,1", "1,3", "1,5", "2,2", "2,4", "2,5", "3,1", "3,4", "3,5", "2,7"]}, {"ID": 153, "Floor": 8, "posBlock": ["1,2", "1,4", "1,5", "2,2", "2,4", "2,6", "3,2", "3,3", "3,6", "3,7"]}, {"ID": 154, "Floor": 8, "posBlock": ["1,2", "1,3", "1,5", "2,1", "2,3", "2,6", "3,2", "3,3", "3,5", "3,7"]}, {"ID": 155, "Floor": 8, "posBlock": ["1,2", "1,3", "1,6", "2,2", "2,4", "2,5", "3,1", "3,3", "3,5", "3,7"]}, {"ID": 156, "Floor": 8, "posBlock": ["1,2", "1,4", "1,5", "2,2", "2,3", "2,5", "3,1", "3,4", "3,5", "2,7"]}, {"ID": 157, "Floor": 8, "posBlock": ["1,1", "1,3", "1,5", "2,1", "2,4", "2,5", "3,2", "3,3", "3,6", "2,7"]}, {"ID": 158, "Floor": 8, "posBlock": ["1,1", "1,4", "1,6", "2,2", "2,4", "2,6", "3,1", "3,4", "3,6", "2,7"]}, {"ID": 159, "Floor": 8, "posBlock": ["1,2", "1,4", "1,6", "2,1", "2,4", "2,5", "3,2", "3,3", "3,5", "1,7"]}, {"ID": 160, "Floor": 8, "posBlock": ["1,1", "1,3", "1,5", "2,2", "2,4", "2,6", "3,1", "3,4", "3,6", "2,7"]}, {"ID": 161, "Floor": 9, "posBlock": ["1,1", "1,3", "1,5", "2,1", "2,4", "2,5", "3,2", "3,3", "3,5", "1,7", "2,7"]}, {"ID": 162, "Floor": 9, "posBlock": ["1,2", "1,3", "1,6", "2,2", "2,3", "2,5", "3,1", "3,4", "3,6", "1,7", "2,7"]}, {"ID": 163, "Floor": 9, "posBlock": ["1,2", "1,4", "1,6", "2,1", "2,3", "2,6", "3,2", "3,3", "3,6", "3,7", "2,7"]}, {"ID": 164, "Floor": 9, "posBlock": ["1,2", "1,3", "1,6", "2,2", "2,4", "2,5", "3,1", "3,4", "3,5", "3,7", "2,7"]}, {"ID": 165, "Floor": 9, "posBlock": ["1,2", "1,3", "1,6", "2,1", "2,4", "2,5", "3,2", "3,3", "3,5", "1,7", "2,7"]}, {"ID": 166, "Floor": 9, "posBlock": ["1,1", "1,3", "1,6", "2,2", "2,3", "2,6", "3,1", "3,4", "3,5", "1,7", "2,7"]}, {"ID": 167, "Floor": 9, "posBlock": ["1,2", "1,3", "1,5", "2,2", "2,4", "2,5", "3,2", "3,4", "3,6", "1,7", "2,7"]}, {"ID": 168, "Floor": 9, "posBlock": ["1,1", "1,3", "1,5", "2,1", "2,4", "2,5", "3,2", "3,4", "3,5", "3,7", "2,7"]}, {"ID": 169, "Floor": 9, "posBlock": ["1,1", "1,4", "1,6", "2,2", "2,3", "2,5", "3,2", "3,3", "3,5", "1,7", "2,7"]}, {"ID": 170, "Floor": 9, "posBlock": ["1,1", "1,3", "1,5", "2,1", "2,3", "2,5", "3,1", "3,3", "3,6", "1,7", "2,7"]}, {"ID": 171, "Floor": 9, "posBlock": ["1,1", "1,4", "1,5", "2,1", "2,4", "2,6", "3,1", "3,4", "3,5", "1,7", "2,7"]}, {"ID": 172, "Floor": 9, "posBlock": ["1,2", "1,3", "1,6", "2,1", "2,4", "2,5", "3,1", "3,4", "3,6", "3,7", "2,7"]}, {"ID": 173, "Floor": 9, "posBlock": ["1,2", "1,4", "1,5", "2,2", "2,3", "2,5", "3,2", "3,3", "3,6", "3,7", "2,7"]}, {"ID": 174, "Floor": 9, "posBlock": ["1,1", "1,3", "1,5", "2,1", "2,3", "2,6", "3,2", "3,3", "3,5", "3,7", "2,7"]}, {"ID": 175, "Floor": 9, "posBlock": ["1,1", "1,3", "1,5", "2,2", "2,4", "2,6", "3,2", "3,4", "3,6", "3,7", "2,7"]}, {"ID": 176, "Floor": 9, "posBlock": ["1,1", "1,3", "1,5", "2,1", "2,3", "2,6", "3,1", "3,4", "3,5", "1,7", "2,7"]}, {"ID": 177, "Floor": 9, "posBlock": ["1,2", "1,3", "1,6", "2,1", "2,3", "2,5", "3,1", "3,4", "3,5", "3,7", "2,7"]}, {"ID": 178, "Floor": 9, "posBlock": ["1,2", "1,4", "1,6", "2,2", "2,4", "2,5", "3,2", "3,3", "3,5", "1,7", "2,7"]}, {"ID": 179, "Floor": 9, "posBlock": ["1,2", "1,3", "1,5", "2,1", "2,4", "2,6", "3,1", "3,3", "3,5", "1,7", "2,7"]}, {"ID": 180, "Floor": 9, "posBlock": ["1,1", "1,3", "1,5", "2,1", "2,3", "2,6", "3,2", "3,4", "3,5", "3,7", "2,7"]}, {"ID": 181, "Floor": 10, "posBlock": ["1,1", "1,2", "2,3", "2,4", "2,5", "2,6", "2,7", "3,1", "3,2", "3,4", "3,5", "3,6"]}, {"ID": 182, "Floor": 10, "posBlock": ["2,1", "1,2", "1,3", "1,4", "1,5", "1,6", "2,7", "2,2", "3,2", "3,4", "3,5", "3,6"]}, {"ID": 183, "Floor": 10, "posBlock": ["2,1", "1,2", "2,3", "1,4", "2,5", "2,6", "1,7", "3,1", "3,2", "3,3", "3,5", "3,6"]}, {"ID": 184, "Floor": 10, "posBlock": ["1,1", "1,2", "2,3", "2,4", "2,5", "1,6", "2,7", "2,2", "3,2", "3,4", "3,5", "3,7"]}, {"ID": 185, "Floor": 10, "posBlock": ["1,1", "1,2", "2,3", "2,4", "2,5", "1,6", "1,7", "2,2", "3,2", "3,3", "3,5", "3,7"]}, {"ID": 186, "Floor": 10, "posBlock": ["2,1", "1,2", "1,3", "1,4", "2,5", "1,6", "1,7", "3,1", "3,2", "3,3", "3,5", "3,7"]}, {"ID": 187, "Floor": 10, "posBlock": ["2,1", "1,2", "1,3", "2,4", "1,5", "2,6", "1,7", "2,2", "3,2", "3,4", "3,5", "3,7"]}, {"ID": 188, "Floor": 10, "posBlock": ["2,1", "1,2", "2,3", "2,4", "2,5", "1,6", "2,7", "2,2", "3,2", "3,3", "3,5", "3,6"]}, {"ID": 189, "Floor": 10, "posBlock": ["1,1", "1,2", "2,3", "2,4", "1,5", "1,6", "1,7", "2,2", "3,2", "3,4", "3,5", "3,7"]}, {"ID": 190, "Floor": 10, "posBlock": ["2,1", "1,2", "2,3", "1,4", "1,5", "1,6", "2,7", "3,1", "3,2", "3,4", "3,5", "3,7"]}, {"ID": 191, "Floor": 10, "posBlock": ["2,1", "1,2", "1,3", "1,4", "2,5", "1,6", "2,7", "2,2", "3,2", "3,3", "3,5", "3,7"]}, {"ID": 192, "Floor": 10, "posBlock": ["2,1", "1,2", "1,3", "2,4", "1,5", "1,6", "1,7", "2,2", "3,2", "3,4", "3,5", "3,6"]}, {"ID": 193, "Floor": 10, "posBlock": ["2,1", "1,2", "2,3", "1,4", "2,5", "2,6", "1,7", "3,1", "3,2", "3,3", "3,5", "3,7"]}, {"ID": 194, "Floor": 10, "posBlock": ["1,1", "1,2", "1,3", "2,4", "2,5", "1,6", "1,7", "3,1", "3,2", "3,4", "3,5", "3,7"]}, {"ID": 195, "Floor": 10, "posBlock": ["2,1", "1,2", "2,3", "1,4", "1,5", "1,6", "1,7", "3,1", "3,2", "3,4", "3,5", "3,6"]}, {"ID": 196, "Floor": 10, "posBlock": ["1,1", "1,2", "2,3", "1,4", "1,5", "2,6", "2,7", "2,2", "3,2", "3,3", "3,5", "3,7"]}, {"ID": 197, "Floor": 10, "posBlock": ["1,1", "1,2", "1,3", "1,4", "1,5", "1,6", "1,7", "3,1", "3,2", "3,4", "3,5", "3,7"]}, {"ID": 198, "Floor": 10, "posBlock": ["1,1", "1,2", "1,3", "1,4", "2,5", "2,6", "2,7", "3,1", "3,2", "3,4", "3,5", "3,7"]}, {"ID": 199, "Floor": 10, "posBlock": ["2,1", "1,2", "2,3", "1,4", "2,5", "1,6", "1,7", "2,2", "3,2", "3,3", "3,5", "3,6"]}, {"ID": 200, "Floor": 10, "posBlock": ["2,1", "1,2", "2,3", "1,4", "1,5", "2,6", "2,7", "2,2", "3,2", "3,4", "3,5", "3,6"]}], "Symbol": [{"ID": 1, "AnswerMin": 1, "AnswerMax": 9, "Form": 2, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 2, "AnswerMin": 1, "AnswerMax": 9, "Form": 2, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 3, "AnswerMin": 1, "AnswerMax": 9, "Form": 2, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 4, "AnswerMin": 1, "AnswerMax": 11, "Form": 2, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 5, "AnswerMin": 6, "AnswerMax": 16, "Form": 2, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 6, "AnswerMin": 6, "AnswerMax": 16, "Form": 2, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 7, "AnswerMin": 6, "AnswerMax": 18, "Form": 2, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 8, "AnswerMin": 6, "AnswerMax": 18, "Form": 2, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 9, "AnswerMin": 11, "AnswerMax": 23, "Form": 2, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 10, "AnswerMin": 11, "AnswerMax": 25, "Form": 2, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 11, "AnswerMin": 11, "AnswerMax": 25, "Form": 2, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 12, "AnswerMin": 11, "AnswerMax": 25, "Form": 2, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 13, "AnswerMin": 16, "AnswerMax": 32, "Form": 2, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 14, "AnswerMin": 16, "AnswerMax": 32, "Form": 2, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 15, "AnswerMin": 16, "AnswerMax": 32, "Form": 2, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 16, "AnswerMin": 5, "AnswerMax": 29, "Form": 0, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 17, "AnswerMin": 8, "AnswerMax": 32, "Form": 0, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 18, "AnswerMin": 11, "AnswerMax": 35, "Form": 0, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 19, "AnswerMin": 14, "AnswerMax": 38, "Form": 0, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 20, "AnswerMin": 17, "AnswerMax": 41, "Form": 0, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 21, "AnswerMin": 20, "AnswerMax": 44, "Form": 0, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 22, "AnswerMin": 23, "AnswerMax": 47, "Form": 0, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 23, "AnswerMin": 26, "AnswerMax": 50, "Form": 0, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 24, "AnswerMin": 29, "AnswerMax": 53, "Form": 0, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 25, "AnswerMin": 32, "AnswerMax": 56, "Form": 0, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 26, "AnswerMin": 35, "AnswerMax": 59, "Form": 0, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 27, "AnswerMin": 38, "AnswerMax": 62, "Form": 0, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 28, "AnswerMin": 41, "AnswerMax": 65, "Form": 0, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 29, "AnswerMin": 44, "AnswerMax": 68, "Form": 0, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 30, "AnswerMin": 47, "AnswerMax": 71, "Form": 0, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 31, "AnswerMin": 0.1, "AnswerMax": 20, "Form": 1, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 32, "AnswerMin": 2.1, "AnswerMax": 22, "Form": 1, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 33, "AnswerMin": 4.1, "AnswerMax": 24, "Form": 1, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 34, "AnswerMin": 6.1, "AnswerMax": 26, "Form": 1, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 35, "AnswerMin": 8.1, "AnswerMax": 28, "Form": 1, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 36, "AnswerMin": 10.1, "AnswerMax": 30, "Form": 1, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 37, "AnswerMin": 12.1, "AnswerMax": 32, "Form": 1, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 38, "AnswerMin": 14.1, "AnswerMax": 34, "Form": 1, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 39, "AnswerMin": 16.1, "AnswerMax": 36, "Form": 1, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 40, "AnswerMin": 18.1, "AnswerMax": 38, "Form": 1, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 41, "AnswerMin": 20.1, "AnswerMax": 40, "Form": 1, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 42, "AnswerMin": 22.1, "AnswerMax": 42, "Form": 1, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 43, "AnswerMin": 24.1, "AnswerMax": 44, "Form": 1, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 44, "AnswerMin": 26.1, "AnswerMax": 46, "Form": 1, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 45, "AnswerMin": 28.1, "AnswerMax": 48, "Form": 1, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 46, "AnswerMin": 10, "AnswerMax": 45, "Form": 2, "Symbol1": 1, "Min": 1, "Max": 9}, {"ID": 47, "AnswerMin": 13, "AnswerMax": 48, "Form": 2, "Symbol1": 1, "Min": 1, "Max": 9}, {"ID": 48, "AnswerMin": 16, "AnswerMax": 51, "Form": 2, "Symbol1": 1, "Min": 1, "Max": 10}, {"ID": 49, "AnswerMin": 19, "AnswerMax": 54, "Form": 2, "Symbol1": 1, "Min": 1, "Max": 10}, {"ID": 50, "AnswerMin": 22, "AnswerMax": 57, "Form": 2, "Symbol1": 1, "Min": 1, "Max": 11}, {"ID": 51, "AnswerMin": 25, "AnswerMax": 60, "Form": 2, "Symbol1": 1, "Min": 2, "Max": 11}, {"ID": 52, "AnswerMin": 28, "AnswerMax": 63, "Form": 2, "Symbol1": 1, "Min": 2, "Max": 12}, {"ID": 53, "AnswerMin": 31, "AnswerMax": 66, "Form": 2, "Symbol1": 1, "Min": 2, "Max": 12}, {"ID": 54, "AnswerMin": 34, "AnswerMax": 69, "Form": 2, "Symbol1": 1, "Min": 2, "Max": 13}, {"ID": 55, "AnswerMin": 37, "AnswerMax": 72, "Form": 2, "Symbol1": 1, "Min": 2, "Max": 13}, {"ID": 56, "AnswerMin": 40, "AnswerMax": 75, "Form": 2, "Symbol1": 1, "Min": 3, "Max": 14}, {"ID": 57, "AnswerMin": 43, "AnswerMax": 78, "Form": 2, "Symbol1": 1, "Min": 3, "Max": 14}, {"ID": 58, "AnswerMin": 46, "AnswerMax": 81, "Form": 2, "Symbol1": 1, "Min": 3, "Max": 15}, {"ID": 59, "AnswerMin": 49, "AnswerMax": 84, "Form": 2, "Symbol1": 1, "Min": 3, "Max": 15}, {"ID": 60, "AnswerMin": 52, "AnswerMax": 87, "Form": 2, "Symbol1": 1, "Min": 3, "Max": 16}, {"ID": 61, "AnswerMin": 5, "AnswerMax": 47, "Form": 2, "Symbol1": 2, "Min": 2, "Max": 12}, {"ID": 62, "AnswerMin": 8, "AnswerMax": 50, "Form": 2, "Symbol1": 2, "Min": 2, "Max": 12}, {"ID": 63, "AnswerMin": 11, "AnswerMax": 53, "Form": 2, "Symbol1": 2, "Min": 2, "Max": 13}, {"ID": 64, "AnswerMin": 14, "AnswerMax": 56, "Form": 2, "Symbol1": 2, "Min": 2, "Max": 13}, {"ID": 65, "AnswerMin": 17, "AnswerMax": 59, "Form": 2, "Symbol1": 2, "Min": 2, "Max": 14}, {"ID": 66, "AnswerMin": 20, "AnswerMax": 62, "Form": 2, "Symbol1": 2, "Min": 3, "Max": 14}, {"ID": 67, "AnswerMin": 23, "AnswerMax": 65, "Form": 2, "Symbol1": 2, "Min": 3, "Max": 15}, {"ID": 68, "AnswerMin": 26, "AnswerMax": 68, "Form": 2, "Symbol1": 2, "Min": 3, "Max": 15}, {"ID": 69, "AnswerMin": 29, "AnswerMax": 71, "Form": 2, "Symbol1": 2, "Min": 3, "Max": 16}, {"ID": 70, "AnswerMin": 32, "AnswerMax": 74, "Form": 2, "Symbol1": 2, "Min": 3, "Max": 16}, {"ID": 71, "AnswerMin": 35, "AnswerMax": 77, "Form": 2, "Symbol1": 2, "Min": 4, "Max": 17}, {"ID": 72, "AnswerMin": 38, "AnswerMax": 80, "Form": 2, "Symbol1": 2, "Min": 4, "Max": 17}, {"ID": 73, "AnswerMin": 41, "AnswerMax": 83, "Form": 2, "Symbol1": 2, "Min": 4, "Max": 18}, {"ID": 74, "AnswerMin": 44, "AnswerMax": 86, "Form": 2, "Symbol1": 2, "Min": 4, "Max": 18}, {"ID": 75, "AnswerMin": 47, "AnswerMax": 89, "Form": 2, "Symbol1": 2, "Min": 4, "Max": 19}, {"ID": 76, "AnswerMin": -20, "AnswerMax": -1, "Form": 3, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 77, "AnswerMin": -28, "AnswerMax": -3, "Form": 3, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 78, "AnswerMin": -36, "AnswerMax": -5, "Form": 3, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 79, "AnswerMin": -44, "AnswerMax": -7, "Form": 3, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 80, "AnswerMin": -52, "AnswerMax": -9, "Form": 3, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 81, "AnswerMin": -60, "AnswerMax": -11, "Form": 3, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 82, "AnswerMin": -68, "AnswerMax": -13, "Form": 3, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 83, "AnswerMin": -76, "AnswerMax": -15, "Form": 3, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 84, "AnswerMin": -84, "AnswerMax": -17, "Form": 3, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 85, "AnswerMin": -92, "AnswerMax": -19, "Form": 3, "Symbol1": 0, "Min": 0, "Max": 0}, {"ID": 86, "AnswerMin": -24, "AnswerMax": 24, "Form": 0, "Symbol1": 1, "Min": 3, "Max": 14}, {"ID": 87, "AnswerMin": -30, "AnswerMax": 30, "Form": 0, "Symbol1": 2, "Min": 3, "Max": 15}, {"ID": 88, "AnswerMin": -36, "AnswerMax": 36, "Form": 0, "Symbol1": 1, "Min": 3, "Max": 16}, {"ID": 89, "AnswerMin": -42, "AnswerMax": 42, "Form": 0, "Symbol1": 2, "Min": 3, "Max": 17}, {"ID": 90, "AnswerMin": -48, "AnswerMax": 48, "Form": 0, "Symbol1": 1, "Min": 4, "Max": 18}, {"ID": 91, "AnswerMin": -54, "AnswerMax": 54, "Form": 0, "Symbol1": 2, "Min": 4, "Max": 19}, {"ID": 92, "AnswerMin": -60, "AnswerMax": 60, "Form": 0, "Symbol1": 1, "Min": 4, "Max": 20}, {"ID": 93, "AnswerMin": -66, "AnswerMax": 66, "Form": 0, "Symbol1": 2, "Min": 4, "Max": 21}, {"ID": 94, "AnswerMin": -72, "AnswerMax": 72, "Form": 0, "Symbol1": 1, "Min": 5, "Max": 22}, {"ID": 95, "AnswerMin": -78, "AnswerMax": 78, "Form": 0, "Symbol1": 2, "Min": 5, "Max": 23}, {"ID": 96, "AnswerMin": -84, "AnswerMax": 84, "Form": 0, "Symbol1": 1, "Min": 5, "Max": 24}, {"ID": 97, "AnswerMin": -90, "AnswerMax": 90, "Form": 0, "Symbol1": 2, "Min": 5, "Max": 25}, {"ID": 98, "AnswerMin": -96, "AnswerMax": 96, "Form": 0, "Symbol1": 1, "Min": 6, "Max": 26}, {"ID": 99, "AnswerMin": -102, "AnswerMax": 102, "Form": 0, "Symbol1": 2, "Min": 6, "Max": 27}, {"ID": 100, "AnswerMin": -108, "AnswerMax": 108, "Form": 0, "Symbol1": 1, "Min": 6, "Max": 28}], "Level": [{"ID": 1, "Level": 1, "TotalNum": 3, "Blocks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], "SymbolNumber": 1, "BubbleNumber": 3, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 20, "Brains": 50, "Score": 100, "Scores": 10, "Reward": 1, "RewardNum": 1, "Limit": 1}, {"ID": 2, "Level": 2, "TotalNum": 3, "Blocks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], "SymbolNumber": 2, "BubbleNumber": 3, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 20, "Brains": 53, "Score": 105, "Scores": 10, "Reward": 1, "RewardNum": 1, "Limit": 1}, {"ID": 3, "Level": 3, "TotalNum": 3, "Blocks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], "SymbolNumber": 3, "BubbleNumber": 3, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 20, "Brains": 56, "Score": 110, "Scores": 10, "Reward": 1, "RewardNum": 1, "Limit": 1}, {"ID": 4, "Level": 4, "TotalNum": 3, "Blocks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], "SymbolNumber": 4, "BubbleNumber": 3, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 20, "Brains": 60, "Score": 115, "Scores": 10, "Reward": 1, "RewardNum": 1, "Limit": 1}, {"ID": 5, "Level": 5, "TotalNum": 3, "Blocks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], "SymbolNumber": 5, "BubbleNumber": 3, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 20, "Brains": 64, "Score": 120, "Scores": 10, "Reward": 1, "RewardNum": 1, "Limit": 1}, {"ID": 6, "Level": 6, "TotalNum": 3, "Blocks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], "SymbolNumber": 6, "BubbleNumber": 3, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 20, "Brains": 68, "Score": 135, "Scores": 11, "Reward": 1, "RewardNum": 1, "Limit": 1}, {"ID": 7, "Level": 7, "TotalNum": 3, "Blocks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], "SymbolNumber": 7, "BubbleNumber": 3, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 20, "Brains": 72, "Score": 140, "Scores": 11, "Reward": 1, "RewardNum": 1, "Limit": 1}, {"ID": 8, "Level": 8, "TotalNum": 3, "Blocks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], "SymbolNumber": 8, "BubbleNumber": 3, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 20, "Brains": 76, "Score": 145, "Scores": 11, "Reward": 1, "RewardNum": 1, "Limit": 1}, {"ID": 9, "Level": 9, "TotalNum": 3, "Blocks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], "SymbolNumber": 9, "BubbleNumber": 3, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 20, "Brains": 82, "Score": 150, "Scores": 11, "Reward": 1, "RewardNum": 1, "Limit": 1}, {"ID": 10, "Level": 10, "TotalNum": 3, "Blocks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], "SymbolNumber": 10, "BubbleNumber": 3, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 20, "Brains": 87, "Score": 155, "Scores": 11, "Reward": 1, "RewardNum": 1, "Limit": 1}, {"ID": 11, "Level": 11, "TotalNum": 4, "Blocks": [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40], "SymbolNumber": 11, "BubbleNumber": 4, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 22, "Brains": 92, "Score": 170, "Scores": 12, "Reward": 1, "RewardNum": 1, "Limit": 1}, {"ID": 12, "Level": 12, "TotalNum": 4, "Blocks": [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40], "SymbolNumber": 12, "BubbleNumber": 4, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 22, "Brains": 97, "Score": 175, "Scores": 12, "Reward": 1, "RewardNum": 1, "Limit": 1}, {"ID": 13, "Level": 13, "TotalNum": 4, "Blocks": [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40], "SymbolNumber": 13, "BubbleNumber": 4, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 22, "Brains": 102, "Score": 180, "Scores": 12, "Reward": 1, "RewardNum": 1, "Limit": 1}, {"ID": 14, "Level": 14, "TotalNum": 4, "Blocks": [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40], "SymbolNumber": 14, "BubbleNumber": 4, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 22, "Brains": 107, "Score": 185, "Scores": 12, "Reward": 1, "RewardNum": 1, "Limit": 1}, {"ID": 15, "Level": 15, "TotalNum": 4, "Blocks": [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40], "SymbolNumber": 15, "BubbleNumber": 4, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 22, "Brains": 115, "Score": 190, "Scores": 12, "Reward": 1, "RewardNum": 1, "Limit": 1}, {"ID": 16, "Level": 16, "TotalNum": 4, "Blocks": [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40], "SymbolNumber": 16, "BubbleNumber": 4, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 22, "Brains": 121, "Score": 205, "Scores": 13, "Reward": 1, "RewardNum": 1, "Limit": 1}, {"ID": 17, "Level": 17, "TotalNum": 4, "Blocks": [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40], "SymbolNumber": 17, "BubbleNumber": 4, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 22, "Brains": 127, "Score": 210, "Scores": 13, "Reward": 1, "RewardNum": 2, "Limit": 4}, {"ID": 18, "Level": 18, "TotalNum": 4, "Blocks": [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40], "SymbolNumber": 18, "BubbleNumber": 4, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 22, "Brains": 133, "Score": 215, "Scores": 13, "Reward": 1, "RewardNum": 2, "Limit": 4}, {"ID": 19, "Level": 19, "TotalNum": 4, "Blocks": [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40], "SymbolNumber": 19, "BubbleNumber": 4, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 22, "Brains": 139, "Score": 220, "Scores": 13, "Reward": 1, "RewardNum": 2, "Limit": 4}, {"ID": 20, "Level": 20, "TotalNum": 4, "Blocks": [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40], "SymbolNumber": 20, "BubbleNumber": 4, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 22, "Brains": 145, "Score": 225, "Scores": 13, "Reward": 1, "RewardNum": 2, "Limit": 4}, {"ID": 21, "Level": 21, "TotalNum": 4, "Blocks": [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40], "SymbolNumber": 21, "BubbleNumber": 4, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 22, "Brains": 155, "Score": 240, "Scores": 14, "Reward": 1, "RewardNum": 2, "Limit": 4}, {"ID": 22, "Level": 22, "TotalNum": 4, "Blocks": [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40], "SymbolNumber": 22, "BubbleNumber": 4, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 22, "Brains": 162, "Score": 245, "Scores": 14, "Reward": 1, "RewardNum": 2, "Limit": 4}, {"ID": 23, "Level": 23, "TotalNum": 4, "Blocks": [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40], "SymbolNumber": 23, "BubbleNumber": 4, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 22, "Brains": 169, "Score": 250, "Scores": 14, "Reward": 1, "RewardNum": 2, "Limit": 4}, {"ID": 24, "Level": 24, "TotalNum": 4, "Blocks": [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40], "SymbolNumber": 24, "BubbleNumber": 4, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 22, "Brains": 176, "Score": 255, "Scores": 14, "Reward": 1, "RewardNum": 2, "Limit": 4}, {"ID": 25, "Level": 25, "TotalNum": 4, "Blocks": [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40], "SymbolNumber": 25, "BubbleNumber": 4, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 22, "Brains": 183, "Score": 260, "Scores": 14, "Reward": 1, "RewardNum": 2, "Limit": 4}, {"ID": 26, "Level": 26, "TotalNum": 5, "Blocks": [41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60], "SymbolNumber": 26, "BubbleNumber": 5, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 25, "Brains": 190, "Score": 275, "Scores": 15, "Reward": 1, "RewardNum": 2, "Limit": 4}, {"ID": 27, "Level": 27, "TotalNum": 5, "Blocks": [41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60], "SymbolNumber": 27, "BubbleNumber": 5, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 25, "Brains": 197, "Score": 280, "Scores": 15, "Reward": 1, "RewardNum": 2, "Limit": 4}, {"ID": 28, "Level": 28, "TotalNum": 5, "Blocks": [41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60], "SymbolNumber": 28, "BubbleNumber": 5, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 25, "Brains": 204, "Score": 285, "Scores": 15, "Reward": 1, "RewardNum": 2, "Limit": 4}, {"ID": 29, "Level": 29, "TotalNum": 5, "Blocks": [41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60], "SymbolNumber": 29, "BubbleNumber": 5, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 25, "Brains": 211, "Score": 290, "Scores": 15, "Reward": 1, "RewardNum": 2, "Limit": 4}, {"ID": 30, "Level": 30, "TotalNum": 5, "Blocks": [41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60], "SymbolNumber": 30, "BubbleNumber": 5, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 25, "Brains": 218, "Score": 295, "Scores": 15, "Reward": 1, "RewardNum": 2, "Limit": 4}, {"ID": 31, "Level": 31, "TotalNum": 5, "Blocks": [41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60], "SymbolNumber": 31, "BubbleNumber": 5, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 25, "Brains": 228, "Score": 310, "Scores": 16, "Reward": 1, "RewardNum": 2, "Limit": 4}, {"ID": 32, "Level": 32, "TotalNum": 5, "Blocks": [41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60], "SymbolNumber": 32, "BubbleNumber": 5, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 25, "Brains": 236, "Score": 315, "Scores": 16, "Reward": 1, "RewardNum": 2, "Limit": 4}, {"ID": 33, "Level": 33, "TotalNum": 5, "Blocks": [41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60], "SymbolNumber": 33, "BubbleNumber": 5, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 25, "Brains": 244, "Score": 320, "Scores": 16, "Reward": 1, "RewardNum": 2, "Limit": 4}, {"ID": 34, "Level": 34, "TotalNum": 5, "Blocks": [41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60], "SymbolNumber": 34, "BubbleNumber": 5, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 25, "Brains": 252, "Score": 325, "Scores": 16, "Reward": 1, "RewardNum": 2, "Limit": 4}, {"ID": 35, "Level": 35, "TotalNum": 5, "Blocks": [41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60], "SymbolNumber": 35, "BubbleNumber": 5, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 25, "Brains": 260, "Score": 330, "Scores": 16, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 36, "Level": 36, "TotalNum": 5, "Blocks": [41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60], "SymbolNumber": 36, "BubbleNumber": 5, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 25, "Brains": 268, "Score": 345, "Scores": 17, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 37, "Level": 37, "TotalNum": 5, "Blocks": [41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60], "SymbolNumber": 37, "BubbleNumber": 5, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 25, "Brains": 276, "Score": 350, "Scores": 17, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 38, "Level": 38, "TotalNum": 5, "Blocks": [41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60], "SymbolNumber": 38, "BubbleNumber": 5, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 25, "Brains": 283, "Score": 355, "Scores": 17, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 39, "Level": 39, "TotalNum": 5, "Blocks": [41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60], "SymbolNumber": 39, "BubbleNumber": 5, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 25, "Brains": 292, "Score": 360, "Scores": 17, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 40, "Level": 40, "TotalNum": 5, "Blocks": [41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60], "SymbolNumber": 40, "BubbleNumber": 5, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 25, "Brains": 300, "Score": 365, "Scores": 17, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 41, "Level": 41, "TotalNum": 6, "Blocks": [61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80], "SymbolNumber": 41, "BubbleNumber": 6, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 28, "Brains": 320, "Score": 380, "Scores": 18, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 42, "Level": 42, "TotalNum": 6, "Blocks": [61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80], "SymbolNumber": 42, "BubbleNumber": 6, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 28, "Brains": 330, "Score": 385, "Scores": 18, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 43, "Level": 43, "TotalNum": 6, "Blocks": [61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80], "SymbolNumber": 43, "BubbleNumber": 6, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 28, "Brains": 340, "Score": 390, "Scores": 18, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 44, "Level": 44, "TotalNum": 6, "Blocks": [61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80], "SymbolNumber": 44, "BubbleNumber": 6, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 28, "Brains": 350, "Score": 395, "Scores": 18, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 45, "Level": 45, "TotalNum": 6, "Blocks": [61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80], "SymbolNumber": 45, "BubbleNumber": 6, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 28, "Brains": 360, "Score": 400, "Scores": 18, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 46, "Level": 46, "TotalNum": 6, "Blocks": [61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80], "SymbolNumber": 46, "BubbleNumber": 6, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 28, "Brains": 370, "Score": 415, "Scores": 19, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 47, "Level": 47, "TotalNum": 6, "Blocks": [61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80], "SymbolNumber": 47, "BubbleNumber": 6, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 28, "Brains": 380, "Score": 420, "Scores": 19, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 48, "Level": 48, "TotalNum": 6, "Blocks": [61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80], "SymbolNumber": 48, "BubbleNumber": 6, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 28, "Brains": 390, "Score": 425, "Scores": 19, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 49, "Level": 49, "TotalNum": 6, "Blocks": [61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80], "SymbolNumber": 49, "BubbleNumber": 6, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 28, "Brains": 400, "Score": 430, "Scores": 19, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 50, "Level": 50, "TotalNum": 6, "Blocks": [61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80], "SymbolNumber": 50, "BubbleNumber": 6, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 28, "Brains": 410, "Score": 435, "Scores": 19, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 51, "Level": 51, "TotalNum": 6, "Blocks": [61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80], "SymbolNumber": 51, "BubbleNumber": 6, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 28, "Brains": 420, "Score": 450, "Scores": 20, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 52, "Level": 52, "TotalNum": 6, "Blocks": [61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80], "SymbolNumber": 52, "BubbleNumber": 6, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 28, "Brains": 430, "Score": 455, "Scores": 20, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 53, "Level": 53, "TotalNum": 6, "Blocks": [61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80], "SymbolNumber": 53, "BubbleNumber": 6, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 28, "Brains": 440, "Score": 460, "Scores": 20, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 54, "Level": 54, "TotalNum": 6, "Blocks": [61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80], "SymbolNumber": 54, "BubbleNumber": 6, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 28, "Brains": 450, "Score": 465, "Scores": 20, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 55, "Level": 55, "TotalNum": 6, "Blocks": [61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80], "SymbolNumber": 55, "BubbleNumber": 6, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 28, "Brains": 460, "Score": 470, "Scores": 20, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 56, "Level": 56, "TotalNum": 6, "Blocks": [61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80], "SymbolNumber": 56, "BubbleNumber": 6, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 28, "Brains": 470, "Score": 485, "Scores": 21, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 57, "Level": 57, "TotalNum": 6, "Blocks": [61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80], "SymbolNumber": 57, "BubbleNumber": 6, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 28, "Brains": 480, "Score": 490, "Scores": 21, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 58, "Level": 58, "TotalNum": 6, "Blocks": [61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80], "SymbolNumber": 58, "BubbleNumber": 6, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 28, "Brains": 490, "Score": 495, "Scores": 21, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 59, "Level": 59, "TotalNum": 6, "Blocks": [61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80], "SymbolNumber": 59, "BubbleNumber": 6, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 28, "Brains": 500, "Score": 500, "Scores": 21, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 60, "Level": 60, "TotalNum": 6, "Blocks": [61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80], "SymbolNumber": 60, "BubbleNumber": 6, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 28, "Brains": 510, "Score": 505, "Scores": 21, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 61, "Level": 61, "TotalNum": 7, "Blocks": [81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100], "SymbolNumber": 61, "BubbleNumber": 7, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 30, "Brains": 520, "Score": 520, "Scores": 22, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 62, "Level": 62, "TotalNum": 7, "Blocks": [81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100], "SymbolNumber": 62, "BubbleNumber": 7, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 30, "Brains": 530, "Score": 525, "Scores": 22, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 63, "Level": 63, "TotalNum": 7, "Blocks": [81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100], "SymbolNumber": 63, "BubbleNumber": 7, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 30, "Brains": 540, "Score": 530, "Scores": 22, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 64, "Level": 64, "TotalNum": 7, "Blocks": [81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100], "SymbolNumber": 64, "BubbleNumber": 7, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 30, "Brains": 550, "Score": 535, "Scores": 22, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 65, "Level": 65, "TotalNum": 7, "Blocks": [81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100], "SymbolNumber": 65, "BubbleNumber": 7, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 30, "Brains": 560, "Score": 540, "Scores": 22, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 66, "Level": 66, "TotalNum": 7, "Blocks": [81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100], "SymbolNumber": 66, "BubbleNumber": 7, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 30, "Brains": 570, "Score": 555, "Scores": 23, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 67, "Level": 67, "TotalNum": 7, "Blocks": [81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100], "SymbolNumber": 67, "BubbleNumber": 7, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 30, "Brains": 580, "Score": 560, "Scores": 23, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 68, "Level": 68, "TotalNum": 7, "Blocks": [81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100], "SymbolNumber": 68, "BubbleNumber": 7, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 30, "Brains": 590, "Score": 565, "Scores": 23, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 69, "Level": 69, "TotalNum": 7, "Blocks": [81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100], "SymbolNumber": 69, "BubbleNumber": 7, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 30, "Brains": 600, "Score": 570, "Scores": 23, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 70, "Level": 70, "TotalNum": 7, "Blocks": [81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100], "SymbolNumber": 70, "BubbleNumber": 7, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 30, "Brains": 610, "Score": 575, "Scores": 23, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 71, "Level": 71, "TotalNum": 7, "Blocks": [81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100], "SymbolNumber": 71, "BubbleNumber": 7, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 30, "Brains": 620, "Score": 590, "Scores": 24, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 72, "Level": 72, "TotalNum": 7, "Blocks": [81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100], "SymbolNumber": 72, "BubbleNumber": 7, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 30, "Brains": 630, "Score": 595, "Scores": 24, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 73, "Level": 73, "TotalNum": 7, "Blocks": [81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100], "SymbolNumber": 73, "BubbleNumber": 7, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 30, "Brains": 640, "Score": 600, "Scores": 24, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 74, "Level": 74, "TotalNum": 7, "Blocks": [81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100], "SymbolNumber": 74, "BubbleNumber": 7, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 30, "Brains": 650, "Score": 605, "Scores": 24, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 75, "Level": 75, "TotalNum": 7, "Blocks": [81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100], "SymbolNumber": 75, "BubbleNumber": 7, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 30, "Brains": 660, "Score": 610, "Scores": 24, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 76, "Level": 76, "TotalNum": 8, "Blocks": [101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120], "SymbolNumber": 76, "BubbleNumber": 8, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 32, "Brains": 670, "Score": 625, "Scores": 25, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 77, "Level": 77, "TotalNum": 8, "Blocks": [101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120], "SymbolNumber": 77, "BubbleNumber": 8, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 32, "Brains": 680, "Score": 630, "Scores": 25, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 78, "Level": 78, "TotalNum": 8, "Blocks": [101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120], "SymbolNumber": 78, "BubbleNumber": 8, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 32, "Brains": 690, "Score": 635, "Scores": 25, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 79, "Level": 79, "TotalNum": 8, "Blocks": [101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120], "SymbolNumber": 79, "BubbleNumber": 8, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 32, "Brains": 700, "Score": 640, "Scores": 25, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 80, "Level": 80, "TotalNum": 8, "Blocks": [101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120], "SymbolNumber": 80, "BubbleNumber": 8, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 32, "Brains": 710, "Score": 645, "Scores": 25, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 81, "Level": 81, "TotalNum": 8, "Blocks": [101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120], "SymbolNumber": 81, "BubbleNumber": 8, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 32, "Brains": 720, "Score": 660, "Scores": 26, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 82, "Level": 82, "TotalNum": 8, "Blocks": [101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120], "SymbolNumber": 82, "BubbleNumber": 8, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 32, "Brains": 730, "Score": 665, "Scores": 26, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 83, "Level": 83, "TotalNum": 8, "Blocks": [101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120], "SymbolNumber": 83, "BubbleNumber": 8, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 32, "Brains": 740, "Score": 670, "Scores": 26, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 84, "Level": 84, "TotalNum": 8, "Blocks": [101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120], "SymbolNumber": 84, "BubbleNumber": 8, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 32, "Brains": 750, "Score": 675, "Scores": 26, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 85, "Level": 85, "TotalNum": 8, "Blocks": [101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120], "SymbolNumber": 85, "BubbleNumber": 8, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 32, "Brains": 760, "Score": 680, "Scores": 26, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 86, "Level": 86, "TotalNum": 9, "Blocks": [121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140], "SymbolNumber": 86, "BubbleNumber": 9, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 35, "Brains": 770, "Score": 695, "Scores": 27, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 87, "Level": 87, "TotalNum": 9, "Blocks": [121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140], "SymbolNumber": 87, "BubbleNumber": 9, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 35, "Brains": 780, "Score": 700, "Scores": 27, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 88, "Level": 88, "TotalNum": 9, "Blocks": [121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140], "SymbolNumber": 88, "BubbleNumber": 9, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 35, "Brains": 790, "Score": 705, "Scores": 27, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 89, "Level": 89, "TotalNum": 9, "Blocks": [121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140], "SymbolNumber": 89, "BubbleNumber": 9, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 35, "Brains": 800, "Score": 710, "Scores": 27, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 90, "Level": 90, "TotalNum": 9, "Blocks": [121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140], "SymbolNumber": 90, "BubbleNumber": 9, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 35, "Brains": 810, "Score": 715, "Scores": 27, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 91, "Level": 91, "TotalNum": 9, "Blocks": [121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140], "SymbolNumber": 91, "BubbleNumber": 9, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 35, "Brains": 820, "Score": 730, "Scores": 28, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 92, "Level": 92, "TotalNum": 9, "Blocks": [121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140], "SymbolNumber": 92, "BubbleNumber": 9, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 35, "Brains": 830, "Score": 735, "Scores": 28, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 93, "Level": 93, "TotalNum": 9, "Blocks": [121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140], "SymbolNumber": 93, "BubbleNumber": 9, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 35, "Brains": 840, "Score": 740, "Scores": 28, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 94, "Level": 94, "TotalNum": 9, "Blocks": [121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140], "SymbolNumber": 94, "BubbleNumber": 9, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 35, "Brains": 850, "Score": 745, "Scores": 28, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 95, "Level": 95, "TotalNum": 9, "Blocks": [121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140], "SymbolNumber": 95, "BubbleNumber": 9, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 35, "Brains": 860, "Score": 750, "Scores": 28, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 96, "Level": 96, "TotalNum": 10, "Blocks": [141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160], "SymbolNumber": 96, "BubbleNumber": 10, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 38, "Brains": 870, "Score": 765, "Scores": 29, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 97, "Level": 97, "TotalNum": 10, "Blocks": [141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160], "SymbolNumber": 97, "BubbleNumber": 10, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 38, "Brains": 880, "Score": 770, "Scores": 29, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 98, "Level": 98, "TotalNum": 10, "Blocks": [141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160], "SymbolNumber": 98, "BubbleNumber": 10, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 38, "Brains": 890, "Score": 775, "Scores": 29, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 99, "Level": 99, "TotalNum": 10, "Blocks": [141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160], "SymbolNumber": 99, "BubbleNumber": 10, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 38, "Brains": 900, "Score": 780, "Scores": 29, "Reward": 1, "RewardNum": 3, "Limit": 7}, {"ID": 100, "Level": 100, "TotalNum": 10, "Blocks": [141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160], "SymbolNumber": 100, "BubbleNumber": 10, "MissionNum": 5, "MissionPass": 5, "Fault": 0, "Time": 38, "Brains": 910, "Score": 785, "Scores": 29, "Reward": 1, "RewardNum": 3, "Limit": 7}], "Mis": [{"Key": 100, "null": null}]};
+
+const formNames = {0: '整数', 1: '小数', 2: '正数', 3: '负数'};
+const opNames = {0: '单体数字', 1: '加式', 2: '减式'};
+const floorMap = new Map((GAME_DATA.Floor || []).map(x => [Number(x.ID), x]));
+const symbolMap = new Map((GAME_DATA.Symbol || []).map(x => [Number(x.ID), x]));
+const levels = (GAME_DATA.Level || []).slice().sort((a, b) => Number(a.Level) - Number(b.Level));
+const queryParams = new URLSearchParams(window.location.search || '');
+const DIFFICULTIES = [
+  { key: 'easy', label: '容易', startLevel: 1 },
+  { key: 'normal', label: '普通', startLevel: 15 },
+  { key: 'hard', label: '困难', startLevel: 30 }
+];
+function difficultyByKey(key) {
+  const normalized = String(key || '').trim().toLowerCase();
+  return DIFFICULTIES.find(x => x.key === normalized) || DIFFICULTIES[0];
+}
+function levelIndexByLevelNumber(levelNumber) {
+  const target = Number(levelNumber) || 1;
+  const exact = levels.findIndex(x => Number(x.Level) === target);
+  if (exact >= 0) return exact;
+  const next = levels.findIndex(x => Number(x.Level) >= target);
+  return next >= 0 ? next : 0;
+}
+const INITIAL_DIFFICULTY = difficultyByKey(queryParams.get('difficulty') || queryParams.get('mode') || 'easy');
+const INITIAL_START_INDEX = levelIndexByLevelNumber(INITIAL_DIFFICULTY.startLevel);
+function resolveSafeNextUrl(value) {
+  const raw = String(value || '').trim();
+  if (!raw) return '';
+  try {
+    const url = new URL(raw, document.baseURI || window.location.href);
+    if (!['http:', 'https:', 'file:'].includes(url.protocol)) return '';
+    return url.href;
+  } catch (_) {
+    return '';
+  }
+}
+const NEXT_GAME_URL = resolveSafeNextUrl(queryParams.get('next') || '');
+
+let state = {
+  difficulty: INITIAL_DIFFICULTY,
+  startIndex: INITIAL_START_INDEX,
+  levelIndex: INITIAL_START_INDEX,
+  totalScore: 0,
+  levelScores: Array(levels.length).fill(0),
+  statuses: Array(5).fill(null),
+  history: [],
+  current: null,
+  expected: [],
+  generatedItems: [],
+  nextExpectedIndex: 0,
+  remaining: 0,
+  timer: null,
+  pendingTimeouts: [],
+  paused: false,
+  inputLocked: false,
+  roundFinalized: false,
+  lastTickSecond: null,
+  trainingRemaining: levels.slice(INITIAL_START_INDEX).reduce((sum, l) => sum + Number(l.Time || 0), 0),
+  audioCtx: null,
+  muted: false,
+  volume: 0.45,
+  lastFocus: null,
+  seed: queryParams.get('seed') || '',
+  rngState: 0
+};
+
+const $ = (id) => document.getElementById(id);
+const screens = ['welcomeScreen', 'guideScreen', 'choiceScreen', 'gameScreen'];
+const audioSources = {
+  start: 'assets/audio/sfx_start.wav',
+  click: 'assets/audio/sfx_click.wav',
+  correct: 'assets/audio/sfx_correct.wav',
+  wrong: 'assets/audio/sfx_wrong.wav',
+  levelPass: 'assets/audio/sfx_level_pass.wav',
+  end: 'assets/audio/sfx_end.wav',
+  tick: 'assets/audio/sfx_tick.wav'
+};
+const audioFallbackTone = {
+  start: [520, .04],
+  click: [420, .035],
+  correct: [760, .055],
+  wrong: [180, .12],
+  levelPass: [860, .12],
+  end: [360, .18],
+  tick: [640, .035]
+};
+const audioPool = new Map();
+
+function initSeed() {
+  if (!state.seed) return;
+  let h = 2166136261;
+  for (let i = 0; i < state.seed.length; i++) {
+    h ^= state.seed.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  state.rngState = h >>> 0;
+}
+function random() {
+  if (!state.seed) return Math.random();
+  state.rngState = (Math.imul(1664525, state.rngState) + 1013904223) >>> 0;
+  return state.rngState / 4294967296;
+}
+function schedule(fn, delay) {
+  const id = window.setTimeout(() => {
+    state.pendingTimeouts = state.pendingTimeouts.filter(x => x !== id);
+    fn();
+  }, delay);
+  state.pendingTimeouts.push(id);
+  return id;
+}
+function clearPendingTimeouts() {
+  state.pendingTimeouts.forEach(id => clearTimeout(id));
+  state.pendingTimeouts = [];
+}
+function showScreen(id) {
+  screens.forEach(s => $(s).classList.toggle('active', s === id));
+}
+function showModal(title, body, buttons) {
+  state.lastFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  $('modalTitle').textContent = title;
+  $('modalBody').innerHTML = body;
+  const actions = $('modalActions');
+  actions.innerHTML = '';
+  for (const b of buttons) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.textContent = b.text;
+    if (b.secondary) btn.className = 'secondary';
+    btn.addEventListener('click', () => {
+      actions.querySelectorAll('button').forEach(node => { node.disabled = true; });
+      b.onClick();
+    });
+    actions.appendChild(btn);
+  }
+  $('modalBackdrop').classList.add('active');
+  const first = actions.querySelector('button');
+  if (first) first.focus({preventScroll: true});
+}
+function closeModal() {
+  $('modalBackdrop').classList.remove('active');
+  if (state.lastFocus && document.contains(state.lastFocus)) {
+    state.lastFocus.focus({preventScroll: true});
+  }
+}
+function formatNumber(value) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return '0';
+  if (Number.isInteger(n)) return String(n);
+  return n.toFixed(1).replace(/\.0$/, '');
+}
+function escapeHtml(text) {
+  return String(text).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+function randInt(min, max) {
+  min = Math.ceil(Number(min));
+  max = Math.floor(Number(max));
+  if (max < min) [min, max] = [max, min];
+  return Math.floor(random() * (max - min + 1)) + min;
+}
+function randDec(min, max) {
+  min = Number(min); max = Number(max);
+  if (max < min) [min, max] = [max, min];
+  return Math.round((random() * (max - min) + min) * 10) / 10;
+}
+function normalizeAnswerByForm(symbol) {
+  const form = Number(symbol.Form);
+  if (form === 1) return randDec(symbol.AnswerMin, symbol.AnswerMax);
+  if (form === 2) return Math.max(1, randInt(symbol.AnswerMin, symbol.AnswerMax));
+  if (form === 3) {
+    const lo = Math.min(Number(symbol.AnswerMin), Number(symbol.AnswerMax));
+    const hi = Math.max(Number(symbol.AnswerMin), Number(symbol.AnswerMax));
+    const sampled = randInt(lo, hi);
+    return sampled < 0 ? sampled : -Math.max(1, Math.abs(sampled));
+  }
+  return randInt(symbol.AnswerMin, symbol.AnswerMax);
+}
+function generateOne(symbol, usedKeys) {
+  const op = Number(symbol.Symbol1 || 0);
+  const form = Number(symbol.Form || 0);
+  for (let attempt = 0; attempt < 300; attempt++) {
+    let answer = normalizeAnswerByForm(symbol);
+    let display = formatNumber(answer);
+    let className = form === 1 ? 'decimal' : '';
+
+    if (op === 1 || op === 2) {
+      let min = Number(symbol.Min || 1);
+      let max = Number(symbol.Max || 9);
+      if (max < min) [min, max] = [max, min];
+      const b = form === 1 ? randDec(min, max) : randInt(min, max);
+      const a = op === 1 ? Number((answer - b).toFixed(1)) : Number((answer + b).toFixed(1));
+      display = `${formatNumber(a)}${op === 1 ? '+' : '-'}${formatNumber(b)}`;
+      className = 'operation';
+    }
+
+    const key = Number(answer).toFixed(3);
+    if (!usedKeys.has(key)) {
+      usedKeys.add(key);
+      return { value: Number(answer), display, className };
+    }
+  }
+  const fallback = usedKeys.size + 1;
+  return { value: fallback, display: String(fallback), className: '' };
+}
+function pickLayout(level, count) {
+  const blocks = Array.isArray(level.Blocks) ? level.Blocks : [];
+  const candidates = blocks.map(id => floorMap.get(Number(id))).filter(x => x && Array.isArray(x.posBlock) && x.posBlock.length >= count);
+  if (candidates.length) return candidates[randInt(0, candidates.length - 1)];
+  const any = [...floorMap.values()].find(x => Array.isArray(x.posBlock) && x.posBlock.length >= count);
+  return any || {ID: 0, Floor: 0, posBlock: fallbackPositions(count)};
+}
+function fallbackPositions(count) {
+  const list = [];
+  const cols = Math.max(3, Math.ceil(count / 2));
+  for (let i = 0; i < count; i++) {
+    const row = i < cols ? 1 : 3;
+    const col = 1 + (i % cols);
+    list.push(`${row},${col}`);
+  }
+  return list;
+}
+function positionToPercent(pos) {
+  const [row, col] = String(pos).split(',').map(Number);
+  const safeRow = Number.isFinite(row) ? row : 2;
+  const safeCol = Number.isFinite(col) ? col : 4;
+  const compact = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(max-width: 760px)').matches;
+  const minX = compact ? 18 : 8;
+  const maxX = compact ? 82 : 92;
+  const x = Math.min(maxX, Math.max(minX, (safeCol / 8) * 100));
+  const y = Math.min(82, Math.max(14, 18 + ((safeRow - 1) / 2) * 46));
+  return { x, y };
+}
+function isCompactLayout() {
+  return typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(max-width: 760px)').matches;
+}
+function bubbleSizeFor(item) {
+  const compact = isCompactLayout();
+  if (item && item.className === 'operation') return compact ? { w: 104, h: 64 } : { w: 128, h: 82 };
+  if (item && item.className === 'decimal') return compact ? { w: 78, h: 68 } : { w: 104, h: 82 };
+  return compact ? { w: 68, h: 68 } : { w: 82, h: 82 };
+}
+function bubbleRadiusFor(item) {
+  const size = bubbleSizeFor(item);
+  return Math.max(size.w, size.h) / 2;
+}
+function rectsOverlap(a, b, gap) {
+  const overlapX = (a.w + b.w) / 2 + gap - Math.abs(b.x - a.x);
+  const overlapY = (a.h + b.h) / 2 + gap - Math.abs(b.y - a.y);
+  return { hit: overlapX > 0 && overlapY > 0, overlapX, overlapY };
+}
+function hasRectCollisions(nodes, gap) {
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {
+      if (rectsOverlap(nodes[i], nodes[j], gap).hit) return true;
+    }
+  }
+  return false;
+}
+function packMobilePositions(positions, items, width, height) {
+  const padX = 10;
+  const topPad = 34;
+  const bottomReserve = 66;
+  const gapX = 10;
+  const entries = positions.map((pos, i) => ({
+    i,
+    pos,
+    size: bubbleSizeFor(items[i])
+  })).sort((a, b) => a.pos.y - b.pos.y || a.pos.x - b.pos.x || a.i - b.i);
+  const usableW = Math.max(120, width - padX * 2);
+  const rows = [];
+  let row = [];
+  let rowWidth = 0;
+  for (const entry of entries) {
+    const needed = entry.size.w + (row.length ? gapX : 0);
+    if (row.length && rowWidth + needed > usableW) {
+      rows.push(row);
+      row = [];
+      rowWidth = 0;
+    }
+    row.push(entry);
+    rowWidth += entry.size.w + (row.length > 1 ? gapX : 0);
+  }
+  if (row.length) rows.push(row);
+  const rowHeights = rows.map(r => Math.max(...r.map(e => e.size.h)));
+  const availableH = Math.max(160, height - topPad - bottomReserve);
+  const naturalGapY = 14;
+  const sumH = rowHeights.reduce((sum, v) => sum + v, 0);
+  const gapY = rows.length > 1 ? Math.max(6, Math.min(naturalGapY, (availableH - sumH) / (rows.length - 1))) : 0;
+  const totalH = sumH + gapY * Math.max(0, rows.length - 1);
+  let y = topPad + Math.max(0, (availableH - totalH) / 2);
+  const packed = Array(items.length);
+  rows.forEach((r, rowIndex) => {
+    const h = rowHeights[rowIndex];
+    const totalW = r.reduce((sum, e) => sum + e.size.w, 0) + gapX * Math.max(0, r.length - 1);
+    let x = padX + Math.max(0, (usableW - totalW) / 2);
+    for (const entry of r) {
+      packed[entry.i] = {
+        x: (x + entry.size.w / 2) * 100 / width,
+        y: (y + h / 2) * 100 / height
+      };
+      x += entry.size.w + gapX;
+    }
+    y += h + gapY;
+  });
+  return packed.map(pos => ({
+    x: Math.max(6, Math.min(94, pos.x)),
+    y: Math.max(8, Math.min(86, pos.y))
+  }));
+}
+function resolveBubblePositions(positions, items) {
+  const area = $('playArea');
+  if (!area || !positions.length) return positions;
+  const rect = area.getBoundingClientRect();
+  const width = rect.width || area.clientWidth || 1;
+  const height = rect.height || area.clientHeight || 1;
+  const compact = isCompactLayout();
+  const bottomReserve = compact ? 66 : 74;
+  const pad = compact ? 8 : 12;
+  const gap = compact ? 8 : 12;
+  const nodes = positions.map((pos, i) => {
+    const size = bubbleSizeFor(items[i]);
+    return {
+      x: Number(pos.x) * width / 100,
+      y: Number(pos.y) * height / 100,
+      w: size.w,
+      h: size.h,
+      originalIndex: i
+    };
+  });
+  const clampNode = (node) => {
+    node.x = Math.max(node.w / 2 + pad, Math.min(width - node.w / 2 - pad, node.x));
+    node.y = Math.max(node.h / 2 + pad, Math.min(height - node.h / 2 - bottomReserve, node.y));
+  };
+  nodes.forEach(clampNode);
+  for (let iter = 0; iter < 140; iter++) {
+    let moved = false;
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const a = nodes[i];
+        const b = nodes[j];
+        const overlap = rectsOverlap(a, b, gap);
+        if (!overlap.hit) continue;
+        let dx = b.x - a.x;
+        let dy = b.y - a.y;
+        if (Math.abs(dx) < 0.001 && Math.abs(dy) < 0.001) {
+          const angle = ((i + 1) * 2.399963 + j * .731) % (Math.PI * 2);
+          dx = Math.cos(angle);
+          dy = Math.sin(angle);
+        }
+        if (overlap.overlapX < overlap.overlapY && Math.abs(dx) > 0.001) {
+          const push = overlap.overlapX / 2 + 0.6;
+          const sign = dx >= 0 ? 1 : -1;
+          a.x -= sign * push;
+          b.x += sign * push;
+        } else {
+          const push = overlap.overlapY / 2 + 0.6;
+          const sign = dy >= 0 ? 1 : -1;
+          a.y -= sign * push;
+          b.y += sign * push;
+        }
+        clampNode(a);
+        clampNode(b);
+        moved = true;
       }
     }
-    function settleIfNeeded() {
-      const level = levels[currentLevel - 1];
-      if (correctRounds >= level.missionPass || wrong > level.fault) {
-        const elapsedSeconds = (performance.now() - levelStartedAt) / 1000;
-        const done = completeNumberLadderLevel({ level, correctRounds, wrongCount: wrong, remainingTime: level.time - elapsedSeconds });
-        const next = nextNumberLadderLevel({ level: currentLevel, passed: done.passed, consecutiveFailures: failures });
-        failures = next.consecutiveFailures;
-        currentLevel = next.nextLevel;
-        correctRounds = 0;
-        wrong = 0;
-      }
-      startRound();
+    if (!moved) break;
+  }
+  if (compact && hasRectCollisions(nodes, 4)) {
+    return packMobilePositions(positions, items, width, height);
+  }
+  return nodes.map(node => ({
+    x: Math.max(6, Math.min(94, node.x * 100 / width)),
+    y: Math.max(8, Math.min(86, node.y * 100 / height))
+  }));
+}
+function missionSizeFor(level) {
+  return Math.max(1, Number(level && level.MissionNum) || 5);
+}
+function missionPassFor(level) {
+  const missionSize = missionSizeFor(level);
+  return Math.min(missionSize, Math.max(1, Number(level && level.MissionPass) || missionSize));
+}
+function faultLimitFor(level) {
+  return Math.max(0, Number(level && level.Fault) || 0);
+}
+function selectedStartIndex() {
+  return Math.max(0, Math.min(levels.length - 1, Number(state.startIndex || 0)));
+}
+function relativeProgressIndex(index = state.levelIndex) {
+  return Math.max(0, Number(index || 0) - selectedStartIndex());
+}
+function trainingTimeFromIndex(startIndex) {
+  const start = Math.max(0, Math.min(levels.length, Number(startIndex || 0)));
+  return levels.slice(start).reduce((sum, l) => sum + Number(l.Time || 0), 0);
+}
+function configureDifficulty(key) {
+  const difficulty = difficultyByKey(key);
+  const startIndex = levelIndexByLevelNumber(difficulty.startLevel);
+  state.difficulty = difficulty;
+  state.startIndex = startIndex;
+  syncDifficultyButtons();
+  return difficulty;
+}
+function syncDifficultyButtons() {
+  if (typeof document === 'undefined') return;
+  document.querySelectorAll('[data-difficulty]').forEach(btn => {
+    const active = btn.dataset.difficulty === (state.difficulty && state.difficulty.key);
+    btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+  });
+}
+function difficultyLabel() {
+  return state.difficulty && state.difficulty.label ? state.difficulty.label : '容易';
+}
+function groupStartIndex(index) {
+  const boundedIndex = Math.max(selectedStartIndex(), Math.min(Number(index || 0), levels.length - 1));
+  const level = levels[boundedIndex] || levels[selectedStartIndex()] || levels[0] || {};
+  const size = missionSizeFor(level);
+  return selectedStartIndex() + Math.floor(relativeProgressIndex(boundedIndex) / size) * size;
+}
+function recomputeTotalScore() {
+  state.totalScore = state.levelScores.reduce((sum, value) => sum + Number(value || 0), 0);
+}
+function currentLevelNumber() {
+  const level = levels[state.levelIndex];
+  return level ? Number(level.Level) : state.levelIndex + 1;
+}
+function classifyToken(display) {
+  const text = String(display);
+  const lenClass = text.length >= 7 ? 'len-7plus' : `len-${text.length}`;
+  const typeClass = /[+\-]/.test(text.slice(1)) || /^[+\-]/.test(text) && /[+\-]/.test(text.slice(1))
+    ? 'operation-token'
+    : text.includes('.')
+      ? 'decimal-token'
+      : /^-/.test(text)
+        ? 'negative-token'
+        : 'integer-token';
+  return `${typeClass} ${lenClass}`;
+}
+function renderBubbleContent(display) {
+  const text = String(display);
+  return `<span class="value-token ${classifyToken(text)}">${escapeHtml(text)}</span>`;
+}
+function updateHud() {
+  const level = levels[state.levelIndex] || levels[levels.length - 1] || {Time: 0};
+  const levelNo = level && Number(level.Level) ? Number(level.Level) : Math.min(state.levelIndex + 1, levels.length);
+  $('difficultyValue').textContent = `${difficultyLabel()} · ${levelNo}/${levels.length}`;
+  $('levelTimeValue').textContent = Number(state.remaining || 0).toFixed(1);
+  $('trainingTimeValue').textContent = Number(state.trainingRemaining || 0).toFixed(1);
+  $('scoreValue').textContent = state.totalScore;
+}
+function renderDots() {
+  const wrap = $('statusDots');
+  wrap.innerHTML = '';
+  const level = levels[state.levelIndex] || levels[levels.length - 1] || {};
+  const count = missionSizeFor(level);
+  if (state.statuses.length !== count) state.statuses = Array(count).fill(null);
+  const activeIndex = Math.min(count - 1, Math.max(0, relativeProgressIndex(state.levelIndex) % count));
+  for (let i = 0; i < count; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot';
+    if (state.statuses[i] === true) d.classList.add('pass');
+    else if (state.statuses[i] === false) d.classList.add('fail');
+    else if (i === activeIndex && !state.roundFinalized) d.classList.add('current');
+    d.setAttribute('aria-label', state.statuses[i] === true ? '已通过' : state.statuses[i] === false ? '失败' : i === activeIndex ? '当前关' : '未开始');
+    wrap.appendChild(d);
+  }
+}
+function disableActiveBubbles() {
+  $('playArea').querySelectorAll('.bubble').forEach(node => {
+    node.disabled = true;
+    node.classList.add('clicked');
+  });
+}
+function beginLevel() {
+  closeModal();
+  showScreen('gameScreen');
+  clearInterval(state.timer);
+  clearPendingTimeouts();
+
+  if (state.levelIndex >= levels.length) return finishTraining();
+  const level = levels[state.levelIndex];
+  const missionSize = missionSizeFor(level);
+  if (relativeProgressIndex(state.levelIndex) % missionSize === 0 || state.statuses.length !== missionSize) {
+    state.statuses = Array(missionSize).fill(null);
+  }
+
+  const symbol = symbolMap.get(Number(level.SymbolNumber));
+  if (!symbol) {
+    return showModal('配置错误', `<p>关卡 ${escapeHtml(level.Level)} 找不到符号模式 ${escapeHtml(level.SymbolNumber)}。</p>`, [
+      { text: '重新训练', onClick: restartTraining }
+    ]);
+  }
+
+  const configuredBubbleCount = Number(level.BubbleNumber || 0);
+  const count = configuredBubbleCount > 0 ? configuredBubbleCount : Number(level.TotalNum || 0);
+  const layout = pickLayout(level, count);
+  state.current = { level, symbol, layout, startedAt: performance.now() };
+  state.remaining = Number(level.Time || 0);
+  state.nextExpectedIndex = 0;
+  state.paused = false;
+  state.inputLocked = false;
+  state.roundFinalized = false;
+  state.lastTickSecond = null;
+  state.generatedItems = [];
+
+  $('promptBar').textContent = `${difficultyLabel()}难度 · 第 ${Number(level.Level)} 关｜请按照数字从小到大顺序点击气泡。本关：${formNames[Number(symbol.Form)] || '未知类型'} / ${opNames[Number(symbol.Symbol1)] || '未知格式'}。`;
+  const area = $('playArea');
+  area.querySelectorAll('.bubble').forEach(n => n.remove());
+
+  const used = new Set();
+  const items = [];
+  for (let i = 0; i < count; i++) items.push(generateOne(symbol, used));
+  state.generatedItems = items.map(x => ({...x}));
+  state.expected = items.map((item, i) => ({ ...item, originalIndex: i })).sort((a, b) => a.value - b.value || a.originalIndex - b.originalIndex);
+  const rawPositions = (Array.isArray(layout.posBlock) && layout.posBlock.length >= count ? layout.posBlock : fallbackPositions(count)).slice(0, count);
+  const positions = resolveBubblePositions(rawPositions.map(positionToPercent), items);
+
+  items.forEach((item, i) => {
+    const pos = positions[i];
+    const bubble = document.createElement('button');
+    bubble.type = 'button';
+    bubble.className = `bubble ${item.className || ''}`.trim();
+    bubble.style.left = `${pos.x}%`;
+    bubble.style.top = `${pos.y}%`;
+    bubble.style.animationDelay = `${i * 0.045}s`;
+    bubble.style.setProperty('--bubble-scale', item.className === 'operation' ? '1.18' : item.className === 'decimal' ? '1.08' : '1');
+    bubble.innerHTML = renderBubbleContent(item.display);
+    bubble.setAttribute('aria-label', `气泡 ${item.display}`);
+    bubble.dataset.index = String(i);
+    bubble.dataset.value = String(item.value);
+    bubble.addEventListener('click', () => onBubbleClick(bubble, item, i));
+    area.appendChild(bubble);
+  });
+
+  renderDots();
+  updateHud();
+  state.timer = setInterval(tick, 100);
+  playSfx('start');
+}
+function tick() {
+  if (state.paused || state.roundFinalized || state.inputLocked) return;
+  state.remaining = Math.max(0, Number((state.remaining - 0.1).toFixed(1)));
+  state.trainingRemaining = Math.max(0, Number((state.trainingRemaining - 0.1).toFixed(1)));
+  updateHud();
+
+  const whole = Math.ceil(state.remaining);
+  if (whole > 0 && whole <= 3 && whole !== state.lastTickSecond) {
+    state.lastTickSecond = whole;
+    playSfx('tick');
+  }
+  if (state.remaining <= 0) {
+    state.inputLocked = true;
+    clearInterval(state.timer);
+    disableActiveBubbles();
+    playSfx('wrong');
+    finalizeRound(false, '倒计时结束，本关卡失败。');
+  }
+}
+function popBubble(node, removeDelay = 320) {
+  if (!node || node.dataset.popStarted === '1') return;
+  node.dataset.popStarted = '1';
+  const sprite = document.createElement('span');
+  sprite.className = 'pop-sprite';
+  sprite.setAttribute('aria-hidden', 'true');
+  node.appendChild(sprite);
+  schedule(() => node.classList.add('popped'), Math.min(120, removeDelay));
+  if (!node.classList.contains('guide-bubble')) {
+    schedule(() => node.remove(), removeDelay + 80);
+  }
+}
+function onBubbleClick(node, item, originalIndex) {
+  if (state.paused || state.inputLocked || state.roundFinalized) return;
+  if (!node || node.disabled || node.dataset.clicked === '1' || node.classList.contains('popped') || node.classList.contains('correct') || node.classList.contains('wrong')) return;
+
+  playSfx('click');
+  const expected = state.expected[state.nextExpectedIndex];
+  if (expected && expected.originalIndex === originalIndex) {
+    node.dataset.clicked = '1';
+    node.disabled = true;
+    node.classList.add('clicked', 'selected', 'correct');
+    playSfx('correct');
+    popBubble(node, 320);
+    state.nextExpectedIndex += 1;
+    if (state.nextExpectedIndex >= state.expected.length) {
+      state.inputLocked = true;
+      clearInterval(state.timer);
+      disableActiveBubbles();
+      schedule(() => finalizeRound(true, ''), 360);
     }
-    function choose(button, id) {
-      const result = selectNumberBubble(round, selected, id);
-      if (!result.correct) {
-        button.classList.add('wrong');
-        wrong += 1;
-        feedback.textContent = '顺序错误，本小关重新开始';
-        window.setTimeout(settleIfNeeded, 400);
-        return;
-      }
-      selected = result.selectedIds;
-      button.classList.add('done');
-      if (result.complete) {
-        correctRounds += 1;
-        feedback.textContent = '完成一组';
-        window.setTimeout(settleIfNeeded, 400);
-      }
+  } else {
+    node.dataset.clicked = '1';
+    node.disabled = true;
+    node.classList.add('clicked', 'wrong');
+    state.inputLocked = true;
+    clearInterval(state.timer);
+    disableActiveBubbles();
+    playSfx('wrong');
+    schedule(() => finalizeRound(false, '点击顺序错误，本关卡失败。'), 260);
+  }
+}
+function finalizeRound(success, reason) {
+  if (state.roundFinalized) return;
+  state.roundFinalized = true;
+  state.inputLocked = true;
+  clearInterval(state.timer);
+
+  const level = levels[state.levelIndex];
+  const dotIndex = relativeProgressIndex(state.levelIndex) % missionSizeFor(level);
+  state.statuses[dotIndex] = !!success;
+  renderDots();
+
+  let gained = 0;
+  const roundedRemaining = Math.max(0, Number(state.remaining.toFixed(1)));
+  if (success) {
+    gained = Math.round(Number(level.Score || 0) + Number(level.Scores || 0) * roundedRemaining / Math.max(1, Number(level.Time || 1)));
+    state.levelScores[state.levelIndex] = gained;
+    recomputeTotalScore();
+    playSfx(state.levelIndex >= levels.length - 1 ? 'end' : 'levelPass');
+  } else {
+    state.levelScores[state.levelIndex] = 0;
+    recomputeTotalScore();
+  }
+
+  const elapsed = Math.max(0, Number((Number(level.Time || 0) - roundedRemaining).toFixed(1)));
+  state.history.push({
+    level: Number(level.Level),
+    index: state.levelIndex,
+    success: !!success,
+    gained,
+    remaining: roundedRemaining,
+    elapsed,
+    reason: reason || '',
+    at: new Date().toISOString()
+  });
+  updateHud();
+
+  const isLast = state.levelIndex >= levels.length - 1;
+  const trendHtml = buildTrendHtml(gained, success, reason);
+  if (success) {
+    const title = isLast ? '通关完成' : '关卡完成';
+    const body = `<p>本关得分 <strong>${gained}</strong>，当前总积分 <strong>${state.totalScore}</strong>。</p><p class="small">积分 = 过关积分 + 额外积分 × 剩余时间 / 关卡时间，结果四舍五入。</p>${trendHtml}`;
+    const buttons = isLast ? [
+      { text: '继续进入下一个游戏', onClick: goNextGame },
+      { text: '重新训练', secondary: true, onClick: restartTraining },
+      { text: '重新演示', secondary: true, onClick: startGuide }
+    ] : [
+      { text: '继续下一关', onClick: () => { state.levelIndex += 1; beginLevel(); } },
+      { text: '重新演示', secondary: true, onClick: startGuide }
+    ];
+    showModal(title, body, buttons);
+  } else {
+    const body = `<p>${escapeHtml(reason || '本关卡失败。')}</p><p>当前总积分 <strong>${state.totalScore}</strong>。</p>${trendHtml}`;
+    showModal('本难度失败', body, [
+      { text: '重新挑战本难度', onClick: retryMissionGroup },
+      { text: '重新演示', secondary: true, onClick: startGuide }
+    ]);
+  }
+}
+function buildTrendHtml(gained, success, reason) {
+  const level = levels[state.levelIndex] || {};
+  const size = missionSizeFor(level);
+  const passNeed = missionPassFor(level);
+  const faultLimit = faultLimitFor(level);
+  const passCount = state.statuses.filter(x => x === true).length;
+  const failCount = state.statuses.filter(x => x === false).length;
+  const attempts = state.history.length;
+  const successes = state.history.filter(x => x.success).length;
+  const avgGain = successes ? Math.round(state.history.filter(x => x.success).reduce((sum, x) => sum + x.gained, 0) / successes) : 0;
+  const recent = state.history.slice(-8);
+  const badges = recent.length ? recent.map(x => `<span class="trend-badge ${x.success ? 'pass' : 'fail'}">${x.level}${x.success ? '✓' : '×'}</span>`).join('') : '<span class="small">暂无历史记录</span>';
+  const groupVerdict = failCount > faultLimit
+    ? `未达标：失败 ${failCount} 次，容错 ${faultLimit} 次。`
+    : passCount >= passNeed
+      ? `已达标：通过 ${passCount}/${size}。`
+      : `进行中：需通过 ${passNeed}/${size}，当前通过 ${passCount}。`;
+  return `
+    <section class="trend" aria-label="训练趋势">
+      <h3>训练趋势</h3>
+      <div class="trend-grid">
+        <div class="trend-cell"><span class="small">本关得分</span><strong>${Number(gained || 0)}</strong></div>
+        <div class="trend-cell"><span class="small">累计通过率</span><strong>${attempts ? Math.round(successes * 100 / attempts) : 0}%</strong></div>
+        <div class="trend-cell"><span class="small">通过均分</span><strong>${avgGain}</strong></div>
+      </div>
+      <p class="small">当前难度：${difficultyLabel()}（从第 ${state.difficulty.startLevel} 关开始）｜当前难度组：${groupVerdict}</p>
+      <div class="trend-strip" aria-label="最近关卡记录">${badges}</div>
+    </section>`;
+}
+function retryMissionGroup() {
+  clearInterval(state.timer);
+  clearPendingTimeouts();
+  const start = groupStartIndex(state.levelIndex);
+  const size = missionSizeFor(levels[start] || levels[0] || {});
+  for (let i = start; i < Math.min(levels.length, start + size); i++) state.levelScores[i] = 0;
+  recomputeTotalScore();
+  state.levelIndex = start;
+  state.statuses = Array(size).fill(null);
+  beginLevel();
+}
+function finishTraining() {
+  clearInterval(state.timer);
+  showModal(`${difficultyLabel()}难度通关完成`, `<p>已完成从第 ${state.difficulty.startLevel} 关开始的训练，总积分 <strong>${state.totalScore}</strong>。</p>${buildTrendHtml(0, true, '')}`, [
+    { text: '继续进入下一个游戏', onClick: goNextGame },
+    { text: '重新训练', secondary: true, onClick: restartTraining },
+    { text: '重新演示', secondary: true, onClick: startGuide }
+  ]);
+}
+function restartTraining(difficultyKey) {
+  clearInterval(state.timer);
+  clearPendingTimeouts();
+  if (difficultyKey) configureDifficulty(difficultyKey);
+  const start = selectedStartIndex();
+  state.levelIndex = start;
+  state.totalScore = 0;
+  state.levelScores = Array(levels.length).fill(0);
+  state.statuses = Array(missionSizeFor(levels[start] || levels[0] || {})).fill(null);
+  state.history = [];
+  state.current = null;
+  state.expected = [];
+  state.generatedItems = [];
+  state.nextExpectedIndex = 0;
+  state.paused = false;
+  state.inputLocked = false;
+  state.roundFinalized = false;
+  state.trainingRemaining = trainingTimeFromIndex(start);
+  beginLevel();
+}
+function startTrainingWithDifficulty(key) {
+  warmAudio();
+  configureDifficulty(key);
+  restartTraining();
+}
+function goNextGame() {
+  const detail = {
+    game: GAME_DATA.meta && GAME_DATA.meta.gameName || '数字阶梯',
+    difficulty: state.difficulty,
+    startLevel: state.difficulty && state.difficulty.startLevel,
+    totalScore: state.totalScore,
+    history: state.history.slice(),
+    completedAt: new Date().toISOString()
+  };
+  window.dispatchEvent(new CustomEvent('digital-ladder-complete', { detail }));
+  if (NEXT_GAME_URL) {
+    window.location.href = NEXT_GAME_URL;
+    return;
+  }
+  showModal('已完成数字阶梯', `<p>已触发进入下一个游戏的完成事件。</p><p class="small">当前单独运行环境未配置 next 参数，因此不会跳转。嵌入平台可监听 <code>digital-ladder-complete</code> 事件，或在 URL 中加入 <code>?next=...</code>。</p>`, [
+    { text: '重新训练', onClick: restartTraining },
+    { text: '重新演示', secondary: true, onClick: startGuide }
+  ]);
+}
+function pauseGame() {
+  if (state.roundFinalized) return;
+  state.paused = true;
+  showModal('暂停', `
+    <p>游戏已暂停。</p>
+    <div class="modal-row"><span>声音大小</span><input id="volumeRange" type="range" min="0" max="1" step="0.01" value="${state.volume}"></div>
+    <div class="modal-row"><label><input id="muteCheck" type="checkbox" ${state.muted ? 'checked' : ''}> 静音</label></div>
+  `, [
+    { text: '继续游戏', onClick: () => { applyAudioControls(); state.paused = false; closeModal(); } },
+    { text: '帮助 / 重新演示', secondary: true, onClick: () => { applyAudioControls(); clearInterval(state.timer); clearPendingTimeouts(); startGuide(); } }
+  ]);
+  schedule(() => {
+    const v = $('volumeRange');
+    const m = $('muteCheck');
+    if (v) v.addEventListener('input', () => { state.volume = Number(v.value); updateAudioVolumes(); });
+    if (m) m.addEventListener('change', () => { state.muted = m.checked; updateAudioVolumes(); });
+  }, 0);
+}
+function applyAudioControls() {
+  const v = $('volumeRange');
+  const m = $('muteCheck');
+  if (v) state.volume = Number(v.value);
+  if (m) state.muted = m.checked;
+  updateAudioVolumes();
+}
+function updateAudioVolumes() {
+  for (const audio of audioPool.values()) audio.volume = state.muted ? 0 : state.volume;
+}
+function getAudio(name) {
+  if (!audioSources[name] || typeof Audio === 'undefined') return null;
+  if (!audioPool.has(name)) {
+    const audio = new Audio(audioSources[name]);
+    audio.preload = 'auto';
+    audio.volume = state.muted ? 0 : state.volume;
+    audioPool.set(name, audio);
+  }
+  return audioPool.get(name);
+}
+function playSfx(name) {
+  if (state.muted || state.volume <= 0) return;
+  const audio = getAudio(name);
+  if (audio) {
+    try {
+      audio.pause();
+      audio.currentTime = 0;
+      audio.volume = state.volume;
+      const result = audio.play();
+      if (result && typeof result.catch === 'function') result.catch(() => playToneFallback(name));
+      return;
+    } catch (_) {
+      playToneFallback(name);
+      return;
     }
-    document.getElementById('reset').addEventListener('click', () => { currentLevel = 1; correctRounds = 0; wrong = 0; failures = 0; startRound(); });
-    startRound();
-  </script>
+  }
+  playToneFallback(name);
+}
+function ensureAudio() {
+  const AudioCtor = window.AudioContext || window.webkitAudioContext;
+  if (!state.audioCtx && AudioCtor) state.audioCtx = new AudioCtor();
+}
+function playToneFallback(name) {
+  const tone = audioFallbackTone[name] || [520, .04];
+  playTone(tone[0], tone[1]);
+}
+function playTone(freq, duration) {
+  if (state.muted || state.volume <= 0) return;
+  try {
+    ensureAudio();
+    if (!state.audioCtx) return;
+    const osc = state.audioCtx.createOscillator();
+    const gain = state.audioCtx.createGain();
+    osc.frequency.value = freq;
+    gain.gain.value = state.volume * 0.035;
+    osc.connect(gain);
+    gain.connect(state.audioCtx.destination);
+    osc.start();
+    gain.gain.exponentialRampToValueAtTime(0.0001, state.audioCtx.currentTime + duration);
+    osc.stop(state.audioCtx.currentTime + duration);
+  } catch (_) {}
+}
+function warmAudio() {
+  Object.keys(audioSources).forEach(name => getAudio(name));
+  try {
+    ensureAudio();
+    if (state.audioCtx && state.audioCtx.state === 'suspended') state.audioCtx.resume();
+  } catch (_) {}
+}
+
+let guideStep = 0;
+function startGuide() {
+  clearInterval(state.timer);
+  clearPendingTimeouts();
+  state.paused = false;
+  state.inputLocked = true;
+  closeModal();
+  guideStep = 0;
+  resetGuideBubbles();
+  renderGuide();
+  showScreen('guideScreen');
+}
+function resetGuideBubbles() {
+  const entries = [
+    [$('guideBubbleSmall'), '2'],
+    [$('guideBubbleLarge'), '8']
+  ];
+  entries.forEach(([b, value]) => {
+    b.classList.remove('guide-highlight', 'correct', 'wrong', 'popped', 'clicked', 'selected');
+    b.disabled = true;
+    b.dataset.clicked = '0';
+    b.dataset.popStarted = '0';
+    b.innerHTML = renderBubbleContent(value);
+    b.setAttribute('aria-label', `气泡 ${value}`);
+  });
+}
+function renderGuide() {
+  const text = $('guideText');
+  const b1 = $('guideBubbleSmall');
+  const b2 = $('guideBubbleLarge');
+  b1.classList.remove('guide-highlight');
+  b2.classList.remove('guide-highlight');
+  b1.disabled = true;
+  b2.disabled = true;
+
+  if (guideStep === 0) {
+    resetGuideBubbles();
+    text.textContent = '请按照从数字小到大顺序点击气泡。';
+    schedule(() => { if ($('guideScreen').classList.contains('active') && guideStep === 0) { guideStep = 1; renderGuide(); } }, 3000);
+  } else if (guideStep === 1) {
+    text.textContent = '这是较小的数字，请点击它。';
+    b1.classList.add('guide-highlight');
+    b1.disabled = false;
+  } else if (guideStep === 2) {
+    text.textContent = '这是较大的数字，请继续点击它。';
+    b1.classList.add('correct', 'popped', 'clicked');
+    b1.disabled = true;
+    b2.classList.add('guide-highlight');
+    b2.disabled = false;
+  } else {
+    playSfx('levelPass');
+    syncDifficultyButtons();
+    showScreen('choiceScreen');
+  }
+}
+function handleGuideBubble(which) {
+  if (which === 'small' && guideStep === 1) {
+    const b = $('guideBubbleSmall');
+    b.disabled = true;
+    b.classList.add('clicked', 'correct');
+    playSfx('correct');
+    popBubble(b, 260);
+    schedule(() => { guideStep = 2; renderGuide(); }, 240);
+  }
+  if (which === 'large' && guideStep === 2) {
+    const b = $('guideBubbleLarge');
+    b.disabled = true;
+    b.classList.add('clicked', 'correct');
+    playSfx('correct');
+    popBubble(b, 260);
+    schedule(() => { guideStep = 3; renderGuide(); }, 240);
+  }
+}
+function validateGameData() {
+  const errors = [];
+  if (!levels.length) errors.push('Level 表为空。');
+  for (const diff of DIFFICULTIES) {
+    if (!levels.some(level => Number(level.Level) === Number(diff.startLevel))) errors.push(`${diff.label}难度起始关卡 ${diff.startLevel} 不存在。`);
+  }
+  const floorIds = new Set((GAME_DATA.Floor || []).map(x => Number(x.ID)));
+  const symbolIds = new Set((GAME_DATA.Symbol || []).map(x => Number(x.ID)));
+  for (const level of levels) {
+    const label = `关卡 ${level.Level}`;
+    const total = Number(level.TotalNum || 0);
+    const bubbles = Number(level.BubbleNumber || 0);
+    if (!symbolIds.has(Number(level.SymbolNumber))) errors.push(`${label} 引用了不存在的符号模式 ${level.SymbolNumber}。`);
+    if (bubbles > 0 && bubbles !== total) errors.push(`${label} BubbleNumber(${bubbles}) 与 TotalNum(${total}) 不一致。`);
+    if (!Array.isArray(level.Blocks) || !level.Blocks.length) errors.push(`${label} Blocks 为空。`);
+    else if (!level.Blocks.some(id => floorIds.has(Number(id)))) errors.push(`${label} Blocks 未引用有效布局。`);
+    if (Number(level.Time || 0) <= 0) errors.push(`${label} Time 必须大于 0。`);
+  }
+  for (const symbol of GAME_DATA.Symbol || []) {
+    if (![0,1,2,3].includes(Number(symbol.Form))) errors.push(`符号模式 ${symbol.ID} 的 Form 非法：${symbol.Form}。`);
+    if (![0,1,2].includes(Number(symbol.Symbol1))) errors.push(`符号模式 ${symbol.ID} 的 Symbol1 非法：${symbol.Symbol1}。`);
+  }
+  return errors;
+}
+function init() {
+  initSeed();
+  $('welcomeScreen').addEventListener('click', (event) => {
+    if (!$('welcomeScreen').classList.contains('active')) return;
+    if (event.target.closest('button, a, input, select, textarea')) return;
+    warmAudio();
+    startGuide();
+  }, { once: false });
+  const enterTrainingBtn = $('enterTrainingBtn');
+  if (enterTrainingBtn) enterTrainingBtn.addEventListener('click', () => { warmAudio(); restartTraining(); });
+  document.querySelectorAll('[data-difficulty]').forEach(btn => {
+    btn.addEventListener('click', () => startTrainingWithDifficulty(btn.dataset.difficulty));
+  });
+  $('replayGuideBtn').addEventListener('click', startGuide);
+  syncDifficultyButtons();
+  $('pauseBtn').addEventListener('click', pauseGame);
+  $('guideBubbleSmall').addEventListener('click', () => handleGuideBubble('small'));
+  $('guideBubbleLarge').addEventListener('click', () => handleGuideBubble('large'));
+  resetGuideBubbles();
+  showScreen('welcomeScreen');
+  const errors = validateGameData();
+  if (errors.length) {
+    schedule(() => showModal('配置校验失败', `<p>发现 ${errors.length} 个配置问题。</p><p class="small">${errors.slice(0, 8).map(escapeHtml).join('<br>')}</p>`, [
+      { text: '继续查看', onClick: closeModal }
+    ]), 0);
+  }
+}
+window.addEventListener('DOMContentLoaded', init);
+
+</script>
 </body>
 </html>

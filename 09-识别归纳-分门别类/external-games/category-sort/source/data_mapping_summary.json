@@ -1,0 +1,151 @@
+{
+  "difficultyStarts": {
+    "easy": 1,
+    "normal": 15,
+    "hard": 30
+  },
+  "counts": {
+    "levels": 100,
+    "items": 92,
+    "primaryTypes": 6,
+    "secondaryTypes": 19,
+    "tertiaryTypes": 6
+  },
+  "levelDepthRanges": [
+    {
+      "levels": "1-12",
+      "depth": "一级类别"
+    },
+    {
+      "levels": "13-90",
+      "depth": "二级类别"
+    },
+    {
+      "levels": "91-100",
+      "depth": "三级类别"
+    }
+  ],
+  "targetMappingGroups": [
+    {
+      "levels": "1-12",
+      "marker": "N=(A,F)",
+      "scope": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "compatibleWithTargetRaw": true
+    },
+    {
+      "levels": "13-30",
+      "marker": "n=(a,s)",
+      "scope": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "compatibleWithTargetRaw": true
+    },
+    {
+      "levels": "31-40",
+      "marker": "n=(a,b)",
+      "scope": [
+        0,
+        1
+      ],
+      "compatibleWithTargetRaw": false
+    },
+    {
+      "levels": "41-50",
+      "marker": "n=(c,f)",
+      "scope": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "compatibleWithTargetRaw": false
+    },
+    {
+      "levels": "51-60",
+      "marker": "n=(g,h)",
+      "scope": [
+        6,
+        7
+      ],
+      "compatibleWithTargetRaw": false
+    },
+    {
+      "levels": "61-70",
+      "marker": "n=(i,k)",
+      "scope": [
+        8,
+        9,
+        10
+      ],
+      "compatibleWithTargetRaw": false
+    },
+    {
+      "levels": "71-80",
+      "marker": "n=(l,o)",
+      "scope": [
+        11,
+        12,
+        13,
+        14
+      ],
+      "compatibleWithTargetRaw": false
+    },
+    {
+      "levels": "81-90",
+      "marker": "n=(p,s)",
+      "scope": [
+        15,
+        16,
+        17,
+        18
+      ],
+      "compatibleWithTargetRaw": false
+    },
+    {
+      "levels": "91-100",
+      "marker": "n=(u,z)",
+      "scope": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "compatibleWithTargetRaw": true
+    }
+  ],
+  "knownSourceInconsistencies": [
+    {
+      "itemId": 28,
+      "sourceA": "数值(4).xlsx Item = 豌豆藤",
+      "sourceB": "关卡配置(2).xlsx 物品属性配置 = 扁豆藤",
+      "runtimeChoice": "豌豆藤"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>静默池塘｜精致素材预览</title>
+<style>
+:root{--bg:#0b3036;--panel:rgba(255,255,255,.08);--line:rgba(255,255,255,.16);--text:#eefdf6;--muted:#b9d5ce;--accent:#f5c563}body{margin:0;font-family:PingFang SC,Microsoft YaHei,Arial,sans-serif;background:radial-gradient(circle at 40% 0,#214f55,#0a2228 70%);color:var(--text)}main{max-width:1180px;margin:auto;padding:32px}h1{font-size:36px;margin:0 0 8px}h2{margin-top:32px;border-bottom:1px solid var(--line);padding-bottom:8px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:0 12px 36px rgba(0,0,0,.22)}.card img{width:100%;height:148px;object-fit:contain;background:rgba(0,0,0,.16);border-radius:12px}.wide img{height:auto}.cap{font-size:13px;color:var(--muted);margin-top:8px;word-break:break-all}.hero{background:var(--panel);border:1px solid var(--line);border-radius:24px;padding:18px}.hero img{width:100%;border-radius:18px}.audio audio{width:100%;margin-top:8px}code{color:var(--accent)}</style></head><body><main>
+<h1>静默池塘｜精致素材预览</h1><p>按设计规范素材需求制作，并补齐当前游戏运行所需资源。完整清单见 <code>assets_manifest.json</code>。</p>
+<section class="hero"><img src="assets/visual/stage_backdrop_980x640.png" alt="场景背景"></section>
+<h2>鲤鱼角色</h2><div class="grid">
+<div class="card"><img src="assets/fish/red_koi.png"><div class="cap">红鲤鱼｜目标鱼</div></div>
+<div class="card"><img src="assets/fish/green_koi.png"><div class="cap">绿/黑绿鲤鱼｜干扰鱼</div></div>
+<div class="card wide"><img src="assets/fish/red_koi_swim_sheet_8x160x96.png"><div class="cap">红鲤鱼 8 帧游动序列</div></div>
+<div class="card wide"><img src="assets/fish/green_koi_swim_sheet_8x160x96.png"><div class="cap">绿鲤鱼 8 帧游动序列</div></div>
+</div>
+<h2>池塘与修饰物</h2><div class="grid">
+<div class="card"><img src="assets/visual/pond_water_840x410.png"><div class="cap">池塘底图</div></div>
+<div class="card"><img src="assets/decor/decor_lotus_leaf.png"><div class="cap">修饰物 1：莲叶</div></div>
+<div class="card"><img src="assets/decor/decor_lotus_bloom.png"><div class="cap">修饰物 2：莲花</div></div>
+<div class="card"><img src="assets/decor/decor_reeds.png"><div class="cap">修饰物 3：芦苇</div></div>
+<div class="card"><img src="assets/decor/decor_algae_cluster.png"><div class="cap">修饰物 4：水草</div></div>
+<div class="card"><img src="assets/decor/decor_stone_moss.png"><div class="cap">修饰物 5：苔石</div></div>
+</div>
+<h2>FX 与 UI</h2><div class="grid">
+<div class="card"><img src="assets/ui/feeder_dispenser.png"><div class="cap">投食机</div></div>
+<div class="card"><img src="assets/fx/food_pellet.png"><div class="cap">食物颗粒</div></div>
+<div class="card wide"><img src="assets/fx/ripple_success_sheet_8x256.png"><div class="cap">成功涟漪序列</div></div>
+<div class="card wide"><img src="assets/fx/splash_fail_sheet_8x256.png"><div class="cap">失败水花序列</div></div>
+<div class="card"><img src="assets/ui/panel_glass_640x360.png"><div class="cap">玻璃面板</div></div>
+<div class="card"><img src="assets/ui/button_primary_360x104.png"><div class="cap">主按钮</div></div>
+</div>
+<h2>音效</h2><div class="grid audio">
+<div class="card"><div>开局</div><audio controls src="assets/audio/sfx_start_water_swell.wav"></audio></div>
+<div class="card"><div>过关</div><audio controls src="assets/audio/sfx_level_pass_chime.wav"></audio></div>
+<div class="card"><div>结束</div><audio controls src="assets/audio/sfx_game_end_gong.wav"></audio></div>
+<div class="card"><div>投食成功</div><audio controls src="assets/audio/sfx_feed_success_splash.wav"></audio></div>
+<div class="card"><div>投食失败</div><audio controls src="assets/audio/sfx_feed_fail_splash.wav"></audio></div>
+<div class="card"><div>环境声</div><audio controls src="assets/audio/ambient_pond_loop_12s.wav"></audio></div>
+</div>
+</main></body></html>

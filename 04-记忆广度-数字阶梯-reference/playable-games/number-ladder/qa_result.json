@@ -1,0 +1,575 @@
+{
+  "version": "数字阶梯_三难度终检版",
+  "passed": true,
+  "totalChecks": 22,
+  "passedChecks": 22,
+  "failedChecks": [],
+  "screenshots": [
+    "自玩_难度选择.png",
+    "自玩_容易第1关.png",
+    "自玩_普通第15关.png",
+    "自玩_困难第30关.png",
+    "自玩_困难失败后重试第30关.png"
+  ],
+  "results": [
+    {
+      "name": "JS 语法检查",
+      "passed": true,
+      "detail": {
+        "stderr": ""
+      }
+    },
+    {
+      "name": "难度起始关卡配置",
+      "passed": true,
+      "detail": {
+        "configured": {
+          "easy": 1,
+          "normal": 15,
+          "hard": 30
+        }
+      }
+    },
+    {
+      "name": "HTML 资源引用存在",
+      "passed": true,
+      "detail": {
+        "assetRefCount": 25,
+        "missing": []
+      }
+    },
+    {
+      "name": "图片解码检查",
+      "passed": true,
+      "detail": {
+        "failures": []
+      }
+    },
+    {
+      "name": "WAV 解码检查",
+      "passed": true,
+      "detail": {
+        "failures": []
+      }
+    },
+    {
+      "name": "欢迎页→新手引导→难度选择流程",
+      "passed": true,
+      "detail": {
+        "buttons": [
+          {
+            "key": "easy",
+            "text": "容易\n从第 1 关开始\n基础数字排序",
+            "pressed": "true"
+          },
+          {
+            "key": "normal",
+            "text": "普通\n从第 15 关开始\n更密集的气泡布局",
+            "pressed": "false"
+          },
+          {
+            "key": "hard",
+            "text": "困难\n从第 30 关开始\n更高数量与复杂度",
+            "pressed": "false"
+          }
+        ]
+      }
+    },
+    {
+      "name": "难度按钮点击：普通从第15关开始",
+      "passed": true,
+      "detail": {
+        "key": "normal",
+        "level": 15,
+        "hud": "普通 · 15/100"
+      }
+    },
+    {
+      "name": "容易难度起始关卡",
+      "passed": true,
+      "detail": {
+        "key": "easy",
+        "label": "容易",
+        "startIndex": 0,
+        "currentLevel": 1,
+        "relative": 0,
+        "hud": "容易 · 1/100",
+        "prompt": "容易难度 · 第 1 关｜请按照数字从小到大顺序点击气泡。本关：正数 / 单体数字。",
+        "bubbleCount": 3,
+        "tokenTexts": [
+          "7",
+          "8",
+          "4"
+        ],
+        "containsDigitImages": false,
+        "expected": [
+          {
+            "idx": 2,
+            "value": 4,
+            "display": "4"
+          },
+          {
+            "idx": 0,
+            "value": 7,
+            "display": "7"
+          },
+          {
+            "idx": 1,
+            "value": 8,
+            "display": "8"
+          }
+        ],
+        "tokenMetrics": [
+          {
+            "text": "7",
+            "width": 17.390625,
+            "bubbleWidth": 68,
+            "letterSpacing": "-1.305px",
+            "fontSize": "29px"
+          },
+          {
+            "text": "8",
+            "width": 17.390625,
+            "bubbleWidth": 68,
+            "letterSpacing": "-1.305px",
+            "fontSize": "29px"
+          },
+          {
+            "text": "4",
+            "width": 17.390625,
+            "bubbleWidth": 68,
+            "letterSpacing": "-1.305px",
+            "fontSize": "29px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "容易难度数字排版",
+      "passed": true,
+      "detail": {
+        "tokenTexts": [
+          "7",
+          "8",
+          "4"
+        ],
+        "containsDigitImages": false,
+        "metrics": [
+          {
+            "text": "7",
+            "width": 17.390625,
+            "bubbleWidth": 68,
+            "letterSpacing": "-1.305px",
+            "fontSize": "29px"
+          },
+          {
+            "text": "8",
+            "width": 17.390625,
+            "bubbleWidth": 68,
+            "letterSpacing": "-1.305px",
+            "fontSize": "29px"
+          },
+          {
+            "text": "4",
+            "width": 17.390625,
+            "bubbleWidth": 68,
+            "letterSpacing": "-1.305px",
+            "fontSize": "29px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "容易难度首关正确通关",
+      "passed": true,
+      "detail": {
+        "modalTitle": "关卡完成",
+        "history": {
+          "level": 1,
+          "index": 0,
+          "success": true,
+          "gained": 109,
+          "remaining": 18.6,
+          "elapsed": 1.4,
+          "reason": "",
+          "at": "2026-05-13T21:03:47.184Z"
+        }
+      }
+    },
+    {
+      "name": "容易难度通关后进入下一关",
+      "passed": true,
+      "detail": {
+        "level": 2,
+        "relative": 1,
+        "hud": "容易 · 2/100"
+      }
+    },
+    {
+      "name": "普通难度起始关卡",
+      "passed": true,
+      "detail": {
+        "key": "normal",
+        "label": "普通",
+        "startIndex": 14,
+        "currentLevel": 15,
+        "relative": 0,
+        "hud": "普通 · 15/100",
+        "prompt": "普通难度 · 第 15 关｜请按照数字从小到大顺序点击气泡。本关：正数 / 单体数字。",
+        "bubbleCount": 4,
+        "tokenTexts": [
+          "25",
+          "18",
+          "31",
+          "26"
+        ],
+        "containsDigitImages": false,
+        "expected": [
+          {
+            "idx": 1,
+            "value": 18,
+            "display": "18"
+          },
+          {
+            "idx": 0,
+            "value": 25,
+            "display": "25"
+          },
+          {
+            "idx": 3,
+            "value": 26,
+            "display": "26"
+          },
+          {
+            "idx": 2,
+            "value": 31,
+            "display": "31"
+          }
+        ],
+        "tokenMetrics": [
+          {
+            "text": "25",
+            "width": 34.78125,
+            "bubbleWidth": 68,
+            "letterSpacing": "-1.305px",
+            "fontSize": "29px"
+          },
+          {
+            "text": "18",
+            "width": 34.78125,
+            "bubbleWidth": 68,
+            "letterSpacing": "-1.305px",
+            "fontSize": "29px"
+          },
+          {
+            "text": "31",
+            "width": 34.78125,
+            "bubbleWidth": 68,
+            "letterSpacing": "-1.305px",
+            "fontSize": "29px"
+          },
+          {
+            "text": "26",
+            "width": 34.78125,
+            "bubbleWidth": 68,
+            "letterSpacing": "-1.305px",
+            "fontSize": "29px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "普通难度数字排版",
+      "passed": true,
+      "detail": {
+        "tokenTexts": [
+          "25",
+          "18",
+          "31",
+          "26"
+        ],
+        "containsDigitImages": false,
+        "metrics": [
+          {
+            "text": "25",
+            "width": 34.78125,
+            "bubbleWidth": 68,
+            "letterSpacing": "-1.305px",
+            "fontSize": "29px"
+          },
+          {
+            "text": "18",
+            "width": 34.78125,
+            "bubbleWidth": 68,
+            "letterSpacing": "-1.305px",
+            "fontSize": "29px"
+          },
+          {
+            "text": "31",
+            "width": 34.78125,
+            "bubbleWidth": 68,
+            "letterSpacing": "-1.305px",
+            "fontSize": "29px"
+          },
+          {
+            "text": "26",
+            "width": 34.78125,
+            "bubbleWidth": 68,
+            "letterSpacing": "-1.305px",
+            "fontSize": "29px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "普通难度首关正确通关",
+      "passed": true,
+      "detail": {
+        "modalTitle": "关卡完成",
+        "history": {
+          "level": 15,
+          "index": 14,
+          "success": true,
+          "gained": 201,
+          "remaining": 20.5,
+          "elapsed": 1.5,
+          "reason": "",
+          "at": "2026-05-13T21:03:49.917Z"
+        }
+      }
+    },
+    {
+      "name": "普通难度通关后进入下一关",
+      "passed": true,
+      "detail": {
+        "level": 16,
+        "relative": 1,
+        "hud": "普通 · 16/100"
+      }
+    },
+    {
+      "name": "困难难度起始关卡",
+      "passed": true,
+      "detail": {
+        "key": "hard",
+        "label": "困难",
+        "startIndex": 29,
+        "currentLevel": 30,
+        "relative": 0,
+        "hud": "困难 · 30/100",
+        "prompt": "困难难度 · 第 30 关｜请按照数字从小到大顺序点击气泡。本关：整数 / 单体数字。",
+        "bubbleCount": 5,
+        "tokenTexts": [
+          "66",
+          "52",
+          "50",
+          "56",
+          "55"
+        ],
+        "containsDigitImages": false,
+        "expected": [
+          {
+            "idx": 2,
+            "value": 50,
+            "display": "50"
+          },
+          {
+            "idx": 1,
+            "value": 52,
+            "display": "52"
+          },
+          {
+            "idx": 4,
+            "value": 55,
+            "display": "55"
+          },
+          {
+            "idx": 3,
+            "value": 56,
+            "display": "56"
+          },
+          {
+            "idx": 0,
+            "value": 66,
+            "display": "66"
+          }
+        ],
+        "tokenMetrics": [
+          {
+            "text": "66",
+            "width": 34.78125,
+            "bubbleWidth": 68,
+            "letterSpacing": "-1.305px",
+            "fontSize": "29px"
+          },
+          {
+            "text": "52",
+            "width": 34.78125,
+            "bubbleWidth": 68,
+            "letterSpacing": "-1.305px",
+            "fontSize": "29px"
+          },
+          {
+            "text": "50",
+            "width": 34.78125,
+            "bubbleWidth": 68,
+            "letterSpacing": "-1.305px",
+            "fontSize": "29px"
+          },
+          {
+            "text": "56",
+            "width": 34.78125,
+            "bubbleWidth": 68,
+            "letterSpacing": "-1.305px",
+            "fontSize": "29px"
+          },
+          {
+            "text": "55",
+            "width": 34.78125,
+            "bubbleWidth": 68,
+            "letterSpacing": "-1.305px",
+            "fontSize": "29px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "困难难度数字排版",
+      "passed": true,
+      "detail": {
+        "tokenTexts": [
+          "66",
+          "52",
+          "50",
+          "56",
+          "55"
+        ],
+        "containsDigitImages": false,
+        "metrics": [
+          {
+            "text": "66",
+            "width": 34.78125,
+            "bubbleWidth": 68,
+            "letterSpacing": "-1.305px",
+            "fontSize": "29px"
+          },
+          {
+            "text": "52",
+            "width": 34.78125,
+            "bubbleWidth": 68,
+            "letterSpacing": "-1.305px",
+            "fontSize": "29px"
+          },
+          {
+            "text": "50",
+            "width": 34.78125,
+            "bubbleWidth": 68,
+            "letterSpacing": "-1.305px",
+            "fontSize": "29px"
+          },
+          {
+            "text": "56",
+            "width": 34.78125,
+            "bubbleWidth": 68,
+            "letterSpacing": "-1.305px",
+            "fontSize": "29px"
+          },
+          {
+            "text": "55",
+            "width": 34.78125,
+            "bubbleWidth": 68,
+            "letterSpacing": "-1.305px",
+            "fontSize": "29px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "困难难度首关正确通关",
+      "passed": true,
+      "detail": {
+        "modalTitle": "关卡完成",
+        "history": {
+          "level": 30,
+          "index": 29,
+          "success": true,
+          "gained": 309,
+          "remaining": 23.2,
+          "elapsed": 1.8,
+          "reason": "",
+          "at": "2026-05-13T21:03:52.846Z"
+        }
+      }
+    },
+    {
+      "name": "困难难度通关后进入下一关",
+      "passed": true,
+      "detail": {
+        "level": 31,
+        "relative": 1,
+        "hud": "困难 · 31/100"
+      }
+    },
+    {
+      "name": "困难难度错误点击失败并重试第30关",
+      "passed": true,
+      "detail": {
+        "failTitle": "本难度失败",
+        "failHistory": {
+          "level": 30,
+          "index": 29,
+          "success": false,
+          "gained": 0,
+          "remaining": 24,
+          "elapsed": 1,
+          "reason": "点击顺序错误，本关卡失败。",
+          "at": "2026-05-13T21:03:55.012Z"
+        },
+        "retry": {
+          "level": 30,
+          "relative": 0,
+          "hud": "困难 · 30/100"
+        }
+      }
+    },
+    {
+      "name": "全关卡气泡碰撞扫描",
+      "passed": true,
+      "detail": {
+        "scans": [
+          {
+            "viewport": {
+              "width": 390,
+              "height": 844
+            },
+            "failureCount": 0,
+            "failures": []
+          },
+          {
+            "viewport": {
+              "width": 320,
+              "height": 568
+            },
+            "failureCount": 0,
+            "failures": []
+          },
+          {
+            "viewport": {
+              "width": 1024,
+              "height": 768
+            },
+            "failureCount": 0,
+            "failures": []
+          }
+        ]
+      }
+    },
+    {
+      "name": "浏览器控制台无错误/警告",
+      "passed": true,
+      "detail": {
+        "console": []
+      }
+    }
+  ]
+}

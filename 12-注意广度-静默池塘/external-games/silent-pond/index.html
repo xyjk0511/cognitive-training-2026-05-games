@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>静默池塘｜三难度版</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main id="app" aria-label="静默池塘训练游戏">
+    <section id="gamePanel">
+      <div id="topbar" class="glassbar" aria-label="训练状态栏">
+        <div class="hudItem"><img class="hudIcon" src="assets/ui/icon_fish.svg" alt=""><span class="hudText"><span class="hudLabel">关卡</span><span id="levelText">--/50</span></span></div>
+        <div class="hudItem"><img class="hudIcon" src="assets/ui/icon_timer.svg" alt=""><span class="hudText"><span class="hudLabel">倒计时</span><span id="timeText">--.-s</span></span></div>
+        <div class="hudItem"><img class="hudIcon" src="assets/ui/icon_food.svg" alt=""><span class="hudText"><span class="hudLabel">食物</span><span id="foodText">0/0</span></span></div>
+        <div class="hudItem"><img class="hudIcon" src="assets/ui/icon_error.svg" alt=""><span class="hudText"><span class="hudLabel">错误/可错</span><span id="faultText">0/0</span></span></div>
+        <div class="hudItem"><img class="hudIcon" src="assets/ui/icon_score.svg" alt=""><span class="hudText"><span class="hudLabel">本关</span><span id="scoreText">0</span></span></div>
+        <div class="hudItem"><img class="hudIcon" src="assets/ui/icon_trophy.svg" alt=""><span class="hudText"><span class="hudLabel">总分</span><span id="totalScoreText">0</span></span></div>
+        <button id="pauseBtn" class="iconBtn" type="button" title="暂停"><img src="assets/ui/icon_pause.svg" alt="">暂停</button>
+      </div>
+
+      <div id="stageWrap">
+        <canvas id="pondCanvas" width="980" height="640" aria-label="池塘游戏区域"></canvas>
+        <div id="tutorialPrompt" class="prompt hidden"></div>
+        <div id="toast" class="toast hidden"></div>
+      </div>
+
+      <div id="feederbar" class="glassbar" aria-label="投食机状态栏">
+        <div class="feeder">
+          <div class="feederIcon" aria-hidden="true"><span></span>投食机</div>
+          <div class="cooldownTrack" aria-label="投食机冷却"><div id="cooldownFill"></div></div>
+          <div id="cooldownText">就绪</div>
+        </div>
+        <div class="ruleHint">点击未被投食过的红鲤鱼；干扰鲤鱼与重复红鲤鱼会计错，错误次数超过可错次数后失败。</div>
+      </div>
+    </section>
+  </main>
+
+  <div id="modal" class="modal" aria-modal="true" role="dialog">
+    <div id="modalCard" class="modalCard"></div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

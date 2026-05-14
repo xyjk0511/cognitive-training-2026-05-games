@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="总分奖杯">
+  <defs>
+    <linearGradient id="g" x1="14" y1="8" x2="50" y2="58" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fff6bf"/>
+      <stop offset="0.46" stop-color="#f4bf4f"/>
+      <stop offset="1" stop-color="#c97b22"/>
+    </linearGradient>
+    <linearGradient id="s" x1="19" y1="44" x2="45" y2="60" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffe7a1"/>
+      <stop offset="1" stop-color="#b66a22"/>
+    </linearGradient>
+  </defs>
+  <path d="M20 12h24v10c0 10.8-5.6 17.8-12 17.8S20 32.8 20 22V12Z" fill="url(#g)" stroke="#8b5516" stroke-width="2"/>
+  <path d="M20 17h-8v5c0 7.5 4.6 12.8 11.2 13.6" fill="none" stroke="#d7902e" stroke-width="4" stroke-linecap="round"/>
+  <path d="M44 17h8v5c0 7.5-4.6 12.8-11.2 13.6" fill="none" stroke="#d7902e" stroke-width="4" stroke-linecap="round"/>
+  <path d="M29 39h6v9h-6z" fill="#d9912d"/>
+  <path d="M22 51h20l4 7H18l4-7Z" fill="url(#s)" stroke="#8b5516" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M25 15h20" stroke="#fff7ca" stroke-width="3" stroke-linecap="round" opacity=".75"/>
+  <circle cx="32" cy="24" r="6" fill="#fff1a6" opacity=".86"/>
+</svg>

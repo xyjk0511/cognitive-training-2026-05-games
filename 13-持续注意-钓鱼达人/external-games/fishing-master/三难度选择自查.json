@@ -1,0 +1,53 @@
+{
+  "node_check": {
+    "钓鱼达人_初涉垂钓_单文件.html": {
+      "returncode": 0,
+      "stderr": ""
+    },
+    "钓鱼达人_无名渔夫_单文件.html": {
+      "returncode": 0,
+      "stderr": ""
+    },
+    "钓鱼达人_成人版_单文件.html": {
+      "returncode": 0,
+      "stderr": ""
+    }
+  },
+  "difficulty_buttons": {
+    "钓鱼达人_初涉垂钓_单文件.html": {
+      "easy": true,
+      "normal": true,
+      "hard": true
+    },
+    "钓鱼达人_无名渔夫_单文件.html": {
+      "easy": true,
+      "normal": true,
+      "hard": true
+    },
+    "钓鱼达人_成人版_单文件.html": {
+      "easy": true,
+      "normal": true,
+      "hard": true
+    }
+  },
+  "start_game_uses_difficulty": {
+    "钓鱼达人_初涉垂钓_单文件.html": true,
+    "钓鱼达人_无名渔夫_单文件.html": true,
+    "钓鱼达人_成人版_单文件.html": true
+  },
+  "tour_game_index_dynamic": {
+    "钓鱼达人_初涉垂钓_单文件.html": true,
+    "钓鱼达人_无名渔夫_单文件.html": true,
+    "钓鱼达人_成人版_单文件.html": true
+  },
+  "tour_spot_no_double_advance": {
+    "钓鱼达人_初涉垂钓_单文件.html": true,
+    "钓鱼达人_无名渔夫_单文件.html": true,
+    "钓鱼达人_成人版_单文件.html": true
+  },
+  "external_asset_refs": {
+    "钓鱼达人_初涉垂钓_单文件.html": [],
+    "钓鱼达人_无名渔夫_单文件.html": [],
+    "钓鱼达人_成人版_单文件.html": []
+  }
+}

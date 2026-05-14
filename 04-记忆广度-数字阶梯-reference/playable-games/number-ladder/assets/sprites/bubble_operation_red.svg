@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="384" height="208" viewBox="0 0 384 208">
+  <defs>
+    <radialGradient id="b" cx=".32" cy=".22" r=".83"><stop offset="0" stop-color="#FFFFFF" stop-opacity=".98"/><stop offset=".40" stop-color="#FFE0DF" stop-opacity=".95"/><stop offset="1" stop-color="#FF786F" stop-opacity=".78"/></radialGradient>
+    <filter id="s" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="14" stdDeviation="12" flood-color="#195C73" flood-opacity=".28"/></filter>
+    <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFFFFF" stop-opacity=".85"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/></linearGradient>
+  </defs>
+  <ellipse cx="192.0" cy="184" rx="138.24" ry="18" fill="#0C5068" opacity=".18"/>
+  <g filter="url(#s)"><rect x="18" y="34" width="348" height="140" rx="70" fill="url(#b)" stroke="#E2554B" stroke-width="10"/></g>
+  <ellipse cx="145.92000000000002" cy="66.56" rx="57.599999999999994" ry="18.72" fill="url(#rim)" opacity=".86" transform="rotate(-32 145.92000000000002 66.56)"/>
+  <circle cx="245.76" cy="137.28" r="12.48" fill="#FFFFFF" opacity=".22"/>
+</svg>

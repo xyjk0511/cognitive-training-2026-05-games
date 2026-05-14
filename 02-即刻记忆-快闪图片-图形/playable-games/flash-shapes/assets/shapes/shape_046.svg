@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-label="橙十字架，正方纹">
+  <defs>
+    
+    <linearGradient id="s046_grad" x1="30" y1="18" x2="210" y2="230" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffbd77"/>
+      <stop offset=".45" stop-color="#FF9A2E"/>
+      <stop offset="1" stop-color="#d68126"/>
+    </linearGradient>
+    <radialGradient id="s046_shine" cx="34%" cy="22%" r="64%">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".48"/>
+      <stop offset=".42" stop-color="#ffffff" stop-opacity=".10"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="s046_inner" x1="0" x2="1"><stop stop-color="#ffbd77"/><stop offset="1" stop-color="#d68126"/></linearGradient>
+    
+        <pattern id="s046_checker" width="42" height="42" patternUnits="userSpaceOnUse" patternTransform="rotate(45 128 128)">
+          <rect width="42" height="42" fill="#FF9A2E"/>
+          <rect x="0" y="0" width="21" height="21" fill="#ffac53" opacity=".72"/>
+          <rect x="21" y="21" width="21" height="21" fill="#ffbd77" opacity=".55"/>
+          <path d="M0 42h42M42 0v42" stroke="#fff" stroke-opacity=".11" stroke-width="2"/>
+        </pattern>
+        
+    <filter id="s046_shadow" x="-32" y="-28" width="320" height="320" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="13" stdDeviation="10" flood-color="#1a2034" flood-opacity=".28"/>
+      <feDropShadow dx="0" dy="3" stdDeviation="2" flood-color="#000" flood-opacity=".20"/>
+    </filter>
+    <filter id="s046_edge" x="-12%" y="-12%" width="124%" height="124%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1.2" result="blur"/>
+      <feSpecularLighting in="blur" surfaceScale="4" specularConstant=".55" specularExponent="16" lighting-color="#fff" result="spec">
+        <fePointLight x="70" y="30" z="180"/>
+      </feSpecularLighting>
+      <feComposite in="spec" in2="SourceAlpha" operator="in" result="specOut"/>
+      <feComposite in="SourceGraphic" in2="specOut" operator="arithmetic" k1="0" k2="1" k3=".42" k4="0"/>
+    </filter>
+  </defs>
+  <g filter="url(#s046_shadow)">
+    <g filter="url(#s046_edge)"><path class="shape-core" fill="url(#s046_checker)" stroke="#ffdcb7" stroke-width="8" stroke-linejoin="round" d="M94 26h68v68h68v68h-68v68H94v-68H26V94h68z"/></g>
+    <path d="M54 74 C82 38, 136 30, 173 48" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" opacity=".24"/>
+    <circle cx="75" cy="57" r="7" fill="#fff" opacity=".35"/>
+    <circle cx="180" cy="198" r="5" fill="#fff" opacity=".22"/>
+  </g>
+</svg>

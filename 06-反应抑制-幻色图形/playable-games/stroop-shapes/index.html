@@ -1,104 +1,171 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>幻色图形</title>
-  <style>
-    * { box-sizing: border-box; }
-    body { margin: 0; min-height: 100vh; font-family: "Microsoft YaHei", system-ui, sans-serif; color: #172033; background: #f3f6fb; display: grid; place-items: center; }
-    main { width: min(880px, calc(100vw - 28px)); display: grid; grid-template-rows: auto 1fr auto; gap: 14px; }
-    header, section, footer { background: #fff; border: 1px solid #dbe3ef; border-radius: 8px; padding: 16px; box-shadow: 0 14px 36px rgba(20,31,48,.08); }
-    header { display: flex; justify-content: space-between; gap: 12px; align-items: center; flex-wrap: wrap; }
-    h1 { margin: 0; font-size: 28px; }
-    .word { min-height: 420px; display: grid; place-items: center; font-size: clamp(86px, 18vw, 180px); font-weight: 1000; letter-spacing: 0; }
-    .choices { display: grid; grid-template-columns: repeat(2, 160px); justify-content: center; gap: 16px; }
-    button { border: 0; border-radius: 8px; padding: 18px 20px; font-size: 44px; font-weight: 900; cursor: pointer; background: #172033; color: #fff; }
-    button.check { background: #10a37f; }
-    button.cross { background: #d92d20; }
-    .hud { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
-    .hud b { font-size: 24px; }
-    footer { display: flex; justify-content: space-between; align-items: center; color: #536173; }
-  </style>
+  <link rel="icon" href="assets/ui/star.svg" />
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <main>
-    <header>
-      <h1>幻色图形</h1>
-      <div class="hud">
-        <span>等级 <b id="level">1</b></span>
-        <span>正确 <b id="correct">0</b></span>
-        <span>错误 <b id="wrong">0</b></span>
-        <span id="feedback">判断文字含义和显示颜色是否一致</span>
-      </div>
-    </header>
-    <section>
-      <div id="word" class="word" aria-live="polite"></div>
-      <div class="choices">
-        <button id="check" class="check" aria-label="一致">✓</button>
-        <button id="cross" class="cross" aria-label="不一致">×</button>
+  <main id="app" class="app-shell" aria-live="polite">
+    <section id="splashScreen" class="screen screen-active splash-screen" data-screen="splash">
+      <div class="splash-glow"></div>
+      <img src="assets/characters/xiaokangkang.svg" alt="小康康" class="mascot mascot-float" />
+      <img src="assets/ui/logo.svg" alt="幻色图形" class="logo" />
+      <p class="subtitle">判断左边图形颜色与右边文字含义是否一致</p>
+      <button id="splashContinue" class="primary-btn large">点击进入</button>
+    </section>
+
+    <section id="difficultyScreen" class="screen difficulty-screen" data-screen="difficulty">
+      <div class="panel menu-panel">
+        <img src="assets/ui/logo.svg" alt="幻色图形" class="logo small-logo" />
+        <h1>选择训练难度</h1>
+        <div class="duration-row">
+          <label for="durationSelect">训练时长</label>
+          <select id="durationSelect" aria-label="训练时长">
+            <option value="180">3 分钟</option>
+            <option value="300" selected>5 分钟</option>
+            <option value="600">10 分钟</option>
+          </select>
+        </div>
+        <div class="difficulty-grid">
+          <button class="difficulty-card" data-difficulty="easy"><span>容易</span><strong>第 1 关开始</strong><em>基础颜色干扰</em></button>
+          <button class="difficulty-card" data-difficulty="normal"><span>普通</span><strong>第 15 关开始</strong><em>中等目标压力</em></button>
+          <button class="difficulty-card" data-difficulty="hard"><span>困难</span><strong>第 30 关开始</strong><em>更强冲突控制</em></button>
+        </div>
       </div>
     </section>
-    <footer>
-      <span>源合同：data.json / P2幻色图形.xlsm / 一致点勾，不一致点叉</span>
-      <button id="reset">重新开始</button>
-    </footer>
+
+    <section id="guideScreen" class="screen guide-screen" data-screen="guide">
+      <div class="panel game-panel guide-panel">
+        <header class="guide-header">
+          <button id="guideBack" class="ghost-btn">返回难度</button>
+          <div class="guide-heading">
+            <h2>新手教程</h2>
+            <div class="tutorial-progress" aria-label="教程进度">
+              <span id="guideStepText">1 / 6</span>
+              <div class="progress-track"><div id="guideProgressBar" class="progress-fill"></div></div>
+            </div>
+          </div>
+          <button id="guideSkip" class="ghost-btn">跳过教程</button>
+        </header>
+        <div class="tutorial-layout">
+          <aside class="tutorial-copy" aria-label="教程说明">
+            <h3 id="guideTitle">第一步：目标不是看形状，而是比较颜色含义</h3>
+            <p id="guideBody">每一题有两张卡片。左边是带颜色的图形，右边是一个颜色词。</p>
+            <ul id="guideBullets" class="tutorial-bullets"></ul>
+            <div id="guideDecision" class="decision-pill">正确选择：√ 一致</div>
+          </aside>
+          <section class="tutorial-practice" aria-label="教程练习">
+            <p id="guidePrompt" class="guide-prompt">“左边图形的颜色” 与 “右边文字的含义” 是否一致？</p>
+            <div class="stimulus-stage guide-stage">
+              <article class="stimulus-card"><span class="card-label">图形颜色</span><img id="guideShape" alt="引导图形" /></article>
+              <article class="stimulus-card word-card"><span class="card-label">文字含义</span><span id="guideWord" class="word-value">红色</span></article>
+            </div>
+            <div class="answer-row guide-answer-row">
+              <button id="guideNo" class="answer-btn wrong" aria-label="不一致"><img src="assets/ui/btn_wrong.svg" alt="X" /><span>不一致</span><kbd>← / X</kbd></button>
+              <button id="guideYes" class="answer-btn correct" aria-label="一致"><img src="assets/ui/btn_correct.svg" alt="对" /><span>一致</span><kbd>→ / Enter</kbd></button>
+            </div>
+          </section>
+        </div>
+        <footer class="guide-footer">
+          <button id="guidePrev" class="secondary-btn">上一步</button>
+          <p id="guideHint" class="hint-text">请按高亮按钮完成示例。</p>
+          <button id="guideNext" class="primary-btn">下一步</button>
+        </footer>
+      </div>
+    </section>
+
+    <section id="guideCompleteScreen" class="screen guide-complete-screen" data-screen="guide-complete">
+      <div class="panel complete-panel">
+        <img src="assets/characters/xiaokangkang.svg" alt="小康康" class="mascot small-mascot" />
+        <h2>教程完成</h2>
+        <p>正式训练会不断刷新题目；小关倒计时结束或连续选错 2 次，小关结束。达到小关目标则升级，未达目标则按连续失败次数调整等级。</p>
+        <div class="button-row">
+          <button id="replayGuide" class="secondary-btn">重新演示</button>
+          <button id="enterTraining" class="primary-btn">进入训练</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="gameScreen" class="screen game-screen" data-screen="game">
+      <div id="gamePanel" class="game-panel">
+        <header class="hud">
+          <button id="pauseBtn" class="icon-btn" aria-label="暂停"><img src="assets/ui/pause.svg" alt="" /></button>
+          <div class="hud-block"><span>难度</span><strong id="hudDifficulty">容易</strong></div>
+          <div class="hud-block"><span>等级</span><strong id="hudLevel">1</strong></div>
+          <div class="hud-block"><span><img src="assets/ui/timer.svg" alt="" />训练</span><strong id="hudTrainingTime">05:00</strong></div>
+          <div class="hud-block"><span>小关</span><strong id="hudSubTime">15.0</strong></div>
+          <div class="hud-block target-block"><span><img src="assets/ui/target.svg" alt="" />目标</span><strong id="hudTarget">0/1</strong></div>
+          <div class="hud-block score-block"><span><img src="assets/ui/star.svg" alt="" />积分</span><strong id="hudScore">0</strong></div>
+        </header>
+        <section class="status-strip" aria-label="训练状态">
+          <div class="progress-group">
+            <div class="progress-label"><span>训练剩余</span><strong id="trainingPercent">100%</strong></div>
+            <div class="linear-progress"><div id="trainingProgress"></div></div>
+          </div>
+          <div class="progress-group">
+            <div class="progress-label"><span>小关剩余</span><strong id="subPercent">100%</strong></div>
+            <div class="linear-progress accent"><div id="subProgress"></div></div>
+          </div>
+          <div id="wrongStatus" class="status-pill">连错 0/2</div>
+          <div id="targetStatus" class="status-pill target-status">还差 1 次达标</div>
+        </section>
+        <div id="passRibbon" class="pass-ribbon hidden">已达到通关等级，继续训练至计时结束</div>
+        <section id="stimulusStage" class="stimulus-stage" aria-label="题目">
+          <article class="stimulus-card shape-card"><span class="card-label">图形颜色</span><img id="shapeImg" alt="左边图形" /></article>
+          <article class="stimulus-card word-card"><span class="card-label">文字含义</span><span id="wordText" class="word-value">红色</span></article>
+          <div id="feedback" class="feedback">正确</div>
+        </section>
+        <section class="answer-row">
+          <button id="answerNo" class="answer-btn wrong" aria-label="不一致"><img src="assets/ui/btn_wrong.svg" alt="X" /><span>不一致</span><kbd>← / X</kbd></button>
+          <button id="answerYes" class="answer-btn correct" aria-label="一致"><img src="assets/ui/btn_correct.svg" alt="对" /><span>一致</span><kbd>→ / Enter</kbd></button>
+        </section>
+        <footer class="game-footer">
+          <span>规则：按图形颜色与文字含义判断；文字颜色只是干扰项。</span>
+          <span>快捷键：← / X = 不一致，→ / Enter = 一致</span>
+        </footer>
+      </div>
+    </section>
   </main>
-  <script type="module">
-    import { buildStroopTrial, completeStroopLevel, hydrateStroopShapesData, judgeStroopResponse, nextStroopLevel, shouldEndStroopLevel } from './rules.mjs';
 
-    const raw = await fetch('./data.json').then((res) => res.json());
-    const { colors, levels } = hydrateStroopShapesData(raw);
-    let currentLevel = 1;
-    let correct = 0;
-    let wrong = 0;
-    let failures = 0;
-    let consecutiveWrong = 0;
-    let draw = 0;
-    let trial = null;
-    const word = document.getElementById('word');
-    const feedback = document.getElementById('feedback');
+  <div id="summaryModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="summaryTitle">
+    <div class="modal-card">
+      <h2 id="summaryTitle">小关完成</h2>
+      <div id="summaryResult" class="summary-result"></div>
+      <div id="trendBars" class="trend-bars" aria-label="训练趋势"></div>
+      <button id="continueBtn" class="primary-btn">继续训练</button>
+    </div>
+  </div>
 
-    function colorCss(color) {
-      const [r, g, b, a = 255] = color.rgba;
-      return `rgba(${r}, ${g}, ${b}, ${a / 255})`;
-    }
-    function nextTrial() {
-      const level = levels[currentLevel - 1];
-      trial = buildStroopTrial(level, colors, (draw % 10) / 10);
-      draw += 1;
-      word.textContent = trial.word;
-      word.style.color = colorCss(trial.displayColor);
-      document.getElementById('level').textContent = currentLevel;
-      document.getElementById('correct').textContent = correct;
-      document.getElementById('wrong').textContent = wrong;
-    }
-    function answer(response) {
-      const result = judgeStroopResponse(trial, response);
-      if (result.correct) {
-        correct += 1;
-        consecutiveWrong = 0;
-      } else {
-        wrong += 1;
-        consecutiveWrong += 1;
-      }
-      feedback.textContent = result.correct ? '正确' : `错误，应选择${result.expectedResponse === 'check' ? '一致' : '不一致'}`;
-      const level = levels[currentLevel - 1];
-      if (shouldEndStroopLevel({ level, correctCount: correct, consecutiveWrong })) {
-        const done = completeStroopLevel({ level, correctCount: correct });
-        const next = nextStroopLevel({ level: currentLevel, passed: done.passed, consecutiveFailures: failures });
-        failures = next.consecutiveFailures;
-        currentLevel = next.nextLevel;
-        correct = 0;
-        wrong = 0;
-        consecutiveWrong = 0;
-      }
-      window.setTimeout(nextTrial, 320);
-    }
-    document.getElementById('check').addEventListener('click', () => answer('check'));
-    document.getElementById('cross').addEventListener('click', () => answer('cross'));
-    document.getElementById('reset').addEventListener('click', () => { currentLevel = 1; correct = 0; wrong = 0; failures = 0; consecutiveWrong = 0; draw = 0; nextTrial(); });
-    nextTrial();
-  </script>
+  <div id="pauseModal" class="modal hidden pause-modal" role="dialog" aria-modal="true" aria-labelledby="pauseTitle">
+    <div class="modal-card">
+      <h2 id="pauseTitle">暂停</h2>
+      <p id="pauseNote" class="modal-note">训练已暂停，计时停止。</p>
+      <div class="toggle-row"><span>音效</span><button id="soundToggle" class="toggle-btn" aria-pressed="true">开启</button></div>
+      <div class="toggle-row"><span>音乐</span><button id="musicToggle" class="toggle-btn" aria-pressed="false">关闭</button></div>
+      <div class="button-row stacked">
+        <button id="resumeBtn" class="primary-btn">继续游戏</button>
+        <button id="helpBtn" class="secondary-btn">帮助 / 重新引导</button>
+        <button id="quitBtn" class="ghost-btn">退出到难度选择</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="finalModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="finalTitle">
+    <div class="modal-card final-card">
+      <img src="assets/characters/xiaokangkang.svg" alt="小康康" class="mascot tiny-mascot" />
+      <h2 id="finalTitle">训练结束</h2>
+      <div id="finalStats" class="final-stats"></div>
+      <div class="button-row stacked">
+        <button id="exportResultBtn" class="secondary-btn">导出训练结果 JSON</button>
+        <button id="restartBtn" class="primary-btn">重新开始</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/game.js"></script>
 </body>
 </html>

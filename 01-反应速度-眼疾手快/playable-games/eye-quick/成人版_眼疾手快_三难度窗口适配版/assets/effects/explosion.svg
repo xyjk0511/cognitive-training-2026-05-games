@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="爆炸特效">
+  <defs>
+    <radialGradient id="boom" cx="50%" cy="48%" r="58%">
+      <stop offset="0" stop-color="#fffbe2"/>
+      <stop offset="0.28" stop-color="#ffe36c"/>
+      <stop offset="0.62" stop-color="#ff9b2f"/>
+      <stop offset="1" stop-color="#db3f2b"/>
+    </radialGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#7b2c18" flood-opacity="0.28"/>
+    </filter>
+  </defs>
+  <g filter="url(#shadow)">
+    <path d="M128 12l22 59 56-32-32 56 62 14-60 24 43 47-63-11 2 65-36-54-49 44 13-63-64 2 52-38-56-31 63-10z" fill="url(#boom)"/>
+    <path d="M128 52l13 37 35-20-20 35 40 9-38 15 28 30-40-7 1 41-23-34-31 28 9-40-41 1 33-24-36-20 40-6z" fill="#fff7a7" opacity="0.92"/>
+    <circle cx="128" cy="126" r="31" fill="#fffde6" opacity="0.85"/>
+    <path d="M78 207c25 14 70 19 103 1" fill="none" stroke="#8d4626" stroke-width="8" stroke-linecap="round" opacity="0.25"/>
+  </g>
+</svg>

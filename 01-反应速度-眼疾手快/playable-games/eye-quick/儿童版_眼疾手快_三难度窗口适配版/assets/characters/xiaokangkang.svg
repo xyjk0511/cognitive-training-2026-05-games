@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 460" role="img" aria-label="小康康角色">
+  <defs>
+    <radialGradient id="fur" cx="45%" cy="22%" r="76%"><stop offset="0" stop-color="#ffd79c"/><stop offset=".58" stop-color="#d99145"/><stop offset="1" stop-color="#a85f2a"/></radialGradient>
+    <linearGradient id="vest" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#ffb84a"/><stop offset="1" stop-color="#e76d2e"/></linearGradient>
+    <linearGradient id="helm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe785"/><stop offset="1" stop-color="#f5a52f"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="18" stdDeviation="16" flood-color="#3a5754" flood-opacity=".28"/></filter>
+  </defs>
+  <ellipse cx="210" cy="412" rx="126" ry="30" fill="#315b52" opacity=".22"/>
+  <g filter="url(#shadow)">
+    <g transform="translate(72 28)">
+      <circle cx="54" cy="104" r="52" fill="#cb863f"/><circle cx="54" cy="104" r="32" fill="#ffd6b5"/><circle cx="222" cy="104" r="52" fill="#cb863f"/><circle cx="222" cy="104" r="32" fill="#ffd6b5"/>
+      <path d="M40 102 C50 55 85 22 137 22 C191 22 227 56 238 102 C228 72 196 58 137 58 C79 58 50 72 40 102Z" fill="url(#helm)" stroke="#ba712b" stroke-width="6"/>
+      <path d="M83 55 C102 36 124 30 139 30 C157 30 184 39 204 58" fill="none" stroke="#fff1a8" stroke-width="9" stroke-linecap="round" opacity=".9"/>
+      <rect x="76" y="75" width="124" height="24" rx="12" fill="#df8328" opacity=".55"/>
+      <path d="M39 111 C39 46 88 15 138 15 C189 15 239 46 239 111 L254 263 C259 318 224 378 139 378 C54 378 18 318 24 263Z" fill="url(#fur)" stroke="#925323" stroke-width="7"/>
+      <path d="M65 260 C82 230 112 215 139 215 C167 215 197 230 214 260 L219 361 C188 381 107 383 77 360Z" fill="url(#vest)"/>
+      <path d="M116 225h45v142h-45z" fill="#fff4d0" opacity=".92"/>
+      <path d="M79 274 C107 250 171 250 206 274 L206 348 C172 372 104 371 79 348Z" fill="#ffe0a2"/>
+      <circle cx="92" cy="169" r="11" fill="#46301f"/><circle cx="176" cy="169" r="11" fill="#46301f"/>
+      <circle cx="95" cy="164" r="4" fill="#fff"/><circle cx="179" cy="164" r="4" fill="#fff"/>
+      <ellipse cx="138" cy="188" rx="19" ry="13" fill="#5f371f"/><path d="M122 204 C129 222 151 222 158 204" fill="none" stroke="#4b2b1a" stroke-width="8" stroke-linecap="round"/>
+      <path d="M132 202v20M146 202v20" stroke="#fff" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="72" cy="204" r="16" fill="#ffb7a0" opacity=".72"/><circle cx="207" cy="204" r="16" fill="#ffb7a0" opacity=".72"/>
+      <path d="M36 190 H0 M38 206 H6 M35 222 H-2 M238 190 H276 M236 206 H270 M239 222 H278" stroke="#5d4938" stroke-width="5" stroke-linecap="round"/>
+      <path d="M19 284 C-10 296 -16 342 20 354 C45 362 62 337 58 312" fill="#cf8842" stroke="#91511f" stroke-width="7"/>
+      <path d="M256 284 C287 299 293 342 257 354 C231 363 214 336 219 312" fill="#cf8842" stroke="#91511f" stroke-width="7"/>
+      <circle cx="138" cy="303" r="25" fill="#ffdd55" stroke="#b36d27" stroke-width="6"/><path d="M138 286l6 14 15 1-12 9 4 15-13-8-13 8 4-15-12-9 15-1z" fill="#fff6bf"/>
+    </g>
+  </g>
+</svg>

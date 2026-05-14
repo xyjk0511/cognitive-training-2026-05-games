@@ -1,109 +1,209 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>分门别类</title>
-  <style>
-    * { box-sizing: border-box; }
-    body { margin: 0; min-height: 100vh; font-family: "Microsoft YaHei", system-ui, sans-serif; color: #172033; background: #f5f8fc; display: grid; place-items: center; }
-    main { width: min(1040px, calc(100vw - 28px)); display: grid; grid-template-rows: auto 1fr auto; gap: 14px; }
-    header, section, footer { background: #fff; border: 1px solid #dbe3ef; border-radius: 8px; padding: 16px; box-shadow: 0 14px 36px rgba(20,31,48,.08); }
-    header { display: flex; justify-content: space-between; gap: 12px; align-items: center; flex-wrap: wrap; }
-    h1 { margin: 0; font-size: 28px; }
-    .hud { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
-    .hud b { font-size: 24px; }
-    .layout { display: grid; grid-template-columns: 280px 1fr; gap: 16px; min-height: 520px; }
-    .cue { display: grid; place-items: center; border: 1px solid #dbe3ef; border-radius: 8px; background: #f8fafc; padding: 16px; text-align: center; }
-    .cue strong { font-size: 42px; }
-    .cue span { margin-top: 10px; color: #536173; }
-    .options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
-    .option { border: 1px solid #dbe3ef; border-radius: 8px; background: #fff; color: #172033; min-height: 150px; padding: 16px; font-size: 30px; font-weight: 900; cursor: pointer; }
-    .option small { display: block; margin-top: 8px; font-size: 14px; color: #536173; font-weight: 500; }
-    .option.correct { border-color: #10a37f; background: #edfdf8; }
-    .option.wrong { border-color: #d92d20; background: #fff1f0; }
-    .guides { display: flex; gap: 8px; flex-wrap: wrap; }
-    .guides img { width: 110px; height: 68px; object-fit: cover; border: 1px solid #dbe3ef; border-radius: 6px; background: #f8fafc; }
-    footer { display: flex; justify-content: space-between; align-items: center; color: #536173; gap: 12px; flex-wrap: wrap; }
-    button { border: 0; border-radius: 8px; padding: 10px 14px; font-weight: 800; background: #172033; color: #fff; cursor: pointer; }
-    @media (max-width: 760px) { .layout { grid-template-columns: 1fr; } .options { grid-template-columns: 1fr; } }
-  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="分门别类：言语与物体识别分类训练 HTML5 游戏。">
+  <meta name="theme-color" content="#eaf6ff">
+  <title>分门别类 · 物体识别训练</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main>
-    <header>
-      <h1>分门别类</h1>
-      <div class="hud">
-        <span>等级 <b id="level">1</b></span>
-        <span>正确 <b id="correct">0</b></span>
-        <span>目标 <b id="target">1</b></span>
-        <span id="feedback">选择同一类别的物品</span>
+  <noscript>本游戏需要启用 JavaScript 后才能运行。</noscript>
+
+  <main class="app">
+    <section id="splashScreen" class="screen active glass" aria-labelledby="splashTitle">
+      <div class="ambient-dot dot-a"></div>
+      <div class="ambient-dot dot-b"></div>
+      <div class="splash-panel">
+        <div class="top-actions">
+          <button class="btn ghost small open-help" type="button" data-kind="tutorial">新手教程</button>
+          <button class="btn ghost small open-help" type="button" data-kind="help">帮助</button>
+        </div>
+        <div class="splash-main">
+          <div class="copy-block">
+            <div class="brand-kicker">言语 · 物体识别训练</div>
+            <h1 id="splashTitle" class="title">分门别类</h1>
+            <p class="subtitle">根据图示和类别提示，在选项中选择与目标类别匹配的图片。训练过程覆盖一级、二级、三级分类，用于物体知觉和语义系统训练。</p>
+            <div class="notice" role="note"><strong>注意</strong><span>该训练方案不适合色盲或色弱用户进行训练。</span></div>
+            <div class="feature-row" aria-label="游戏内容概览">
+              <span>100 关</span>
+              <span>92 项物品素材</span>
+              <span>3 档起始难度</span>
+              <span>PassTarget 结算</span>
+            </div>
+            <div class="asset-loader" aria-live="polite">
+              <div class="loader-line"><span id="assetStatus">正在准备素材……</span><span id="assetPercent">0%</span></div>
+              <div class="loading-bar" aria-hidden="true"><span id="assetProgress"></span></div>
+            </div>
+            <button id="enterBtn" class="btn" type="button" disabled>进入训练</button>
+          </div>
+          <div class="mascot-wrap" aria-hidden="true"><img src="assets/ui/kangkang.svg" alt=""></div>
+        </div>
       </div>
-    </header>
-    <section class="layout">
-      <aside class="cue">
-        <strong id="cueName"></strong>
-        <span id="cueType"></span>
-      </aside>
-      <div id="options" class="options"></div>
     </section>
-    <footer>
-      <div class="guides" aria-label="源引导图">
-        <img src="./guides/引导1.png" alt="" />
-        <img src="./guides/引导2.png" alt="" />
-        <img src="./guides/引导3.png" alt="" />
+
+    <section id="welcomeScreen" class="screen glass" aria-labelledby="welcomeTitle">
+      <div class="ambient-dot dot-c"></div>
+      <div class="welcome-panel">
+        <div class="top-actions">
+          <button class="btn ghost small open-help" type="button" data-kind="guide">引导</button>
+          <button class="btn ghost small open-help" type="button" data-kind="layout">布局</button>
+          <button class="btn ghost small open-help" type="button" data-kind="tutorial">新手教程</button>
+          <button class="btn ghost small open-help" type="button" data-kind="help">帮助</button>
+        </div>
+        <div class="welcome-grid">
+          <div class="plane-card" aria-hidden="true"><img src="assets/ui/kangkang_airplane.svg" alt=""></div>
+          <div class="copy-block">
+            <div class="brand-kicker">选择训练难度</div>
+            <h2 id="welcomeTitle" class="title compact-title">准备起飞</h2>
+            <p class="subtitle">难度只决定起始关卡；倒计时、选项数、目标数、分数和目标池均来自配置表。</p>
+            <div class="difficulty-stack">
+              <button class="difficulty-card" type="button" data-difficulty="easy">
+                <span class="level">第 1 关</span>
+                <h3>容易</h3>
+                <p>从一级类别开始，适合首次训练和规则热身。</p>
+                <div class="card-tags"><span>基础分类</span><span>低压节奏</span></div>
+              </button>
+              <button class="difficulty-card" type="button" data-difficulty="normal">
+                <span class="level">第 15 关</span>
+                <h3>普通</h3>
+                <p>从中段二级类别开始，选项与目标要求提高。</p>
+                <div class="card-tags"><span>中段训练</span><span>二级类别</span></div>
+              </button>
+              <button class="difficulty-card" type="button" data-difficulty="hard">
+                <span class="level">第 30 关</span>
+                <h3>困难</h3>
+                <p>从第 30 关开始，更快进入高压分类训练。</p>
+                <div class="card-tags"><span>高强度</span><span>更高目标</span></div>
+              </button>
+            </div>
+          </div>
+        </div>
+        <aside class="quick-guide-card" aria-label="快速上手">
+          <strong>30 秒上手：</strong>先看图示 → 看提示类别 → 等选项飞入 → 点 1 个正确图片。达到目标后不会立即结束，小关会持续到倒计时结束或连续选错 2 次。
+        </aside>
       </div>
-      <span>源合同：数值.xlsx / 关卡配置.xlsx / 按类别归纳选择</span>
-      <button id="reset">重新开始</button>
-    </footer>
+    </section>
+
+    <section id="gameScreen" class="screen glass" aria-labelledby="gameTitle">
+      <div class="game-panel">
+        <h2 id="gameTitle" class="sr-only">训练进行中</h2>
+        <div class="hud" aria-label="训练状态">
+          <div class="hud-card"><div class="label">难度</div><div id="hudDifficulty" class="value">-</div></div>
+          <div class="hud-card"><div class="label">关卡</div><div id="hudLevel" class="value">1</div></div>
+          <div class="hud-card"><div class="label">积分</div><div id="hudScore" class="value">0</div></div>
+          <div class="hud-card"><div class="label">目标</div><div id="hudGoal" class="value">0/1</div><div class="progress-pill"><span id="goalProgress"></span></div></div>
+          <div class="hud-card"><div class="label">连错</div><div id="hudWrongStreak" class="value">0/2</div></div>
+          <div class="hud-card timer"><div class="label">倒计时</div><div id="hudTimer" class="value">0s</div></div>
+          <div class="hud-card"><div class="label">轮次</div><div id="hudRound" class="value">0</div></div>
+          <div class="hud-card"><div class="label">趋势</div><div id="hudTrend" class="value">初次</div></div>
+        </div>
+
+        <div class="playfield glass">
+          <div class="top-actions in-game-actions">
+            <button id="muteBtn" class="btn ghost small" type="button" aria-pressed="false">静音</button>
+            <button id="openCoachBtn" class="btn ghost small" type="button">教程</button>
+            <button class="btn ghost small open-help" type="button" data-kind="help">帮助</button>
+            <button id="pauseBtn" class="btn secondary small" type="button" aria-pressed="false">暂停</button>
+          </div>
+
+          <div class="prompt" role="status" aria-live="polite">
+            <div>
+              <div id="promptStep" class="prompt-step">准备</div>
+              <div id="promptMain" class="prompt-main">请选择难度开始训练</div>
+              <div id="promptSub" class="prompt-sub">先展示图示，随后展示选项。</div>
+            </div>
+            <div id="promptBadge" class="category-badge">类别</div>
+          </div>
+
+          <div class="stage">
+            <div class="clue-zone">
+              <div class="zone-title">图示</div>
+              <div id="clueCard" class="clue-card empty"><span>等待开始</span></div>
+            </div>
+            <div class="option-zone">
+              <div class="zone-title">选项 <span class="keyboard-hint">可用数字键 1-4 选择</span></div>
+              <div id="optionsGrid" class="options-grid cols-2 preparing"><div class="option-placeholder">等待开始</div></div>
+            </div>
+          </div>
+
+          <div class="footer-line">
+            <span>结束条件：倒计时为 0，或连续选错 2 次。</span>
+            <span>达标后继续答题，可获得超额正确奖励。</span>
+          </div>
+
+          <div id="feedback" class="feedback" role="status" aria-live="assertive"></div>
+
+          <div id="stageIntroLayer" class="coach-layer show" aria-live="polite">
+            <div class="coach-card">
+              <div class="brand-kicker">本关准备</div>
+              <h2 id="introTitle">选择难度后开始</h2>
+              <p id="introBody">难度入口会决定起始关卡。开始后先观察图示，再根据提示选择选项。</p>
+              <div class="intro-stats">
+                <div><span>类别粒度</span><strong id="introDepth">-</strong></div>
+                <div><span>选项数量</span><strong id="introOptions">-</strong></div>
+                <div><span>倒计时</span><strong id="introTime">-</strong></div>
+                <div><span>过关目标</span><strong id="introPass">-</strong></div>
+              </div>
+              <div class="coach-note">提示：达到目标次数后不会立即结算，继续正确选择可提高本关积分。</div>
+              <div class="toggle-row">
+                <button id="startStageBtn" class="btn" type="button" disabled>开始本关</button>
+                <button class="btn secondary open-help" type="button" data-kind="tutorial">查看完整教程</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="pauseLayer" class="pause-layer">
+            <div>
+              <h2>已暂停</h2>
+              <p>倒计时和点击选择已暂停；当前画面保留。</p>
+              <button id="resumeBtn" class="btn" type="button">继续训练</button>
+            </div>
+          </div>
+          <div id="confetti" class="confetti" aria-hidden="true"></div>
+        </div>
+      </div>
+    </section>
   </main>
-  <script type="module">
-    import { buildCategoryRound, hydrateCategoryData, itemMatchesCategory, scoreCategoryLevel } from './rules.mjs';
 
-    const raw = await fetch('./data.json').then((res) => res.json());
-    const { items, levels } = hydrateCategoryData(raw);
-    let currentLevel = 1;
-    let correct = 0;
-    let round = null;
-    const refs = Object.fromEntries(['level', 'correct', 'target', 'feedback', 'cueName', 'cueType', 'options'].map((id) => [id, document.getElementById(id)]));
+  <div id="infoModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+    <div class="modal">
+      <button id="closeInfoX" class="modal-x" type="button" aria-label="关闭">×</button>
+      <h2 id="infoTitle">帮助</h2>
+      <div id="infoBody"></div>
+      <div class="toggle-row">
+        <button id="modalGuideBtn" class="btn secondary" type="button">查看引导</button>
+        <button id="modalLayoutBtn" class="btn secondary" type="button">查看布局</button>
+        <button id="modalTutorialBtn" class="btn secondary" type="button">新手教程</button>
+        <button id="closeInfo" class="btn" type="button">关闭</button>
+      </div>
+    </div>
+  </div>
 
-    function typeText(item, dimension) {
-      const names = ['一级类别', '二级类别', '三级类别'];
-      const value = dimension === 0 ? item.primary : dimension === 1 ? item.secondary : item.tertiary;
-      return `${names[dimension]} ${value}`;
-    }
-    function startRound() {
-      const level = levels[currentLevel - 1];
-      round = buildCategoryRound(level, items, (correct % 10) / 10);
-      refs.level.textContent = currentLevel;
-      refs.correct.textContent = correct;
-      refs.target.textContent = level.passTarget;
-      refs.cueName.textContent = round.cue.name;
-      refs.cueType.textContent = typeText(round.cue, level.dimension);
-      refs.options.innerHTML = '';
-      for (const item of round.options) {
-        const button = document.createElement('button');
-        button.className = 'option';
-        button.innerHTML = `${item.name}<small>${typeText(item, level.dimension)}</small>`;
-        button.addEventListener('click', () => choose(button, item));
-        refs.options.append(button);
-      }
-    }
-    function choose(button, item) {
-      const level = levels[currentLevel - 1];
-      const ok = itemMatchesCategory(item, level, round.target);
-      button.classList.add(ok ? 'correct' : 'wrong');
-      if (ok) correct += 1;
-      refs.feedback.textContent = ok ? '正确' : '错误';
-      if (correct >= level.passTarget) {
-        const result = scoreCategoryLevel({ level, correctCount: correct, remainingTime: level.stageTime });
-        currentLevel = result.passed ? Math.min(100, currentLevel + 1) : currentLevel;
-        correct = 0;
-      }
-      window.setTimeout(startRound, 420);
-    }
-    document.getElementById('reset').addEventListener('click', () => { currentLevel = 1; correct = 0; startRound(); });
-    startRound();
-  </script>
+  <div id="settleModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="settleTitle">
+    <div class="modal settle-modal">
+      <h2 id="settleTitle">结算</h2>
+      <p id="settleReason">本关结束。</p>
+      <div class="settle-grid">
+        <div class="settle-stat"><div class="label">结果</div><div id="settlePass" class="n">-</div></div>
+        <div class="settle-stat"><div class="label">本关积分</div><div id="settleScore" class="n">+0</div></div>
+        <div class="settle-stat"><div class="label">正确次数</div><div id="settleCorrect" class="n">0/0</div></div>
+        <div class="settle-stat"><div class="label">准确率</div><div id="settleAccuracy" class="n">0%</div></div>
+        <div class="settle-stat"><div class="label">剩余时间</div><div id="settleTime" class="n">0s</div></div>
+        <div class="settle-stat"><div class="label">等级变化</div><div id="settleLevel" class="n">1 → 1</div></div>
+      </div>
+      <div id="settleFormula" class="formula-box"></div>
+      <p>趋势：<strong id="settleTrend">初次</strong></p>
+      <p id="settleNextHint" class="next-hint">继续训练会进入结算后的等级。</p>
+      <div class="toggle-row">
+        <button id="nextStageBtn" class="btn" type="button">继续下一小关</button>
+        <button id="restartBtn" class="btn secondary" type="button">重新选择难度</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="src/data.js"></script>
+  <script src="src/game.js"></script>
 </body>
 </html>

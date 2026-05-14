@@ -1,114 +1,34 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>快闪图片-图形</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>快闪图形 - 三档难度版版本选择</title>
+  <link rel="stylesheet" href="shared/style.css">
   <style>
-    * { box-sizing: border-box; }
-    body { margin: 0; min-height: 100vh; font-family: "Microsoft YaHei", system-ui, sans-serif; color: #172033; background: #eef3f8; display: grid; place-items: center; }
-    main { width: min(960px, calc(100vw - 28px)); min-height: 620px; display: grid; grid-template-rows: auto 1fr auto; gap: 16px; }
-    header, section, footer { background: #fff; border: 1px solid #dbe3ef; border-radius: 8px; padding: 16px; box-shadow: 0 14px 36px rgba(20, 31, 48, .08); }
-    header { display: grid; grid-template-columns: 1fr repeat(4, minmax(88px, auto)); gap: 10px; align-items: center; }
-    h1 { margin: 0; font-size: 28px; }
-    .stat { text-align: center; border-left: 1px solid #e5ebf4; padding-left: 10px; }
-    .stat b { display: block; font-size: 22px; }
-    .stage { display: grid; place-items: center; gap: 18px; }
-    .stimulus { width: min(320px, 70vw); aspect-ratio: 1; border: 1px solid #dbe3ef; border-radius: 8px; background: #f8fafc; display: grid; place-items: center; }
-    .stimulus svg { width: 82%; height: 82%; }
-    .choices { display: grid; grid-template-columns: repeat(2, 180px); gap: 14px; }
-    button { border: 0; border-radius: 8px; padding: 14px 18px; font-size: 20px; font-weight: 800; cursor: pointer; background: #1f6feb; color: #fff; }
-    button.secondary { background: #10a37f; }
-    button:disabled { opacity: .45; cursor: not-allowed; }
-    .feedback { min-height: 28px; font-weight: 800; }
-    footer { display: flex; justify-content: space-between; align-items: center; color: #536173; }
+    body { overflow:auto; }
+    #app { min-height:100vh; }
+    .stage { min-height:620px; }
+    a.primary-btn { display:inline-grid; place-items:center; text-decoration:none; }
+    .stage, #welcomeScreen, #menuScreen { background-image:url("assets/ui/bg_menu.svg"); }
   </style>
 </head>
 <body>
-  <main>
-    <header>
-      <h1>快闪图片-图形</h1>
-      <div class="stat"><span>等级</span><b id="level">1</b></div>
-      <div class="stat"><span>正确</span><b id="correct">0</b></div>
-      <div class="stat"><span>错误</span><b id="wrong">0</b></div>
-      <div class="stat"><span>目标</span><b id="target">1</b></div>
-    </header>
-    <section class="stage">
-      <div id="stimulus" class="stimulus" aria-live="polite"></div>
-      <div class="choices">
-        <button id="same" class="secondary">相同</button>
-        <button id="different">不同</button>
+<div id="app">
+  <main class="stage">
+    <section class="screen active">
+      <div class="center-stack">
+        <img class="title-logo" src="assets/ui/title_logo.svg" alt="快闪图形">
+        <img class="mascot-img" src="assets/mascot/xkk_idle.svg" alt="角色小康康">
+        <div class="mascot-name">选择版本</div>
+        <div class="menu-actions">
+          <a class="primary-btn" href="儿童版/index.html">儿童版</a>
+          <a class="primary-btn" href="成人版/index.html">成人版</a>
+        </div>
+        <div style="color:rgba(255,255,255,.78);font-weight:900">无需联网，直接在浏览器中打开对应版本即可运行。</div>
       </div>
-      <div id="feedback" class="feedback">第一张图形只用于建立记忆，不计分。</div>
     </section>
-    <footer>
-      <span id="contract">源合同：data.json / P2快闪图形.xlsm，一回溯相同/不同判断</span>
-      <button id="reset">重新开始</button>
-    </footer>
   </main>
-  <script type="module">
-    import { completeFlashLevel, createFlashTrial, getFlashLevel, judgeFlashResponse, nextFlashLevel } from './rules.mjs';
-
-    const [data, catalog] = await Promise.all([
-      fetch('./data.json').then((res) => res.json()),
-      fetch('../../assets/training-assets-flash/flashShapeStimulusCatalog.json').then((res) => res.json()),
-    ]);
-
-    let currentLevel = 1;
-    let correct = 0;
-    let wrong = 0;
-    let consecutiveFailures = 0;
-    let previous = null;
-    let trial = null;
-    let cursor = 0;
-    const refs = Object.fromEntries(['level', 'correct', 'wrong', 'target', 'stimulus', 'feedback'].map((id) => [id, document.getElementById(id)]));
-
-    function levelConfig() { return getFlashLevel(data, currentLevel); }
-    function stimulusAt(offset) { return catalog[(cursor + offset) % catalog.length]; }
-    function renderStimulus(stimulus) {
-      refs.stimulus.innerHTML = stimulus?.fallbackSvg || '';
-    }
-    function renderHud() {
-      const level = levelConfig();
-      refs.level.textContent = currentLevel;
-      refs.correct.textContent = correct;
-      refs.wrong.textContent = wrong;
-      refs.target.textContent = level.missionPass;
-    }
-    function nextTrial(forceFirst = false) {
-      const level = levelConfig();
-      const candidate = stimulusAt(forceFirst ? 0 : 7);
-      trial = createFlashTrial({ previousStimulus: previous, candidateStimulus: candidate, level, draw: (cursor % 10) / 10 });
-      previous = trial.candidateStimulus;
-      cursor += 1;
-      renderStimulus(trial.candidateStimulus);
-      refs.feedback.textContent = trial.firstTrial ? '第一张图形只用于建立记忆，不计分。' : '判断这张图和上一张是否相同。';
-      renderHud();
-    }
-    function answer(response) {
-      const result = judgeFlashResponse(trial, response);
-      if (result.ignored) { nextTrial(); return; }
-      if (result.correct) correct += 1; else wrong += 1;
-      refs.feedback.textContent = result.correct ? '正确' : `错误，应选择${result.expectedResponse === 'same' ? '相同' : '不同'}`;
-      const level = levelConfig();
-      if (correct >= level.missionPass || wrong > level.fault) {
-        const done = completeFlashLevel({ level, correctCount: correct, wrongCount: wrong, remainingTime: level.time });
-        const next = nextFlashLevel({ level: currentLevel, passed: done.passed, consecutiveFailures });
-        consecutiveFailures = next.consecutiveFailures;
-        currentLevel = next.nextLevel;
-        correct = 0;
-        wrong = 0;
-        previous = null;
-        window.setTimeout(() => nextTrial(true), 600);
-      } else {
-        window.setTimeout(() => nextTrial(), 320);
-      }
-      renderHud();
-    }
-    document.getElementById('same').addEventListener('click', () => answer('same'));
-    document.getElementById('different').addEventListener('click', () => answer('different'));
-    document.getElementById('reset').addEventListener('click', () => { currentLevel = 1; correct = 0; wrong = 0; previous = null; nextTrial(true); });
-    nextTrial(true);
-  </script>
+</div>
 </body>
 </html>
