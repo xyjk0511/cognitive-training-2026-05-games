@@ -7,6 +7,16 @@ node .\tools\verify-design-parity.mjs
 $env:NODE_PATH='C:\Users\55093\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\node_modules'; node .\tools\smoke-games.mjs
 ```
 
+公开入口：<https://xyjk0511.github.io/cognitive-training-2026-05-games/>
+
+首页按源材料的五个一级目录分组：
+
+- `01 感知觉`：眼疾手快、影子配对
+- `02 记忆力`：快闪图片-图形、强力记忆、数字阶梯、翻个西瓜
+- `03 注意力`：包裹出库、静默池塘、钓鱼达人
+- `04 执行能力`：幻色图形、扑克求和、骰子求和
+- `05 社会认知`：分门别类
+
 ## 对应关系
 
 | 归档目录 | 可运行入口 | 选定设计合同 | 当前状态 |
