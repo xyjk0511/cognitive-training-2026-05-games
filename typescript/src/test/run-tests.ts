@@ -25,6 +25,29 @@ for (const vector of vectors) {
 assertRejected(() => canonicalString({ bad: "\ud800" }), "unpaired surrogate must be rejected");
 assertRejected(() => canonicalString({ bad: -0 }), "negative zero must be rejected");
 
+const stateSpec = JSON.parse(
+  readFileSync(resolve(process.cwd(), "../contracts/normative/a620_runtime_state_machine_v1.1.json"), "utf8"),
+) as {
+  transitions: Array<{from: RuntimeState[]; input: string; to: RuntimeState}>;
+  nonMutatingInputLegality: Record<string, RuntimeState[]>;
+};
+for (const transition of stateSpec.transitions) {
+  for (const source of transition.from) {
+    assert(
+      reduceState(source, transition.input as Parameters<typeof reduceState>[1]) === transition.to,
+      `generated transition mismatch: ${source} + ${transition.input}`,
+    );
+  }
+}
+for (const [input, states] of Object.entries(stateSpec.nonMutatingInputLegality)) {
+  for (const source of states) {
+    assert(
+      reduceState(source, input as Parameters<typeof reduceState>[1]) === source,
+      `generated non-mutating legality mismatch: ${source} + ${input}`,
+    );
+  }
+}
+
 let state: RuntimeState = "UNPREPARED";
 state = reduceState(state, "PREPARE");
 assert(state === "PREPARING", "PREPARE transition");
@@ -46,6 +69,7 @@ assertRejected(() => reduceState("RUNNING", "RESULT_READY"), "RESULT_READY from 
 assertRejected(() => reduceState("UNPREPARED", "QUERY_STATE"), "QUERY_STATE from UNPREPARED must be rejected");
 assertRejected(() => reduceState("UNPREPARED", "BATCH_CLOSED"), "BATCH_CLOSED from UNPREPARED must be rejected");
 assertRejected(() => reduceState("READY", "COMMAND_ACCEPTED"), "COMMAND_ACCEPTED from READY must be rejected");
+assertRejected(() => reduceState("TERMINATING", "TERMINATE"), "repeated TERMINATE while TERMINATING must be rejected");
 assert(reduceState("RUNNING", "COMMAND_REJECTED") === "ERROR", "COMMAND_REJECTED must enter ERROR");
 
 console.log("TYPESCRIPT_GATE0_TESTS_PASS");

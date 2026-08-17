@@ -160,6 +160,14 @@ def test_embedded_game_payload_schemas_match_source():
     assert formal['properties']['gamePayload']==source
 
 
+def test_generated_cross_language_state_machine_sources_are_current():
+    subprocess.run(
+        [sys.executable, str(ROOT/'python/tools/generate_state_machine_sources.py'), '--check'],
+        check=True,
+        cwd=ROOT,
+    )
+
+
 def test_game_specific_schema_rejects_unknown_metrics():
     flow=load('valid_complete_flow.json')['messages']
     payload=next(m for m in flow if m['messageType']=='RESULT_READY')['payload']['gamePayload']

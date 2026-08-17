@@ -56,6 +56,7 @@ object Gate0Main {
         expectRejected { RuntimeStateMachine.reduce(RuntimeState.UNPREPARED, RuntimeInput.QUERY_STATE) }
         expectRejected { RuntimeStateMachine.reduce(RuntimeState.UNPREPARED, RuntimeInput.BATCH_CLOSED) }
         expectRejected { RuntimeStateMachine.reduce(RuntimeState.READY, RuntimeInput.COMMAND_ACCEPTED) }
+        expectRejected { RuntimeStateMachine.reduce(RuntimeState.TERMINATING, RuntimeInput.TERMINATE) }
         check(RuntimeStateMachine.reduce(RuntimeState.RUNNING, RuntimeInput.COMMAND_REJECTED) == RuntimeState.ERROR)
 
         val ledger = BatchEvidenceLedger(8)
