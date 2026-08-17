@@ -8,3 +8,5 @@ build/
 *.tpkg
 *.tmp
 .DS_Store
+
+.pytest_cache/
