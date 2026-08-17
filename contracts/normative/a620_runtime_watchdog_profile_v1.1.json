@@ -1,0 +1,25 @@
+{
+  "profile": "A620-RWP-1",
+  "contractVersion": "A620-TRC-1.1",
+  "snapshotVersion": "A620-RWS-1.1",
+  "timeoutsMs": {
+    "prepareReady": 10000,
+    "commandAccepted": 100,
+    "startConfirmationAfterBoundary": 1000,
+    "pauseConfirmationAfterBoundary": 1000,
+    "resumeConfirmationAfterBoundary": 1000,
+    "terminateConfirmationAfterBoundary": 1000,
+    "queryState": 1000,
+    "heartbeatInterval": 1000,
+    "heartbeatSilence": 3500,
+    "finalizationResultReady": 5000,
+    "localResultCommit": 5000
+  },
+  "terminalAction": "INTERRUPT_EXECUTION_WITHOUT_FORMAL_RESULT",
+  "rules": [
+    "Timeouts are measured in A620-UPTIME-MS-1 and expire at the inclusive deadline.",
+    "A watchdog failure never fabricates RESULT_READY, ACK_RESULT_COMMITTED, or a FormalTrainingResult.",
+    "The durable outbox may continue exact-byte retry until the watchdog interrupts or the runtime is superseded.",
+    "RUNTIME_ERROR is an immediate watchdog failure regardless of the remaining timeout budget."
+  ]
+}

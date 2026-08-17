@@ -404,7 +404,7 @@ def test_durable_runtime_journal_survives_restart_and_isolates_stale_messages(tm
     regressed=deepcopy(new_prepare); regressed['messageId']='cmd-regressed'; regressed['senderSeq']=1
     with pytest.raises(JournalConflict,match='senderSeq'):
         journal.ingest(regressed)
-    assert journal.counts()=={'active_runtime':1,'runtime_message_journal':3,'sender_cursor':2,'reducer_snapshot':1}
+    assert journal.counts()=={'active_runtime':1,'runtime_message_journal':3,'runtime_audit_chain':3,'sender_cursor':2,'reducer_snapshot':1}
     journal.close()
 
 
@@ -659,7 +659,7 @@ def test_durable_runtime_apply_commits_message_cursor_and_snapshot_atomically(tm
 
     with pytest.raises(RuntimeError,match='injected failure'):
         journal.apply(ready,inject_failure_after_journal=True)
-    assert journal.counts()=={'active_runtime':1,'runtime_message_journal':1,'sender_cursor':1,'reducer_snapshot':1}
+    assert journal.counts()=={'active_runtime':1,'runtime_message_journal':1,'runtime_audit_chain':1,'sender_cursor':1,'reducer_snapshot':1}
     assert journal.load_snapshot(identity['runtimeSessionId'])['state']=='PREPARING'
 
     retried=journal.apply(ready)
@@ -680,7 +680,7 @@ def test_durable_runtime_apply_commits_message_cursor_and_snapshot_atomically(tm
     superseded_replay=journal.apply(ready)
     assert superseded_replay.intake.disposition is IntakeDisposition.IDEMPOTENT_REPLAY
     assert superseded_replay.reducer_snapshot is None
-    assert journal.counts()=={'active_runtime':1,'runtime_message_journal':2,'sender_cursor':2,'reducer_snapshot':1}
+    assert journal.counts()=={'active_runtime':1,'runtime_message_journal':2,'runtime_audit_chain':2,'sender_cursor':2,'reducer_snapshot':1}
     journal.close()
 
 
@@ -706,3 +706,397 @@ def test_package_release_floor_blocks_old_nonactive_package(tmp_path):
     with pytest.raises(PackageActivationError,match='minimum accepted release sequence'):
         slots.install(package1,expected_game_code='CATCH_LIGHT',maintenance_state='IDLE_NO_TASK')
     assert slots.active('CATCH_LIGHT')==active2
+
+
+def test_json_resource_profile_rejects_depth_container_and_string_budgets():
+    from a620_gate0.canonical import A620_JSON_RESOURCE_LIMITS, validate_json_resources
+
+    deep: object = 0
+    for _ in range(A620_JSON_RESOURCE_LIMITS.max_depth + 1):
+        deep = [deep]
+    with pytest.raises(CanonicalJsonError, match='depth'):
+        validate_json_resources(deep)
+    with pytest.raises(CanonicalJsonError, match='array exceeds'):
+        canonical_bytes([0] * (A620_JSON_RESOURCE_LIMITS.max_array_items + 1))
+    with pytest.raises(CanonicalJsonError, match='string budget'):
+        canonical_bytes(['x' * 200_000] * 8)
+
+
+def test_ipc_frame_fragmentation_coalescing_and_fail_closed():
+    from a620_gate0.ipc_frame import (
+        FrameDecoder, IpcFrameError, decode_canonical_payload, encode_frame,
+        MAX_FRAME_PAYLOAD_BYTES,
+    )
+
+    frame_a = encode_frame({'a': 1})
+    frame_b = encode_frame({'b': '捕光行动'})
+    decoder = FrameDecoder()
+    assert decoder.feed(frame_a[:1]) == []
+    assert decoder.feed(frame_a[1:5]) == []
+    result = decoder.feed(frame_a[5:])
+    assert [decode_canonical_payload(item) for item in result] == [{'a': 1}]
+    assert decoder.retained_bytes == 0
+    decoder.finish()
+
+    decoder = FrameDecoder()
+    result = decoder.feed(frame_a + frame_b)
+    assert [decode_canonical_payload(item) for item in result] == [{'a': 1}, {'b': '捕光行动'}]
+    decoder.finish()
+
+    decoder = FrameDecoder()
+    decoder.feed(frame_b[:-1])
+    with pytest.raises(IpcFrameError, match='partial frame'):
+        decoder.finish()
+    with pytest.raises(IpcFrameError, match='already failed'):
+        decoder.feed(b'')
+
+    with pytest.raises(IpcFrameError, match='canonical'):
+        decode_canonical_payload(b'{"b":2, "a":1}')
+    with pytest.raises(IpcFrameError, match='size'):
+        decode_canonical_payload(b'x' * (MAX_FRAME_PAYLOAD_BYTES + 1))
+
+
+def test_ipc_frame_accepts_multiple_large_frames_in_one_read_without_false_overflow():
+    from a620_gate0.ipc_frame import FrameDecoder, decode_canonical_payload, encode_frame
+
+    # Two 1.5 MiB payload frames exceed the maximum *single-frame* retained
+    # size when coalesced, but must still be processed sequentially.
+    value_a = {'blob': ['a' * 200_000] * 6}
+    value_b = {'blob': ['b' * 200_000] * 6}
+    combined = encode_frame(value_a) + encode_frame(value_b)
+    decoded = FrameDecoder().feed(combined)
+    assert len(decoded) == 2
+    assert decode_canonical_payload(decoded[0])['blob'][0][0] == 'a'
+    assert decode_canonical_payload(decoded[1])['blob'][0][0] == 'b'
+
+
+def test_durable_outbox_retries_exact_bytes_and_survives_restart(tmp_path):
+    from a620_gate0.durable_outbox import DurableMessageOutbox, OutboxConflict
+
+    messages = load('valid_complete_flow.json')['messages']
+    prepare = next(m for m in messages if m['messageType'] == 'PREPARE')
+    ready = next(m for m in messages if m['messageType'] == 'READY')
+    path = tmp_path / 'outbox.db'
+
+    outbox = DurableMessageOutbox(path)
+    assert outbox.enqueue(prepare)
+    assert not outbox.enqueue(prepare)
+    attempts = outbox.claim_due(prepare['sentAtUptimeMs'])
+    assert len(attempts) == 1 and attempts[0].attempt_number == 1
+    assert strict_json_loads(attempts[0].canonical_json) == prepare
+    assert outbox.claim_due(prepare['sentAtUptimeMs'] + 99) == []
+    outbox.close()
+
+    outbox = DurableMessageOutbox(path)
+    second = outbox.claim_due(prepare['sentAtUptimeMs'] + 100)
+    assert len(second) == 1 and second[0].attempt_number == 2
+    assert second[0].canonical_json == attempts[0].canonical_json
+    assert outbox.observe_inbound(ready)
+    assert outbox.pending() == []
+    outbox.integrity_check()
+
+    conflict = deepcopy(prepare)
+    conflict['sentAtUptimeMs'] += 1
+    with pytest.raises(OutboxConflict, match='different canonical'):
+        outbox.enqueue(conflict)
+    outbox.close()
+
+
+def test_durable_outbox_waits_for_all_command_obligations(tmp_path):
+    from a620_gate0.durable_outbox import DurableMessageOutbox
+
+    messages = load('valid_complete_flow.json')['messages']
+    start = next(m for m in messages if m['messageType'] == 'START')
+    accepted = next(m for m in messages if m['messageType'] == 'COMMAND_ACCEPTED')
+    started = next(m for m in messages if m['messageType'] == 'STARTED')
+    outbox = DurableMessageOutbox(tmp_path / 'outbox.db')
+    outbox.enqueue(start)
+    assert not outbox.observe_inbound(accepted)
+    assert [row['messageType'] for row in outbox.pending()] == ['START']
+    assert outbox.observe_inbound(started)
+    assert outbox.pending() == []
+    outbox.close()
+
+
+def test_batch_evidence_outbox_released_only_after_result_commit_ack(tmp_path):
+    from a620_gate0.durable_outbox import DurableMessageOutbox
+
+    messages = load('valid_complete_flow.json')['messages']
+    batches = [m for m in messages if m['messageType'] == 'BATCH_CLOSED']
+    result = next(m for m in messages if m['messageType'] == 'RESULT_READY')
+    ack = next(m for m in messages if m['messageType'] == 'ACK_RESULT_COMMITTED')
+    outbox = DurableMessageOutbox(tmp_path / 'outbox.db')
+    for event in batches:
+        outbox.enqueue(event)
+    outbox.enqueue(result)
+    assert len(outbox.pending()) == len(batches) + 1
+    assert outbox.observe_inbound(ack)
+    assert outbox.pending() == []
+    outbox.integrity_check()
+    outbox.close()
+
+
+def test_outbox_cancel_superseded_runtime_stops_all_retries(tmp_path):
+    from a620_gate0.durable_outbox import DurableMessageOutbox
+
+    prepare = next(m for m in load('valid_complete_flow.json')['messages'] if m['messageType'] == 'PREPARE')
+    outbox = DurableMessageOutbox(tmp_path / 'outbox.db')
+    outbox.enqueue(prepare)
+    assert outbox.cancel_runtime(prepare['runtimeSessionId'], 'SUPERSEDED_EXECUTION', now_uptime_ms=999) == 1
+    assert outbox.claim_due(10_000) == []
+    outbox.close()
+
+
+def test_runtime_watchdog_closes_missing_response_and_heartbeat_paths():
+    from a620_gate0.runtime_watchdog import RuntimeWatchdog
+
+    messages = load('valid_complete_flow.json')['messages']
+    prepare = next(m for m in messages if m['messageType'] == 'PREPARE')
+    ready = next(m for m in messages if m['messageType'] == 'READY')
+    start = next(m for m in messages if m['messageType'] == 'START')
+    accepted = next(m for m in messages if m['messageType'] == 'COMMAND_ACCEPTED')
+    started = next(m for m in messages if m['messageType'] == 'STARTED')
+    heartbeat = next(m for m in messages if m['messageType'] == 'HEARTBEAT')
+
+    watchdog = RuntimeWatchdog()
+    watchdog.observe_outbound(prepare)
+    assert watchdog.poll(prepare['sentAtUptimeMs'] + 9_999) is None
+    assert watchdog.poll(prepare['sentAtUptimeMs'] + 10_000).code == 'READY_TIMEOUT'
+
+    watchdog = RuntimeWatchdog()
+    watchdog.observe_outbound(prepare)
+    watchdog.observe_inbound(ready)
+    watchdog.observe_outbound(start)
+    watchdog.observe_inbound(accepted)
+    watchdog.observe_inbound(started)
+    watchdog.observe_inbound(heartbeat)
+    assert watchdog.poll(heartbeat['sentAtUptimeMs'] + 3_499) is None
+    failure = watchdog.poll(heartbeat['sentAtUptimeMs'] + 3_500)
+    assert failure is not None and failure.code == 'HEARTBEAT_TIMEOUT'
+    assert failure.action == 'INTERRUPT_EXECUTION_WITHOUT_FORMAL_RESULT'
+
+
+def test_runtime_watchdog_finalization_and_local_commit_timeouts():
+    from a620_gate0.runtime_watchdog import RuntimeWatchdog
+
+    messages = load('valid_complete_flow.json')['messages']
+    result = next(m for m in messages if m['messageType'] == 'RESULT_READY')
+    ack = next(m for m in messages if m['messageType'] == 'ACK_RESULT_COMMITTED')
+
+    watchdog = RuntimeWatchdog()
+    watchdog.enter_state('FINALIZING', 301_000)
+    assert watchdog.poll(305_999) is None
+    assert watchdog.poll(306_000).code == 'RESULT_READY_TIMEOUT'
+
+    watchdog = RuntimeWatchdog()
+    watchdog.enter_state('FINALIZING', 300_000)
+    watchdog.observe_inbound(result)
+    assert watchdog.poll(result['sentAtUptimeMs'] + 4_999) is None
+    watchdog.observe_outbound(ack)
+    assert watchdog.poll(result['sentAtUptimeMs'] + 100_000) is None
+
+
+def test_runtime_watchdog_snapshot_restores_pending_and_terminal_state():
+    from a620_gate0.runtime_watchdog import RuntimeWatchdog
+
+    messages = load('valid_complete_flow.json')['messages']
+    prepare = next(m for m in messages if m['messageType'] == 'PREPARE')
+    watchdog = RuntimeWatchdog()
+    watchdog.observe_outbound(prepare)
+    restored = RuntimeWatchdog.from_snapshot(watchdog.snapshot())
+    assert restored.pending_deadlines() == watchdog.pending_deadlines()
+    assert restored.poll(prepare['sentAtUptimeMs'] + 9_999) is None
+    failure = restored.poll(prepare['sentAtUptimeMs'] + 10_000)
+    assert failure is not None and failure.code == 'READY_TIMEOUT'
+
+    terminal_snapshot = restored.snapshot()
+    terminal = RuntimeWatchdog.from_snapshot(terminal_snapshot)
+    assert terminal.poll(999_999) == failure
+
+    malformed = deepcopy(terminal_snapshot)
+    malformed['deadlines'] = [{
+        'key': 'x', 'code': 'Y', 'atUptimeMs': -1, 'relatedMessageId': None
+    }]
+    with pytest.raises(ValueError, match='malformed|inconsistent'):
+        RuntimeWatchdog.from_snapshot(malformed)
+
+
+def test_runtime_audit_chain_detects_message_and_chain_tampering(tmp_path):
+    messages = load('valid_complete_flow.json')['messages']
+    prepare = next(m for m in messages if m['messageType'] == 'PREPARE')
+    ready = next(m for m in messages if m['messageType'] == 'READY')
+    identity = {k: prepare[k] for k in ['systemId','deviceId','taskId','taskItemId','executionAttempt','runtimeSessionId','packageVersion','coreProtocolVersion','monotonicEpochId']}
+    path = tmp_path / 'journal.db'
+
+    journal = DurableRuntimeJournal(path)
+    journal.activate(identity)
+    journal.ingest(prepare)
+    journal.ingest(ready)
+    head = journal.verify_audit_chain()
+    assert head['entryCount'] == 2 and len(head['headSha256']) == 64
+    journal.db.execute("UPDATE runtime_audit_chain SET entry_sha256=? WHERE journal_index=2", ('0' * 64,))
+    with pytest.raises(JournalConflict, match='entry hash'):
+        journal.verify_audit_chain()
+    journal.close()
+
+
+def test_runtime_audit_chain_backfills_baseline3_database_once(tmp_path):
+    # Build a minimal pre-baseline.4 journal schema with one canonical message.
+    import sqlite3
+    prepare = next(m for m in load('valid_complete_flow.json')['messages'] if m['messageType'] == 'PREPARE')
+    path = tmp_path / 'legacy.db'
+    db = sqlite3.connect(path)
+    db.executescript('''
+      CREATE TABLE active_runtime(singleton INTEGER PRIMARY KEY, identity_json BLOB NOT NULL);
+      CREATE TABLE runtime_message_journal(
+        message_id TEXT PRIMARY KEY,runtime_session_id TEXT NOT NULL,sender_role TEXT NOT NULL,
+        sender_seq INTEGER NOT NULL,sent_at_uptime_ms INTEGER NOT NULL,canonical_sha256 TEXT NOT NULL,
+        canonical_json BLOB NOT NULL,disposition TEXT NOT NULL);
+      CREATE TABLE sender_cursor(runtime_session_id TEXT,sender_role TEXT,last_sender_seq INTEGER,last_sent_at_uptime_ms INTEGER,PRIMARY KEY(runtime_session_id,sender_role));
+      CREATE TABLE reducer_snapshot(runtime_session_id TEXT PRIMARY KEY,snapshot_sha256 TEXT NOT NULL,snapshot_json BLOB NOT NULL);
+    ''')
+    raw = canonical_bytes(prepare)
+    db.execute(
+        'INSERT INTO runtime_message_journal VALUES(?,?,?,?,?,?,?,?)',
+        (prepare['messageId'], prepare['runtimeSessionId'], prepare['senderRole'], prepare['senderSeq'], prepare['sentAtUptimeMs'], canonical_sha256(prepare), raw, 'NEW'),
+    )
+    db.commit(); db.close()
+
+    journal = DurableRuntimeJournal(path)
+    assert journal.verify_audit_chain()['entryCount'] == 1
+    journal.close()
+
+
+def test_reducer_snapshot_v12_is_compact_and_reads_v11_migration():
+    messages = load('valid_complete_flow.json')['messages']
+    validator = FlowValidator()
+    for message in messages[:5]:
+        validator.process(message)
+    snapshot = validator.snapshot()
+    assert snapshot['snapshotVersion'] == 'A620-RSN-1.2'
+    assert 'seenMessageSha256' in snapshot and 'seenMessageCanonicalHex' not in snapshot
+    assert FlowValidator.from_snapshot(snapshot).state == validator.state
+
+    legacy = deepcopy(snapshot)
+    legacy['snapshotVersion'] = 'A620-RSN-1.1'
+    legacy['seenMessageCanonicalHex'] = {
+        message['messageId']: canonical_bytes(message).hex() for message in messages[:5]
+    }
+    legacy.pop('seenMessageSha256')
+    migrated = FlowValidator.from_snapshot(legacy)
+    assert migrated.state == validator.state
+    assert migrated.snapshot()['snapshotVersion'] == 'A620-RSN-1.2'
+
+
+def test_ipc_frame_deterministic_random_fragmentation_and_coalescing():
+    import random
+    from a620_gate0.ipc_frame import FrameDecoder, decode_canonical_payload, encode_frame
+
+    rng = random.Random(20260817)
+    values = [
+        {'i': i, 'text': '捕光' if i % 2 == 0 else '信号', 'items': list(range(i % 11))}
+        for i in range(200)
+    ]
+    wire = b''.join(encode_frame(value) for value in values)
+    decoder = FrameDecoder()
+    payloads = []
+    offset = 0
+    while offset < len(wire):
+        step = rng.randint(1, 97)
+        payloads.extend(decoder.feed(wire[offset:offset + step]))
+        offset += step
+    decoder.finish()
+    assert [decode_canonical_payload(payload) for payload in payloads] == values
+
+
+def test_runtime_audit_migration_marker_blocks_full_chain_rebackfill(tmp_path):
+    messages = load('valid_complete_flow.json')['messages']
+    prepare = next(m for m in messages if m['messageType'] == 'PREPARE')
+    ready = next(m for m in messages if m['messageType'] == 'READY')
+    identity = {k: prepare[k] for k in ['systemId','deviceId','taskId','taskItemId','executionAttempt','runtimeSessionId','packageVersion','coreProtocolVersion','monotonicEpochId']}
+    path = tmp_path / 'journal.db'
+
+    journal = DurableRuntimeJournal(path)
+    journal.activate(identity)
+    journal.ingest(prepare)
+    journal.ingest(ready)
+    assert journal.verify_audit_chain()['entryCount'] == 2
+    # Simulate complete chain deletion and anchor reset while the durable
+    # baseline.4 migration marker remains. Reopening must fail closed rather
+    # than treating the database as baseline.3 again.
+    journal.db.execute('DELETE FROM runtime_audit_chain')
+    journal.db.execute(
+        'UPDATE runtime_audit_anchor SET entry_count=0,head_sha256=? WHERE singleton=1',
+        ('0' * 64,),
+    )
+    journal.close()
+
+    with pytest.raises(JournalConflict, match='disappeared'):
+        DurableRuntimeJournal(path)
+
+
+def test_runtime_audit_anchor_detects_tail_truncation(tmp_path):
+    messages = load('valid_complete_flow.json')['messages']
+    prepare = next(m for m in messages if m['messageType'] == 'PREPARE')
+    ready = next(m for m in messages if m['messageType'] == 'READY')
+    identity = {k: prepare[k] for k in ['systemId','deviceId','taskId','taskItemId','executionAttempt','runtimeSessionId','packageVersion','coreProtocolVersion','monotonicEpochId']}
+    journal = DurableRuntimeJournal(tmp_path / 'journal.db')
+    journal.activate(identity)
+    journal.ingest(prepare)
+    journal.ingest(ready)
+    journal.db.execute("DELETE FROM runtime_audit_chain WHERE journal_index=2")
+    journal.db.execute("DELETE FROM runtime_message_journal WHERE message_id=?", (ready['messageId'],))
+    with pytest.raises(JournalConflict, match='anchor'):
+        journal.verify_audit_chain()
+    journal.close()
+
+
+def test_runtime_profile_generated_sources_are_current():
+    subprocess.run(
+        [sys.executable, str(ROOT / 'python/tools/generate_runtime_profile_sources.py'), '--check'],
+        cwd=ROOT,
+        check=True,
+    )
+
+
+def test_reducer_snapshot_maximum_message_fingerprint_budget_is_serializable():
+    validator = FlowValidator()
+    validator.seen_messages = {
+        f'msg-{index:04d}': f'{index:064x}'[-64:]
+        for index in range(validator.MAX_SEEN_MESSAGES_PER_RUNTIME)
+    }
+    snapshot = validator.snapshot()
+    encoded = canonical_bytes(snapshot)
+    assert len(encoded) < 1_000_000
+    restored = FlowValidator.from_snapshot(snapshot)
+    assert len(restored.seen_messages) == validator.MAX_SEEN_MESSAGES_PER_RUNTIME
+
+
+def test_outbox_rejects_sender_sequence_reuse_and_prunes_only_terminal_rows(tmp_path):
+    from a620_gate0.durable_outbox import DurableMessageOutbox, OutboxConflict
+
+    messages = load('valid_complete_flow.json')['messages']
+    prepare = next(m for m in messages if m['messageType'] == 'PREPARE')
+    ready = next(m for m in messages if m['messageType'] == 'READY')
+    outbox = DurableMessageOutbox(tmp_path / 'outbox.db')
+    outbox.enqueue(prepare)
+    conflicting = deepcopy(prepare)
+    conflicting['messageId'] = 'different-id-same-seq'
+    with pytest.raises(OutboxConflict, match='senderSeq'):
+        outbox.enqueue(conflicting)
+    outbox.observe_inbound(ready, now_uptime_ms=500)
+    assert outbox.prune_terminal(before_uptime_ms=500) == 0
+    assert outbox.prune_terminal(before_uptime_ms=501) == 1
+    outbox.close()
+
+
+def test_outbox_integrity_rejects_indexed_metadata_tampering(tmp_path):
+    from a620_gate0.durable_outbox import DurableMessageOutbox, OutboxConflict
+
+    prepare = next(m for m in load('valid_complete_flow.json')['messages'] if m['messageType'] == 'PREPARE')
+    outbox = DurableMessageOutbox(tmp_path / 'outbox.db')
+    outbox.enqueue(prepare)
+    outbox.db.execute("UPDATE durable_outbox SET message_type='START' WHERE message_id=?", (prepare['messageId'],))
+    with pytest.raises(OutboxConflict, match='metadata'):
+        outbox.integrity_check()
+    outbox.close()

@@ -1,5 +1,27 @@
+import { JSON_MAX_ARRAY_ITEMS, JSON_MAX_DEPTH, JSON_MAX_OBJECT_KEY_UTF8_BYTES, JSON_MAX_OBJECT_MEMBERS, JSON_MAX_STRING_UTF8_BYTES, JSON_MAX_TOTAL_NODES, JSON_MAX_TOTAL_STRING_UTF8_BYTES } from "./generated-runtime-profiles.js";
+
 export const SAFE_INTEGER_MAX = Number.MAX_SAFE_INTEGER;
 export type JsonValue = null | boolean | string | number | JsonValue[] | { [key: string]: JsonValue };
+
+export const A620_JSON_RESOURCE_LIMITS = Object.freeze({
+  maxDepth: JSON_MAX_DEPTH,
+  maxTotalNodes: JSON_MAX_TOTAL_NODES,
+  maxObjectMembers: JSON_MAX_OBJECT_MEMBERS,
+  maxArrayItems: JSON_MAX_ARRAY_ITEMS,
+  maxStringUtf8Bytes: JSON_MAX_STRING_UTF8_BYTES,
+  maxObjectKeyUtf8Bytes: JSON_MAX_OBJECT_KEY_UTF8_BYTES,
+  maxTotalStringUtf8Bytes: JSON_MAX_TOTAL_STRING_UTF8_BYTES,
+});
+
+interface ValidationBudget {
+  nodes: number;
+  totalStringBytes: number;
+  activeContainers: WeakSet<object>;
+}
+
+function utf8Length(value: string): number {
+  return new TextEncoder().encode(value).length;
+}
 
 function assertWellFormedUtf16(value: string, path: string): void {
   for (let i = 0; i < value.length; i++) {
@@ -18,10 +40,29 @@ function assertWellFormedUtf16(value: string, path: string): void {
   }
 }
 
-function assertValue(value: JsonValue, path = "$" ): void {
+function accountString(value: string, path: string, byteLimit: number, budget: ValidationBudget): void {
+  assertWellFormedUtf16(value, path);
+  const size = utf8Length(value);
+  if (size > byteLimit) throw new Error(`${path}: UTF-8 string exceeds ${byteLimit} bytes`);
+  budget.totalStringBytes += size;
+  if (budget.totalStringBytes > A620_JSON_RESOURCE_LIMITS.maxTotalStringUtf8Bytes) {
+    throw new Error("JSON total UTF-8 string budget exceeded");
+  }
+}
+
+function assertValue(value: unknown, path = "$", depth = 0, budget?: ValidationBudget): asserts value is JsonValue {
+  const state = budget ?? { nodes: 0, totalStringBytes: 0, activeContainers: new WeakSet<object>() };
+  if (depth > A620_JSON_RESOURCE_LIMITS.maxDepth) {
+    throw new Error(`${path}: JSON nesting exceeds depth ${A620_JSON_RESOURCE_LIMITS.maxDepth}`);
+  }
+  state.nodes += 1;
+  if (state.nodes > A620_JSON_RESOURCE_LIMITS.maxTotalNodes) {
+    throw new Error(`${path}: JSON node budget exceeds ${A620_JSON_RESOURCE_LIMITS.maxTotalNodes}`);
+  }
+
   if (value === null || typeof value === "boolean") return;
   if (typeof value === "string") {
-    assertWellFormedUtf16(value, path);
+    accountString(value, path, A620_JSON_RESOURCE_LIMITS.maxStringUtf8Bytes, state);
     return;
   }
   if (typeof value === "number") {
@@ -29,14 +70,40 @@ function assertValue(value: JsonValue, path = "$" ): void {
     if (Object.is(value, -0)) throw new Error(`${path}: negative zero is forbidden`);
     return;
   }
-  if (Array.isArray(value)) {
-    value.forEach((v, i) => assertValue(v, `${path}[${i}]`));
-    return;
+  if (typeof value !== "object") {
+    throw new Error(`${path}: unsupported JSON type ${typeof value}`);
   }
-  for (const [k, v] of Object.entries(value)) {
-    assertWellFormedUtf16(k, `${path}.<key>`);
-    assertValue(v, `${path}.${k}`);
+
+  if (state.activeContainers.has(value)) throw new Error(`${path}: cyclic JSON value is forbidden`);
+  state.activeContainers.add(value);
+  try {
+    if (Array.isArray(value)) {
+      if (value.length > A620_JSON_RESOURCE_LIMITS.maxArrayItems) {
+        throw new Error(`${path}: array exceeds ${A620_JSON_RESOURCE_LIMITS.maxArrayItems} items`);
+      }
+      value.forEach((v, i) => assertValue(v, `${path}[${i}]`, depth + 1, state));
+      return;
+    }
+
+    const prototype = Object.getPrototypeOf(value);
+    if (prototype !== Object.prototype && prototype !== null) {
+      throw new Error(`${path}: non-plain object is forbidden`);
+    }
+    const entries = Object.entries(value as Record<string, unknown>);
+    if (entries.length > A620_JSON_RESOURCE_LIMITS.maxObjectMembers) {
+      throw new Error(`${path}: object exceeds ${A620_JSON_RESOURCE_LIMITS.maxObjectMembers} members`);
+    }
+    for (const [key, child] of entries) {
+      accountString(key, `${path}.<key>`, A620_JSON_RESOURCE_LIMITS.maxObjectKeyUtf8Bytes, state);
+      assertValue(child, `${path}.${key}`, depth + 1, state);
+    }
+  } finally {
+    state.activeContainers.delete(value);
   }
+}
+
+export function validateJsonResources(value: unknown): asserts value is JsonValue {
+  assertValue(value);
 }
 
 function utf16Compare(a: string, b: string): number {
@@ -56,12 +123,12 @@ function emit(value: JsonValue): string {
   return `{${keys.map(k => `${JSON.stringify(k)}:${emit(value[k]!)}`).join(",")}}`;
 }
 
-export function canonicalUtf8(value: JsonValue): Uint8Array {
+export function canonicalUtf8(value: unknown): Uint8Array {
   assertValue(value);
   return new TextEncoder().encode(emit(value));
 }
 
-export function canonicalString(value: JsonValue): string {
+export function canonicalString(value: unknown): string {
   return new TextDecoder().decode(canonicalUtf8(value));
 }
 
@@ -128,6 +195,6 @@ export function sha256Hex(input: Uint8Array): string {
   return [h0,h1,h2,h3,h4,h5,h6,h7].map(value => value.toString(16).padStart(8, "0")).join("");
 }
 
-export function canonicalSha256(value: JsonValue): string {
+export function canonicalSha256(value: unknown): string {
   return sha256Hex(canonicalUtf8(value));
 }

@@ -1,0 +1,17 @@
+{
+  "profile": "A620-IPC-FRAME-1",
+  "contractVersion": "A620-TRC-1.1",
+  "headerBytes": 4,
+  "lengthEncoding": "UNSIGNED_BIG_ENDIAN",
+  "minimumPayloadBytes": 2,
+  "maximumPayloadBytes": 2097152,
+  "maximumFeedChunkBytes": 8388608,
+  "payloadEncoding": "A620-JCS-1_CANONICAL_UTF8_JSON",
+  "rules": [
+    "A channel may fragment one frame across reads or coalesce multiple frames in one read.",
+    "The decoder must validate the declared length before accumulating payload bytes.",
+    "The decoder may retain at most four header bytes plus one declared payload internally.",
+    "A protocol error permanently fails that decoder instance; the process channel must be recreated.",
+    "A clean channel close is legal only at a frame boundary."
+  ]
+}

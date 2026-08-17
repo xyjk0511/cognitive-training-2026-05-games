@@ -37,6 +37,32 @@ object Gate0Main {
         }
         expectRejected { CanonicalJson.canonicalString(mapOf("bad" to "\uD800")) }
 
+        var deep: Any? = 0L
+        repeat(CanonicalJson.MAX_DEPTH + 1) { deep = listOf(deep) }
+        expectRejected { CanonicalJson.canonicalString(deep) }
+        expectRejected { CanonicalJson.canonicalString(List(CanonicalJson.MAX_ARRAY_ITEMS + 1) { 0L }) }
+
+        val frameA = IpcFrame.encode(mapOf("a" to 1L))
+        val frameB = IpcFrame.encode(mapOf("b" to "捕光行动"))
+        val decoder = IpcFrameDecoder()
+        check(decoder.feed(frameA.copyOfRange(0, 1)).isEmpty())
+        check(decoder.feed(frameA.copyOfRange(1, 5)).isEmpty())
+        check(decoder.feed(frameA.copyOfRange(5, frameA.size)).single().contentEquals(CanonicalJson.canonicalBytes(mapOf("a" to 1L))))
+        check(decoder.retainedBytes == 0)
+        decoder.finish()
+        val coalesced = IpcFrameDecoder().feed(frameA + frameB)
+        check(coalesced.size == 2)
+        val trailing = IpcFrameDecoder()
+        trailing.feed(frameB.copyOfRange(0, frameB.size - 1))
+        expectRejected { trailing.finish() }
+
+        check((1..7).map { RetryPolicy.delayMs(it) } == listOf(100L, 250L, 500L, 1000L, 2000L, 5000L, 5000L))
+        expectRejected { RetryPolicy.delayMs(0) }
+        check(RetryPolicy.requiredResponses("START") == listOf("COMMAND_ACCEPTED", "STARTED"))
+        check(RetryPolicy.requiredResponses("HEARTBEAT").isEmpty())
+        check(RetryPolicy.retainsUntilResultCommit("BATCH_CLOSED"))
+        check(!RetryPolicy.retainsUntilResultCommit("RESULT_READY"))
+
         val controller = MockController()
         controller.apply(RuntimeInput.PREPARE)
         controller.apply(RuntimeInput.READY)

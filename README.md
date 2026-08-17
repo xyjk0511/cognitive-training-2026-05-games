@@ -1,27 +1,28 @@
 # A620 Cognitive Training Platform — Gate 0 单线施工候选基线
 
-状态：`GATE_0_IMPLEMENTATION_CANDIDATE_RC3_BASELINE_3_NOT_APPROVED`
+状态：`GATE_0_IMPLEMENTATION_CANDIDATE_RC3_BASELINE_4_NOT_APPROVED`
 
 本仓库是从零建立并持续加固的公共平台代码基线，不包含《捕光行动》120 级或《信号反应站》96 级的全量实现。当前范围严格限定为：
 
 - A620-TRC-1.1 公共运行消息、结构 Schema 与机器状态机；
 - A620-UPTIME-MS-1 毫秒单调时钟和消息级字节限制；
-- Python 参考 reducer、语义验证器与 SQLite 持久化边界；
-- TypeScript 公共状态机、纯运行时 SHA-256/JCS 子集与游戏插件接口；
-- Kotlin/JVM 主控 DTO、状态机与批次账本参考实现；
+- Python 参考 reducer、语义验证器、持久日志、可靠投递和看门狗；
+- TypeScript 公共状态机、纯运行时 SHA-256/JCS 子集、IPC 帧与游戏插件接口；
+- Kotlin/JVM 主控 DTO、状态机、IPC 帧与批次账本参考实现；
 - 批次证据对账及正式结果提交握手；
 - 真实 `.tpkg` 构建、安全验证、签名、防回滚和 A/B 槽激活；
 - 两个游戏的空插件及示例训练包。
 
-## baseline.3 重点加固
+## baseline.4 重点加固
 
-1. **消息与 reducer 原子持久化**：活动消息、发送方高水位和处理后的完整 reducer 快照在同一 SQLite 事务中提交，避免崩溃后出现“消息已消费、状态少走一步”。
-2. **重启与旧执行隔离**：消息幂等缓存、发送序列、活动运行身份和 reducer 快照可跨进程恢复；旧 `executionAttempt`、旧 `runtimeSessionId`、旧时钟纪元只进入审计。
-3. **状态机完整性**：规范状态表先检查重复规则、重叠规则、不可达状态和终态非法迁移，再生成 TypeScript/Kotlin 表；两端穷举全部状态×输入组合。
-4. **严格 wire 入口**：在 DTO/状态处理前按消息类型限制原始 UTF-8 字节数，并拒绝重复 JSON key、浮点数、不安全整数、非法 UTF-8 和空白膨胀。
-5. **跨语言一致性**：Kotlin 与 TypeScript 消息包络字段自动对照公共 Schema；TypeScript SHA-256 不再依赖 `node:crypto`，可进入 Cocos 运行环境。
-6. **结果事务加固**：PREPARE、逐批 `BATCH_CLOSED`、最终 payload、正式结果、同步队列和可变主控状态均有明确绑定及互斥规则。
-7. **训练包原子激活**：构建时二次核对源文件；校验 ZIP 容器、路径、类型、大小、压缩率、哈希、Ed25519、信任根、兼容范围和发布序号；A/B 槽恢复只认已提交 release floor，不会把已暂存但未提交的新包误激活。
+1. **跨语言 JSON 资源预算**：最大深度、节点数、对象成员、数组长度、单字符串、键长和总字符串字节由同一规范生成到 Python、TypeScript、Kotlin；循环对象、深层嵌套和字符串放大在规范化前拒绝。
+2. **流式 IPC 帧**：4 字节大端长度头、2 MiB 单帧上限和 8 MiB 单次输入上限；支持拆帧与粘包，内部最多保留一个未完成帧，协议错误后该 decoder 永久失败并要求重建通道。
+3. **持久重发队列**：关键命令、`RESULT_READY` 与 `BATCH_CLOSED` 使用原始规范化字节、原 `messageId` 和原 `senderSeq` 重发；进程重启后继续，完成、取消和证据释放均有确定规则。
+4. **运行看门狗**：READY、COMMAND_ACCEPTED、状态确认、心跳、RESULT_READY 和本地结果提交均有机器化期限；超时只会形成中断，不会伪造正式结果。看门狗快照可持久化并在进程重启后恢复。
+5. **可验证运行审计链**：消息日志与哈希链、链头锚点同事务提交；baseline.3 旧库只允许一次迁移，迁移标记存在后链缺失或截断均拒绝启动，不再静默重建。
+6. **紧凑 reducer 快照**：快照由保存完整报文字节改为 `messageId → SHA-256`，降低重启状态体积；仍可只读迁移 baseline.3 的 v1.1 快照。
+7. **规范单一事实源**：资源预算、IPC 帧、重试、消息响应义务、看门狗和审计链关键常量从 normative JSON 自动生成到三端，避免手工漂移。
+8. **保留 baseline.3 的事务与训练包加固**：消息+reducer 原子持久化、旧执行隔离、正式结果三表事务、真实 ZIP 校验、Ed25519、防回滚和 A/B 槽恢复继续生效。
 
 ## 为什么先做公共线
 
@@ -37,7 +38,7 @@
 当前参考验证输出：
 
 ```text
-55 passed
+75 passed
 TYPESCRIPT_GATE0_TESTS_PASS
 KOTLIN_GATE0_TESTS_PASS
 SAMPLE_TPKG_BUILD_AND_VALIDATE_PASS
@@ -64,7 +65,7 @@ canonicalJsonProfile = A620-JCS-1
 
 ```text
 release/candidate.json
-candidateRevision = rc3-baseline.3
+candidateRevision = rc3-baseline.4
 ```
 
 Gate 0 只有在 Android、Cocos Creator、候选平板和故障注入全部完成后才能批准。当前仓库仍是实现候选基线，不能据此宣称 Gate 0 已通过。

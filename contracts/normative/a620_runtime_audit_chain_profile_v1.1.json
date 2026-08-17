@@ -1,0 +1,28 @@
+{
+  "profile": "A620-RAC-1",
+  "contractVersion": "A620-TRC-1.1",
+  "genesisSha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "entryProjection": [
+    "auditProfile",
+    "journalIndex",
+    "messageId",
+    "runtimeSessionId",
+    "senderRole",
+    "senderSeq",
+    "sentAtUptimeMs",
+    "canonicalSha256",
+    "disposition",
+    "previousEntrySha256"
+  ],
+  "hashAlgorithm": "SHA-256",
+  "canonicalization": "A620-JCS-1",
+  "migrationMarkerKey": "runtimeAuditChainProfile",
+  "migrationMarkerValue": "A620-RAC-1",
+  "rules": [
+    "The message journal row and its audit-chain entry commit in one SQLite transaction.",
+    "A singleton anchor stores the committed entry count and head hash.",
+    "Baseline.3 databases with no audit-chain rows may be backfilled exactly once and then receive the durable migration marker.",
+    "After the migration marker exists, an empty, partial, gapped, mutated, or anchor-mismatched chain is never silently repaired.",
+    "This chain detects accidental or unsophisticated local tampering; production device attestation and protected key storage remain separate concerns."
+  ]
+}

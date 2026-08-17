@@ -8,10 +8,23 @@ from pathlib import Path
 from typing import Any, Iterator
 
 from .canonical import canonical_bytes, canonical_sha256, strict_json_loads
+from .generated_profiles import (
+    AUDIT_CHAIN_ENTRY_PROJECTION, AUDIT_CHAIN_GENESIS_SHA256, AUDIT_CHAIN_MIGRATION_KEY,
+    AUDIT_CHAIN_MIGRATION_VALUE, AUDIT_CHAIN_PROFILE_ID,
+)
 from .schema import validate_schema
 
 
 MAX_REDUCER_SNAPSHOT_BYTES = 4 * 1024 * 1024
+AUDIT_CHAIN_PROFILE = AUDIT_CHAIN_PROFILE_ID
+AUDIT_CHAIN_GENESIS = AUDIT_CHAIN_GENESIS_SHA256
+_EXPECTED_AUDIT_PROJECTION = (
+    "auditProfile", "journalIndex", "messageId", "runtimeSessionId",
+    "senderRole", "senderSeq", "sentAtUptimeMs", "canonicalSha256",
+    "disposition", "previousEntrySha256",
+)
+if tuple(AUDIT_CHAIN_ENTRY_PROJECTION) != _EXPECTED_AUDIT_PROJECTION:
+    raise RuntimeError("generated audit-chain entry projection diverged from the reference implementation")
 
 IDENTITY_FIELDS = (
     "systemId", "deviceId", "taskId", "taskItemId", "executionAttempt",
@@ -91,8 +104,28 @@ class DurableRuntimeJournal:
               snapshot_sha256 TEXT NOT NULL,
               snapshot_json BLOB NOT NULL
             );
+            CREATE TABLE IF NOT EXISTS runtime_audit_chain (
+              journal_index INTEGER PRIMARY KEY,
+              message_id TEXT NOT NULL UNIQUE,
+              previous_entry_sha256 TEXT NOT NULL,
+              entry_sha256 TEXT NOT NULL
+            );
+            CREATE TABLE IF NOT EXISTS runtime_audit_anchor (
+              singleton INTEGER PRIMARY KEY CHECK(singleton=1),
+              entry_count INTEGER NOT NULL,
+              head_sha256 TEXT NOT NULL
+            );
+            CREATE TABLE IF NOT EXISTS runtime_schema_metadata (
+              metadata_key TEXT PRIMARY KEY,
+              metadata_value TEXT NOT NULL
+            );
             """
         )
+        self.db.execute(
+            "INSERT OR IGNORE INTO runtime_audit_anchor(singleton,entry_count,head_sha256) VALUES(1,0,?)",
+            (AUDIT_CHAIN_GENESIS,),
+        )
+        self._ensure_audit_chain()
 
     def close(self) -> None:
         self.db.close()
@@ -106,6 +139,163 @@ class DurableRuntimeJournal:
         except Exception:
             self.db.rollback()
             raise
+
+    @staticmethod
+    def _audit_projection(
+        *,
+        journal_index: int,
+        message_id: str,
+        runtime_session_id: str,
+        sender_role: str,
+        sender_seq: int,
+        sent_at_uptime_ms: int,
+        canonical_sha256_value: str,
+        disposition: str,
+        previous_entry_sha256: str,
+    ) -> dict[str, Any]:
+        return {
+            "auditProfile": AUDIT_CHAIN_PROFILE,
+            "journalIndex": journal_index,
+            "messageId": message_id,
+            "runtimeSessionId": runtime_session_id,
+            "senderRole": sender_role,
+            "senderSeq": sender_seq,
+            "sentAtUptimeMs": sent_at_uptime_ms,
+            "canonicalSha256": canonical_sha256_value,
+            "disposition": disposition,
+            "previousEntrySha256": previous_entry_sha256,
+        }
+
+    def _append_audit_in_transaction(self, message: dict[str, Any], digest: str, disposition: str) -> None:
+        row = self.db.execute(
+            "SELECT journal_index,entry_sha256 FROM runtime_audit_chain ORDER BY journal_index DESC LIMIT 1"
+        ).fetchone()
+        journal_index = 1 if row is None else int(row[0]) + 1
+        previous = AUDIT_CHAIN_GENESIS if row is None else str(row[1])
+        projection = self._audit_projection(
+            journal_index=journal_index,
+            message_id=message["messageId"],
+            runtime_session_id=message["runtimeSessionId"],
+            sender_role=message["senderRole"],
+            sender_seq=message["senderSeq"],
+            sent_at_uptime_ms=message["sentAtUptimeMs"],
+            canonical_sha256_value=digest,
+            disposition=disposition,
+            previous_entry_sha256=previous,
+        )
+        entry_hash = canonical_sha256(projection)
+        anchor = self.db.execute(
+            "SELECT entry_count,head_sha256 FROM runtime_audit_anchor WHERE singleton=1"
+        ).fetchone()
+        if anchor is None or int(anchor[0]) != journal_index - 1 or str(anchor[1]) != previous:
+            raise JournalConflict("runtime audit anchor diverged before append")
+        self.db.execute(
+            "INSERT INTO runtime_audit_chain(journal_index,message_id,previous_entry_sha256,entry_sha256) "
+            "VALUES(?,?,?,?)",
+            (journal_index, message["messageId"], previous, entry_hash),
+        )
+        self.db.execute(
+            "UPDATE runtime_audit_anchor SET entry_count=?,head_sha256=? WHERE singleton=1",
+            (journal_index, entry_hash),
+        )
+
+    def _ensure_audit_chain(self) -> None:
+        """Perform the baseline.3 migration once, then fail closed forever.
+
+        A chain that disappears after the migration marker exists is corruption,
+        not another legacy database. This closes the otherwise dangerous case
+        where deleting every chain row and resetting the anchor could trigger a
+        silent re-backfill on the next process start.
+        """
+
+        journal_count = int(self.db.execute("SELECT COUNT(*) FROM runtime_message_journal").fetchone()[0])
+        chain_count = int(self.db.execute("SELECT COUNT(*) FROM runtime_audit_chain").fetchone()[0])
+        marker_row = self.db.execute(
+            "SELECT metadata_value FROM runtime_schema_metadata WHERE metadata_key=?",
+            (AUDIT_CHAIN_MIGRATION_KEY,),
+        ).fetchone()
+
+        if marker_row is not None:
+            if str(marker_row[0]) != AUDIT_CHAIN_MIGRATION_VALUE:
+                raise JournalConflict("runtime audit-chain migration marker has an unsupported value")
+            if chain_count != journal_count:
+                raise JournalConflict("runtime audit chain disappeared or became partial after migration")
+            self.verify_audit_chain()
+            return
+
+        # Marker absence is accepted only as the one-time baseline.3 migration
+        # condition. A partially existing chain is never guessed or repaired.
+        if chain_count not in {0, journal_count}:
+            raise JournalConflict("runtime audit chain is partial and will not be auto-repaired")
+        if chain_count:
+            # A pre-marker full chain may come from a short-lived baseline.4
+            # development build. Verify it before recording the permanent
+            # migration marker; corruption must not cause any write.
+            self.verify_audit_chain()
+        with self._transaction():
+            if chain_count == 0:
+                rows = self.db.execute(
+                    "SELECT canonical_json,canonical_sha256,disposition FROM runtime_message_journal ORDER BY rowid"
+                ).fetchall()
+                for raw, digest, disposition in rows:
+                    message = strict_json_loads(bytes(raw))
+                    self._append_audit_in_transaction(message, str(digest), str(disposition))
+            self.db.execute(
+                "INSERT INTO runtime_schema_metadata(metadata_key,metadata_value) VALUES(?,?)",
+                (AUDIT_CHAIN_MIGRATION_KEY, AUDIT_CHAIN_MIGRATION_VALUE),
+            )
+        self.verify_audit_chain()
+
+    def verify_audit_chain(self) -> dict[str, Any]:
+        quick = self.db.execute("PRAGMA quick_check").fetchone()
+        if quick is None or quick[0] != "ok":
+            raise JournalConflict(f"SQLite quick_check failed: {quick}")
+        rows = self.db.execute(
+            """
+            SELECT c.journal_index,c.message_id,c.previous_entry_sha256,c.entry_sha256,
+                   j.runtime_session_id,j.sender_role,j.sender_seq,j.sent_at_uptime_ms,
+                   j.canonical_sha256,j.canonical_json,j.disposition
+            FROM runtime_audit_chain c
+            JOIN runtime_message_journal j ON j.message_id=c.message_id
+            ORDER BY c.journal_index
+            """
+        ).fetchall()
+        journal_count = int(self.db.execute("SELECT COUNT(*) FROM runtime_message_journal").fetchone()[0])
+        chain_count = int(self.db.execute("SELECT COUNT(*) FROM runtime_audit_chain").fetchone()[0])
+        if len(rows) != journal_count or chain_count != journal_count:
+            raise JournalConflict("runtime audit chain does not cover every journal message")
+        previous = AUDIT_CHAIN_GENESIS
+        for expected_index, row in enumerate(rows, start=1):
+            (
+                index, message_id, stored_previous, stored_entry, runtime_session_id,
+                sender_role, sender_seq, sent_at_uptime_ms, digest, raw, disposition,
+            ) = row
+            if int(index) != expected_index or stored_previous != previous:
+                raise JournalConflict("runtime audit chain order/previous hash mismatch")
+            message = strict_json_loads(bytes(raw))
+            if canonical_bytes(message) != bytes(raw) or canonical_sha256(message) != digest:
+                raise JournalConflict("runtime audit journal canonical message integrity mismatch")
+            projection = self._audit_projection(
+                journal_index=expected_index,
+                message_id=str(message_id),
+                runtime_session_id=str(runtime_session_id),
+                sender_role=str(sender_role),
+                sender_seq=int(sender_seq),
+                sent_at_uptime_ms=int(sent_at_uptime_ms),
+                canonical_sha256_value=str(digest),
+                disposition=str(disposition),
+                previous_entry_sha256=str(stored_previous),
+            )
+            expected_hash = canonical_sha256(projection)
+            if stored_entry != expected_hash:
+                raise JournalConflict("runtime audit chain entry hash mismatch")
+            previous = expected_hash
+        anchor = self.db.execute(
+            "SELECT entry_count,head_sha256 FROM runtime_audit_anchor WHERE singleton=1"
+        ).fetchone()
+        if anchor is None or int(anchor[0]) != len(rows) or str(anchor[1]) != previous:
+            raise JournalConflict("runtime audit anchor count/head mismatch")
+        return {"entryCount": len(rows), "headSha256": previous}
 
     def activate(self, identity: dict[str, Any], *, replace: bool = False) -> None:
         candidate = canonical_bytes({field: identity[field] for field in IDENTITY_FIELDS})
@@ -198,6 +388,7 @@ class DurableRuntimeJournal:
                 message["sentAtUptimeMs"], digest, encoded, disposition.value,
             ),
         )
+        self._append_audit_in_transaction(message, digest, disposition.value)
         return IntakeResult(disposition, message_id, digest)
 
     def ingest(self, message: dict[str, Any]) -> IntakeResult:
@@ -377,5 +568,5 @@ class DurableRuntimeJournal:
     def counts(self) -> dict[str, int]:
         return {
             table: int(self.db.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0])
-            for table in ("active_runtime", "runtime_message_journal", "sender_cursor", "reducer_snapshot")
+            for table in ("active_runtime", "runtime_message_journal", "runtime_audit_chain", "sender_cursor", "reducer_snapshot")
         }

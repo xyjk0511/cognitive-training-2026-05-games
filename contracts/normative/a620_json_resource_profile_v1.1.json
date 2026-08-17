@@ -1,0 +1,10 @@
+{
+  "profile": "A620-JRP-1",
+  "maxDepth": 64,
+  "maxTotalNodes": 50000,
+  "maxObjectMembers": 2048,
+  "maxArrayItems": 2048,
+  "maxStringUtf8Bytes": 262144,
+  "maxObjectKeyUtf8Bytes": 512,
+  "maxTotalStringUtf8Bytes": 1572864
+}

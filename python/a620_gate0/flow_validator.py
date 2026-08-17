@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 from copy import deepcopy
+import hashlib
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Any
 
 from .canonical import canonical_bytes, canonical_sha256
 from .game_schema import GameSchemaError, validate_game_config
+from .generated_profiles import DELIVERY_MAX_SEEN_MESSAGE_IDS_PER_RUNTIME
 from .result_validator import ResultValidationError, validate_game_payload
 from .schema import validate_schema
 from .wire import parse_runtime_message
@@ -34,6 +36,8 @@ class FlowValidator:
     """
 
     COMMAND_ACCEPTED_REQUIRED = {"START", "PAUSE", "RESUME", "TERMINATE"}
+    SNAPSHOT_VERSION = "A620-RSN-1.2"
+    MAX_SEEN_MESSAGES_PER_RUNTIME = DELIVERY_MAX_SEEN_MESSAGE_IDS_PER_RUNTIME
     TERMINAL_STATES = {"RESULT_COMMITTED", "TERMINATED", "ERROR"}
     STATE_SET = {
         "UNPREPARED", "PREPARING", "READY", "START_SCHEDULED", "RUNNING",
@@ -45,7 +49,7 @@ class FlowValidator:
     def __init__(self) -> None:
         self.state = "UNPREPARED"
         self.identity: dict[str, Any] | None = None
-        self.seen_messages: dict[str, bytes] = {}
+        self.seen_messages: dict[str, str] = {}
         self.last_sender_seq = {"ANDROID_CONTROLLER": 0, "COCOS_RUNTIME": 0}
         self.last_sender_uptime = {"ANDROID_CONTROLLER": -1, "COCOS_RUNTIME": -1}
 
@@ -106,10 +110,13 @@ class FlowValidator:
     def _check_replay_and_sequence(self, msg: dict[str, Any]) -> bool:
         message_id = msg["messageId"]
         encoded = canonical_bytes(msg)
+        digest = hashlib.sha256(encoded).hexdigest()
         if message_id in self.seen_messages:
-            if self.seen_messages[message_id] != encoded:
+            if self.seen_messages[message_id] != digest:
                 self._fail(f"messageId {message_id} was reused with different content")
             return True
+        if len(self.seen_messages) >= self.MAX_SEEN_MESSAGES_PER_RUNTIME:
+            self._fail("runtime message-id budget exceeded")
 
         role = msg["senderRole"]
         if msg["senderSeq"] <= self.last_sender_seq[role]:
@@ -118,7 +125,7 @@ class FlowValidator:
             self._fail(f"sentAtUptimeMs moved backwards for {role}")
         self.last_sender_seq[role] = msg["senderSeq"]
         self.last_sender_uptime[role] = msg["sentAtUptimeMs"]
-        self.seen_messages[message_id] = encoded
+        self.seen_messages[message_id] = digest
         return False
 
     def _check_command_accept_timeouts(self, now_ms: int, *, inclusive: bool) -> None:
@@ -596,10 +603,10 @@ class FlowValidator:
         """Return a canonical-JSON-safe complete reducer checkpoint."""
 
         return {
-            "snapshotVersion": "A620-RSN-1.1",
+            "snapshotVersion": self.SNAPSHOT_VERSION,
             "state": self.state,
             "identity": deepcopy(self.identity),
-            "seenMessageCanonicalHex": {key: value.hex() for key, value in self.seen_messages.items()},
+            "seenMessageSha256": dict(self.seen_messages),
             "lastSenderSeq": dict(self.last_sender_seq),
             "lastSenderUptimeMs": dict(self.last_sender_uptime),
             "commands": deepcopy(self.commands),
@@ -637,8 +644,9 @@ class FlowValidator:
 
     @classmethod
     def from_snapshot(cls, snapshot: dict[str, Any]) -> "FlowValidator":
-        expected_keys = {
-            "snapshotVersion", "state", "identity", "seenMessageCanonicalHex", "lastSenderSeq",
+        version = snapshot.get("snapshotVersion")
+        common_keys = {
+            "snapshotVersion", "state", "identity", "lastSenderSeq",
             "lastSenderUptimeMs", "commands", "acceptedCommands", "commandAcceptDeadlines",
             "pendingQueryCommands", "expectedConfirmation", "boundaries", "runtimeConfigHash",
             "gameCode", "designMaxLevel", "plannedBatchCount", "sessionStartLevel", "durationMs",
@@ -646,10 +654,17 @@ class FlowValidator:
             "activeElapsedMs", "deadlineConfirmed", "evidenceLedger", "lastBatchClosedActiveMs",
             "resultReadyMessage", "resultPayloadSha256", "finalFormalResultId",
         }
-        if set(snapshot) != expected_keys or snapshot.get("snapshotVersion") != "A620-RSN-1.1":
+        if version == "A620-RSN-1.2":
+            expected_keys = common_keys | {"seenMessageSha256"}
+        elif version == "A620-RSN-1.1":
+            # Read-only migration path for baseline.3 checkpoints. New writes
+            # always use 1.2 and store only compact message fingerprints; the
+            # durable journal remains the exact-byte collision authority.
+            expected_keys = common_keys | {"seenMessageCanonicalHex"}
+        else:
             raise ValidationError("runtime reducer snapshot has an unsupported shape/version")
-        # Canonical validation rejects floats, unsafe integers and malformed
-        # Unicode before any state is restored.
+        if set(snapshot) != expected_keys:
+            raise ValidationError("runtime reducer snapshot has an unsupported shape/version")
         canonical_bytes(snapshot)
         if snapshot["state"] not in cls.STATE_SET:
             raise ValidationError("runtime reducer snapshot contains an unknown state")
@@ -664,11 +679,27 @@ class FlowValidator:
             raise ValidationError("runtime reducer snapshot identity is malformed")
 
         try:
-            validator.seen_messages = {
-                key: bytes.fromhex(value) for key, value in snapshot["seenMessageCanonicalHex"].items()
-            }
-        except (AttributeError, ValueError) as exc:
+            if version == "A620-RSN-1.2":
+                fingerprints = dict(snapshot["seenMessageSha256"])
+                if any(
+                    not isinstance(key, str)
+                    or not isinstance(value, str)
+                    or len(value) != 64
+                    or any(char not in "0123456789abcdef" for char in value)
+                    for key, value in fingerprints.items()
+                ):
+                    raise ValueError("invalid fingerprint")
+                validator.seen_messages = fingerprints
+            else:
+                validator.seen_messages = {
+                    key: hashlib.sha256(bytes.fromhex(value)).hexdigest()
+                    for key, value in snapshot["seenMessageCanonicalHex"].items()
+                }
+        except (AttributeError, TypeError, ValueError) as exc:
             raise ValidationError("runtime reducer snapshot message cache is malformed") from exc
+        if len(validator.seen_messages) > cls.MAX_SEEN_MESSAGES_PER_RUNTIME:
+            raise ValidationError("runtime reducer snapshot message-id budget exceeded")
+
         validator.last_sender_seq = dict(snapshot["lastSenderSeq"])
         validator.last_sender_uptime = dict(snapshot["lastSenderUptimeMs"])
         if set(validator.last_sender_seq) != {"ANDROID_CONTROLLER", "COCOS_RUNTIME"}:

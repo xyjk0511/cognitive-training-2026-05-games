@@ -1,0 +1,53 @@
+{
+  "profile": "A620-DRP-1",
+  "contractVersion": "A620-TRC-1.1",
+  "retryDelayMsByCompletedAttempt": [
+    100,
+    250,
+    500,
+    1000,
+    2000,
+    5000
+  ],
+  "retryDelayCapMs": 5000,
+  "maximumSeenMessageIdsPerRuntime": 2048,
+  "maximumPendingMessagesPerRuntime": 4096,
+  "maximumPendingCanonicalBytesPerRuntime": 16777216,
+  "responseObligations": {
+    "PREPARE": [
+      "READY"
+    ],
+    "START": [
+      "COMMAND_ACCEPTED",
+      "STARTED"
+    ],
+    "PAUSE": [
+      "COMMAND_ACCEPTED",
+      "PAUSED"
+    ],
+    "RESUME": [
+      "COMMAND_ACCEPTED",
+      "RESUMED"
+    ],
+    "TERMINATE": [
+      "COMMAND_ACCEPTED",
+      "TERMINATED"
+    ],
+    "QUERY_STATE": [
+      "STATE_SNAPSHOT"
+    ],
+    "RESULT_READY": [
+      "ACK_RESULT_COMMITTED"
+    ]
+  },
+  "retainUntilResultCommitted": [
+    "BATCH_CLOSED"
+  ],
+  "rules": [
+    "The original canonical message bytes and messageId are reused for every retry.",
+    "A retry never allocates a new senderSeq or messageId.",
+    "BATCH_CLOSED evidence is retained until the corresponding RESULT_READY is durably committed.",
+    "Superseded runtime sessions are cancelled explicitly and never retried into the active execution.",
+    "Exhaustion of a watchdog deadline interrupts the execution; it never converts an uncommitted draft into a formal result."
+  ]
+}

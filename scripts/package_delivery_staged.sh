@@ -5,8 +5,8 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 OUT_DIR="${1:-/mnt/data}"
 STAGE="${2:-}"
 DATE_TAG="${DATE_TAG:-20260817}"
-BASENAME="A620_Gate0_rc3_baseline3_${DATE_TAG}"
-EXPECTED_TAG="a620-trc-1.1-rc3-baseline.3"
+BASENAME="A620_Gate0_rc3_baseline4_${DATE_TAG}"
+EXPECTED_TAG="a620-trc-1.1-rc3-baseline.4"
 STEP_TIMEOUT_SECONDS="${A620_REHYDRATE_STEP_TIMEOUT_SECONDS:-180}"
 STATE_DIR="$ROOT/build/delivery/$BASENAME"
 CONTEXT="$STATE_DIR/context.json"
@@ -239,8 +239,29 @@ out.write_text(''.join(f"{hashlib.sha256(p.read_bytes()).hexdigest()}  {p.name}\
 PY
     COMMIT="$(read_json_field "$CONTEXT" commit)"; BRANCH="$(read_json_field "$CONTEXT" branch)"; TAG="$(read_json_field "$CONTEXT" tag)"
     PYTHON_VERSION="$(python3 --version 2>&1)"; NODE_VERSION="$(node --version 2>&1)"; KOTLIN_VERSION="$(kotlinc -version 2>&1 | head -n 1)"; PYTEST_SUMMARY="$(grep -E '^[0-9]+ passed$' "$TEST_LOG" | tail -n 1)"
+    read -r SOURCE_FILE_COUNT SOURCE_LINE_COUNT < <(python3 - "$ROOT" <<'PY_COUNT'
+from pathlib import Path
+import sys
+root=Path(sys.argv[1])
+excluded={'.git','build','node_modules','dist','__pycache__','.pytest_cache'}
+files=[]
+lines=0
+for path in root.rglob('*'):
+    if not path.is_file() or any(part in excluded for part in path.relative_to(root).parts):
+        continue
+    if path.suffix in {'.pyc','.jar','.class','.tpkg','.tmp','.zip','.bundle'}:
+        continue
+    try:
+        text=path.read_text(encoding='utf-8')
+    except (UnicodeDecodeError,OSError):
+        continue
+    files.append(path)
+    lines += len(text.splitlines())
+print(len(files), lines)
+PY_COUNT
+    )
     cat > "$DELIVERY_MANIFEST" <<EOF_MANIFEST
-# A620 Gate 0 rc3 baseline.3 交付清单
+# A620 Gate 0 rc3 baseline.4 交付清单
 
 - 候选状态：\`GATE_0_IMPLEMENTATION_CANDIDATE_NOT_APPROVED\`
 - Git 分支：\`$BRANCH\`
@@ -258,6 +279,11 @@ PY
 - Node $NODE_VERSION
 - $KOTLIN_VERSION
 
+## 规模
+
+- 文本源码、规范、Schema、测试向量和文档：\`$SOURCE_FILE_COUNT\` 个文件；
+- 总行数：\`$SOURCE_LINE_COUNT\` 行（包含生成表、Schema、测试向量和文档）。
+
 ## 组件
 
 - \`$(basename "$SOURCE_ZIP")\`：完整源码、规范及可重建脚本；
@@ -269,9 +295,9 @@ PY
 
 ## 明确限制
 
-本交付不包含 Android APK、Cocos Creator 工程、真实 AIDL/Binder、Room、原生触摸门、两款游戏代表等级、正式素材或生产密钥。SQLite 与 A/B 槽均为参考实现，尚未替代候选平板上的进程杀死、真实闪存断电和文件系统验证。它不能用于患者任务，也不能据此宣称 Gate 0 已通过。
+本交付不包含 Android APK、Cocos Creator 工程、真实 AIDL/Binder、Room、原生触摸门、两款游戏代表等级、正式素材或生产密钥。SQLite outbox/journal、看门狗与 A/B 槽均为参考实现，尚未替代候选平板上的进程杀死、真实 Binder 丢包、真实闪存断电和文件系统验证。它不能用于患者任务，也不能据此宣称 Gate 0 已通过。
 EOF_MANIFEST
-    python3 - "$COMPLETE_ZIP" "$SOURCE_ZIP" "$BUNDLE" "$PACKAGE_ZIP" "$COMPONENT_CHECKSUMS" "$DELIVERY_MANIFEST" "$TEST_LOG" "$SOURCE_VERIFY_LOG" "$BUNDLE_VERIFY_LOG" "$ROOT/docs/TEST_REPORT_20260817.md" "$ROOT/docs/HARDENING_BASELINE3_20260817.md" <<'PY'
+    python3 - "$COMPLETE_ZIP" "$SOURCE_ZIP" "$BUNDLE" "$PACKAGE_ZIP" "$COMPONENT_CHECKSUMS" "$DELIVERY_MANIFEST" "$TEST_LOG" "$SOURCE_VERIFY_LOG" "$BUNDLE_VERIFY_LOG" "$ROOT/docs/TEST_REPORT_20260817.md" "$ROOT/docs/HARDENING_BASELINE4_20260817.md" <<'PY'
 import sys,zipfile
 from pathlib import Path
 out=Path(sys.argv[1]); inputs=[Path(x) for x in sys.argv[2:]]
