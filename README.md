@@ -1,19 +1,17 @@
-# A620 Cognitive Training Platform — Gate 0 单线施工基线
+# A620 Cognitive Training Platform — Gate 0 单线施工候选基线
 
-状态：`GATE_0_IMPLEMENTATION_BASELINE_RC3`
+状态：`GATE_0_IMPLEMENTATION_CANDIDATE_RC3_BASELINE_1_NOT_APPROVED`
 
 本仓库是从零建立的公共平台首批代码，不包含《捕光行动》120 级或《信号反应站》96 级的全量实现。当前范围严格限定为：
 
-- A620-TRC-1.1 公共运行消息与状态机；
-- A620-UPTIME-MS-1 毫秒单调时钟与活动时间账本；
-- Python 参考验证器；
-- TypeScript 公共运行内核；
-- Kotlin/JVM 主控参考实现；
-- 批次证据账本与正式结果提交握手；
-- SQLite 正式结果原子事务参考实现；
-- 游戏专属配置/结果 Schema；
-- 真实 `.tpkg` 构建、安全验证、签名与防回滚；
-- 两个游戏的空插件与示例训练包。
+- A620-TRC-1.1 公共运行消息与机器状态机；
+- A620-UPTIME-MS-1 毫秒单调时钟；
+- Python 参考验证器与 SQLite 事务边界；
+- TypeScript 公共运行状态机与游戏插件接口；
+- Kotlin/JVM 主控参考状态机与批次账本；
+- 批次证据对账及正式结果提交握手；
+- 真实 `.tpkg` 构建、安全验证、签名和防回滚；
+- 两个游戏的空插件及示例训练包。
 
 ## 为什么先做公共线
 
@@ -22,29 +20,20 @@
 ## 一键验证
 
 ```bash
+./scripts/bootstrap_vectors.sh
 ./scripts/test_all.sh
 ```
 
-验证内容：
+当前验证内容：
 
-1. JSON Schema、严格 JSON 与 Python 语义测试；
-2. 正常完成、终止、故障三类流程；
-3. 14 组错误回显、错误状态、活动时间漂移和批次替换等对抗样例；
-4. TypeScript 编译和状态机测试；
-5. Kotlin 编译和状态机测试；
-6. Python / TypeScript / Kotlin 规范化 JSON golden vectors；
-7. SQLite 结果事务、幂等、冲突与故障回滚；
-8. 实际 `.tpkg` 文件清单、路径、条目类型、哈希、签名、版本、防回滚和压缩安全校验；
-9. 相同输入生成字节一致的 `.tpkg` 与交付 ZIP。
-
-当前自动化基线：
-
-```text
-Python: 33 passed
-TypeScript: TYPESCRIPT_GATE0_TESTS_PASS
-Kotlin: KOTLIN_GATE0_TESTS_PASS
-Total: ALL_GATE0_IMPLEMENTATION_TESTS_PASS
-```
+1. JSON Schema、游戏专属 Schema 与 Python 语义测试；
+2. 正常完成、暂停后完成、终止、同毫秒终止优先和运行故障；
+3. 缺失 ACK、错误回显、错误状态、时钟错误、批次替换、等级链篡改等对抗样例；
+4. TypeScript 与 Kotlin 状态机由同一份规范 JSON 生成并编译测试；
+5. Python / TypeScript / Kotlin 规范化 JSON golden vectors；
+6. SQLite 中批次证据、正式结果、同步队列和主控状态的原子提交；
+7. 实际 `.tpkg` 的路径、重复项、普通文件类型、大小、压缩比、文件哈希、Ed25519 签名、密钥状态、APK 兼容和 releaseSequence 防回滚；
+8. 相同输入生成字节一致的 `.tpkg` 与源码 ZIP。
 
 ## 版本约定
 
@@ -60,33 +49,18 @@ canonicalJsonProfile = A620-JCS-1
 
 ```text
 release/candidate.json
-candidateRevision = rc3
+candidateRevision = rc3-baseline.1
 ```
 
-Gate 0 通过后只改变审批状态，不修改 wire 字段、Schema ID 或签名投影。
-
-## 目录重点
-
-```text
-contracts/       公共规范、Schema、状态机和测试向量
-python/          参考验证器、事务和训练包工具
-typescript/      Cocos 侧公共运行内核参考实现
-kotlin/          Android 主控侧 Kotlin/JVM 参考实现
-games/           两款游戏的空插件 Schema 与样例配置
-tools/           配置、训练包与交付工具
-scripts/         一键生成、测试和打包入口
-docs/            状态与测试报告
-```
+Gate 0 只有在 Android、Cocos Creator、候选平板和故障注入全部完成后才能批准。当前仓库只是实现候选基线，不能据此宣称 Gate 0 已通过。
 
 ## 当前未包含
 
-- Android APK 与真实 AIDL/Binder 集成；
-- Room 生产数据库、任务槽和上传通信；
-- Cocos Creator 原生工程与 Asset Bundle；
-- 原生 `MotionEvent` 输入门；
+- Android Studio 主 APK 与真实 AIDL/Binder 集成；
+- Cocos Creator 原生工程、训练进程与 Asset Bundle；
+- Android `MotionEvent.getEventTime()` 原生输入门；
+- Room 生产数据库和管理软件生产接口；
 - 生产签名密钥；
-- 两款游戏正式素材和代表等级；
-- Windows 管理软件生产接口；
-- 候选平板实机 Gate 0 报告。
+- 两款游戏正式素材和代表等级。
 
-这些属于后续 Gate A–F。当前代码提供可编译、可执行、可审查的公共基线和 Mock Host，而不是可交付患者使用的产品。
+这些属于后续 Gate A–F。当前代码提供可编译、可执行、可审查的公共基线和 Mock Host。
