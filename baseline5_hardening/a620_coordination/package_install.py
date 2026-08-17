@@ -7,7 +7,13 @@ from pathlib import Path
 from typing import Any
 
 from .errors import InstallBusy, InvalidState, ReleaseRollback, StaleFence
-from .sqlite_support import canonical_json_bytes, connect, immediate_transaction, load_blob
+from .sqlite_support import canonical_json_bytes, connect, immediate_transaction, load_blob, sha256_bytes
+from .package_storage import (
+    guard_package_clock,
+    migrate_package_schema,
+    validate_package_integrity,
+    verified_manifest,
+)
 
 @dataclass(frozen=True)
 class InstallLease:
@@ -34,8 +40,9 @@ class PackageInstallCoordinator:
     are updated in one SQLite transaction. A stale installer cannot commit.
     """
 
-    def __init__(self, db_path: str | Path):
+    def __init__(self, db_path: str | Path, monotonic_epoch_id: str = "legacy-epoch"):
         self.db_path = str(db_path)
+        self.monotonic_epoch_id = monotonic_epoch_id
         conn = connect(self.db_path)
         try:
             conn.executescript("""
@@ -75,6 +82,9 @@ class PackageInstallCoordinator:
                 UNIQUE(game_code, candidate_sha256, release_sequence)
             );
             """)
+            with immediate_transaction(conn):
+                migrate_package_schema(conn, self.monotonic_epoch_id)
+            validate_package_integrity(conn)
         finally:
             conn.close()
 
@@ -88,6 +98,7 @@ class PackageInstallCoordinator:
         conn = self._conn()
         try:
             with immediate_transaction(conn):
+                guard_package_clock(conn, self.monotonic_epoch_id, now_ms)
                 row = conn.execute("SELECT * FROM package_install_lock WHERE game_code=?",
                                    (game_code,)).fetchone()
                 until = now_ms + lease_ms
@@ -118,6 +129,7 @@ class PackageInstallCoordinator:
         conn = self._conn()
         try:
             with immediate_transaction(conn):
+                guard_package_clock(conn, self.monotonic_epoch_id, now_ms)
                 self._assert_lock(conn, game_code, owner_id, fence_token, now_ms)
                 active = conn.execute("SELECT * FROM package_active WHERE game_code=?", (game_code,)).fetchone()
                 floor = conn.execute("SELECT minimum_release_sequence FROM package_release_floor WHERE game_code=?",
@@ -140,8 +152,11 @@ class PackageInstallCoordinator:
                     return InstallPlan(iid, game_code, existing['inactive_slot'], release_sequence,
                                        candidate_sha256, fence_token, existing['staging_path'])
                 conn.execute("""
-                    INSERT INTO package_install_journal
-                    VALUES (?,?,?,?,?,?,?, 'STAGING',?,NULL,?,?)
+                    INSERT INTO package_install_journal(
+                        install_id,game_code,owner_id,fence_token,inactive_slot,candidate_sha256,
+                        release_sequence,phase,staging_path,manifest_json,created_at_ms,updated_at_ms,
+                        manifest_sha256,abort_reason
+                    ) VALUES (?,?,?,?,?,?,?,'STAGING',?,NULL,?,?,NULL,NULL)
                 """, (iid, game_code, owner_id, fence_token, inactive,
                        candidate_sha256, release_sequence, staging_path, now_ms, now_ms))
                 return InstallPlan(iid, game_code, inactive, release_sequence,
@@ -166,6 +181,7 @@ class PackageInstallCoordinator:
         conn = self._conn()
         try:
             with immediate_transaction(conn):
+                guard_package_clock(conn, self.monotonic_epoch_id, now_ms)
                 row = self._journal(conn, install_id)
                 self._assert_lock(conn, row['game_code'], owner_id, fence_token, now_ms)
                 if row['owner_id'] != owner_id or row['fence_token'] != fence_token:
@@ -174,9 +190,14 @@ class PackageInstallCoordinator:
                     return
                 if row['phase'] != expected:
                     raise InvalidState(f"expected {expected}, got {row['phase']}")
-                conn.execute("UPDATE package_install_journal SET phase=?,manifest_json=COALESCE(?,manifest_json),updated_at_ms=? WHERE install_id=?",
-                             (target, canonical_json_bytes(manifest) if manifest is not None else None,
-                              now_ms, install_id))
+                manifest_blob = canonical_json_bytes(manifest) if manifest is not None else None
+                manifest_hash = sha256_bytes(manifest_blob) if manifest_blob is not None else None
+                conn.execute(
+                    "UPDATE package_install_journal SET phase=?,"
+                    "manifest_json=COALESCE(?,manifest_json),"
+                    "manifest_sha256=COALESCE(?,manifest_sha256),updated_at_ms=? WHERE install_id=?",
+                    (target, manifest_blob, manifest_hash, now_ms, install_id),
+                )
         finally:
             conn.close()
 
@@ -187,6 +208,7 @@ class PackageInstallCoordinator:
         conn = self._conn()
         try:
             with immediate_transaction(conn):
+                guard_package_clock(conn, self.monotonic_epoch_id, now_ms)
                 row = self._journal(conn, install_id)
                 self._assert_lock(conn, row['game_code'], owner_id, fence_token, now_ms)
                 if row['owner_id'] != owner_id or row['fence_token'] != fence_token:
@@ -200,16 +222,24 @@ class PackageInstallCoordinator:
                 min_seq = floor['minimum_release_sequence'] if floor else -1
                 if row['release_sequence'] <= min_seq:
                     raise ReleaseRollback("candidate no longer exceeds durable floor")
+                verified_manifest(
+                    row['manifest_json'], row['manifest_sha256'],
+                    label=f"install manifest {install_id}",
+                )
                 conn.execute("""
-                    INSERT INTO package_active VALUES (?,?,?,?,?,?)
+                    INSERT INTO package_active(
+                        game_code,active_slot,package_sha256,release_sequence,manifest_json,
+                        updated_at_ms,manifest_sha256
+                    ) VALUES (?,?,?,?,?,?,?)
                     ON CONFLICT(game_code) DO UPDATE SET
                         active_slot=excluded.active_slot,
                         package_sha256=excluded.package_sha256,
                         release_sequence=excluded.release_sequence,
                         manifest_json=excluded.manifest_json,
+                        manifest_sha256=excluded.manifest_sha256,
                         updated_at_ms=excluded.updated_at_ms
                 """, (row['game_code'], row['inactive_slot'], row['candidate_sha256'],
-                       row['release_sequence'], row['manifest_json'], now_ms))
+                       row['release_sequence'], row['manifest_json'], now_ms, row['manifest_sha256']))
                 if fault_at == 'after_active_pointer':
                     raise RuntimeError('fault injection: after_active_pointer')
                 conn.execute("""
@@ -234,6 +264,7 @@ class PackageInstallCoordinator:
         conn = self._conn()
         try:
             with immediate_transaction(conn):
+                guard_package_clock(conn, self.monotonic_epoch_id, now_ms)
                 self._assert_lock(conn, game_code, owner_id, fence_token, now_ms)
                 rows = conn.execute("""
                     SELECT install_id,staging_path FROM package_install_journal
@@ -241,8 +272,11 @@ class PackageInstallCoordinator:
                       AND fence_token<?
                 """, (game_code, fence_token)).fetchall()
                 for row in rows:
-                    conn.execute("UPDATE package_install_journal SET phase='ABORTED',updated_at_ms=? WHERE install_id=?",
-                                 (now_ms, row['install_id']))
+                    conn.execute(
+                        "UPDATE package_install_journal SET phase='ABORTED',"
+                        "abort_reason='SUPERSEDED_INSTALL_FENCE',updated_at_ms=? WHERE install_id=?",
+                        (now_ms, row['install_id']),
+                    )
                 return [row['staging_path'] for row in rows]
         finally:
             conn.close()
@@ -251,14 +285,34 @@ class PackageInstallCoordinator:
         conn = self._conn()
         try:
             row = conn.execute("SELECT * FROM package_active WHERE game_code=?", (game_code,)).fetchone()
-            return dict(row) if row else None
+            if not row:
+                return None
+            result = dict(row)
+            result['manifest'] = verified_manifest(
+                result.pop('manifest_json'), result['manifest_sha256'],
+                label=f"active manifest {game_code}",
+            )
+            return result
         finally:
             conn.close()
 
     def journal(self, install_id: str) -> dict[str, Any]:
         conn = self._conn()
         try:
-            return dict(self._journal(conn, install_id))
+            result = dict(self._journal(conn, install_id))
+            if result['manifest_json'] is not None:
+                result['manifest'] = verified_manifest(
+                    result['manifest_json'], result['manifest_sha256'],
+                    label=f"install manifest {install_id}",
+                )
+            return result
+        finally:
+            conn.close()
+
+    def validate_integrity(self) -> dict[str, int | str]:
+        conn = self._conn()
+        try:
+            return validate_package_integrity(conn)
         finally:
             conn.close()
 
@@ -292,5 +346,8 @@ class PackageInstallCoordinator:
         if not row:
             raise InvalidState("active package missing after commit")
         result = dict(row)
-        result['manifest'] = load_blob(result.pop('manifest_json'))
+        result['manifest'] = verified_manifest(
+            result.pop('manifest_json'), result['manifest_sha256'],
+            label=f"active manifest {game_code}",
+        )
         return result

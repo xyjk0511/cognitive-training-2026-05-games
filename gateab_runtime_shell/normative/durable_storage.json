@@ -1,0 +1,33 @@
+{
+  "profile": "A620-DSP-1",
+  "schemaVersion": 2,
+  "migrationProfile": "A620-DBM-1",
+  "bootEpochProfile": "A620-BEP-1",
+  "startupIntegrityChecks": [
+    "quick_check",
+    "foreign_key_check",
+    "durability_invariants"
+  ],
+  "sameEpochUptimeRegression": "FAIL_CLOSED_AND_INTERRUPT_ACTIVE_RUNTIMES",
+  "changedEpochActiveRuntimeAction": "INTERRUPTED_DEVICE_REBOOT",
+  "outbox": {
+    "maxNormalMessagesPerRuntime": 1024,
+    "maxNormalBytesPerRuntime": 8388608,
+    "maxNormalMessagesGlobal": 4096,
+    "maxNormalBytesGlobal": 33554432,
+    "criticalReserveMessagesPerRuntime": 16,
+    "criticalReserveBytesPerRuntime": 1048576,
+    "criticalTypes": [
+      "ACK_RESULT_COMMITTED",
+      "RESULT_READY",
+      "BATCH_CLOSED",
+      "TERMINATE",
+      "RUNTIME_ERROR"
+    ],
+    "nonDurableTypes": [
+      "HEARTBEAT",
+      "STATE_SNAPSHOT"
+    ]
+  },
+  "emergencyReserveBytes": 4194304
+}

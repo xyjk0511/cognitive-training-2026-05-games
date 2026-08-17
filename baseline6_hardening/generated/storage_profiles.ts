@@ -1,0 +1,7 @@
+// Generated; do not edit.
+export const STORAGE_PROFILE_SHA256 = "b5b5694e9c12531b7351af58d83bbf8f6c5a33d91be3ac7e3335c98c4c7e2ac1";
+export const RUNTIME_STORAGE_PROFILE = "A620-SIP-1";
+export const RUNTIME_SCHEMA_VERSION = 2;
+export const PACKAGE_STORAGE_PROFILE = "A620-PSI-1";
+export const PACKAGE_SCHEMA_VERSION = 2;
+export const RUNTIME_WATCHDOG_SENTINEL = "__RUNTIME__";

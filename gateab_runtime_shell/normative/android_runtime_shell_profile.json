@@ -1,0 +1,46 @@
+{
+  "profile": "A620-ARS-1",
+  "candidateRevision": "rc3-baseline.6",
+  "wireContractVersion": "A620-TRC-1.1",
+  "status": "GATE_AB_RUNTIME_SHELL_CANDIDATE_NOT_DEVICE_APPROVED",
+  "processIsolation": {
+    "controllerProcess": "com.a620.tablet",
+    "trainingProcessSuffix": ":training",
+    "serviceExported": false,
+    "sameUidRequired": true,
+    "autoResumeAfterProcessDeath": false,
+    "deathOutcome": "INTERRUPTED",
+    "newExecutionAttemptRequiredAfterDeath": true,
+    "callbackRegistrationTimeoutMs": 5000
+  },
+  "binder": {
+    "inlineCanonicalMaxBytes": 49152,
+    "inlineDescriptorMaxBytes": 8192,
+    "bulkCanonicalMaxBytes": 2097152,
+    "bulkLeaseMs": 15000,
+    "singleConsumerQueueMaxMessages": 256,
+    "singleConsumerQueueMaxBytes": 4194304,
+    "onewaySubmission": true,
+    "duplicateFileDescriptorBeforeAsyncUse": true
+  },
+  "inputGate": {
+    "clockProfile": "A620-UPTIME-MS-1",
+    "interval": "HALF_OPEN",
+    "maxPointers": 10,
+    "rejectUnknownPointerUp": true
+  },
+  "sourceScaffold": {
+    "minAndroidApiCandidate": 30,
+    "toolchainMustBeLockedBeforeApkBuild": true,
+    "androidSdkBuildPerformed": false,
+    "deviceApprovalPerformed": false
+  },
+  "toolchainCandidate": {
+    "androidGradlePlugin": "9.3.1",
+    "gradle": "9.5.0",
+    "jdk": 17,
+    "compileSdk": 36,
+    "targetSdk": 36,
+    "minSdk": 30
+  }
+}

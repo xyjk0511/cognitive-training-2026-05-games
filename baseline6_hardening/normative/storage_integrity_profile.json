@@ -1,0 +1,33 @@
+{
+  "profileId": "A620-SIP-1",
+  "contractVersion": "A620-TRC-1.1",
+  "candidateRevision": "rc3-baseline.6",
+  "wireSemanticChange": false,
+  "runtimeStorageProfile": "A620-SIP-1",
+  "runtimeSchemaVersion": 2,
+  "packageStorageProfile": "A620-PSI-1",
+  "packageSchemaVersion": 2,
+  "runtimeWatchdogNullSourceKey": "__RUNTIME__",
+  "persistedJson": {
+    "canonicalProfile": "A620-JCS-1",
+    "strictDuplicateKeyRejection": true,
+    "verifyStoredHashBeforeUse": true,
+    "verifyCanonicalBytesBeforeUse": true
+  },
+  "clockPolicy": {
+    "profile": "A620-UPTIME-MS-1",
+    "rejectBackwardsWithinEpoch": true,
+    "packageEpochChange": "CLEAR_LOCKS_AND_ABORT_UNCOMMITTED_INSTALLS",
+    "runtimeEpochChange": "REQUIRE_NEW_EXECUTION_ATTEMPT"
+  },
+  "watchdogPolicy": {
+    "allDueRuntimeObligationsBeatAnyAckAtSameMillisecond": true,
+    "normalizeNullSourceForUniqueness": true
+  },
+  "integrityPolicy": {
+    "validateOnOpen": true,
+    "sqliteQuickCheck": true,
+    "foreignKeyCheck": true,
+    "crossTableInvariantCheck": true
+  }
+}

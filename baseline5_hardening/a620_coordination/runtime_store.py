@@ -12,7 +12,15 @@ from .errors import (
 )
 from .sqlite_support import (
     canonical_json_bytes, canonical_sha256, connect,
-    immediate_transaction, json_blob, load_blob,
+    immediate_transaction, json_blob, load_blob, sha256_bytes,
+)
+from .storage_integrity import (
+    RUNTIME_WATCHDOG_SENTINEL,
+    guard_all_active_runtime_clocks,
+    guard_runtime_clock,
+    migrate_runtime_schema,
+    read_verified_snapshot,
+    validate_runtime_integrity,
 )
 
 Reducer = Callable[[dict[str, Any], dict[str, Any]], tuple[dict[str, Any], dict[str, Any]]]
@@ -48,6 +56,9 @@ class RuntimeCoordinationStore:
         conn = connect(self.db_path)
         try:
             self._create_schema(conn)
+            with immediate_transaction(conn):
+                migrate_runtime_schema(conn)
+            validate_runtime_integrity(conn)
         finally:
             conn.close()
 
@@ -160,6 +171,12 @@ class RuntimeCoordinationStore:
                     actual = (row['task_item_id'], row['execution_attempt'], row['monotonic_epoch_id'])
                     if actual != expected:
                         raise ProtocolConflict("runtimeSessionId reused with different identity")
+                    guard_runtime_clock(conn, runtime_session_id, now_ms)
+                    initial_digest = canonical_sha256(initial_snapshot)
+                    if row['initial_snapshot_sha256'] != initial_digest:
+                        raise ProtocolConflict("runtime re-registration changed the initial snapshot")
+                    if row['lifecycle'] != 'ACTIVE':
+                        raise TerminalRuntime(row['terminal_reason'] or 'runtime terminal')
                     return
                 max_attempt = conn.execute(
                     "SELECT MAX(execution_attempt) AS value FROM runtime_session WHERE task_item_id=?",
@@ -168,23 +185,33 @@ class RuntimeCoordinationStore:
                 if max_attempt is not None and execution_attempt <= max_attempt:
                     raise ProtocolConflict("executionAttempt must increase for a task item")
                 older_active = conn.execute(
-                    "SELECT runtime_session_id FROM runtime_session WHERE task_item_id=? AND lifecycle='ACTIVE'",
+                    "SELECT runtime_session_id,monotonic_epoch_id,last_observed_uptime_ms "
+                    "FROM runtime_session WHERE task_item_id=? AND lifecycle='ACTIVE'",
                     (task_item_id,),
                 ).fetchall()
                 for old_runtime in older_active:
+                    same_epoch = old_runtime['monotonic_epoch_id'] == monotonic_epoch_id
+                    terminal_now = now_ms if same_epoch else old_runtime['last_observed_uptime_ms']
                     self._terminalize_tx(
                         conn, old_runtime['runtime_session_id'], 'INTERRUPTED',
-                        'EXECUTION_SUPERSEDED_BY_NEW_ATTEMPT', now_ms,
+                        'EXECUTION_SUPERSEDED_BY_NEW_ATTEMPT', terminal_now,
+                        enforce_clock=same_epoch,
                     )
                 blob = canonical_json_bytes(initial_snapshot)
                 digest = canonical_sha256(initial_snapshot)
                 conn.execute(
-                    "INSERT INTO runtime_session VALUES (?,?,?,?, 'ACTIVE',NULL,0,?,?)",
+                    """INSERT INTO runtime_session(
+                        runtime_session_id,task_item_id,execution_attempt,monotonic_epoch_id,
+                        lifecycle,terminal_reason,state_revision,created_at_ms,updated_at_ms,
+                        initial_snapshot_sha256,last_observed_uptime_ms
+                    ) VALUES (?,?,?,?, 'ACTIVE',NULL,0,?,?,?,?)""",
                     (runtime_session_id, task_item_id, execution_attempt,
-                     monotonic_epoch_id, now_ms, now_ms),
+                     monotonic_epoch_id, now_ms, now_ms, digest, now_ms),
                 )
                 conn.execute(
-                    "INSERT INTO runtime_snapshot VALUES (?,?,?,?,?)",
+                    """INSERT INTO runtime_snapshot(
+                        runtime_session_id,revision,snapshot_json,snapshot_sha256,updated_at_ms
+                    ) VALUES (?,?,?,?,?)""",
                     (runtime_session_id, 0, blob, digest, now_ms),
                 )
         finally:
@@ -199,6 +226,7 @@ class RuntimeCoordinationStore:
             with immediate_transaction(conn):
                 runtime = self._runtime(conn, runtime_session_id)
                 self._require_active(runtime)
+                guard_runtime_clock(conn, runtime_session_id, now_ms)
                 if runtime['monotonic_epoch_id'] != monotonic_epoch_id:
                     raise StaleFence("monotonic epoch does not match runtime")
                 row = conn.execute(
@@ -241,6 +269,8 @@ class RuntimeCoordinationStore:
             with immediate_transaction(conn):
                 runtime = self._runtime(conn, runtime_session_id)
                 self._require_active(runtime)
+                guard_runtime_clock(conn, runtime_session_id, now_ms)
+                runtime = self._runtime(conn, runtime_session_id)
                 self._assert_lease(conn, runtime_session_id, owner_id, fence_token, now_ms)
                 existing = conn.execute(
                     "SELECT * FROM inbox_message WHERE message_id=?", (message_id,)
@@ -248,26 +278,28 @@ class RuntimeCoordinationStore:
                 if existing:
                     if existing['canonical_sha256'] != digest:
                         raise ProtocolConflict("same messageId has different canonical content")
-                    return load_blob(existing['outcome_json']), True
+                    return load_blob(existing['outcome_json'], expected_sha256=existing['outcome_sha256'], label=f"inbox outcome {message_id}"), True
                 same_seq = conn.execute(
                     "SELECT message_id,canonical_sha256 FROM inbox_message WHERE runtime_session_id=? AND sender_role=? AND sender_seq=?",
                     (runtime_session_id, sender_role, sender_seq),
                 ).fetchone()
                 if same_seq:
                     raise ProtocolConflict("sender sequence reused by a different message")
-                snap = conn.execute(
-                    "SELECT * FROM runtime_snapshot WHERE runtime_session_id=?",
-                    (runtime_session_id,),
-                ).fetchone()
-                old_snapshot = load_blob(snap['snapshot_json'])
+                snap, old_snapshot = read_verified_snapshot(conn, runtime_session_id)
+                if snap['revision'] != runtime['state_revision']:
+                    raise ProtocolConflict("runtime and snapshot revisions diverged")
                 new_snapshot, outcome = reducer(old_snapshot, payload)
                 new_blob = canonical_json_bytes(new_snapshot)
                 outcome_blob = canonical_json_bytes(outcome)
                 new_revision = snap['revision'] + 1
+                outcome_digest = sha256_bytes(outcome_blob)
                 conn.execute(
-                    "INSERT INTO inbox_message VALUES (?,?,?,?,?,?,?,?,?)",
-                    (message_id, runtime_session_id, digest, sender_role,
-                     sender_seq, outcome_blob, new_revision, now_ms, now_ms),
+                    """INSERT INTO inbox_message(
+                        message_id,runtime_session_id,canonical_sha256,sender_role,sender_seq,
+                        outcome_json,applied_revision,created_at_ms,updated_at_ms,outcome_sha256
+                    ) VALUES (?,?,?,?,?,?,?,?,?,?)""",
+                    (message_id, runtime_session_id, digest, sender_role, sender_seq,
+                     outcome_blob, new_revision, now_ms, now_ms, outcome_digest),
                 )
                 if fault_at == 'after_inbox_insert':
                     raise RuntimeError('fault injection: after_inbox_insert')
@@ -278,10 +310,12 @@ class RuntimeCoordinationStore:
                 ).rowcount
                 if changed != 1:
                     raise StaleFence("snapshot revision changed concurrently")
-                conn.execute(
+                session_changed = conn.execute(
                     "UPDATE runtime_session SET state_revision=?,updated_at_ms=? WHERE runtime_session_id=? AND state_revision=?",
                     (new_revision, now_ms, runtime_session_id, snap['revision']),
-                )
+                ).rowcount
+                if session_changed != 1:
+                    raise StaleFence("runtime state revision changed concurrently")
                 if fault_at == 'after_snapshot_update':
                     raise RuntimeError('fault injection: after_snapshot_update')
                 if fault_at == 'before_commit':
@@ -303,6 +337,7 @@ class RuntimeCoordinationStore:
             with immediate_transaction(conn):
                 runtime = self._runtime(conn, runtime_session_id)
                 self._require_active(runtime)
+                guard_runtime_clock(conn, runtime_session_id, now_ms)
                 existing = conn.execute(
                     "SELECT * FROM outbox_message WHERE message_id=?", (message_id,)
                 ).fetchone()
@@ -311,11 +346,18 @@ class RuntimeCoordinationStore:
                         load_blob(existing['required_acks_json']) != required):
                         raise ProtocolConflict("outbox messageId reused with different content or obligations")
                     return
+                required_blob = json_blob(required)
+                received_blob = json_blob([])
                 conn.execute(
-                    "INSERT INTO outbox_message VALUES (?,?,?,?,?,?, 'PENDING',?,0,NULL,0,NULL,NULL,?,?)",
+                    """INSERT INTO outbox_message(
+                        message_id,runtime_session_id,canonical_bytes,canonical_sha256,
+                        required_acks_json,received_acks_json,status,next_attempt_ms,attempt_count,
+                        claim_owner,claim_generation,claim_until_ms,terminal_note,created_at_ms,updated_at_ms,
+                        required_acks_sha256,received_acks_sha256
+                    ) VALUES (?,?,?,?,?,?, 'PENDING',?,0,NULL,0,NULL,NULL,?,?,?,?)""",
                     (message_id, runtime_session_id, canonical, digest,
-                     json_blob(required), json_blob([]), next_attempt_ms,
-                     now_ms, now_ms),
+                     required_blob, received_blob, next_attempt_ms, now_ms, now_ms,
+                     sha256_bytes(required_blob), sha256_bytes(received_blob)),
                 )
         finally:
             conn.close()
@@ -331,10 +373,27 @@ class RuntimeCoordinationStore:
             with immediate_transaction(conn):
                 runtime = self._runtime(conn, runtime_session_id)
                 self._require_active(runtime)
+                guard_runtime_clock(conn, runtime_session_id, now_ms)
+                details_blob = json_blob(details or {})
+                source_key = source_message_id or RUNTIME_WATCHDOG_SENTINEL
+                existing = conn.execute(
+                    "SELECT obligation_id,deadline_ms,details_sha256 FROM watchdog_obligation "
+                    "WHERE runtime_session_id=? AND kind=? AND source_message_key=?",
+                    (runtime_session_id, kind, source_key),
+                ).fetchone()
+                if existing:
+                    if (existing['obligation_id'] != obligation_id or
+                        existing['deadline_ms'] != deadline_ms or
+                        existing['details_sha256'] != sha256_bytes(details_blob)):
+                        raise ProtocolConflict("watchdog identity reused with different obligation")
+                    return
                 conn.execute(
-                    "INSERT OR IGNORE INTO watchdog_obligation VALUES (?,?,?,?,?, 'ACTIVE',?,NULL,?,?)",
-                    (obligation_id, runtime_session_id, source_message_id,
-                     kind, deadline_ms, json_blob(details or {}), now_ms, now_ms),
+                    """INSERT INTO watchdog_obligation(
+                        obligation_id,runtime_session_id,source_message_id,kind,deadline_ms,status,
+                        details_json,fired_reason,created_at_ms,updated_at_ms,details_sha256,source_message_key
+                    ) VALUES (?,?,?,?,?,'ACTIVE',?,NULL,?,?,?,?)""",
+                    (obligation_id, runtime_session_id, source_message_id, kind, deadline_ms,
+                     details_blob, now_ms, now_ms, sha256_bytes(details_blob), source_key),
                 )
         finally:
             conn.close()
@@ -351,6 +410,7 @@ class RuntimeCoordinationStore:
         conn = self._conn()
         try:
             with immediate_transaction(conn):
+                guard_all_active_runtime_clocks(conn, now_ms)
                 fired = self._fire_due_watchdogs_tx(conn, now_ms)
                 claimed = self._claim_due_outbox_tx(
                     conn, worker_id, now_ms, claim_lease_ms, limit
@@ -366,6 +426,7 @@ class RuntimeCoordinationStore:
         conn = self._conn()
         try:
             with immediate_transaction(conn):
+                guard_all_active_runtime_clocks(conn, now_ms)
                 self._fire_due_watchdogs_tx(conn, now_ms)
                 return self._claim_due_outbox_tx(
                     conn, worker_id, now_ms, claim_lease_ms, limit
@@ -400,11 +461,22 @@ class RuntimeCoordinationStore:
                    row['claim_generation'], now_ms)).rowcount
             if changed != 1:
                 continue
+            if sha256_bytes(row['canonical_bytes']) != row['canonical_sha256']:
+                raise ProtocolConflict(f"outbox canonical hash mismatch for {row['message_id']}")
+            load_blob(row['canonical_bytes'], label=f"outbox message {row['message_id']}")
             result.append(ClaimedOutboxMessage(
                 row['message_id'], row['runtime_session_id'], row['canonical_bytes'],
                 row['attempt_count'] + 1, generation, until,
-                tuple(load_blob(row['required_acks_json'], [])),
-                tuple(load_blob(row['received_acks_json'], [])),
+                tuple(load_blob(
+                    row['required_acks_json'], [],
+                    expected_sha256=row['required_acks_sha256'],
+                    label=f"required ACKs {row['message_id']}",
+                )),
+                tuple(load_blob(
+                    row['received_acks_json'], [],
+                    expected_sha256=row['received_acks_sha256'],
+                    label=f"received ACKs {row['message_id']}",
+                )),
             ))
         return result
 
@@ -423,6 +495,7 @@ class RuntimeCoordinationStore:
                 """, (message_id,)).fetchone()
                 if not row:
                     raise InvalidState("unknown outbox message")
+                guard_runtime_clock(conn, row['runtime_session_id'], now_ms)
                 if row['lifecycle'] != 'ACTIVE':
                     conn.execute("UPDATE outbox_message SET status='CANCELLED',terminal_note=?,claim_owner=NULL,claim_until_ms=NULL,updated_at_ms=? WHERE message_id=?",
                                  ('runtime terminal', now_ms, message_id))
@@ -451,31 +524,43 @@ class RuntimeCoordinationStore:
                 """, (message_id,)).fetchone()
                 if not row:
                     raise InvalidState("unknown outbox message")
+                guard_runtime_clock(conn, row['runtime_session_id'], now_ms)
                 if row['lifecycle'] != 'ACTIVE' or row['status'] == 'CANCELLED':
                     raise TerminalRuntime("late ACK after terminal outcome")
-                # At an equal uptime millisecond the watchdog owns the boundary.
+                # Any due obligation for this runtime wins the boundary.  An ACK
+                # for START may not bypass a due heartbeat or result-commit timer.
                 due = conn.execute("""
                     SELECT 1 FROM watchdog_obligation
-                    WHERE runtime_session_id=? AND source_message_id=?
-                      AND status='ACTIVE' AND deadline_ms<=?
+                    WHERE runtime_session_id=? AND status='ACTIVE' AND deadline_ms<=?
                     LIMIT 1
-                """, (row['runtime_session_id'], message_id, now_ms)).fetchone()
+                """, (row['runtime_session_id'], now_ms)).fetchone()
                 if due:
-                    self._fire_due_watchdogs_tx(conn, now_ms)
+                    self._fire_due_watchdogs_tx(
+                        conn, now_ms, runtime_session_id=row['runtime_session_id']
+                    )
                     timed_out = True
                 else:
-                    required = set(load_blob(row['required_acks_json'], []))
+                    required = set(load_blob(
+                        row['required_acks_json'], [],
+                        expected_sha256=row['required_acks_sha256'],
+                        label=f"required ACKs {message_id}",
+                    ))
                     if ack_kind not in required:
                         raise ProtocolConflict("ACK is not an obligation of this message")
-                    received = set(load_blob(row['received_acks_json'], []))
+                    received = set(load_blob(
+                        row['received_acks_json'], [],
+                        expected_sha256=row['received_acks_sha256'],
+                        label=f"received ACKs {message_id}",
+                    ))
                     received.add(ack_kind)
                     complete = required.issubset(received)
+                    received_blob = json_blob(sorted(received))
                     conn.execute("""
-                        UPDATE outbox_message SET received_acks_json=?,status=?,
+                        UPDATE outbox_message SET received_acks_json=?,received_acks_sha256=?,status=?,
                         next_attempt_ms=?,claim_owner=NULL,claim_until_ms=NULL,updated_at_ms=?
                         WHERE message_id=?
-                    """, (json_blob(sorted(received)), 'ACKED' if complete else 'PENDING',
-                           now_ms, now_ms, message_id))
+                    """, (received_blob, sha256_bytes(received_blob),
+                           'ACKED' if complete else 'PENDING', now_ms, now_ms, message_id))
                     if complete:
                         conn.execute("""
                             UPDATE watchdog_obligation
@@ -492,17 +577,26 @@ class RuntimeCoordinationStore:
         conn = self._conn()
         try:
             with immediate_transaction(conn):
+                guard_all_active_runtime_clocks(conn, now_ms)
                 return self._fire_due_watchdogs_tx(conn, now_ms)
         finally:
             conn.close()
 
-    def _fire_due_watchdogs_tx(self, conn: sqlite3.Connection, now_ms: int) -> list[str]:
-        rows = conn.execute("""
-            SELECT w.*,r.lifecycle FROM watchdog_obligation w
-            JOIN runtime_session r ON r.runtime_session_id=w.runtime_session_id
-            WHERE w.status='ACTIVE' AND w.deadline_ms<=?
-            ORDER BY w.deadline_ms,w.obligation_id
-        """, (now_ms,)).fetchall()
+    def _fire_due_watchdogs_tx(self, conn: sqlite3.Connection, now_ms: int, runtime_session_id: str | None = None) -> list[str]:
+        if runtime_session_id is None:
+            rows = conn.execute("""
+                SELECT w.*,r.lifecycle FROM watchdog_obligation w
+                JOIN runtime_session r ON r.runtime_session_id=w.runtime_session_id
+                WHERE w.status='ACTIVE' AND w.deadline_ms<=?
+                ORDER BY w.deadline_ms,w.obligation_id
+            """, (now_ms,)).fetchall()
+        else:
+            rows = conn.execute("""
+                SELECT w.*,r.lifecycle FROM watchdog_obligation w
+                JOIN runtime_session r ON r.runtime_session_id=w.runtime_session_id
+                WHERE w.runtime_session_id=? AND w.status='ACTIVE' AND w.deadline_ms<=?
+                ORDER BY w.deadline_ms,w.obligation_id
+            """, (runtime_session_id, now_ms)).fetchall()
         fired: list[str] = []
         terminalized: set[str] = set()
         for row in rows:
@@ -535,6 +629,7 @@ class RuntimeCoordinationStore:
         conn = self._conn()
         try:
             with immediate_transaction(conn):
+                guard_runtime_clock(conn, runtime_session_id, now_ms)
                 self._terminalize_tx(conn, runtime_session_id, completion_state, reason, now_ms)
         finally:
             conn.close()
@@ -542,8 +637,12 @@ class RuntimeCoordinationStore:
     def _terminalize_tx(
         self, conn: sqlite3.Connection, runtime_session_id: str,
         completion_state: str, reason: str, now_ms: int,
+        *, enforce_clock: bool = True,
     ) -> None:
         runtime = self._runtime(conn, runtime_session_id)
+        if enforce_clock:
+            guard_runtime_clock(conn, runtime_session_id, now_ms)
+            runtime = self._runtime(conn, runtime_session_id)
         if runtime['lifecycle'] == 'TERMINAL':
             existing = conn.execute("SELECT * FROM execution_outcome WHERE runtime_session_id=?",
                                     (runtime_session_id,)).fetchone()
@@ -554,8 +653,12 @@ class RuntimeCoordinationStore:
             raise InvalidState("invalid terminal completion state")
         conn.execute("UPDATE runtime_session SET lifecycle='TERMINAL',terminal_reason=?,updated_at_ms=? WHERE runtime_session_id=?",
                      (reason, now_ms, runtime_session_id))
-        conn.execute("INSERT INTO execution_outcome VALUES (?,?,?,?)",
-                     (runtime_session_id, completion_state, reason, now_ms))
+        conn.execute(
+            """INSERT INTO execution_outcome(
+                runtime_session_id,completion_state,reason,created_at_ms
+            ) VALUES (?,?,?,?)""",
+            (runtime_session_id, completion_state, reason, now_ms),
+        )
         conn.execute("""
             UPDATE outbox_message SET status='CANCELLED',terminal_note=?,
                 claim_owner=NULL,claim_until_ms=NULL,updated_at_ms=?
@@ -571,6 +674,7 @@ class RuntimeCoordinationStore:
         conn = self._conn()
         try:
             with immediate_transaction(conn):
+                guard_all_active_runtime_clocks(conn, now_ms)
                 reset = conn.execute("""
                     UPDATE outbox_message SET status='PENDING',claim_owner=NULL,
                         claim_until_ms=NULL,updated_at_ms=?
@@ -594,11 +698,11 @@ class RuntimeCoordinationStore:
     def snapshot(self, runtime_session_id: str) -> dict[str, Any]:
         conn = self._conn()
         try:
-            row = conn.execute("SELECT * FROM runtime_snapshot WHERE runtime_session_id=?",
-                               (runtime_session_id,)).fetchone()
-            if not row:
-                raise UnknownRuntime(runtime_session_id)
-            return load_blob(row['snapshot_json'])
+            runtime = self._runtime(conn, runtime_session_id)
+            row, snapshot = read_verified_snapshot(conn, runtime_session_id)
+            if row['revision'] != runtime['state_revision']:
+                raise ProtocolConflict("runtime and snapshot revisions diverged")
+            return snapshot
         finally:
             conn.close()
 
@@ -616,6 +720,13 @@ class RuntimeCoordinationStore:
         conn = self._conn()
         try:
             return dict(self._runtime(conn, runtime_session_id))
+        finally:
+            conn.close()
+
+    def validate_integrity(self) -> dict[str, int | str]:
+        conn = self._conn()
+        try:
+            return validate_runtime_integrity(conn)
         finally:
             conn.close()
 

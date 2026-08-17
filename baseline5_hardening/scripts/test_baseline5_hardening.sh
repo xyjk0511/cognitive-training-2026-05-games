@@ -3,7 +3,7 @@ set -euo pipefail
 HERE="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$HERE"
 python3 tools/generate_coordination_profiles.py --check
-PYTHONPATH="$HERE" python3 -m pytest -q tests
+PYTHONPATH="$HERE:$HERE/../python" python3 -m pytest -q tests
 rm -rf typescript/build
 tsc -p typescript/tsconfig.json
 node typescript/build/typescript/test_profiles.js

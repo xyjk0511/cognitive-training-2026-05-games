@@ -11,3 +11,7 @@
 9. 每次提交前运行 `./scripts/test_all.sh`。
 10. 活动运行消息、sender cursor 与处理后的 reducer 快照必须同事务提交；不得先标记消息已消费再异步补写状态。
 11. A/B 训练包恢复只能暴露 durable release floor 对应的已提交版本；不得把 inactive slot 中更高但未完成 pointer commit 的候选包自动提升为活动包。
+12. 所有 SQLite 持久 JSON 必须使用共享 A620-JCS-1 实现并绑定 hash；禁止另写 `json.dumps(sort_keys=True)` 作为等价规范化。
+13. 同一 monotonic epoch 内 `nowUptimeMs` 不得回退；跨 boot epoch 的旧运行必须中断并建立新执行代次。
+14. Android Binder 回调与请求在进入 reducer 前必须经过单消费者 actor；排队后仍须重新校验 channel generation。
+15. Android 目录在 SDK 编译和实机测试前只能称为 source scaffold，不得称为可安装 APK。

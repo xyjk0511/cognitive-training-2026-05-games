@@ -1,0 +1,21 @@
+{
+  "profile": "A620-RCP-1",
+  "transactionSteps": [
+    "validate_runtime",
+    "reconcile_batch_evidence",
+    "insert_formal_result",
+    "insert_sync_queue",
+    "write_controller_state",
+    "enqueue_ack_result_committed",
+    "finalize_runtime"
+  ],
+  "faultInjectionPoints": [
+    "after_formal_result",
+    "after_sync_queue",
+    "after_controller_state",
+    "after_ack_outbox",
+    "before_runtime_finalization"
+  ],
+  "idempotencyKey": "runtimeSessionId+resultId+resultPayloadSha256",
+  "ackReleasedOnlyAfterCommit": true
+}

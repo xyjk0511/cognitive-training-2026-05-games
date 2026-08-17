@@ -1,8 +1,17 @@
 {
   "contractVersion": "A620-TRC-1.1",
-  "candidateRevision": "rc3-baseline.4",
-  "releaseStatus": "GATE_0_IMPLEMENTATION_CANDIDATE_NOT_APPROVED",
+  "candidateRevision": "rc3-baseline.6",
+  "releaseStatus": "GATE_AB_RUNTIME_SHELL_CANDIDATE_NOT_DEVICE_APPROVED",
   "clockProfile": "A620-UPTIME-MS-1",
   "canonicalJsonProfile": "A620-JCS-1",
-  "notes": "Transport-reliability reference baseline with cross-language JSON resource budgets, fail-closed framed IPC, exact-byte durable outbox, restart-restorable watchdog state, compact reducer snapshots, and migration-locked audit-chain verification. Gate 0 still requires real Android/Cocos/device validation."
+  "wireSemanticChangeFromBaseline4": false,
+  "includes": [
+    "baseline5 concurrent coordination",
+    "baseline6 storage integrity and schema migration",
+    "Android-shaped AIDL/Binder source scaffold",
+    "JVM MockGame 300-second result commit loop",
+    "Python controller database migration and result transaction",
+    "TypeScript transport policy reference"
+  ],
+  "notes": "The Android source scaffold has not been built with an Android SDK and the candidate tablet has not been tested. This is not approved for patient use."
 }
