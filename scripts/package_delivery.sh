@@ -13,11 +13,23 @@ COMPONENT_CHECKSUMS="$OUT_DIR/${BASENAME}_component_SHA256SUMS.txt"
 ALL_CHECKSUMS="$OUT_DIR/${BASENAME}_ALL_SHA256SUMS.txt"
 DELIVERY_MANIFEST="$OUT_DIR/${BASENAME}_DELIVERY_MANIFEST.md"
 TEST_LOG="$OUT_DIR/${BASENAME}_test_all.log"
+RAW_TEST_LOG="$ROOT/build/reports/test_all_${DATE_TAG}_raw.log"
 
 mkdir -p "$OUT_DIR" "$ROOT/build/reports"
 "$ROOT/scripts/bootstrap_vectors.sh"
 set -o pipefail
-"$ROOT/scripts/test_all.sh" 2>&1 | tee "$TEST_LOG"
+"$ROOT/scripts/test_all.sh" 2>&1 | tee "$RAW_TEST_LOG"
+python3 - "$RAW_TEST_LOG" "$TEST_LOG" <<'PY_NORMALIZE'
+from pathlib import Path
+import re
+import sys
+
+raw = Path(sys.argv[1]).read_text(encoding="utf-8")
+# Pytest wall-clock duration is intentionally removed from the exported log so
+# identical source and tools produce byte-identical delivery archives.
+normalized = re.sub(r"(\d+ passed)(?:, \d+ warning(?:s)?)? in \d+(?:\.\d+)?s", r"\1", raw)
+Path(sys.argv[2]).write_text(normalized, encoding="utf-8")
+PY_NORMALIZE
 cp "$TEST_LOG" "$ROOT/build/reports/test_all_${DATE_TAG}.txt"
 
 if [[ -n "$(cd "$ROOT" && git status --porcelain)" ]]; then
