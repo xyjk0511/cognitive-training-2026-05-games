@@ -192,8 +192,16 @@ def build_tpkg(
             compresslevel=9,
         )
         for entry in content_files:
-            data = (source_dir / entry["path"]).read_bytes()
-            archive.writestr(_deterministic_zip_info(entry["path"]), data, compresslevel=9)
+            info = _deterministic_zip_info(entry["path"])
+            # Stream source files into the deterministic archive so the
+            # builder's memory use is bounded even near the per-file limit.
+            with (source_dir / entry["path"]).open("rb") as source, archive.open(
+                info,
+                "w",
+                force_zip64=True,
+            ) as target:
+                while chunk := source.read(READ_CHUNK):
+                    target.write(chunk)
     return manifest
 
 

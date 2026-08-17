@@ -44,7 +44,7 @@
 ## 自动化状态
 
 ```text
-Python: 30 passed
+Python: 33 passed
 TypeScript: TYPESCRIPT_GATE0_TESTS_PASS
 Kotlin: KOTLIN_GATE0_TESTS_PASS
 Total: ALL_GATE0_IMPLEMENTATION_TESTS_PASS

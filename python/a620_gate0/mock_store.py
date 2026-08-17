@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from .canonical import canonical_bytes, canonical_sha256
+from .canonical import canonical_bytes, canonical_sha256, strict_json_loads
 from .controller_state import build_controller_state_record
 from .result_validator import build_execution_outcome, build_formal_result, validate_game_payload
 
@@ -117,6 +117,43 @@ class MockResultStore:
 
         ledger = self._ledger(runtime_session_id)
         validate_game_payload(game_payload, evidence_ledger=ledger)
+        payload_hash = canonical_sha256(game_payload)
+
+        existing = self.db.execute(
+            "SELECT result_id,payload_sha256,result_json FROM formal_result WHERE runtime_session_id=? OR result_id=?",
+            (runtime_session_id, result_id),
+        ).fetchone()
+        if existing:
+            existing_result = strict_json_loads(bytes(existing[2]))
+            identity_fields = (
+                "systemId",
+                "deviceId",
+                "taskId",
+                "taskItemId",
+                "executionAttempt",
+                "runtimeSessionId",
+                "monotonicEpochId",
+                "packageVersion",
+                "coreProtocolVersion",
+            )
+            identity_matches = all(existing_result[field] == identity[field] for field in identity_fields)
+            if (
+                existing[0] != result_id
+                or existing[1] != payload_hash
+                or existing_result["resultId"] != result_id
+                or existing_result["resultPayloadSha256"] != payload_hash
+                or existing_result["gamePayload"] != game_payload
+                or not identity_matches
+            ):
+                raise CommitConflict("resultId/runtimeSessionId already committed with different content")
+            return CommitAck(
+                result_id,
+                payload_hash,
+                existing_result["savedAtUtc"],
+                existing_result["savedAtUptimeMs"],
+                True,
+            )
+
         result = build_formal_result(
             identity=identity,
             payload=game_payload,
@@ -125,16 +162,6 @@ class MockResultStore:
             saved_at_uptime_ms=committed_at_uptime_ms,
         )
         result_bytes = canonical_bytes(result)
-        payload_hash = canonical_sha256(game_payload)
-
-        existing = self.db.execute(
-            "SELECT result_id,payload_sha256,result_json FROM formal_result WHERE runtime_session_id=? OR result_id=?",
-            (runtime_session_id, result_id),
-        ).fetchone()
-        if existing:
-            if existing[0] != result_id or existing[1] != payload_hash or bytes(existing[2]) != result_bytes:
-                raise CommitConflict("resultId/runtimeSessionId already committed with different content")
-            return CommitAck(result_id, payload_hash, committed_at_utc, committed_at_uptime_ms, True)
 
         controller_state = build_controller_state_record(
             identity=identity,

@@ -1,5 +1,6 @@
 from __future__ import annotations
 import json
+import stat
 import subprocess
 import sys
 import zipfile
@@ -8,7 +9,12 @@ from pathlib import Path
 import pytest
 from a620_gate0.canonical import canonical_bytes, canonical_sha256, strict_json_loads, CanonicalJsonError
 from a620_gate0.flow_validator import validate_flow, ValidationError
-from a620_gate0.result_validator import validate_game_payload, derive_quality_flag
+from a620_gate0.result_validator import (
+    build_formal_result,
+    derive_quality_flag,
+    validate_formal_result,
+    validate_game_payload,
+)
 from a620_gate0.tpkg import build_tpkg, validate_tpkg, TpkgError
 from a620_gate0.mock_store import MockResultStore, CommitConflict
 from a620_gate0.result_validator import build_execution_outcome
@@ -71,7 +77,8 @@ def test_tpkg_roundtrip_and_attacks(tmp_path):
     dup=tmp_path/'dup.tpkg'
     with zipfile.ZipFile(pkg) as zsrc, zipfile.ZipFile(dup,'w') as zout:
         for info in zsrc.infolist(): zout.writestr(info,zsrc.read(info.filename))
-        zout.writestr('bundle/index.json',b'evil')
+        with pytest.warns(UserWarning, match='Duplicate name'):
+            zout.writestr('bundle/index.json',b'evil')
     with pytest.raises(TpkgError): validate_tpkg(dup,trust)
 
     # Path traversal attack.
@@ -80,6 +87,60 @@ def test_tpkg_roundtrip_and_attacks(tmp_path):
         for info in zsrc.infolist(): zout.writestr(info,zsrc.read(info.filename))
         zout.writestr('../evil.txt',b'x')
     with pytest.raises(TpkgError): validate_tpkg(trav,trust)
+
+
+def test_tpkg_trust_rollback_compatibility_and_game_binding(tmp_path):
+    src=tmp_path/'src'; (src/'bundle').mkdir(parents=True); (src/'bundle/index.json').write_text('{}',encoding='utf-8')
+    manifest=json.loads((ROOT/'packages/catch-light/manifest.base.json').read_text(encoding='utf-8'))
+    private='9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60'
+    trust=load('test_trust_store.json')
+    pkg=tmp_path/'ok.tpkg'; build_tpkg(src,pkg,manifest,private)
+
+    next_trust=deepcopy(trust); next_trust['keys'][0]['status']='NEXT'
+    assert validate_tpkg(pkg,next_trust,apk_version='0.1.0',expected_game_code='CATCH_LIGHT')['releaseSequence']==1
+
+    revoked=deepcopy(trust); revoked['keys'][0]['status']='REVOKED'
+    with pytest.raises(TpkgError,match='revoked'):
+        validate_tpkg(pkg,revoked)
+    with pytest.raises(TpkgError,match='minimum accepted release sequence'):
+        validate_tpkg(pkg,trust,minimum_release_sequence=2)
+    with pytest.raises(TpkgError,match='not compatible'):
+        validate_tpkg(pkg,trust,apk_version='0.2.0')
+    with pytest.raises(TpkgError,match='gameCode'):
+        validate_tpkg(pkg,trust,expected_game_code='SIGNAL_STATION')
+
+
+def test_tpkg_rejects_symlink_zip_bomb_and_content_tamper(tmp_path):
+    src=tmp_path/'src'; (src/'bundle').mkdir(parents=True); (src/'bundle/index.json').write_text('{}',encoding='utf-8')
+    manifest=json.loads((ROOT/'packages/catch-light/manifest.base.json').read_text(encoding='utf-8'))
+    private='9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60'
+    trust=load('test_trust_store.json')
+    pkg=tmp_path/'ok.tpkg'; build_tpkg(src,pkg,manifest,private)
+
+    symlink=tmp_path/'symlink.tpkg'
+    with zipfile.ZipFile(pkg) as zsrc, zipfile.ZipFile(symlink,'w',compression=zipfile.ZIP_DEFLATED) as zout:
+        for info in zsrc.infolist(): zout.writestr(info,zsrc.read(info.filename))
+        info=zipfile.ZipInfo('bundle/link',date_time=(1980,1,1,0,0,0))
+        info.create_system=3; info.compress_type=zipfile.ZIP_STORED
+        info.external_attr=(stat.S_IFLNK | 0o777) << 16
+        zout.writestr(info,b'index.json')
+    with pytest.raises(TpkgError,match='non-regular'):
+        validate_tpkg(symlink,trust)
+
+    bomb=tmp_path/'bomb.tpkg'
+    with zipfile.ZipFile(pkg) as zsrc, zipfile.ZipFile(bomb,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as zout:
+        for info in zsrc.infolist(): zout.writestr(info,zsrc.read(info.filename))
+        zout.writestr('bundle/bomb.bin',b'0'*(1024*1024))
+    with pytest.raises(TpkgError,match='compression ratio'):
+        validate_tpkg(bomb,trust)
+
+    tampered=tmp_path/'tampered.tpkg'
+    with zipfile.ZipFile(pkg) as zsrc, zipfile.ZipFile(tampered,'w',compression=zipfile.ZIP_DEFLATED) as zout:
+        for info in zsrc.infolist():
+            data=b'changed' if info.filename=='bundle/index.json' else zsrc.read(info.filename)
+            zout.writestr(info,data)
+    with pytest.raises(TpkgError,match='file metadata mismatch'):
+        validate_tpkg(tampered,trust)
 
 
 def test_all_schemas_are_valid_draft_2020_12():
@@ -124,8 +185,27 @@ def test_mock_result_store_atomic_commit_and_idempotency():
     assert store.counts()=={'batch_evidence':7,'formal_result':0,'sync_queue':0,'execution_outcome':0,'controller_state':0}
     ack=store.commit_formal_result(identity=identity,game_payload=ready['payload']['gamePayload'],result_id='RES-TXN',committed_at_utc='2026-08-17T05:05:01Z',committed_at_uptime_ms=301020)
     assert store.counts()=={'batch_evidence':7,'formal_result':1,'sync_queue':1,'execution_outcome':0,'controller_state':1} and not ack.idempotent_replay
-    replay=store.commit_formal_result(identity=identity,game_payload=ready['payload']['gamePayload'],result_id='RES-TXN',committed_at_utc='2026-08-17T05:05:01Z',committed_at_uptime_ms=301020)
-    assert replay.idempotent_replay and store.counts()=={'batch_evidence':7,'formal_result':1,'sync_queue':1,'execution_outcome':0,'controller_state':1}
+    replay=store.commit_formal_result(identity=identity,game_payload=ready['payload']['gamePayload'],result_id='RES-TXN',committed_at_utc='2026-08-17T05:06:00Z',committed_at_uptime_ms=360000)
+    assert replay.idempotent_replay
+    assert replay.committed_at_utc=='2026-08-17T05:05:01Z' and replay.committed_at_uptime_ms==301020
+    assert store.counts()=={'batch_evidence':7,'formal_result':1,'sync_queue':1,'execution_outcome':0,'controller_state':1}
+
+    conflicting_identity=deepcopy(identity); conflicting_identity['taskId']='TASK-OTHER'
+    with pytest.raises(CommitConflict):
+        store.commit_formal_result(identity=conflicting_identity,game_payload=ready['payload']['gamePayload'],result_id='RES-TXN',committed_at_utc='2026-08-17T05:06:00Z',committed_at_uptime_ms=360000)
+
+
+def test_formal_result_is_immutable_and_excludes_mutable_platform_state():
+    ready=next(m for m in load('valid_complete_flow.json')['messages'] if m['messageType']=='RESULT_READY')
+    identity={k:ready[k] for k in ['systemId','deviceId','taskId','taskItemId','executionAttempt','runtimeSessionId','monotonicEpochId','packageVersion','coreProtocolVersion']}
+    result=build_formal_result(
+        identity=identity,payload=ready['payload']['gamePayload'],result_id='RES-IMMUTABLE',
+        saved_at_utc='2026-08-17T05:05:01Z',saved_at_uptime_ms=301020,
+    )
+    validate_formal_result(result)
+    bad=deepcopy(result); bad['syncState']='SYNCED'
+    with pytest.raises(Exception):
+        validate_formal_result(bad)
 
 
 
@@ -155,6 +235,27 @@ def test_execution_outcome_and_controller_state_separation():
     bad=deepcopy(record); bad['syncState']='SYNCED'
     with pytest.raises(ControllerStateError):
         validate_controller_state_record(bad)
+
+    store=MockResultStore()
+    stored=store.commit_execution_outcome(
+        identity=identity,game_code='CATCH_LIGHT',completion_state='INTERRUPTED',
+        reason_code='A620-RUNTIME-CRASH',active_elapsed_ms=1234,
+        recorded_at_utc='2026-08-17T05:00:02Z',recorded_at_uptime_ms=2234,audit_snapshot={},
+    )
+    assert stored==outcome
+    assert store.counts()=={'batch_evidence':0,'formal_result':0,'sync_queue':0,'execution_outcome':1,'controller_state':1}
+    assert store.commit_execution_outcome(
+        identity=identity,game_code='CATCH_LIGHT',completion_state='INTERRUPTED',
+        reason_code='A620-RUNTIME-CRASH',active_elapsed_ms=1234,
+        recorded_at_utc='2026-08-17T05:00:02Z',recorded_at_uptime_ms=2234,audit_snapshot={},
+    )==outcome
+
+    ready=next(m for m in load('valid_complete_flow.json')['messages'] if m['messageType']=='RESULT_READY')
+    with pytest.raises(CommitConflict):
+        store.commit_formal_result(
+            identity=identity,game_payload=ready['payload']['gamePayload'],result_id='RES-ILLEGAL',
+            committed_at_utc='2026-08-17T05:05:01Z',committed_at_uptime_ms=301020,
+        )
 
 
 def test_manifest_rejects_invalid_version_range(tmp_path):

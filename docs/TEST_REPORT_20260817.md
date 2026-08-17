@@ -14,7 +14,7 @@ ALL_GATE0_IMPLEMENTATION_TESTS_PASS
 
 ## 自动化验证结果
 
-- Python：`30 passed`。覆盖 JSON Schema、严格 JSON 解析、JCS 子集、运行状态机、活动时钟、跨消息回显、批次证据对账、游戏专属 Schema、正式结果语义、执行结局/主控状态分离、SQLite 事务、训练包构建和归档攻击测试；
+- Python：`33 passed`。覆盖 JSON Schema、严格 JSON 解析、JCS 子集、运行状态机、活动时钟、跨消息回显、批次证据对账、游戏专属 Schema、正式结果语义、执行结局/主控状态分离、SQLite 事务、训练包构建和归档攻击测试；
 - TypeScript：`TYPESCRIPT_GATE0_TESTS_PASS`。覆盖规范化 JSON、公共 DTO、运行状态归约、非法迁移、批次账本与结果提交握手；
 - Kotlin/JVM：`KOTLIN_GATE0_TESTS_PASS`。覆盖规范化 JSON、公共 DTO、主控状态归约、批次证据和提交确认；
 - 训练包：`CATCH_LIGHT` 与 `SIGNAL_STATION` 两份空插件样例 `.tpkg` 完成确定性构建、Ed25519 测试签名、信任根状态、文件哈希、版本范围、releaseSequence 和真实归档安全校验；
@@ -62,7 +62,7 @@ sync_queue
 
 - 正常提交全部写入；
 - 在“正式结果插入后、同步队列插入前”注入故障时全部回滚；
-- 相同 `resultId`、相同规范化内容属于幂等重放；
+- 相同 `resultId`、相同身份及相同规范化内容属于幂等重放，并返回首次提交时刻；
 - 相同 `resultId`、不同内容被拒绝；
 - `INTERRUPTED / DISCARDED` 只写入 `execution_outcome` 和 `controller_state`，不生成正式结果和正式同步队列。
 
@@ -76,9 +76,10 @@ sync_queue
 - 单文件/总解压尺寸、压缩率和 ZIP bomb；
 - manifest 与实际文件的双向清单、尺寸和 SHA-256 对账；
 - 版本范围 `minInclusive < maxExclusive`；
-- `releaseSequence` 防回滚；
+- `releaseSequence` 防回滚、APK 兼容范围和目标 `gameCode` 绑定；
 - `ACTIVE / NEXT / REVOKED` 信任根状态；
 - JCS 投影与 Ed25519 测试签名；
+- 构建器以流式方式写入内容文件，控制大文件内存占用；
 - 相同输入两次构建得到字节完全一致的 `.tpkg`。
 
 测试使用 RFC 8032 固定测试密钥，仅供自动化验证，禁止进入生产 APK 或生产发布流程。
@@ -86,7 +87,7 @@ sync_queue
 ## 代码规模
 
 - 源文件数：88；
-- 可读源码、Schema、规范、测试和文档约：18965 行。
+- 可读源码、Schema、规范、测试和文档约：19102 行。
 
 统计排除了 `.git`、`build`、`node_modules`、编译产物和缓存目录。
 
