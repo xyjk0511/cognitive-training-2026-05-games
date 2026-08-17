@@ -1,0 +1,10 @@
+{
+  "name": "@a620/runtime-core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "npm run build && node dist/test/run-tests.js"
+  }
+}
