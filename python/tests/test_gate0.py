@@ -6,11 +6,13 @@ import zipfile
 from copy import deepcopy
 from pathlib import Path
 import pytest
-from a620_gate0.canonical import canonical_bytes, canonical_sha256, CanonicalJsonError
+from a620_gate0.canonical import canonical_bytes, canonical_sha256, strict_json_loads, CanonicalJsonError
 from a620_gate0.flow_validator import validate_flow, ValidationError
 from a620_gate0.result_validator import validate_game_payload, derive_quality_flag
 from a620_gate0.tpkg import build_tpkg, validate_tpkg, TpkgError
 from a620_gate0.mock_store import MockResultStore, CommitConflict
+from a620_gate0.result_validator import build_execution_outcome
+from a620_gate0.controller_state import validate_controller_state_record, ControllerStateError
 from jsonschema import Draft202012Validator
 
 ROOT=Path(__file__).resolve().parents[2]
@@ -27,14 +29,26 @@ def test_canonical_rejects_float_and_unsafe_int():
     with pytest.raises(CanonicalJsonError): canonical_bytes({'x':1.5})
     with pytest.raises(CanonicalJsonError): canonical_bytes({'x':2**53})
 
+
+def test_strict_json_rejects_duplicate_keys_and_unpaired_surrogates():
+    with pytest.raises(CanonicalJsonError):
+        strict_json_loads('{"a":1,"a":2}')
+    with pytest.raises(CanonicalJsonError):
+        canonical_bytes({"bad":"\ud800"})
+
 @pytest.mark.parametrize('name', ['valid_complete_flow.json','valid_pause_complete_flow.json','valid_terminated_flow.json','valid_same_time_terminate_flow.json','valid_error_flow.json'])
 def test_valid_flows(name):
     obj=load(name); validate_flow(obj['messages'],obj['expectedOutcome'])
 
-@pytest.mark.parametrize('name', ['invalid_missing_start_accepted.json','invalid_ready_hash.json','invalid_started_cutoff.json','invalid_result_from_running.json','invalid_batch_evidence_replaced.json','invalid_ack_hash.json','invalid_sender_time_backwards.json','invalid_heartbeat_state.json','invalid_query_without_snapshot.json'])
-def test_invalid_flows(name):
-    obj=load(name)
-    with pytest.raises(Exception): validate_flow(obj['messages'],'COMPLETE')
+@pytest.mark.parametrize(
+    'path',
+    sorted(VECTORS.glob('invalid_*.json')),
+    ids=lambda path: path.stem,
+)
+def test_invalid_flows(path):
+    obj=json.loads(path.read_text(encoding='utf-8'))
+    with pytest.raises(Exception):
+        validate_flow(obj['messages'],'COMPLETE')
 
 def test_quality_derivation():
     assert derive_quality_flag(8,8)=='COMPLETE_BATCH_SET'
@@ -45,7 +59,7 @@ def test_tpkg_roundtrip_and_attacks(tmp_path):
     src=tmp_path/'src'; (src/'bundle').mkdir(parents=True); (src/'bundle/index.json').write_text('{"ok":true}\n',encoding='utf-8')
     manifest=json.loads((ROOT/'packages/catch-light/manifest.base.json').read_text(encoding='utf-8'))
     private='9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60'
-    trust={'TEST-RFC8032-1':'d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a'}
+    trust=load('test_trust_store.json')
     pkg=tmp_path/'ok.tpkg'; build_tpkg(src,pkg,manifest,private)
     valid=validate_tpkg(pkg,trust); assert valid['gameCode']=='CATCH_LIGHT'
 
@@ -74,6 +88,17 @@ def test_all_schemas_are_valid_draft_2020_12():
     for path in (ROOT/'games').glob('*/schemas/*.json'):
         Draft202012Validator.check_schema(json.loads(path.read_text(encoding='utf-8')))
 
+
+def test_embedded_game_payload_schemas_match_source():
+    source=json.loads((ROOT/'contracts/schemas/a620_training_game_payload.schema.json').read_text(encoding='utf-8'))
+    source.pop('$schema',None); source.pop('$id',None)
+    runtime=json.loads((ROOT/'contracts/schemas/a620_training_runtime_message.schema.json').read_text(encoding='utf-8'))
+    branch=next(b for b in runtime['oneOf'] if b.get('properties',{}).get('messageType',{}).get('const')=='RESULT_READY')
+    assert branch['properties']['payload']['properties']['gamePayload']==source
+    formal=json.loads((ROOT/'contracts/schemas/a620_formal_training_result.schema.json').read_text(encoding='utf-8'))
+    assert formal['properties']['gamePayload']==source
+
+
 def test_game_specific_schema_rejects_unknown_metrics():
     flow=load('valid_complete_flow.json')['messages']
     payload=next(m for m in flow if m['messageType']=='RESULT_READY')['payload']['gamePayload']
@@ -89,18 +114,47 @@ def test_mock_result_store_atomic_commit_and_idempotency():
     obj=load('valid_complete_flow.json')
     messages=obj['messages']
     ready=next(m for m in messages if m['messageType']=='RESULT_READY')
-    identity={k:ready[k] for k in ['systemId','deviceId','taskId','taskItemId','executionAttempt','runtimeSessionId','packageVersion','coreProtocolVersion']}
+    identity={k:ready[k] for k in ['systemId','deviceId','taskId','taskItemId','executionAttempt','runtimeSessionId','monotonicEpochId','packageVersion','coreProtocolVersion']}
     store=MockResultStore()
     for batch in [m['payload'] for m in messages if m['messageType']=='BATCH_CLOSED']:
         store.record_batch_evidence(identity['runtimeSessionId'],batch)
-    assert store.counts()==(7,0,0)
+    assert store.counts()=={'batch_evidence':7,'formal_result':0,'sync_queue':0,'execution_outcome':0,'controller_state':0}
     with pytest.raises(RuntimeError):
         store.commit_formal_result(identity=identity,game_payload=ready['payload']['gamePayload'],result_id='RES-TXN',committed_at_utc='2026-08-17T05:05:01Z',committed_at_uptime_ms=301020,inject_failure_after_result=True)
-    assert store.counts()==(7,0,0)
+    assert store.counts()=={'batch_evidence':7,'formal_result':0,'sync_queue':0,'execution_outcome':0,'controller_state':0}
     ack=store.commit_formal_result(identity=identity,game_payload=ready['payload']['gamePayload'],result_id='RES-TXN',committed_at_utc='2026-08-17T05:05:01Z',committed_at_uptime_ms=301020)
-    assert store.counts()==(7,1,1) and not ack.idempotent_replay
+    assert store.counts()=={'batch_evidence':7,'formal_result':1,'sync_queue':1,'execution_outcome':0,'controller_state':1} and not ack.idempotent_replay
     replay=store.commit_formal_result(identity=identity,game_payload=ready['payload']['gamePayload'],result_id='RES-TXN',committed_at_utc='2026-08-17T05:05:01Z',committed_at_uptime_ms=301020)
-    assert replay.idempotent_replay and store.counts()==(7,1,1)
+    assert replay.idempotent_replay and store.counts()=={'batch_evidence':7,'formal_result':1,'sync_queue':1,'execution_outcome':0,'controller_state':1}
+
+
+
+def test_execution_outcome_and_controller_state_separation():
+    identity={
+        'systemId':'SYS-001','deviceId':'TAB-01','taskId':'TASK-001','taskItemId':'ITEM-01',
+        'executionAttempt':1,'runtimeSessionId':'RUN-ERR','monotonicEpochId':'BOOT-A',
+        'packageVersion':'1.5.0','coreProtocolVersion':'1.5.0',
+    }
+    outcome=build_execution_outcome(
+        identity=identity,game_code='CATCH_LIGHT',completion_state='INTERRUPTED',
+        reason_code='A620-RUNTIME-CRASH',active_elapsed_ms=1234,
+        recorded_at_utc='2026-08-17T05:00:02Z',recorded_at_uptime_ms=2234,audit_snapshot={},
+    )
+    assert outcome['completionState']=='INTERRUPTED' and 'resultId' not in outcome
+
+    record={
+        'recordVersion':'A620-CSR-1.1','systemId':'SYS-001','deviceId':'TAB-01',
+        'taskId':'TASK-001','taskItemId':'ITEM-01','executionAttempt':1,
+        'runtimeSessionId':'RUN-ERR','monotonicEpochId':'BOOT-A',
+        'packageVersion':'1.5.0','coreProtocolVersion':'1.5.0','contractVersion':'A620-TRC-1.1',
+        'runtimeState':'ERROR','completionState':'INTERRUPTED',
+        'syncState':None,'taskSlotState':'INTERRUPTED_WAIT','resultId':None,
+        'updatedAtUtc':'2026-08-17T05:00:02Z','updatedAtUptimeMs':2234,
+    }
+    validate_controller_state_record(record)
+    bad=deepcopy(record); bad['syncState']='SYNCED'
+    with pytest.raises(ControllerStateError):
+        validate_controller_state_record(bad)
 
 
 def test_manifest_rejects_invalid_version_range(tmp_path):
@@ -108,6 +162,7 @@ def test_manifest_rejects_invalid_version_range(tmp_path):
     manifest=json.loads((ROOT/'packages/catch-light/manifest.base.json').read_text(encoding='utf-8'))
     manifest['minApkVersionInclusive']='1.0.0'; manifest['maxApkVersionExclusive']='1.0.0'
     private='9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60'
-    trust={'TEST-RFC8032-1':'d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a'}
-    pkg=tmp_path/'bad-range.tpkg'; build_tpkg(src,pkg,manifest,private)
-    with pytest.raises(TpkgError): validate_tpkg(pkg,trust)
+    trust=load('test_trust_store.json')
+    pkg=tmp_path/'bad-range.tpkg'
+    with pytest.raises(TpkgError):
+        build_tpkg(src,pkg,manifest,private)

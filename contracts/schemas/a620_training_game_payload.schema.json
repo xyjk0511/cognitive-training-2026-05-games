@@ -7,6 +7,7 @@
     "gameCode",
     "gamePayloadVersion",
     "runtimeConfigHash",
+    "designMaxLevel",
     "plannedBatchCount",
     "eligibleBatchCount",
     "eligibleBatches",
@@ -33,15 +34,20 @@
       "type": "string",
       "pattern": "^[0-9a-f]{64}$"
     },
+    "designMaxLevel": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 10000
+    },
     "plannedBatchCount": {
       "type": "integer",
       "minimum": 1,
-      "maximum": 9007199254740991
+      "maximum": 1024
     },
     "eligibleBatchCount": {
       "type": "integer",
       "minimum": 0,
-      "maximum": 9007199254740991
+      "maximum": 1024
     },
     "eligibleBatches": {
       "type": "array",
@@ -65,7 +71,7 @@
           "batchOrdinal": {
             "type": "integer",
             "minimum": 1,
-            "maximum": 9007199254740991
+            "maximum": 1024
           },
           "closed": {
             "const": true
@@ -76,7 +82,7 @@
           "levelBefore": {
             "type": "integer",
             "minimum": 1,
-            "maximum": 9007199254740991
+            "maximum": 10000
           },
           "resultZone": {
             "enum": [
@@ -98,7 +104,7 @@
           "levelAfter": {
             "type": "integer",
             "minimum": 1,
-            "maximum": 9007199254740991
+            "maximum": 10000
           },
           "batchScore": {
             "type": "integer",
@@ -124,11 +130,12 @@
     },
     "incompleteBatchAudit": {
       "type": "array",
-      "maxItems": 1024,
+      "maxItems": 1,
       "items": {
         "type": "object",
         "required": [
           "batchOrdinal",
+          "levelBefore",
           "cutoffReason",
           "startedAtActiveMs",
           "cutoffAtActiveMs",
@@ -138,7 +145,7 @@
           "batchOrdinal": {
             "type": "integer",
             "minimum": 1,
-            "maximum": 9007199254740991
+            "maximum": 1024
           },
           "cutoffReason": {
             "const": "DEADLINE"
@@ -154,6 +161,11 @@
           "partialMetrics": {
             "type": "object",
             "maxProperties": 128
+          },
+          "levelBefore": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10000
           }
         },
         "additionalProperties": false
@@ -162,24 +174,24 @@
     "sessionStartLevel": {
       "type": "integer",
       "minimum": 1,
-      "maximum": 9007199254740991
+      "maximum": 10000
     },
     "sessionEndLevel": {
       "type": "integer",
       "minimum": 1,
-      "maximum": 9007199254740991
+      "maximum": 10000
     },
     "sessionHighestPresentedLevel": {
       "type": "integer",
       "minimum": 1,
-      "maximum": 9007199254740991
+      "maximum": 10000
     },
     "sessionHighestPassedLevel": {
       "oneOf": [
         {
           "type": "integer",
           "minimum": 1,
-          "maximum": 9007199254740991
+          "maximum": 10000
         },
         {
           "type": "null"
@@ -189,7 +201,7 @@
     "nextStartLevel": {
       "type": "integer",
       "minimum": 1,
-      "maximum": 9007199254740991
+      "maximum": 10000
     },
     "sessionRawScore": {
       "type": "integer",

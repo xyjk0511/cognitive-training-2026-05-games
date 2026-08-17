@@ -1,3 +1,14 @@
 {
-  "TEST-RFC8032-1": "d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a"
+  "trustStoreVersion": 1,
+  "minimumAcceptedReleaseSequence": {
+    "CATCH_LIGHT": 1,
+    "SIGNAL_STATION": 1
+  },
+  "keys": [
+    {
+      "keyId": "TEST-RFC8032-1",
+      "status": "ACTIVE",
+      "publicKeyHex": "d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a"
+    }
+  ]
 }

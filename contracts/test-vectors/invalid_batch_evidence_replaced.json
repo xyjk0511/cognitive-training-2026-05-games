@@ -26,13 +26,13 @@
         "sessionStartLevel": 1,
         "designMaxLevel": 120,
         "plannedBatchCount": 8,
-        "runtimeConfigHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "scoringRuleVersion": "1.5.0",
         "resultSchemaVersion": "A620-TRR-1.1",
         "generatorVersion": "catch-light-gen-1",
         "gameCode": "CATCH_LIGHT",
         "gameConfigSchemaId": "urn:a620:catch-light:config:1.5",
-        "gameConfig": {}
+        "gameConfig": {},
+        "runtimeConfigHash": "2d8279cc04e7baf0b41be68d02bd1a4b3fb3db4074ae077ab6999498fa8d8fcb"
       }
     },
     {
@@ -54,7 +54,7 @@
       "sentAtUtc": "2026-08-17T05:00:00Z",
       "sentAtUptimeMs": 150,
       "payload": {
-        "runtimeConfigHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "runtimeConfigHash": "2d8279cc04e7baf0b41be68d02bd1a4b3fb3db4074ae077ab6999498fa8d8fcb",
         "plannedBatchCount": 8,
         "runtimeState": "READY"
       }
@@ -146,11 +146,81 @@
       "packageVersion": "1.5.0",
       "coreProtocolVersion": "1.5.0",
       "monotonicEpochId": "BOOT-A",
+      "messageType": "QUERY_STATE",
+      "messageId": "cmd-query",
+      "correlationId": null,
+      "senderRole": "ANDROID_CONTROLLER",
+      "senderSeq": 3,
+      "sentAtUtc": "2026-08-17T05:00:00Z",
+      "sentAtUptimeMs": 1500,
+      "payload": {}
+    },
+    {
+      "contractVersion": "A620-TRC-1.1",
+      "systemId": "SYS-001",
+      "deviceId": "TAB-01",
+      "taskId": "TASK-001",
+      "taskItemId": "ITEM-01",
+      "executionAttempt": 1,
+      "runtimeSessionId": "RUN-001",
+      "packageVersion": "1.5.0",
+      "coreProtocolVersion": "1.5.0",
+      "monotonicEpochId": "BOOT-A",
+      "messageType": "STATE_SNAPSHOT",
+      "messageId": "evt-snapshot",
+      "correlationId": "cmd-query",
+      "senderRole": "COCOS_RUNTIME",
+      "senderSeq": 4,
+      "sentAtUtc": "2026-08-17T05:00:00Z",
+      "sentAtUptimeMs": 1510,
+      "payload": {
+        "runtimeState": "RUNNING",
+        "activeElapsedMs": 510,
+        "clockRevision": 1,
+        "lastAppliedControllerSeq": 3
+      }
+    },
+    {
+      "contractVersion": "A620-TRC-1.1",
+      "systemId": "SYS-001",
+      "deviceId": "TAB-01",
+      "taskId": "TASK-001",
+      "taskItemId": "ITEM-01",
+      "executionAttempt": 1,
+      "runtimeSessionId": "RUN-001",
+      "packageVersion": "1.5.0",
+      "coreProtocolVersion": "1.5.0",
+      "monotonicEpochId": "BOOT-A",
+      "messageType": "HEARTBEAT",
+      "messageId": "evt-heartbeat",
+      "correlationId": null,
+      "senderRole": "COCOS_RUNTIME",
+      "senderSeq": 5,
+      "sentAtUtc": "2026-08-17T05:00:00Z",
+      "sentAtUptimeMs": 2000,
+      "payload": {
+        "runtimeState": "RUNNING",
+        "activeElapsedMs": 1000,
+        "clockRevision": 1,
+        "lastAppliedControllerSeq": 3
+      }
+    },
+    {
+      "contractVersion": "A620-TRC-1.1",
+      "systemId": "SYS-001",
+      "deviceId": "TAB-01",
+      "taskId": "TASK-001",
+      "taskItemId": "ITEM-01",
+      "executionAttempt": 1,
+      "runtimeSessionId": "RUN-001",
+      "packageVersion": "1.5.0",
+      "coreProtocolVersion": "1.5.0",
+      "monotonicEpochId": "BOOT-A",
       "messageType": "BATCH_CLOSED",
       "messageId": "evt-b1",
       "correlationId": null,
       "senderRole": "COCOS_RUNTIME",
-      "senderSeq": 4,
+      "senderSeq": 6,
       "sentAtUtc": "2026-08-17T05:00:00Z",
       "sentAtUptimeMs": 38500,
       "payload": {
@@ -187,7 +257,7 @@
       "messageId": "evt-b2",
       "correlationId": null,
       "senderRole": "COCOS_RUNTIME",
-      "senderSeq": 5,
+      "senderSeq": 7,
       "sentAtUtc": "2026-08-17T05:00:00Z",
       "sentAtUptimeMs": 76000,
       "payload": {
@@ -224,7 +294,7 @@
       "messageId": "evt-b3",
       "correlationId": null,
       "senderRole": "COCOS_RUNTIME",
-      "senderSeq": 6,
+      "senderSeq": 8,
       "sentAtUtc": "2026-08-17T05:00:00Z",
       "sentAtUptimeMs": 113500,
       "payload": {
@@ -261,7 +331,7 @@
       "messageId": "evt-b4",
       "correlationId": null,
       "senderRole": "COCOS_RUNTIME",
-      "senderSeq": 7,
+      "senderSeq": 9,
       "sentAtUtc": "2026-08-17T05:00:00Z",
       "sentAtUptimeMs": 151000,
       "payload": {
@@ -298,7 +368,7 @@
       "messageId": "evt-b5",
       "correlationId": null,
       "senderRole": "COCOS_RUNTIME",
-      "senderSeq": 8,
+      "senderSeq": 10,
       "sentAtUtc": "2026-08-17T05:00:00Z",
       "sentAtUptimeMs": 188500,
       "payload": {
@@ -335,7 +405,7 @@
       "messageId": "evt-b6",
       "correlationId": null,
       "senderRole": "COCOS_RUNTIME",
-      "senderSeq": 9,
+      "senderSeq": 11,
       "sentAtUtc": "2026-08-17T05:00:00Z",
       "sentAtUptimeMs": 226000,
       "payload": {
@@ -372,7 +442,7 @@
       "messageId": "evt-b7",
       "correlationId": null,
       "senderRole": "COCOS_RUNTIME",
-      "senderSeq": 10,
+      "senderSeq": 12,
       "sentAtUtc": "2026-08-17T05:00:00Z",
       "sentAtUptimeMs": 263500,
       "payload": {
@@ -409,7 +479,7 @@
       "messageId": "cmd-deadline",
       "correlationId": null,
       "senderRole": "ANDROID_CONTROLLER",
-      "senderSeq": 3,
+      "senderSeq": 4,
       "sentAtUtc": "2026-08-17T05:00:00Z",
       "sentAtUptimeMs": 301000,
       "payload": {
@@ -433,15 +503,16 @@
       "messageId": "evt-result",
       "correlationId": null,
       "senderRole": "COCOS_RUNTIME",
-      "senderSeq": 11,
+      "senderSeq": 13,
       "sentAtUtc": "2026-08-17T05:00:00Z",
       "sentAtUptimeMs": 301010,
       "payload": {
-        "resultDraftSha256": "3c4d661eae08c7753e7610f0dbf0650cdec29ae6ef74b166f86c61c85d0ab34b",
+        "resultDraftSha256": "142ff6ad735be6b787a1b035b5b548614625380221de36d0e0b89b76048c164a",
         "gamePayload": {
           "gameCode": "CATCH_LIGHT",
           "gamePayloadVersion": "A620-GP-1.1",
-          "runtimeConfigHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "runtimeConfigHash": "2d8279cc04e7baf0b41be68d02bd1a4b3fb3db4074ae077ab6999498fa8d8fcb",
+          "designMaxLevel": 120,
           "plannedBatchCount": 8,
           "eligibleBatchCount": 7,
           "eligibleBatches": [
@@ -575,6 +646,7 @@
           "incompleteBatchAudit": [
             {
               "batchOrdinal": 8,
+              "levelBefore": 8,
               "cutoffReason": "DEADLINE",
               "startedAtActiveMs": 262500,
               "cutoffAtActiveMs": 300000,
@@ -612,14 +684,14 @@
       "messageId": "cmd-ack",
       "correlationId": "evt-result",
       "senderRole": "ANDROID_CONTROLLER",
-      "senderSeq": 4,
+      "senderSeq": 5,
       "sentAtUtc": "2026-08-17T05:00:00Z",
       "sentAtUptimeMs": 301020,
       "payload": {
         "resultId": "RES-001",
-        "resultPayloadSha256": "3c4d661eae08c7753e7610f0dbf0650cdec29ae6ef74b166f86c61c85d0ab34b",
-        "committedAtUtc": "2026-08-17T05:05:01Z",
-        "committedAtUptimeMs": 301020
+        "resultPayloadSha256": "142ff6ad735be6b787a1b035b5b548614625380221de36d0e0b89b76048c164a",
+        "committedAtUtc": "2026-08-17T05:00:00Z",
+        "committedAtUptimeMs": 301015
       }
     }
   ]

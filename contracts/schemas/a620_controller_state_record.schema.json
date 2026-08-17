@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:a620:controller-state-record:1.1",
+  "title": "A620 Controller State Record 1.1",
+  "type": "object",
+  "required": [
+    "recordVersion",
+    "systemId",
+    "deviceId",
+    "taskId",
+    "taskItemId",
+    "executionAttempt",
+    "runtimeSessionId",
+    "monotonicEpochId",
+    "packageVersion",
+    "coreProtocolVersion",
+    "contractVersion",
+    "runtimeState",
+    "completionState",
+    "syncState",
+    "taskSlotState",
+    "updatedAtUtc",
+    "updatedAtUptimeMs"
+  ],
+  "properties": {
+    "recordVersion": {
+      "const": "A620-CSR-1.1"
+    },
+    "systemId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "deviceId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "taskId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "taskItemId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "executionAttempt": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "runtimeSessionId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "runtimeState": {
+      "enum": [
+        "UNPREPARED",
+        "PREPARING",
+        "READY",
+        "START_SCHEDULED",
+        "RUNNING",
+        "PAUSE_SCHEDULED",
+        "PAUSED",
+        "RESUME_SCHEDULED",
+        "FINALIZING",
+        "RESULT_PENDING_COMMIT",
+        "RESULT_COMMITTED",
+        "TERMINATING",
+        "TERMINATED",
+        "ERROR"
+      ]
+    },
+    "completionState": {
+      "oneOf": [
+        {
+          "enum": [
+            "COMPLETE",
+            "INTERRUPTED",
+            "DISCARDED"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "syncState": {
+      "oneOf": [
+        {
+          "enum": [
+            "PENDING_UPLOAD",
+            "WAITING_ACK",
+            "SYNCED"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "taskSlotState": {
+      "enum": [
+        "IDLE",
+        "OCCUPIED",
+        "END_RECONCILING",
+        "INTERRUPTED_WAIT"
+      ]
+    },
+    "resultId": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "updatedAtUtc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updatedAtUptimeMs": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "monotonicEpochId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "packageVersion": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+    },
+    "coreProtocolVersion": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "contractVersion": {
+      "const": "A620-TRC-1.1"
+    }
+  },
+  "additionalProperties": false
+}

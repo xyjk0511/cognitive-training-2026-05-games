@@ -197,10 +197,10 @@
       "senderRole": "COCOS_RUNTIME",
       "senderSeq": 5,
       "sentAtUtc": "2026-08-17T05:00:00Z",
-      "sentAtUptimeMs": 100,
+      "sentAtUptimeMs": 2000,
       "payload": {
         "runtimeState": "RUNNING",
-        "activeElapsedMs": 1000,
+        "activeElapsedMs": 999,
         "clockRevision": 1,
         "lastAppliedControllerSeq": 3
       }

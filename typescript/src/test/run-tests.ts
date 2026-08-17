@@ -1,23 +1,51 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { canonicalSha256, canonicalString, type JsonValue } from "../canonical.js";
-import { reduceState } from "../state-machine.js";
-import type { RuntimeState } from "../contracts.js";
 
-function assert(condition: unknown, message: string): asserts condition { if (!condition) throw new Error(message); }
-const vectors = JSON.parse(readFileSync(resolve(process.cwd(), "../contracts/test-vectors/canonical_json_vectors.json"), "utf8")) as Array<{id:string,value:JsonValue,canonicalUtf8:string,sha256:string}>;
-for (const v of vectors) {
-  assert(canonicalString(v.value) === v.canonicalUtf8, `canonical bytes mismatch: ${v.id}`);
-  assert(canonicalSha256(v.value) === v.sha256, `canonical hash mismatch: ${v.id}`);
+import { canonicalSha256, canonicalString, type JsonValue } from "../canonical.js";
+import type { RuntimeState } from "../contracts.js";
+import { reduceState } from "../state-machine.js";
+
+function assert(condition: unknown, message: string): asserts condition {
+  if (!condition) throw new Error(message);
 }
+
+function assertRejected(action: () => unknown, message: string): void {
+  let rejected = false;
+  try { action(); } catch { rejected = true; }
+  assert(rejected, message);
+}
+
+const vectors = JSON.parse(
+  readFileSync(resolve(process.cwd(), "../contracts/test-vectors/canonical_json_vectors.json"), "utf8"),
+) as Array<{id:string,value:JsonValue,canonicalUtf8:string,sha256:string}>;
+for (const vector of vectors) {
+  assert(canonicalString(vector.value) === vector.canonicalUtf8, `canonical bytes mismatch: ${vector.id}`);
+  assert(canonicalSha256(vector.value) === vector.sha256, `canonical hash mismatch: ${vector.id}`);
+}
+assertRejected(() => canonicalString({ bad: "\ud800" }), "unpaired surrogate must be rejected");
+assertRejected(() => canonicalString({ bad: -0 }), "negative zero must be rejected");
+
 let state: RuntimeState = "UNPREPARED";
 state = reduceState(state, "PREPARE");
 assert(state === "PREPARING", "PREPARE transition");
-let s: any = "PREPARING";
-s = reduceState(s, "READY"); s = reduceState(s, "START"); s = reduceState(s, "EFFECTIVE_START_REACHED");
-assert(s === "RUNNING", "start flow");
-s = reduceState(s, "ACTIVE_TIME_REACHED_DURATION"); s = reduceState(s, "RESULT_READY"); s = reduceState(s, "ACK_RESULT_COMMITTED");
-assert(s === "RESULT_COMMITTED", "result flow");
-let rejected = false; try { reduceState("RUNNING", "RESULT_READY"); } catch { rejected = true; }
-assert(rejected, "RESULT_READY from RUNNING must be rejected");
+let running: RuntimeState = "PREPARING";
+running = reduceState(running, "READY");
+running = reduceState(running, "START");
+running = reduceState(running, "COMMAND_ACCEPTED");
+running = reduceState(running, "EFFECTIVE_START_REACHED");
+running = reduceState(running, "STARTED");
+assert(running === "RUNNING", "start flow");
+running = reduceState(running, "BATCH_CLOSED");
+running = reduceState(running, "ACTIVE_TIME_REACHED_DURATION");
+running = reduceState(running, "DEADLINE");
+running = reduceState(running, "RESULT_READY");
+running = reduceState(running, "ACK_RESULT_COMMITTED");
+assert(running === "RESULT_COMMITTED", "result flow");
+
+assertRejected(() => reduceState("RUNNING", "RESULT_READY"), "RESULT_READY from RUNNING must be rejected");
+assertRejected(() => reduceState("UNPREPARED", "QUERY_STATE"), "QUERY_STATE from UNPREPARED must be rejected");
+assertRejected(() => reduceState("UNPREPARED", "BATCH_CLOSED"), "BATCH_CLOSED from UNPREPARED must be rejected");
+assertRejected(() => reduceState("READY", "COMMAND_ACCEPTED"), "COMMAND_ACCEPTED from READY must be rejected");
+assert(reduceState("RUNNING", "COMMAND_REJECTED") === "ERROR", "COMMAND_REJECTED must enter ERROR");
+
 console.log("TYPESCRIPT_GATE0_TESTS_PASS");

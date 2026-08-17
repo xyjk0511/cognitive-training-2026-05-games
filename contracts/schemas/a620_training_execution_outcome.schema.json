@@ -11,7 +11,10 @@
     "taskItemId",
     "executionAttempt",
     "runtimeSessionId",
+    "monotonicEpochId",
     "gameCode",
+    "packageVersion",
+    "coreProtocolVersion",
     "contractVersion",
     "completionState",
     "reasonCode",
@@ -49,9 +52,22 @@
       "type": "string",
       "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
     },
+    "monotonicEpochId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
     "gameCode": {
       "type": "string",
       "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "packageVersion": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+    },
+    "coreProtocolVersion": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
     },
     "contractVersion": {
       "const": "A620-TRC-1.1"

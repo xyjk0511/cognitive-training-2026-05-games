@@ -32,7 +32,7 @@
         "gameCode": "CATCH_LIGHT",
         "gameConfigSchemaId": "urn:a620:catch-light:config:1.5",
         "gameConfig": {},
-        "runtimeConfigHash": "2d8279cc04e7baf0b41be68d02bd1a4b3fb3db4074ae077ab6999498fa8d8fcb"
+        "runtimeConfigHash": "0000000000000000000000000000000000000000000000000000000000000000"
       }
     },
     {
@@ -197,7 +197,7 @@
       "senderRole": "COCOS_RUNTIME",
       "senderSeq": 5,
       "sentAtUtc": "2026-08-17T05:00:00Z",
-      "sentAtUptimeMs": 100,
+      "sentAtUptimeMs": 2000,
       "payload": {
         "runtimeState": "RUNNING",
         "activeElapsedMs": 1000,

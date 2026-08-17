@@ -12,13 +12,12 @@
     "taskItemId",
     "executionAttempt",
     "runtimeSessionId",
+    "monotonicEpochId",
     "gameCode",
     "packageVersion",
     "coreProtocolVersion",
     "contractVersion",
     "completionState",
-    "syncState",
-    "taskSlotState",
     "derivedQualityFlag",
     "resultPayloadSha256",
     "savedAtUtc",
@@ -58,6 +57,10 @@
       "type": "string",
       "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
     },
+    "monotonicEpochId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
     "gameCode": {
       "type": "string",
       "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
@@ -68,27 +71,14 @@
     },
     "coreProtocolVersion": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "maxLength": 128
     },
     "contractVersion": {
       "const": "A620-TRC-1.1"
     },
     "completionState": {
       "const": "COMPLETE"
-    },
-    "syncState": {
-      "enum": [
-        "PENDING_UPLOAD",
-        "WAITING_ACK",
-        "SYNCED"
-      ]
-    },
-    "taskSlotState": {
-      "enum": [
-        "OCCUPIED",
-        "END_RECONCILING",
-        "IDLE"
-      ]
     },
     "derivedQualityFlag": {
       "enum": [
@@ -111,14 +101,13 @@
       "maximum": 9007199254740991
     },
     "gamePayload": {
-      "$schema": "https://json-schema.org/draft/2020-12/schema",
-      "$id": "urn:a620:training-game-payload:1.1",
       "title": "A620 Training Game Payload 1.1",
       "type": "object",
       "required": [
         "gameCode",
         "gamePayloadVersion",
         "runtimeConfigHash",
+        "designMaxLevel",
         "plannedBatchCount",
         "eligibleBatchCount",
         "eligibleBatches",
@@ -145,15 +134,20 @@
           "type": "string",
           "pattern": "^[0-9a-f]{64}$"
         },
+        "designMaxLevel": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10000
+        },
         "plannedBatchCount": {
           "type": "integer",
           "minimum": 1,
-          "maximum": 9007199254740991
+          "maximum": 1024
         },
         "eligibleBatchCount": {
           "type": "integer",
           "minimum": 0,
-          "maximum": 9007199254740991
+          "maximum": 1024
         },
         "eligibleBatches": {
           "type": "array",
@@ -177,7 +171,7 @@
               "batchOrdinal": {
                 "type": "integer",
                 "minimum": 1,
-                "maximum": 9007199254740991
+                "maximum": 1024
               },
               "closed": {
                 "const": true
@@ -188,7 +182,7 @@
               "levelBefore": {
                 "type": "integer",
                 "minimum": 1,
-                "maximum": 9007199254740991
+                "maximum": 10000
               },
               "resultZone": {
                 "enum": [
@@ -210,7 +204,7 @@
               "levelAfter": {
                 "type": "integer",
                 "minimum": 1,
-                "maximum": 9007199254740991
+                "maximum": 10000
               },
               "batchScore": {
                 "type": "integer",
@@ -236,11 +230,12 @@
         },
         "incompleteBatchAudit": {
           "type": "array",
-          "maxItems": 1024,
+          "maxItems": 1,
           "items": {
             "type": "object",
             "required": [
               "batchOrdinal",
+              "levelBefore",
               "cutoffReason",
               "startedAtActiveMs",
               "cutoffAtActiveMs",
@@ -250,7 +245,7 @@
               "batchOrdinal": {
                 "type": "integer",
                 "minimum": 1,
-                "maximum": 9007199254740991
+                "maximum": 1024
               },
               "cutoffReason": {
                 "const": "DEADLINE"
@@ -266,6 +261,11 @@
               "partialMetrics": {
                 "type": "object",
                 "maxProperties": 128
+              },
+              "levelBefore": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 10000
               }
             },
             "additionalProperties": false
@@ -274,24 +274,24 @@
         "sessionStartLevel": {
           "type": "integer",
           "minimum": 1,
-          "maximum": 9007199254740991
+          "maximum": 10000
         },
         "sessionEndLevel": {
           "type": "integer",
           "minimum": 1,
-          "maximum": 9007199254740991
+          "maximum": 10000
         },
         "sessionHighestPresentedLevel": {
           "type": "integer",
           "minimum": 1,
-          "maximum": 9007199254740991
+          "maximum": 10000
         },
         "sessionHighestPassedLevel": {
           "oneOf": [
             {
               "type": "integer",
               "minimum": 1,
-              "maximum": 9007199254740991
+              "maximum": 10000
             },
             {
               "type": "null"
@@ -301,7 +301,7 @@
         "nextStartLevel": {
           "type": "integer",
           "minimum": 1,
-          "maximum": 9007199254740991
+          "maximum": 10000
         },
         "sessionRawScore": {
           "type": "integer",

@@ -197,7 +197,7 @@
       "senderRole": "COCOS_RUNTIME",
       "senderSeq": 5,
       "sentAtUtc": "2026-08-17T05:00:00Z",
-      "sentAtUptimeMs": 100,
+      "sentAtUptimeMs": 2000,
       "payload": {
         "runtimeState": "RUNNING",
         "activeElapsedMs": 1000,
@@ -507,7 +507,7 @@
       "sentAtUtc": "2026-08-17T05:00:00Z",
       "sentAtUptimeMs": 301010,
       "payload": {
-        "resultDraftSha256": "c1fdee27546dbdd17e879948e9111ffd2b2c5931dfb0e97e92e9225f97c0c47b",
+        "resultDraftSha256": "3ac23c9f621efc318014a24833c6fc78cffe8339b54d9289d92f4cb8aaa337d1",
         "gamePayload": {
           "gameCode": "CATCH_LIGHT",
           "gamePayloadVersion": "A620-GP-1.1",
@@ -657,7 +657,7 @@
           ],
           "sessionStartLevel": 1,
           "sessionEndLevel": 8,
-          "sessionHighestPresentedLevel": 8,
+          "sessionHighestPresentedLevel": 120,
           "sessionHighestPassedLevel": 7,
           "nextStartLevel": 8,
           "sessionRawScore": 700,
@@ -689,7 +689,7 @@
       "sentAtUptimeMs": 301020,
       "payload": {
         "resultId": "RES-001",
-        "resultPayloadSha256": "c1fdee27546dbdd17e879948e9111ffd2b2c5931dfb0e97e92e9225f97c0c47b",
+        "resultPayloadSha256": "3ac23c9f621efc318014a24833c6fc78cffe8339b54d9289d92f4cb8aaa337d1",
         "committedAtUtc": "2026-08-17T05:00:00Z",
         "committedAtUptimeMs": 301015
       }

@@ -1,5 +1,7 @@
 export const CONTRACT_VERSION = "A620-TRC-1.1" as const;
 export const CLOCK_PROFILE = "A620-UPTIME-MS-1" as const;
+export const GAME_CODES = ["CATCH_LIGHT", "SIGNAL_STATION"] as const;
+export type GameCode = typeof GAME_CODES[number];
 
 export type RuntimeState =
   | "UNPREPARED" | "PREPARING" | "READY" | "START_SCHEDULED" | "RUNNING"
@@ -43,14 +45,24 @@ export interface EligibleBatch {
   gameBatchMetrics: Record<string, unknown>;
 }
 
+export interface IncompleteBatchAudit {
+  batchOrdinal: number;
+  levelBefore: number;
+  cutoffReason: "DEADLINE";
+  startedAtActiveMs: number;
+  cutoffAtActiveMs: 300000;
+  partialMetrics: Record<string, unknown>;
+}
+
 export interface GameResultDraft {
-  gameCode: string;
+  gameCode: GameCode;
   gamePayloadVersion: "A620-GP-1.1";
   runtimeConfigHash: string;
+  designMaxLevel: number;
   plannedBatchCount: number;
   eligibleBatchCount: number;
   eligibleBatches: EligibleBatch[];
-  incompleteBatchAudit: unknown[];
+  incompleteBatchAudit: IncompleteBatchAudit[];
   sessionStartLevel: number;
   sessionEndLevel: number;
   sessionHighestPresentedLevel: number;

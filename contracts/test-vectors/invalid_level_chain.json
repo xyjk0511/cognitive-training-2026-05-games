@@ -197,7 +197,7 @@
       "senderRole": "COCOS_RUNTIME",
       "senderSeq": 5,
       "sentAtUtc": "2026-08-17T05:00:00Z",
-      "sentAtUptimeMs": 100,
+      "sentAtUptimeMs": 2000,
       "payload": {
         "runtimeState": "RUNNING",
         "activeElapsedMs": 1000,
@@ -264,10 +264,10 @@
         "batchOrdinal": 2,
         "closed": true,
         "decisionEligible": true,
-        "levelBefore": 2,
+        "levelBefore": 99,
         "resultZone": "UPGRADE",
         "levelTransition": "UP",
-        "levelAfter": 3,
+        "levelAfter": 100,
         "batchScore": 100,
         "closedAtActiveMs": 75000,
         "gameBatchMetrics": {
@@ -276,7 +276,7 @@
           "F": 0,
           "D": 0
         },
-        "batchPayloadSha256": "193210c424ab6eea4bc7a96c303c0324e61c7100da0be2b3924ea474d30a8725"
+        "batchPayloadSha256": "73b5cfeee6955d045958f79d34b9fa1bcec7608e3fcfacf35c8c2854fe1ba968"
       }
     },
     {
@@ -507,7 +507,7 @@
       "sentAtUtc": "2026-08-17T05:00:00Z",
       "sentAtUptimeMs": 301010,
       "payload": {
-        "resultDraftSha256": "c1fdee27546dbdd17e879948e9111ffd2b2c5931dfb0e97e92e9225f97c0c47b",
+        "resultDraftSha256": "7269c0a3e22efcaf3a0b824b437c0498a65fb9144ba2bb607a2ec054f01746c3",
         "gamePayload": {
           "gameCode": "CATCH_LIGHT",
           "gamePayloadVersion": "A620-GP-1.1",
@@ -538,10 +538,10 @@
               "batchOrdinal": 2,
               "closed": true,
               "decisionEligible": true,
-              "levelBefore": 2,
+              "levelBefore": 99,
               "resultZone": "UPGRADE",
               "levelTransition": "UP",
-              "levelAfter": 3,
+              "levelAfter": 100,
               "batchScore": 100,
               "closedAtActiveMs": 75000,
               "gameBatchMetrics": {
@@ -550,7 +550,7 @@
                 "F": 0,
                 "D": 0
               },
-              "batchPayloadSha256": "193210c424ab6eea4bc7a96c303c0324e61c7100da0be2b3924ea474d30a8725"
+              "batchPayloadSha256": "73b5cfeee6955d045958f79d34b9fa1bcec7608e3fcfacf35c8c2854fe1ba968"
             },
             {
               "batchOrdinal": 3,
@@ -657,8 +657,8 @@
           ],
           "sessionStartLevel": 1,
           "sessionEndLevel": 8,
-          "sessionHighestPresentedLevel": 8,
-          "sessionHighestPassedLevel": 7,
+          "sessionHighestPresentedLevel": 100,
+          "sessionHighestPassedLevel": 99,
           "nextStartLevel": 8,
           "sessionRawScore": 700,
           "sessionRawScoreMax": 800,
@@ -689,7 +689,7 @@
       "sentAtUptimeMs": 301020,
       "payload": {
         "resultId": "RES-001",
-        "resultPayloadSha256": "c1fdee27546dbdd17e879948e9111ffd2b2c5931dfb0e97e92e9225f97c0c47b",
+        "resultPayloadSha256": "7269c0a3e22efcaf3a0b824b437c0498a65fb9144ba2bb607a2ec054f01746c3",
         "committedAtUtc": "2026-08-17T05:00:00Z",
         "committedAtUptimeMs": 301015
       }

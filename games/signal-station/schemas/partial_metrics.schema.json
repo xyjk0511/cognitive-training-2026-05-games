@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:a620:signal-station:partial-metrics:gate0",
+  "title": "SIGNAL_STATION Gate0 Partial Batch Metrics",
+  "type": "object",
+  "properties": {
+    "waveOrdinal": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 8
+    }
+  },
+  "additionalProperties": false,
+  "maxProperties": 16
+}

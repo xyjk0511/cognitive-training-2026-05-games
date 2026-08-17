@@ -1,5 +1,5 @@
 {
-  "expectedOutcome": "COMPLETE",
+  "expectedOutcome": "REJECT",
   "messages": [
     {
       "contractVersion": "A620-TRC-1.1",
@@ -155,7 +155,7 @@
       "sentAtUptimeMs": 60000,
       "payload": {
         "effectivePauseUptimeMs": 60300,
-        "activeElapsedMs": 59300,
+        "activeElapsedMs": 100,
         "clockRevision": 2,
         "pauseLeadTimeMs": 300,
         "reasonCode": "THERAPIST_PAUSE"

@@ -14,7 +14,25 @@ object CanonicalJson {
         return a.length - b.length
     }
 
+    private fun requireWellFormedUtf16(value: String) {
+        var i = 0
+        while (i < value.length) {
+            val ch = value[i]
+            when {
+                Character.isHighSurrogate(ch) -> {
+                    require(i + 1 < value.length && Character.isLowSurrogate(value[i + 1])) {
+                        "unpaired high surrogate is forbidden"
+                    }
+                    i += 2
+                }
+                Character.isLowSurrogate(ch) -> error("unpaired low surrogate is forbidden")
+                else -> i += 1
+            }
+        }
+    }
+
     private fun escape(value: String): String {
+        requireWellFormedUtf16(value)
         val out = StringBuilder("\"")
         for (ch in value) {
             when (ch) {
@@ -31,7 +49,6 @@ object CanonicalJson {
         return out.append('"').toString()
     }
 
-    @Suppress("UNCHECKED_CAST")
     private fun emit(value: Any?): String = when (value) {
         null -> "null"
         is Boolean -> if (value) "true" else "false"
@@ -44,9 +61,12 @@ object CanonicalJson {
         is Float, is Double -> error("floating-point values are forbidden")
         is List<*> -> value.joinToString(prefix = "[", postfix = "]", separator = ",") { emit(it) }
         is Map<*, *> -> {
-            val map = value.entries.associate { (k, v) ->
-                require(k is String) { "object key must be a string" }
-                k to v
+            val map = linkedMapOf<String, Any?>()
+            for ((rawKey, rawValue) in value.entries) {
+                require(rawKey is String) { "object key must be a string" }
+                requireWellFormedUtf16(rawKey)
+                require(rawKey !in map) { "duplicate object key" }
+                map[rawKey] = rawValue
             }
             map.keys.sortedWith(::compareUtf16).joinToString(prefix = "{", postfix = "}", separator = ",") { key -> escape(key) + ":" + emit(map[key]) }
         }

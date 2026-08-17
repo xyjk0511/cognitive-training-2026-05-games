@@ -26,13 +26,13 @@
         "sessionStartLevel": 1,
         "designMaxLevel": 120,
         "plannedBatchCount": 8,
-        "runtimeConfigHash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
-        "scoringRuleVersion": "1",
+        "scoringRuleVersion": "1.5.0",
         "resultSchemaVersion": "A620-TRR-1.1",
-        "generatorVersion": "g1",
+        "generatorVersion": "catch-light-gen-1",
         "gameCode": "CATCH_LIGHT",
-        "gameConfigSchemaId": "urn:test",
-        "gameConfig": {}
+        "gameConfigSchemaId": "urn:a620:catch-light:config:1.5",
+        "gameConfig": {},
+        "runtimeConfigHash": "4989657186f9bf268276846f3fa0307797920976ce86498551903a27f31dd69f"
       }
     },
     {
@@ -54,7 +54,7 @@
       "sentAtUtc": "2026-08-17T05:00:00Z",
       "sentAtUptimeMs": 150,
       "payload": {
-        "runtimeConfigHash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "runtimeConfigHash": "4989657186f9bf268276846f3fa0307797920976ce86498551903a27f31dd69f",
         "plannedBatchCount": 8,
         "runtimeState": "READY"
       }

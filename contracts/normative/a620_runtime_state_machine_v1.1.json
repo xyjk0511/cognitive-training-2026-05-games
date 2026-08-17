@@ -196,6 +196,88 @@
       "input": "RUNTIME_ERROR",
       "sender": "COCOS_RUNTIME",
       "to": "ERROR"
+    },
+    {
+      "from": [
+        "PREPARING",
+        "READY",
+        "START_SCHEDULED",
+        "RUNNING",
+        "PAUSE_SCHEDULED",
+        "PAUSED",
+        "RESUME_SCHEDULED",
+        "FINALIZING",
+        "RESULT_PENDING_COMMIT",
+        "TERMINATING"
+      ],
+      "input": "COMMAND_REJECTED",
+      "sender": "COCOS_RUNTIME",
+      "to": "ERROR"
     }
-  ]
+  ],
+  "nonMutatingInputLegality": {
+    "QUERY_STATE": [
+      "PREPARING",
+      "READY",
+      "START_SCHEDULED",
+      "RUNNING",
+      "PAUSE_SCHEDULED",
+      "PAUSED",
+      "RESUME_SCHEDULED",
+      "FINALIZING",
+      "RESULT_PENDING_COMMIT",
+      "RESULT_COMMITTED",
+      "TERMINATING",
+      "TERMINATED",
+      "ERROR"
+    ],
+    "STATE_SNAPSHOT": [
+      "PREPARING",
+      "READY",
+      "START_SCHEDULED",
+      "RUNNING",
+      "PAUSE_SCHEDULED",
+      "PAUSED",
+      "RESUME_SCHEDULED",
+      "FINALIZING",
+      "RESULT_PENDING_COMMIT",
+      "RESULT_COMMITTED",
+      "TERMINATING",
+      "TERMINATED",
+      "ERROR"
+    ],
+    "HEARTBEAT": [
+      "PREPARING",
+      "READY",
+      "START_SCHEDULED",
+      "RUNNING",
+      "PAUSE_SCHEDULED",
+      "PAUSED",
+      "RESUME_SCHEDULED",
+      "FINALIZING",
+      "RESULT_PENDING_COMMIT",
+      "TERMINATING"
+    ],
+    "BATCH_CLOSED": [
+      "RUNNING"
+    ],
+    "COMMAND_ACCEPTED": [
+      "START_SCHEDULED",
+      "PAUSE_SCHEDULED",
+      "RESUME_SCHEDULED",
+      "TERMINATING"
+    ],
+    "STARTED": [
+      "RUNNING"
+    ],
+    "PAUSED": [
+      "PAUSED"
+    ],
+    "RESUMED": [
+      "RUNNING"
+    ],
+    "TERMINATED": [
+      "TERMINATED"
+    ]
+  }
 }

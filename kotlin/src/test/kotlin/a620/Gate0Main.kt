@@ -4,11 +4,18 @@ import java.nio.file.Files
 import java.nio.file.Path
 
 object Gate0Main {
-    @JvmStatic fun main(args: Array<String>) {
+    private fun expectRejected(block: () -> Unit) {
+        var rejected = false
+        try { block() } catch (_: IllegalStateException) { rejected = true } catch (_: IllegalArgumentException) { rejected = true }
+        check(rejected)
+    }
+
+    @JvmStatic
+    fun main(args: Array<String>) {
         val vectorsPath = Path.of(args.firstOrNull() ?: "../contracts/test-vectors/canonical_json_vectors.json")
         val text = Files.readString(vectorsPath)
-        // Avoid external JSON dependencies: assert known golden values directly and ensure file is present.
         check(text.contains("object-order"))
+
         val values = listOf(
             mapOf("z" to 0L, "a" to 1L, "nested" to mapOf("b" to 2L, "a" to 1L)),
             mapOf("line" to "a\nb", "quote" to "\"", "slash" to "/", "unicode" to "捕光行动", "emoji" to "🍎"),
@@ -23,22 +30,33 @@ object Gate0Main {
             "{\"a\":3,\"😀\":1,\"\":2}",
             "[3,{\"a\":1,\"b\":2},null,true,false,\"x\"]",
         )
-        values.zip(expected).forEachIndexed { i, (value, expectedString) -> check(CanonicalJson.canonicalString(value) == expectedString) { "canonical vector $i mismatch: ${CanonicalJson.canonicalString(value)}" } }
+        values.zip(expected).forEachIndexed { index, (value, expectedString) ->
+            check(CanonicalJson.canonicalString(value) == expectedString) {
+                "canonical vector $index mismatch: ${CanonicalJson.canonicalString(value)}"
+            }
+        }
+        expectRejected { CanonicalJson.canonicalString(mapOf("bad" to "\uD800")) }
 
         val controller = MockController()
         controller.apply(RuntimeInput.PREPARE)
         controller.apply(RuntimeInput.READY)
         controller.apply(RuntimeInput.START)
+        controller.apply(RuntimeInput.COMMAND_ACCEPTED)
         controller.apply(RuntimeInput.EFFECTIVE_START_REACHED)
+        controller.apply(RuntimeInput.STARTED)
         check(controller.state == RuntimeState.RUNNING)
+        controller.apply(RuntimeInput.BATCH_CLOSED)
         controller.apply(RuntimeInput.ACTIVE_TIME_REACHED_DURATION)
+        controller.apply(RuntimeInput.DEADLINE)
         controller.apply(RuntimeInput.RESULT_READY)
         controller.apply(RuntimeInput.ACK_RESULT_COMMITTED)
         check(controller.state == RuntimeState.RESULT_COMMITTED)
 
-        var rejected = false
-        try { RuntimeStateMachine.reduce(RuntimeState.RUNNING, RuntimeInput.RESULT_READY) } catch (_: IllegalStateException) { rejected = true }
-        check(rejected)
+        expectRejected { RuntimeStateMachine.reduce(RuntimeState.RUNNING, RuntimeInput.RESULT_READY) }
+        expectRejected { RuntimeStateMachine.reduce(RuntimeState.UNPREPARED, RuntimeInput.QUERY_STATE) }
+        expectRejected { RuntimeStateMachine.reduce(RuntimeState.UNPREPARED, RuntimeInput.BATCH_CLOSED) }
+        expectRejected { RuntimeStateMachine.reduce(RuntimeState.READY, RuntimeInput.COMMAND_ACCEPTED) }
+        check(RuntimeStateMachine.reduce(RuntimeState.RUNNING, RuntimeInput.COMMAND_REJECTED) == RuntimeState.ERROR)
 
         val ledger = BatchEvidenceLedger(8)
         ledger.record(BatchEvidence(1, "a".repeat(64), 37500, "evt-1", 1, 100))
