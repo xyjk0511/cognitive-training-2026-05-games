@@ -4,6 +4,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 OUT_DIR="${1:-/mnt/data}"
 DATE_TAG="${DATE_TAG:-20260817}"
+REHYDRATE_STEP_TIMEOUT_SECONDS="${A620_REHYDRATE_STEP_TIMEOUT_SECONDS:-180}"
 BASENAME="A620_Gate0_rc3_baseline3_${DATE_TAG}"
 EXPECTED_TAG="a620-trc-1.1-rc3-baseline.3"
 SOURCE_ZIP="$OUT_DIR/${BASENAME}_source.zip"
@@ -111,15 +112,15 @@ run_rehydrated_suite() {
     (
         cd "$checkout_root"
         echo "${label}_BOOTSTRAP"
-        timeout 90 ./scripts/bootstrap_vectors.sh >/dev/null
+        timeout --foreground "$REHYDRATE_STEP_TIMEOUT_SECONDS" ./scripts/bootstrap_vectors.sh >/dev/null
         echo "${label}_PYTHON"
-        timeout 90 ./scripts/test_python.sh >/dev/null
+        timeout --foreground "$REHYDRATE_STEP_TIMEOUT_SECONDS" ./scripts/test_python.sh >/dev/null
         echo "${label}_TYPESCRIPT"
-        timeout 90 ./scripts/test_typescript.sh >/dev/null
+        timeout --foreground "$REHYDRATE_STEP_TIMEOUT_SECONDS" ./scripts/test_typescript.sh >/dev/null
         echo "${label}_KOTLIN"
-        timeout 90 ./scripts/test_kotlin.sh >/dev/null
+        timeout --foreground "$REHYDRATE_STEP_TIMEOUT_SECONDS" ./scripts/test_kotlin.sh >/dev/null
         echo "${label}_TPKG"
-        timeout 90 ./scripts/build_sample_packages.sh >/dev/null
+        timeout --foreground "$REHYDRATE_STEP_TIMEOUT_SECONDS" ./scripts/build_sample_packages.sh >/dev/null
     )
 }
 
