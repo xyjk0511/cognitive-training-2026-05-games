@@ -27,10 +27,14 @@ private inline fun <reified T : Throwable> expectThrows(noinline block: () -> Un
 
 private fun testGeneratedProfile() {
     checkTrue(P.ANDROID_SHELL_PROFILE == "A620-ARS-1", "profile")
-    checkTrue(P.CANDIDATE_REVISION == "rc3-baseline.7", "revision")
+    checkTrue(P.CANDIDATE_REVISION == "rc3-baseline.8", "revision")
     checkTrue(P.WIRE_CONTRACT_VERSION == "A620-TRC-1.1", "wire contract")
     checkTrue(P.INLINE_CANONICAL_MAX_BYTES < 1_000_000, "Binder inline limit must remain conservative")
     checkTrue(!P.AUTO_RESUME_AFTER_PROCESS_DEATH, "no mid-session auto-resume")
+    checkTrue(P.CHANNEL_AUTH_PROFILE == "A620-ACS-1", "channel auth profile")
+    checkTrue(P.CHANNEL_TOKEN_BYTES == 32 && P.CHANNEL_TOKEN_CHARS == 64, "channel token size")
+    checkTrue(!P.CHANNEL_TOKEN_PERSISTS_RAW, "raw token must not persist")
+    checkTrue(P.CHANNEL_TOKEN_RETAIN_RAW_IN_MEMORY_FOR_CALLBACKS, "service callback token is transient memory only")
 }
 
 private fun testTransportSplit() {
@@ -276,5 +280,5 @@ fun main() {
     testIngressBudget()
     testOrderedIngressSequencer()
     testPointerStreamCancellation()
-    println("KOTLIN_BASELINE7_RUNTIME_INGRESS_TESTS_PASS")
+    println("KOTLIN_BASELINE8_AUTHENTICATED_DURABLE_CONTROLLER_TESTS_PASS")
 }

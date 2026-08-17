@@ -11,11 +11,15 @@ function check(value: boolean, message: string): void {
 }
 
 check(androidShellProfile.profile === "A620-ARS-1", "profile");
-check(androidShellProfile.candidateRevision === "rc3-baseline.7", "revision");
+check(androidShellProfile.candidateRevision === "rc3-baseline.8", "revision");
 check(profileProjectionHash() === androidShellProfileSha256, "profile hash");
 check(androidShellProfile.binder.urgentQueueMaxMessages === 32, "urgent queue reserve");
 check(androidShellProfile.binder.normalQueueMaxMessages === 64, "normal queue cap");
 check(androidShellProfile.inputGate.cancelActiveStreamOnBoundary === true, "touch cancel boundary");
+check(androidShellProfile.processIsolation.channelAuthentication.profile === "A620-ACS-1", "channel auth profile");
+check(androidShellProfile.processIsolation.channelAuthentication.tokenBytes === 32, "channel token bytes");
+check(androidShellProfile.processIsolation.channelAuthentication.tokenChars === 64, "channel token chars");
+check(androidShellProfile.processIsolation.channelAuthentication.persistRawToken === false, "raw token must not persist");
 check(androidShellProfile.binder.droppableOnBackpressureMessageTypes.includes("HEARTBEAT"), "telemetry backpressure policy");
 check(androidShellProfile.binder.urgentQueueMaxBytes >= androidShellProfile.binder.bulkCanonicalMaxBytes, "max result fits urgent reserve");
 
@@ -44,4 +48,4 @@ try {
 }
 check(tooLargeRejected, "oversize rejected");
 
-console.log("TYPESCRIPT_BASELINE7_TRANSPORT_TESTS_PASS");
+console.log("TYPESCRIPT_BASELINE8_AUTHENTICATED_DURABLE_CONTROLLER_TESTS_PASS");

@@ -1,19 +1,28 @@
 {
   "contractVersion": "A620-TRC-1.1",
-  "candidateRevision": "rc3-baseline.7",
-  "releaseStatus": "GATE_AB_RUNTIME_INGRESS_CANDIDATE_NOT_DEVICE_APPROVED",
+  "candidateRevision": "rc3-baseline.8",
+  "releaseStatus": "GATE_AB_AUTHENTICATED_DURABLE_CONTROLLER_CANDIDATE_NOT_DEVICE_APPROVED",
   "clockProfile": "A620-UPTIME-MS-1",
   "canonicalJsonProfile": "A620-JCS-1",
-  "wireSemanticChangeFromBaseline4": false,
+  "internalChannelSecurityProfile": "A620-ACS-1",
+  "wireSemanticChangeFromBaseline7": false,
   "includes": [
-    "baseline5 concurrent coordination",
-    "baseline6 storage integrity and Android-shaped runtime shell",
-    "strict canonical Kotlin wire-envelope parser",
-    "reserved urgent actor lane",
-    "off-actor bounded PFD ingestion with timeout",
-    "touch stream cancellation at input boundaries",
-    "controller callback ingress hardening",
-    "Android toolchain lock and SDK-build preflight"
+    "all baseline.7 strict canonical/PFD/ordered ingress protections",
+    "per-binding 256-bit same-UID AIDL channel token on every request and callback",
+    "stale token and generation fencing before parse and before reducer mutation",
+    "bidirectional inline/PFD event transport with bounded off-actor bulk I/O",
+    "strict runtime identity, messageId and role-scoped senderSeq persistence",
+    "application-private SQLite schema A620-ACDS-1 with boot-epoch fencing",
+    "durable BATCH_CLOSED evidence and exact RESULT_READY reconciliation",
+    "single transaction for formal result, sync queue, controller state, commit ACK and runtime finalization",
+    "fenced durable ACK outbox dispatcher with exact canonical retry and UTC claim leases",
+    "UTC retry deadlines across reboot and fail-closed unknown database versions",
+    "JDK 17 minimum Android toolchain preflight; JDK 21 stub build verified",
+    "exact RESULT_READY replay requeues the original committed ACK before terminal late-audit handling",
+    "controller outbox dispatch is serialized by smallest unresolved senderSeq",
+    "future UTC outbox deadlines schedule reconnect/restart wake-up"
   ],
-  "notes": "Android SDK/Gradle dependency resolution and candidate-tablet testing were not available in this environment. JVM/stub compilation is not device approval."
+  "notes": "Public A620-TRC-1.1 canonical wire bytes are unchanged. The direct SQLiteOpenHelper core and Android/AIDL stubs are implementation candidates; Android SDK build, Room facade, real Binder/PFD and candidate-tablet verification remain outstanding.",
+  "implementationCandidateRevision": "rc3-baseline.8",
+  "status": "GATE_AB_AUTHENTICATED_DURABLE_CONTROLLER_CANDIDATE_NOT_DEVICE_APPROVED"
 }

@@ -6,10 +6,11 @@ import android.os.Binder
 import android.os.IBinder
 import android.os.ParcelFileDescriptor
 import a620.RuntimeIngressPriority
+import java.security.MessageDigest
 import java.util.concurrent.RejectedExecutionException
 
 class TrainingRuntimeService : Service() {
-    private val sink: RuntimeMessageSink = RejectingPlaceholderSink()
+    private val sink = StrictRuntimeMessageSink()
     private val actor = TrainingRuntimeActor { error ->
         sink.onFatalInfrastructureFailure("RUNTIME_ACTOR_FAILURE: ${error.message ?: error::class.java.simpleName}")
     }
@@ -18,34 +19,49 @@ class TrainingRuntimeService : Service() {
     @Volatile private var callback: ITrainingRuntimeCallback? = null
     @Volatile private var callbackBinder: IBinder? = null
     @Volatile private var callbackDeathRecipient: IBinder.DeathRecipient? = null
+    @Volatile private var channelTokenForCallback: String? = null // transient; never persisted
+    @Volatile private var channelTokenDigest: ByteArray? = null
     @Volatile private var channelGeneration: Long = 0
 
     private val ingress = CanonicalIngressCoordinator(
         expectedSenderRole = "ANDROID_CONTROLLER",
         actor = actor,
         sink = sink,
-        requireLiveGeneration = ::requireLiveGeneration,
+        isLiveChannel = ::isLiveChannel,
+    )
+    internal val eventTransport = RuntimeEventTransport(
+        channelProvider = ::currentCallbackChannel,
+        onFatalFailure = sink::onFatalInfrastructureFailure,
     )
 
     private val binder = object : ITrainingRuntime.Stub() {
-        override fun registerCallback(newCallback: ITrainingRuntimeCallback, generation: Long) {
+        override fun registerCallback(
+            newCallback: ITrainingRuntimeCallback,
+            channelToken: String,
+            generation: Long,
+        ) {
             enforceSameUid()
+            ChannelAuthenticator.requireValidToken(channelToken)
             require(generation > 0) { "channel generation must be positive" }
+            val newDigest = ChannelAuthenticator.digest(channelToken)
             val newBinder = newCallback.asBinder()
             synchronized(callbackLock) {
-                require(generation > channelGeneration) { "channel generation must increase" }
-                callbackDeathRecipient?.let { oldRecipient ->
-                    callbackBinder?.unlinkToDeath(oldRecipient, 0)
+                val oldDigest = channelTokenDigest
+                val sameTokenEpoch = oldDigest != null && MessageDigest.isEqual(newDigest, oldDigest)
+                if (sameTokenEpoch) {
+                    require(generation > channelGeneration) { "generation must increase within one token epoch" }
                 }
+
                 val recipient = IBinder.DeathRecipient {
                     try {
                         actor.submitUrgent {
                             synchronized(callbackLock) {
-                                // A delayed death from an old callback cannot close a newer channel.
-                                if (channelGeneration == generation && callbackBinder === newBinder) {
-                                    callback = null
-                                    callbackBinder = null
-                                    callbackDeathRecipient = null
+                                // Delayed death from an old callback/token cannot close a newer channel.
+                                if (channelGeneration == generation &&
+                                    callbackBinder === newBinder &&
+                                    MessageDigest.isEqual(channelTokenDigest, newDigest)
+                                ) {
+                                    clearCallbackLocked()
                                     sink.onControllerChannelClosed("CONTROLLER_BINDER_DIED")
                                 }
                             }
@@ -54,10 +70,19 @@ class TrainingRuntimeService : Service() {
                         sink.onFatalInfrastructureFailure("URGENT_LANE_UNAVAILABLE_ON_BINDER_DEATH")
                     }
                 }
+
+                // Link before replacing the old callback. A failed link leaves the
+                // previously live channel intact.
                 newBinder.linkToDeath(recipient, 0)
+                callbackDeathRecipient?.let { oldRecipient ->
+                    callbackBinder?.unlinkToDeath(oldRecipient, 0)
+                }
                 callback = newCallback
                 callbackBinder = newBinder
                 callbackDeathRecipient = recipient
+                channelTokenForCallback = channelToken
+                channelTokenDigest?.fill(0)
+                channelTokenDigest = newDigest
                 channelGeneration = generation
             }
         }
@@ -68,9 +93,11 @@ class TrainingRuntimeService : Service() {
             senderSeq: Long,
             canonicalJson: ByteArray,
             canonicalSha256: String,
+            channelToken: String,
             generation: Long,
         ) {
             enforceSameUid()
+            requireLiveChannelOrReject(messageId, generation, channelToken)
             ingress.submitInline(
                 messageType,
                 messageId,
@@ -78,6 +105,7 @@ class TrainingRuntimeService : Service() {
                 canonicalJson,
                 canonicalSha256,
                 generation,
+                channelToken,
             )
         }
 
@@ -88,27 +116,38 @@ class TrainingRuntimeService : Service() {
             payloadFd: ParcelFileDescriptor,
             byteLength: Long,
             canonicalSha256: String,
+            channelToken: String,
             generation: Long,
         ) {
             enforceSameUid()
-            ingress.submitBulk(
-                messageType,
-                messageId,
-                senderSeq,
-                payloadFd,
-                byteLength,
-                canonicalSha256,
-                generation,
-            )
+            payloadFd.use { inbound ->
+                requireLiveChannelOrReject(messageId, generation, channelToken)
+                ingress.submitBulk(
+                    messageType,
+                    messageId,
+                    senderSeq,
+                    inbound,
+                    byteLength,
+                    canonicalSha256,
+                    generation,
+                    channelToken,
+                )
+            }
         }
 
-        override fun closeChannel(generation: Long, reason: String) {
+        override fun closeChannel(channelToken: String, generation: Long, reason: String) {
             enforceSameUid()
             require(reason.isNotBlank())
-            requireLiveGeneration(generation)
+            requireLiveChannelOrReject(null, generation, channelToken)
             actor.submit(RuntimeIngressPriority.URGENT, 1) {
-                requireLiveGeneration(generation)
-                sink.onControllerChannelClosed(reason)
+                if (!isLiveChannel(generation, channelToken)) {
+                    sink.onStaleChannelMessage(null, "STALE_CLOSE_CHANNEL")
+                    return@submit
+                }
+                synchronized(callbackLock) {
+                    sink.onControllerChannelClosed(reason)
+                    clearCallbackLocked()
+                }
             }
         }
     }
@@ -116,15 +155,41 @@ class TrainingRuntimeService : Service() {
     override fun onBind(intent: Intent?): IBinder = binder
 
     override fun onDestroy() {
-        synchronized(callbackLock) {
-            callbackDeathRecipient?.let { callbackBinder?.unlinkToDeath(it, 0) }
-            callback = null
-            callbackBinder = null
-            callbackDeathRecipient = null
-        }
+        synchronized(callbackLock) { clearCallbackLocked() }
         ingress.close()
+        eventTransport.close()
         actor.shutdownNow()
         super.onDestroy()
+    }
+
+    /** Snapshot used only by the internal Cocos-to-controller event transport. */
+    internal fun currentCallbackChannel(): CallbackChannel? = synchronized(callbackLock) {
+        val currentCallback = callback ?: return@synchronized null
+        val token = channelTokenForCallback ?: return@synchronized null
+        CallbackChannel(currentCallback, token, channelGeneration)
+    }
+
+    internal data class CallbackChannel(
+        val callback: ITrainingRuntimeCallback,
+        val token: String,
+        val generation: Long,
+    )
+
+    private fun clearCallbackLocked() {
+        callbackDeathRecipient?.let { callbackBinder?.unlinkToDeath(it, 0) }
+        callback = null
+        callbackBinder = null
+        callbackDeathRecipient = null
+        channelTokenForCallback = null
+        channelTokenDigest?.fill(0)
+        channelTokenDigest = null
+        channelGeneration = 0
+    }
+
+    private fun requireLiveChannelOrReject(messageId: String?, generation: Long, token: String) {
+        if (isLiveChannel(generation, token)) return
+        sink.onStaleChannelMessage(messageId, "STALE_OR_UNAUTHENTICATED_AIDL_CHANNEL")
+        throw SecurityException("stale or unauthenticated channel")
     }
 
     private fun enforceSameUid() {
@@ -133,9 +198,8 @@ class TrainingRuntimeService : Service() {
         }
     }
 
-    private fun requireLiveGeneration(generation: Long) {
-        require(generation == channelGeneration && callback != null) {
-            "stale or unregistered channel"
-        }
-    }
+    private fun isLiveChannel(generation: Long, token: String): Boolean =
+        generation == channelGeneration &&
+            callback != null &&
+            ChannelAuthenticator.matches(token, channelTokenDigest)
 }

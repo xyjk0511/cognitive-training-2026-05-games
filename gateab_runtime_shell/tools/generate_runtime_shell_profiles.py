@@ -45,6 +45,7 @@ def render() -> dict[Path, str]:
     binder = ars["binder"]
     proc = ars["processIsolation"]
     gate = ars["inputGate"]
+    auth = proc["channelAuthentication"]
     urgent_message_types_kt = ",".join(json.dumps(x) for x in binder["urgentMessageTypes"])
     droppable_message_types_kt = ",".join(json.dumps(x) for x in binder["droppableOnBackpressureMessageTypes"])
     dsp = profiles["durable_storage.json"]
@@ -66,6 +67,15 @@ object RuntimeShellProfiles {{
     const val DEATH_OUTCOME = "{proc['deathOutcome']}"
     const val NEW_ATTEMPT_REQUIRED_AFTER_DEATH = {str(proc['newExecutionAttemptRequiredAfterDeath']).lower()}
     const val CALLBACK_REGISTRATION_TIMEOUT_MS: Long = {proc['callbackRegistrationTimeoutMs']}L
+    const val CHANNEL_AUTH_PROFILE = "{auth['profile']}"
+    const val CHANNEL_TOKEN_BYTES: Int = {auth['tokenBytes']}
+    const val CHANNEL_TOKEN_CHARS: Int = {auth['tokenChars']}
+    const val CHANNEL_TOKEN_ENCODING = "{auth['tokenEncoding']}"
+    const val CHANNEL_TOKEN_ON_EVERY_AIDL_CALL = {str(auth['includeOnEveryAidlCall']).lower()}
+    const val CHANNEL_TOKEN_ON_EVERY_CALLBACK = {str(auth['includeOnEveryCallback']).lower()}
+    const val CHANNEL_TOKEN_PERSISTS_RAW = {str(auth['servicePersistsRawToken']).lower()}
+    const val CHANNEL_TOKEN_RETAIN_RAW_IN_MEMORY_FOR_CALLBACKS = {str(auth['serviceRetainsRawTokenInMemoryForCallbacks']).lower()}
+    const val CHANNEL_TOKEN_CONSTANT_TIME_COMPARE = {str(auth['constantTimeComparison']).lower()}
     const val INLINE_CANONICAL_MAX_BYTES: Int = {binder['inlineCanonicalMaxBytes']}
     const val INLINE_DESCRIPTOR_MAX_BYTES: Int = {binder['inlineDescriptorMaxBytes']}
     const val BULK_CANONICAL_MAX_BYTES: Int = {binder['bulkCanonicalMaxBytes']}
@@ -98,6 +108,8 @@ object RuntimeShellProfiles {{
     const val ANDROID_GRADLE_PLUGIN = "{ars['toolchainCandidate']['androidGradlePlugin']}"
     const val GRADLE = "{ars['toolchainCandidate']['gradle']}"
     const val JDK: Int = {ars['toolchainCandidate']['jdk']}
+    const val JDK_MINIMUM: Int = {ars['toolchainCandidate'].get('jdkMinimum', ars['toolchainCandidate']['jdk'])}
+    const val JDK_STUB_TESTED: Int = {ars['toolchainCandidate'].get('jdkTestedByStub', ars['toolchainCandidate']['jdk'])}
     const val COMPILE_SDK: Int = {ars['toolchainCandidate']['compileSdk']}
     const val TARGET_SDK: Int = {ars['toolchainCandidate']['targetSdk']}
     const val MIN_SDK: Int = {ars['toolchainCandidate']['minSdk']}
@@ -165,6 +177,12 @@ object AndroidShellProfile {{
     const val DeathOutcome = "{proc['deathOutcome']}"
     const val NewExecutionAttemptRequiredAfterDeath = {str(proc['newExecutionAttemptRequiredAfterDeath']).lower()}
     const val CallbackRegistrationTimeoutMs = {proc['callbackRegistrationTimeoutMs']}L
+    const val ChannelAuthProfile = "{auth['profile']}"
+    const val ChannelTokenBytes = {auth['tokenBytes']}
+    const val ChannelTokenChars = {auth['tokenChars']}
+    const val ChannelTokenPersistsRaw = {str(auth['servicePersistsRawToken']).lower()}
+    const val ChannelTokenRetainRawInMemoryForCallbacks = {str(auth['serviceRetainsRawTokenInMemoryForCallbacks']).lower()}
+    const val ChannelTokenConstantTimeCompare = {str(auth['constantTimeComparison']).lower()}
 }}
 '''
 
@@ -195,6 +213,14 @@ object RuntimePolicy {{
     const val CANCEL_ACTIVE_STREAM_ON_BOUNDARY = {str(gate['cancelActiveStreamOnBoundary']).lower()}
     const val FORWARD_PLATFORM_CANCEL = {str(gate['forwardPlatformCancel']).lower()}
     const val CALLBACK_REGISTRATION_TIMEOUT_MS = {proc['callbackRegistrationTimeoutMs']}L
+    const val CHANNEL_AUTH_PROFILE = "{auth['profile']}"
+    const val CHANNEL_TOKEN_BYTES = {auth['tokenBytes']}
+    const val CHANNEL_TOKEN_CHARS = {auth['tokenChars']}
+    const val CHANNEL_TOKEN_PERSISTS_RAW = {str(auth['servicePersistsRawToken']).lower()}
+    const val CHANNEL_TOKEN_RETAIN_RAW_IN_MEMORY_FOR_CALLBACKS = {str(auth['serviceRetainsRawTokenInMemoryForCallbacks']).lower()}
+    const val CHANNEL_TOKEN_CONSTANT_TIME_COMPARE = {str(auth['constantTimeComparison']).lower()}
+    const val RECEIVER_CLOSES_INBOUND_PFD_AFTER_DUP = {str(binder['receiverClosesInboundPfdAfterSynchronousDuplication']).lower()}
+    const val EXPOSE_RAW_AIDL_INTERFACE = {str(binder['exposeRawAidlInterfaceToCallers']).lower()}
 }}
 '''
 
@@ -204,6 +230,8 @@ object RuntimePolicy {{
         "androidGradlePlugin": ars["toolchainCandidate"]["androidGradlePlugin"],
         "gradle": ars["toolchainCandidate"]["gradle"],
         "jdk": ars["toolchainCandidate"]["jdk"],
+        "jdkMinimum": ars["toolchainCandidate"].get("jdkMinimum", ars["toolchainCandidate"]["jdk"]),
+        "jdkStubTested": ars["toolchainCandidate"].get("jdkTestedByStub"),
         "compileSdk": ars["toolchainCandidate"]["compileSdk"],
         "targetSdk": ars["toolchainCandidate"]["targetSdk"],
         "minSdk": ars["toolchainCandidate"]["minSdk"],

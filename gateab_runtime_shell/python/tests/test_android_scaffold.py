@@ -38,9 +38,11 @@ def test_aidl_uses_oneway_and_file_descriptor_for_bulk() -> None:
     assert "String messageType" in text
     assert "String messageId" in text
     assert "long senderSeq" in text
+    assert text.count("String channelToken") >= 4
     callback = (ANDROID / "app/src/main/aidl/com/a620/tablet/training/ITrainingRuntimeCallback.aidl").read_text()
     assert "oneway interface ITrainingRuntimeCallback" in callback
     assert "ParcelFileDescriptor payloadFd" in callback
+    assert callback.count("String channelToken") >= 3
 
 
 def test_service_enforces_same_uid_and_duplicates_fd() -> None:
@@ -108,10 +110,15 @@ def test_sql_schema_enforces_result_outcome_exclusivity() -> None:
 
 def test_service_rechecks_generation_and_bulk_fd_is_owned_off_actor() -> None:
     text = (ANDROID / "app/src/main/java/com/a620/tablet/training/TrainingRuntimeService.kt").read_text()
-    assert "channelGeneration == generation && callbackBinder === newBinder" in text
+    assert "channelGeneration == generation" in text
+    assert "callbackBinder === newBinder" in text
+    assert "MessageDigest.isEqual(channelTokenDigest, newDigest)" in text
     coordinator = (ANDROID / "app/src/main/java/com/a620/tablet/training/CanonicalIngressCoordinator.kt").read_text()
-    assert coordinator.count("requireLiveGeneration(generation)") >= 3
-    assert "ownedFd.close()" in coordinator
+    assert coordinator.count("isLive(prepared.fence)") >= 2
+    assert "CHANNEL_ROTATED_BEFORE_PARSE" in coordinator
+    assert "CHANNEL_ROTATED_BEFORE_REDUCER" in coordinator
+    assert "closeQuietly(operation.fd)" in coordinator
+    assert "inFlightBulk" in coordinator
     assert "BULK_PAYLOAD_LEASE_EXPIRED" in coordinator
 
 
@@ -176,3 +183,66 @@ def test_android_apk_source_set_excludes_reference_only_harnesses() -> None:
         "Transport.kt",
     ):
         assert name in text
+
+
+def test_channel_token_is_generated_hashed_and_checked_on_both_directions() -> None:
+    auth = (ANDROID / "app/src/main/java/com/a620/tablet/training/ChannelAuthenticator.kt").read_text()
+    service = (ANDROID / "app/src/main/java/com/a620/tablet/training/TrainingRuntimeService.kt").read_text()
+    client = (ANDROID / "app/src/main/java/com/a620/tablet/training/ControllerRuntimeClient.kt").read_text()
+    assert "SecureRandom" in auth
+    assert "MessageDigest.isEqual" in auth
+    assert "channelTokenDigest" in service
+    assert "ChannelAuthenticator.matches" in service
+    assert "ChannelAuthenticator.generateToken" in client
+    assert "ChannelAuthenticator.matches" in client
+    assert "fun requireRuntime" not in client
+
+
+def test_receiver_closes_aidl_delivered_bulk_fd_after_coordinator_dup() -> None:
+    service = (ANDROID / "app/src/main/java/com/a620/tablet/training/TrainingRuntimeService.kt").read_text()
+    client = (ANDROID / "app/src/main/java/com/a620/tablet/training/ControllerRuntimeClient.kt").read_text()
+    assert "payloadFd.use { inbound" in service
+    assert "payloadFd.use { inbound" in client
+    coordinator = (ANDROID / "app/src/main/java/com/a620/tablet/training/CanonicalIngressCoordinator.kt").read_text()
+    assert "ParcelFileDescriptor.dup(payloadFd.fileDescriptor)" in coordinator
+
+
+def test_placeholder_sink_is_no_longer_wired_into_runtime_or_controller() -> None:
+    service = (ANDROID / "app/src/main/java/com/a620/tablet/training/TrainingRuntimeService.kt").read_text()
+    client = (ANDROID / "app/src/main/java/com/a620/tablet/training/ControllerRuntimeClient.kt").read_text()
+    sink = (ANDROID / "app/src/main/java/com/a620/tablet/training/RuntimeMessageSink.kt").read_text()
+    assert "StrictRuntimeMessageSink" in service
+    assert "StrictRuntimeMessageSink" in client
+    assert "RejectingPlaceholderSink" not in service
+    assert "RejectingPlaceholderSink" not in client
+    assert "senderSeq must strictly increase" in sink
+    assert "runtime identity changed within one channel" in sink
+
+
+def test_bulk_descriptors_are_closed_on_shutdown_and_stale_egress_is_not_fatal() -> None:
+    ingress = (ANDROID / "app/src/main/java/com/a620/tablet/training/CanonicalIngressCoordinator.kt").read_text()
+    egress = (ANDROID / "app/src/main/java/com/a620/tablet/training/RuntimeEventTransport.kt").read_text()
+    assert "inFlightBulk" in ingress
+    assert "operation.finished.compareAndSet(false, true)" in ingress
+    assert "closeQuietly(operation.fd)" in ingress
+    assert "activeWriteEnds" in egress
+    assert "isCurrentChannel(channel)" in egress
+    assert "if (!closed.get() && isCurrentChannel(channel))" in egress
+
+
+def test_formal_result_replay_requires_exact_canonical_event() -> None:
+    replay = (ANDROID / "app/src/main/java/com/a620/tablet/training/FormalResultReplayValidator.kt").read_text()
+    store = (ANDROID / "app/src/main/java/com/a620/tablet/training/AndroidControllerStore.kt").read_text()
+    sink = (ANDROID / "app/src/main/java/com/a620/tablet/training/DurableControllerEventSink.kt").read_text()
+    assert "incomingCanonical.contentEquals(persistedResultReadyCanonical)" in replay
+    assert "JOIN controller_event_inbox i ON i.message_id=f.result_ready_message_id" in store
+    assert "loadCommittedAck(resultReady, canonicalResultReady)" in sink
+
+
+def test_runtime_client_always_closes_ingress_when_interruption_persistence_fails():
+    source = (ANDROID / "app/src/main/java/com/a620/tablet/training/ControllerRuntimeClient.kt").read_text()
+    assert "private fun recordInterruptionAndClose" in source
+    assert "finally {" in source
+    assert "eventIngress.close()" in source
+    assert "eventActor.shutdownNow()" in source
+    assert "INTERRUPTION_PERSIST_FAILED" in source

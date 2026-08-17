@@ -1,39 +1,47 @@
-# A620 Gate A/B runtime ingress hardening — baseline.7
+# A620 Gate A/B authenticated durable controller — baseline.8
 
-`rc3-baseline.7` hardens the Android-shaped runtime shell without changing the
-`A620-TRC-1.1` canonical wire bytes.
+`rc3-baseline.8` preserves the public `A620-TRC-1.1` canonical wire bytes and
+hardens the same-APK controller/training boundary plus controller persistence.
 
-## Added in baseline.7
+## Added in baseline.8
 
-- Strict bounded Kotlin parser for canonical A620 JSON. It rejects malformed
-  UTF-8, duplicate keys, whitespace/non-canonical encoding, floats, unsafe
-  integers and malformed surrogate pairs.
-- The internal AIDL interface carries `messageType`, `messageId` and
-  `senderSeq` beside the canonical bytes. The receiver must compare all three
-  with the embedded envelope before reducer mutation.
-- Bulk `ParcelFileDescriptor` reads and SHA-256 verification run outside the
-  single state actor with an independent in-flight budget and 15-second lease.
-- Binder ingress order is retained while bulk reads complete asynchronously;
-  `RESULT_READY` cannot pass an earlier `BATCH_CLOSED`.
-- Urgent traffic has separately reserved admission capacity, but does not
-  violate causal FIFO. `HEARTBEAT` and `STATE_SNAPSHOT` may be dropped under
-  backpressure; formal evidence and terminal messages may not.
-- Touch streams that cross pause/deadline/termination boundaries return
-  `CANCEL_STREAM`, requiring the Cocos adapter to deliver or synthesize an
-  `ACTION_CANCEL` before discarding the old gesture.
-- Controller callbacks use the same strict ingress boundary as
-  controller-to-training messages.
-- Android toolchain versions are generated into `toolchain.lock.json`, with an
-  SDK build/lint preflight script. This environment did not contain the Android
-  SDK, Gradle 9.5.0 or dependency-network access, so an Android SDK build is not
-  claimed.
+- A fresh 256-bit opaque token is generated for every main-process binding.
+  Every AIDL request and callback carries token + generation. The service
+  enforces same UID, stores only the token digest for validation, compares in
+  constant time, and fences stale asynchronous work before parse and reducer.
+- The raw AIDL interface remains behind `ControllerRuntimeClient`; callers use
+  authenticated wrappers. The training process can send controller events by
+  bounded inline or `ParcelFileDescriptor` transport.
+- `A620-ACDS-1` / schema v4 defines application-private SQLite records for
+  PREPARE identity, role-scoped sender cursors, canonical inbox events, late
+  audit, batch evidence, formal result, execution outcome, sync queue, commit
+  ACK outbox and controller state.
+- PREPARE and runtime traffic must match a previously bound boot epoch. Uptime
+  regression inside that epoch fails closed; retries across reboot use UTC.
+- `BATCH_CLOSED` evidence is reconciled exactly against the final game payload.
+  Formal result, sync queue, controller state, commit ACK and runtime
+  finalization are written in one transaction.
+- The commit ACK is delivered by a fenced durable outbox dispatcher. Binder
+  submission failure retries the original canonical bytes/message identity and
+  never rewrites an already committed formal result as interrupted.
+- An identical result retry returns the first committed facts and canonical ACK;
+  result and interruption outcome remain mutually exclusive.
+- Android toolchain preflight accepts JDK 17 or newer. The current JDK 21 stub
+  compilation is evidence only, not an Android SDK build.
+
+## Deliberate implementation boundary
+
+The transaction core currently uses `SQLiteOpenHelper` directly. A future Room
+facade may be added only if it preserves the same database schema, boot fencing,
+message idempotency and one-transaction result commit. baseline.8 does not claim
+that Room, real AIDL code generation or a production APK is complete.
 
 ## Still not complete
 
-- No Android SDK `assembleDebug`/lint/instrumentation result.
-- No generated Room implementation or production reducer wiring.
-- No Cocos Creator native project or native touch-to-Cocos cancel adapter.
-- No candidate-tablet Binder/PFD latency, process-kill or 300-second timing test.
+- No Android SDK `assembleDebug`, lint or instrumentation result.
+- No Room entities/DAO/migrations proven against a device database.
+- No real Binder/PFD or Cocos Creator `:training` process.
+- No candidate-tablet process kill, 300-second timing or power-loss test.
 - No game-specific L1 implementation.
 
 This candidate is not approved for patient use.

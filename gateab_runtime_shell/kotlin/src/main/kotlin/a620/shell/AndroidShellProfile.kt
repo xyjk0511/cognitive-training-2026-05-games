@@ -4,10 +4,10 @@ package a620.shell
 /** Compatibility view over A620-ARS-1. */
 object AndroidShellProfile {
     const val Profile = "A620-ARS-1"
-    const val CandidateRevision = "rc3-baseline.7"
+    const val CandidateRevision = "rc3-baseline.8"
     const val WireContractVersion = "A620-TRC-1.1"
-    const val Status = "GATE_AB_RUNTIME_INGRESS_CANDIDATE_NOT_DEVICE_APPROVED"
-    const val ProfileSha256 = "ad5f742e1ec5b61f970737d117264e4194d7c907fe4d335d6031d6ba065d86a5"
+    const val Status = "GATE_AB_AUTHENTICATED_DURABLE_CONTROLLER_CANDIDATE_NOT_DEVICE_APPROVED"
+    const val ProfileSha256 = "6e994f0150cfae49ce5a5ad3480d1d2453febf6288ce2a07c1300479a81254fc"
 
     const val InlineCanonicalMaxBytes = 49152
     const val InlineDescriptorMaxBytes = 8192
@@ -46,4 +46,10 @@ object AndroidShellProfile {
     const val DeathOutcome = "INTERRUPTED"
     const val NewExecutionAttemptRequiredAfterDeath = true
     const val CallbackRegistrationTimeoutMs = 5000L
+    const val ChannelAuthProfile = "A620-ACS-1"
+    const val ChannelTokenBytes = 32
+    const val ChannelTokenChars = 64
+    const val ChannelTokenPersistsRaw = false
+    const val ChannelTokenRetainRawInMemoryForCallbacks = true
+    const val ChannelTokenConstantTimeCompare = true
 }

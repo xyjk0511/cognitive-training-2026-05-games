@@ -9,7 +9,9 @@ import a620.shell.OrderedIngressSequencer
 import java.io.ByteArrayOutputStream
 import java.security.MessageDigest
 import java.util.concurrent.ArrayBlockingQueue
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.RejectedExecutionException
+import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.ScheduledThreadPoolExecutor
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
@@ -18,26 +20,53 @@ import java.util.concurrent.atomic.AtomicBoolean
 /**
  * Strict ingress boundary shared by controller and training processes.
  *
- * Inline JSON is bounded and parsed on the Binder caller. Bulk PFD I/O happens
- * off the reducer actor. An ordered sequencer preserves original Binder ingress
- * order, so a fast later message cannot pass an earlier slow bulk payload.
+ * Every asynchronously prepared item retains both generation and channel token.
+ * The fence is checked at receipt, before parsing and again on the reducer actor.
+ * This is required because a new process binding may start a new token epoch and
+ * reset its local generation counter while an old bulk read is still pending.
  */
 class CanonicalIngressCoordinator(
     private val expectedSenderRole: String,
     private val actor: TrainingRuntimeActor,
     private val sink: RuntimeMessageSink,
-    private val requireLiveGeneration: (Long) -> Unit,
+    private val isLiveChannel: (Long, String) -> Boolean,
 ) {
+    private data class ChannelFence(val generation: Long, val token: String)
+
     private sealed interface PreparedIngress {
+        val messageId: String?
+        val fence: ChannelFence
+
         data class Valid(
             val envelope: RuntimeWireEnvelope,
             val canonicalJson: ByteArray,
-            val generation: Long,
+            override val fence: ChannelFence,
+        ) : PreparedIngress {
+            override val messageId: String = envelope.messageId
+        }
+
+        data class Invalid(
+            override val messageId: String?,
+            val reason: String,
+            override val fence: ChannelFence,
         ) : PreparedIngress
-        data class Invalid(val messageId: String?, val reason: String) : PreparedIngress
+
+        data class Stale(
+            override val messageId: String?,
+            val reason: String,
+            override val fence: ChannelFence,
+        ) : PreparedIngress
     }
 
+    private class BulkOperation(
+        val fd: ParcelFileDescriptor,
+        val lease: IngressBudget.Lease,
+        val finished: AtomicBoolean = AtomicBoolean(false),
+        @Volatile var timeout: ScheduledFuture<*>? = null,
+    )
+
     private val closed = AtomicBoolean(false)
+    private val inFlightBulk = ConcurrentHashMap<Long, BulkOperation>()
     private val orderedIngress = OrderedIngressSequencer<PreparedIngress>(
         maxPendingMessages = RuntimePolicy.ACTOR_QUEUE_MAX_MESSAGES + RuntimePolicy.MAX_INFLIGHT_BULK_MESSAGES,
         maxPendingBytes = RuntimePolicy.ACTOR_QUEUE_MAX_BYTES + RuntimePolicy.MAX_INFLIGHT_BULK_BYTES,
@@ -66,22 +95,25 @@ class CanonicalIngressCoordinator(
         canonicalJson: ByteArray,
         canonicalSha256: String,
         generation: Long,
+        channelToken: String,
     ) {
         check(!closed.get()) { "ingress coordinator is closed" }
-        requireLiveGeneration(generation)
+        val fence = liveFenceOrThrow(generation, channelToken)
         require(canonicalJson.size in 1..RuntimePolicy.INLINE_CANONICAL_MAX_BYTES)
         validateHashSyntax(canonicalSha256)
         val ownedBytes = canonicalJson.copyOf()
         val token = orderedIngress.register(ownedBytes.size)
-        val prepared = prepare(
-            declaredMessageType,
-            declaredMessageId,
-            declaredSenderSeq,
-            ownedBytes,
-            canonicalSha256,
-            generation,
+        completeOrdered(
+            token,
+            prepare(
+                declaredMessageType,
+                declaredMessageId,
+                declaredSenderSeq,
+                ownedBytes,
+                canonicalSha256,
+                fence,
+            ),
         )
-        completeOrdered(token, prepared)
     }
 
     fun submitBulk(
@@ -92,9 +124,10 @@ class CanonicalIngressCoordinator(
         byteLength: Long,
         canonicalSha256: String,
         generation: Long,
+        channelToken: String,
     ) {
         check(!closed.get()) { "ingress coordinator is closed" }
-        requireLiveGeneration(generation)
+        val fence = liveFenceOrThrow(generation, channelToken)
         require(byteLength in 1..RuntimePolicy.BULK_CANONICAL_MAX_BYTES.toLong())
         validateHashSyntax(canonicalSha256)
         val lease = bulkBudget.reserve(byteLength.toInt())
@@ -108,48 +141,52 @@ class CanonicalIngressCoordinator(
             ParcelFileDescriptor.dup(payloadFd.fileDescriptor)
         } catch (error: Throwable) {
             lease.close()
-            completeOrdered(token, PreparedIngress.Invalid(declaredMessageId, "BULK_FD_DUP_FAILED"))
+            completeOrdered(token, invalidOrStale(declaredMessageId, "BULK_FD_DUP_FAILED", fence))
             throw error
         }
-        val finished = AtomicBoolean(false)
-        val timeout = timeoutExecutor.schedule({
-            if (finished.compareAndSet(false, true)) {
-                try { ownedFd.close() } catch (_: Throwable) { }
-                lease.close()
-                completeOrdered(token, PreparedIngress.Invalid(declaredMessageId, "BULK_PAYLOAD_LEASE_EXPIRED"))
-            }
-        }, RuntimePolicy.BULK_READ_TIMEOUT_MS, TimeUnit.MILLISECONDS)
+        val operation = BulkOperation(ownedFd, lease)
+        inFlightBulk[token.ordinal] = operation
+        try {
+            operation.timeout = timeoutExecutor.schedule({
+                finishBulk(
+                    token,
+                    operation,
+                    invalidOrStale(declaredMessageId, "BULK_PAYLOAD_LEASE_EXPIRED", fence),
+                )
+            }, RuntimePolicy.BULK_READ_TIMEOUT_MS, TimeUnit.MILLISECONDS)
+        } catch (error: Throwable) {
+            finishBulk(token, operation, null)
+            throw error
+        }
 
         try {
             bulkExecutor.execute {
-                if (finished.get()) return@execute
+                if (operation.finished.get()) return@execute
                 val prepared = try {
-                    val bytes = ownedFd.use { readLimited(it, byteLength.toInt()) }
+                    val bytes = readLimited(ownedFd, byteLength.toInt())
                     prepare(
                         declaredMessageType,
                         declaredMessageId,
                         declaredSenderSeq,
                         bytes,
                         canonicalSha256,
-                        generation,
+                        fence,
                     )
                 } catch (error: Throwable) {
-                    PreparedIngress.Invalid(declaredMessageId, error.message ?: error::class.java.simpleName)
+                    invalidOrStale(
+                        declaredMessageId,
+                        error.message ?: error::class.java.simpleName,
+                        fence,
+                    )
                 }
-                if (finished.compareAndSet(false, true)) {
-                    timeout.cancel(false)
-                    lease.close()
-                    completeOrdered(token, prepared)
-                }
-                try { ownedFd.close() } catch (_: Throwable) { }
+                finishBulk(token, operation, prepared)
             }
         } catch (error: RejectedExecutionException) {
-            if (finished.compareAndSet(false, true)) {
-                timeout.cancel(false)
-                lease.close()
-                ownedFd.close()
-                completeOrdered(token, PreparedIngress.Invalid(declaredMessageId, "BULK_IO_QUEUE_SATURATED"))
-            }
+            finishBulk(
+                token,
+                operation,
+                invalidOrStale(declaredMessageId, "BULK_IO_QUEUE_SATURATED", fence),
+            )
             throw error
         }
     }
@@ -158,7 +195,28 @@ class CanonicalIngressCoordinator(
         if (!closed.compareAndSet(false, true)) return
         bulkExecutor.shutdownNow()
         timeoutExecutor.shutdownNow()
+        inFlightBulk.entries.toList().forEach { (ordinal, operation) ->
+            if (operation.finished.compareAndSet(false, true)) {
+                operation.timeout?.cancel(false)
+                closeQuietly(operation.fd)
+                operation.lease.close()
+                inFlightBulk.remove(ordinal, operation)
+            }
+        }
         orderedIngress.close()
+    }
+
+    private fun finishBulk(
+        token: OrderedIngressSequencer.Token,
+        operation: BulkOperation,
+        prepared: PreparedIngress?,
+    ) {
+        if (!operation.finished.compareAndSet(false, true)) return
+        operation.timeout?.cancel(false)
+        closeQuietly(operation.fd)
+        operation.lease.close()
+        inFlightBulk.remove(token.ordinal, operation)
+        if (prepared != null && !closed.get()) completeOrdered(token, prepared)
     }
 
     private fun prepare(
@@ -167,20 +225,22 @@ class CanonicalIngressCoordinator(
         declaredSenderSeq: Long,
         canonicalJson: ByteArray,
         canonicalSha256: String,
-        generation: Long,
-    ): PreparedIngress = try {
-        requireLiveGeneration(generation)
-        require(sha256Hex(canonicalJson) == canonicalSha256) { "canonical payload hash mismatch" }
-        val envelope = RuntimeWireEnvelopeParser.parseCanonical(
-            canonicalBytes = canonicalJson,
-            declaredMessageType = declaredMessageType,
-            declaredMessageId = declaredMessageId,
-            declaredSenderSeq = declaredSenderSeq,
-            expectedSenderRole = expectedSenderRole,
-        )
-        PreparedIngress.Valid(envelope, canonicalJson, generation)
-    } catch (error: Throwable) {
-        PreparedIngress.Invalid(declaredMessageId, error.message ?: error::class.java.simpleName)
+        fence: ChannelFence,
+    ): PreparedIngress {
+        if (!isLive(fence)) return PreparedIngress.Stale(declaredMessageId, "CHANNEL_ROTATED_BEFORE_PARSE", fence)
+        return try {
+            require(sha256Hex(canonicalJson) == canonicalSha256) { "canonical payload hash mismatch" }
+            val envelope = RuntimeWireEnvelopeParser.parseCanonical(
+                canonicalBytes = canonicalJson,
+                declaredMessageType = declaredMessageType,
+                declaredMessageId = declaredMessageId,
+                declaredSenderSeq = declaredSenderSeq,
+                expectedSenderRole = expectedSenderRole,
+            )
+            PreparedIngress.Valid(envelope, canonicalJson, fence)
+        } catch (error: Throwable) {
+            invalidOrStale(declaredMessageId, error.message ?: error::class.java.simpleName, fence)
+        }
     }
 
     private fun completeOrdered(
@@ -207,7 +267,10 @@ class CanonicalIngressCoordinator(
                 } else RuntimeIngressPriority.NORMAL
                 try {
                     actor.submit(priority, prepared.canonicalJson.size) {
-                        requireLiveGeneration(prepared.generation)
+                        if (!isLive(prepared.fence)) {
+                            sink.onStaleChannelMessage(prepared.messageId, "CHANNEL_ROTATED_BEFORE_REDUCER")
+                            return@submit
+                        }
                         sink.onCanonicalMessage(prepared.envelope, prepared.canonicalJson)
                     }
                 } catch (error: RejectedExecutionException) {
@@ -217,10 +280,30 @@ class CanonicalIngressCoordinator(
                 }
             }
             is PreparedIngress.Invalid -> actor.submit(RuntimeIngressPriority.URGENT, 1) {
-                sink.onProtocolViolation(prepared.messageId, prepared.reason.ifBlank { "PROTOCOL_VIOLATION" })
+                if (!isLive(prepared.fence)) {
+                    sink.onStaleChannelMessage(prepared.messageId, "CHANNEL_ROTATED_BEFORE_VIOLATION_COMMIT")
+                } else {
+                    sink.onProtocolViolation(prepared.messageId, prepared.reason.ifBlank { "PROTOCOL_VIOLATION" })
+                }
+            }
+            is PreparedIngress.Stale -> actor.submit(RuntimeIngressPriority.URGENT, 1) {
+                sink.onStaleChannelMessage(prepared.messageId, prepared.reason)
             }
         }
     }
+
+    private fun invalidOrStale(messageId: String?, reason: String, fence: ChannelFence): PreparedIngress =
+        if (isLive(fence)) PreparedIngress.Invalid(messageId, reason, fence)
+        else PreparedIngress.Stale(messageId, "STALE_CHANNEL:$reason", fence)
+
+    private fun liveFenceOrThrow(generation: Long, channelToken: String): ChannelFence {
+        val fence = ChannelFence(generation, channelToken)
+        require(isLive(fence)) { "stale or unauthenticated channel" }
+        return fence
+    }
+
+    private fun isLive(fence: ChannelFence): Boolean =
+        !closed.get() && isLiveChannel(fence.generation, fence.token)
 
     private fun readLimited(fd: ParcelFileDescriptor, declaredLength: Int): ByteArray {
         ParcelFileDescriptor.AutoCloseInputStream(fd).use { input ->
@@ -239,6 +322,10 @@ class CanonicalIngressCoordinator(
             require(total == declaredLength) { "bulk length mismatch" }
             return output.toByteArray()
         }
+    }
+
+    private fun closeQuietly(fd: ParcelFileDescriptor) {
+        try { fd.close() } catch (_: Throwable) { }
     }
 
     private fun validateHashSyntax(value: String) {

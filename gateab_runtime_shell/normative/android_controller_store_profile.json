@@ -1,0 +1,51 @@
+{
+  "profile": "A620-ACDS-1",
+  "candidateRevision": "rc3-baseline.8",
+  "schemaVersion": 4,
+  "status": "ANDROID_SQLITE_TRANSACTION_SCAFFOLD_NOT_DEVICE_APPROVED",
+  "databaseName": "a620-controller.db",
+  "singleActiveRuntimeGlobally": true,
+  "eventIdentity": {
+    "messageIdGloballyUnique": true,
+    "senderSequenceScopedByRuntimeAndSenderRole": true,
+    "lateTerminalMessagesGoToAuditOnly": true
+  },
+  "clockPolicy": {
+    "runtimeBoundaryClock": "UPTIME_MS_WITH_MONOTONIC_EPOCH",
+    "crossRebootRetryClock": "UTC_EPOCH_MS",
+    "neverCompareUptimeAcrossBootEpochs": true
+  },
+  "resultCommit": {
+    "singleSQLiteTransaction": true,
+    "steps": [
+      "RECONCILE_BATCH_EVIDENCE",
+      "INSERT_FORMAL_RESULT",
+      "INSERT_SYNC_QUEUE",
+      "WRITE_CONTROLLER_STATE",
+      "ENQUEUE_ACK_RESULT_COMMITTED",
+      "FINALIZE_RUNTIME"
+    ],
+    "formalResultAndExecutionOutcomeMutuallyExclusive": true,
+    "idempotentReplayReturnsFirstCommitFacts": true
+  },
+  "migration": {
+    "unknownNewerVersionFailsClosed": true,
+    "downgradeForbidden": true,
+    "activeRuntimeInterruptedOnBootEpochChange": true
+  },
+  "outboxDelivery": {
+    "claimClock": "UTC_EPOCH_MS",
+    "claimLeaseMs": 15000,
+    "maxClaimBatch": 16,
+    "fenceByOwnerAndClaimGeneration": true,
+    "retryUsesOriginalCanonicalBytes": true,
+    "retryUsesOriginalMessageIdAndSenderSeq": true,
+    "binderSubmissionFailureDoesNotRollbackCommittedFormalResult": true,
+    "corruptCanonicalOutboxEntryFailsClosed": true,
+    "dispatchPreservesSenderSequence": true,
+    "onlySmallestUnresolvedSenderSequenceCanBeClaimed": true,
+    "futureDueRowsScheduleWakeup": true,
+    "onewayBinderReturnIsTransportSubmissionOnly": true,
+    "exactResultReadyReplayRequeuesOriginalCommitAck": true
+  }
+}

@@ -9,6 +9,7 @@ oneway interface ITrainingRuntimeCallback {
         long senderSeq,
         in byte[] canonicalJson,
         String canonicalSha256,
+        String channelToken,
         long channelGeneration
     );
     void onBulkEvent(
@@ -18,7 +19,15 @@ oneway interface ITrainingRuntimeCallback {
         in ParcelFileDescriptor payloadFd,
         long byteLength,
         String canonicalSha256,
+        String channelToken,
         long channelGeneration
     );
-    void onRuntimeInterrupted(String runtimeSessionId, long executionAttempt, String reason, long observedAtUptimeMs);
+    void onRuntimeInterrupted(
+        String runtimeSessionId,
+        long executionAttempt,
+        String reason,
+        long observedAtUptimeMs,
+        String channelToken,
+        long channelGeneration
+    );
 }

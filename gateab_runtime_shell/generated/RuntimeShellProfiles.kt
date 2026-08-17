@@ -3,17 +3,26 @@ package a620.shell.generated
 
 object RuntimeShellProfiles {
     const val ANDROID_SHELL_PROFILE = "A620-ARS-1"
-    const val CANDIDATE_REVISION = "rc3-baseline.7"
+    const val CANDIDATE_REVISION = "rc3-baseline.8"
     const val WIRE_CONTRACT_VERSION = "A620-TRC-1.1"
     const val CONTROLLER_PROCESS = "com.a620.tablet"
     const val TRAINING_PROCESS_SUFFIX = ":training"
-    const val STATUS = "GATE_AB_RUNTIME_INGRESS_CANDIDATE_NOT_DEVICE_APPROVED"
+    const val STATUS = "GATE_AB_AUTHENTICATED_DURABLE_CONTROLLER_CANDIDATE_NOT_DEVICE_APPROVED"
     const val SERVICE_EXPORTED = false
     const val SAME_UID_REQUIRED = true
     const val AUTO_RESUME_AFTER_PROCESS_DEATH = false
     const val DEATH_OUTCOME = "INTERRUPTED"
     const val NEW_ATTEMPT_REQUIRED_AFTER_DEATH = true
     const val CALLBACK_REGISTRATION_TIMEOUT_MS: Long = 5000L
+    const val CHANNEL_AUTH_PROFILE = "A620-ACS-1"
+    const val CHANNEL_TOKEN_BYTES: Int = 32
+    const val CHANNEL_TOKEN_CHARS: Int = 64
+    const val CHANNEL_TOKEN_ENCODING = "LOWER_HEX"
+    const val CHANNEL_TOKEN_ON_EVERY_AIDL_CALL = true
+    const val CHANNEL_TOKEN_ON_EVERY_CALLBACK = true
+    const val CHANNEL_TOKEN_PERSISTS_RAW = false
+    const val CHANNEL_TOKEN_RETAIN_RAW_IN_MEMORY_FOR_CALLBACKS = true
+    const val CHANNEL_TOKEN_CONSTANT_TIME_COMPARE = true
     const val INLINE_CANONICAL_MAX_BYTES: Int = 49152
     const val INLINE_DESCRIPTOR_MAX_BYTES: Int = 8192
     const val BULK_CANONICAL_MAX_BYTES: Int = 2097152
@@ -46,6 +55,8 @@ object RuntimeShellProfiles {
     const val ANDROID_GRADLE_PLUGIN = "9.3.1"
     const val GRADLE = "9.5.0"
     const val JDK: Int = 17
+    const val JDK_MINIMUM: Int = 17
+    const val JDK_STUB_TESTED: Int = 21
     const val COMPILE_SDK: Int = 36
     const val TARGET_SDK: Int = 36
     const val MIN_SDK: Int = 30
@@ -59,8 +70,8 @@ object RuntimeShellProfiles {
     const val CRITICAL_RESERVE_BYTES_PER_RUNTIME: Int = 1048576
     const val RESULT_COMMIT_PROFILE = "A620-RCP-1"
 
-    const val ANDROID_PROFILE_SHA256 = "ad5f742e1ec5b61f970737d117264e4194d7c907fe4d335d6031d6ba065d86a5"
+    const val ANDROID_PROFILE_SHA256 = "6e994f0150cfae49ce5a5ad3480d1d2453febf6288ce2a07c1300479a81254fc"
     const val STORAGE_PROFILE_SHA256 = "a6a48e89a548f4ee27ec67c635e50116060fb1b663606d5a12be0b59f699eb58"
     const val RESULT_COMMIT_PROFILE_SHA256 = "9f530a96c2e3a4784aba3415068c4634ab0ae7350297753cfbe1422cb51cf325"
-    const val AGGREGATE_PROFILE_SHA256 = "2b99104f5581cd243bc7de523bdf8b7bb060a0a38eee7bd63d015429afdff5ca"
+    const val AGGREGATE_PROFILE_SHA256 = "b3b56b5d081e8a27c2e2d067867a3cc92e6e16de544e42ff35fb5f1bc23dab8e"
 }

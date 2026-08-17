@@ -4,7 +4,7 @@ package com.a620.tablet.training
 object RuntimePolicy {
     const val PROFILE = "A620-ARS-1"
     const val CONTRACT_VERSION = "A620-TRC-1.1"
-    const val PROFILE_SHA256 = "ad5f742e1ec5b61f970737d117264e4194d7c907fe4d335d6031d6ba065d86a5"
+    const val PROFILE_SHA256 = "6e994f0150cfae49ce5a5ad3480d1d2453febf6288ce2a07c1300479a81254fc"
     const val INLINE_CANONICAL_MAX_BYTES = 49152
     const val BULK_CANONICAL_MAX_BYTES = 2097152
     const val ACTOR_QUEUE_MAX_MESSAGES = 96
@@ -25,4 +25,12 @@ object RuntimePolicy {
     const val CANCEL_ACTIVE_STREAM_ON_BOUNDARY = true
     const val FORWARD_PLATFORM_CANCEL = true
     const val CALLBACK_REGISTRATION_TIMEOUT_MS = 5000L
+    const val CHANNEL_AUTH_PROFILE = "A620-ACS-1"
+    const val CHANNEL_TOKEN_BYTES = 32
+    const val CHANNEL_TOKEN_CHARS = 64
+    const val CHANNEL_TOKEN_PERSISTS_RAW = false
+    const val CHANNEL_TOKEN_RETAIN_RAW_IN_MEMORY_FOR_CALLBACKS = true
+    const val CHANNEL_TOKEN_CONSTANT_TIME_COMPARE = true
+    const val RECEIVER_CLOSES_INBOUND_PFD_AFTER_DUP = true
+    const val EXPOSE_RAW_AIDL_INTERFACE = false
 }

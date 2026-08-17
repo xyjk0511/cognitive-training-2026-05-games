@@ -1,8 +1,8 @@
 {
   "profile": "A620-ARS-1",
-  "candidateRevision": "rc3-baseline.7",
+  "candidateRevision": "rc3-baseline.8",
   "wireContractVersion": "A620-TRC-1.1",
-  "status": "GATE_AB_RUNTIME_INGRESS_CANDIDATE_NOT_DEVICE_APPROVED",
+  "status": "GATE_AB_AUTHENTICATED_DURABLE_CONTROLLER_CANDIDATE_NOT_DEVICE_APPROVED",
   "processIsolation": {
     "controllerProcess": "com.a620.tablet",
     "trainingProcessSuffix": ":training",
@@ -11,7 +11,22 @@
     "autoResumeAfterProcessDeath": false,
     "deathOutcome": "INTERRUPTED",
     "newExecutionAttemptRequiredAfterDeath": true,
-    "callbackRegistrationTimeoutMs": 5000
+    "callbackRegistrationTimeoutMs": 5000,
+    "channelAuthentication": {
+      "profile": "A620-ACS-1",
+      "controllerGenerated": true,
+      "tokenBytes": 32,
+      "tokenEncoding": "LOWER_HEX",
+      "tokenChars": 64,
+      "includeOnEveryAidlCall": true,
+      "includeOnEveryCallback": true,
+      "constantTimeComparison": true,
+      "regenerateOnEveryBinding": true,
+      "persistRawToken": false,
+      "securityBoundary": "DEFENSE_IN_DEPTH_INSIDE_SAME_UID",
+      "servicePersistsRawToken": false,
+      "serviceRetainsRawTokenInMemoryForCallbacks": true
+    }
   },
   "binder": {
     "inlineCanonicalMaxBytes": 49152,
@@ -53,7 +68,9 @@
     "droppableOnBackpressureMessageTypes": [
       "HEARTBEAT",
       "STATE_SNAPSHOT"
-    ]
+    ],
+    "receiverClosesInboundPfdAfterSynchronousDuplication": true,
+    "exposeRawAidlInterfaceToCallers": false
   },
   "inputGate": {
     "clockProfile": "A620-UPTIME-MS-1",
@@ -78,6 +95,8 @@
     "compileSdk": 36,
     "targetSdk": 36,
     "minSdk": 30,
-    "buildTools": "36.0.0"
+    "buildTools": "36.0.0",
+    "jdkMinimum": 17,
+    "jdkTestedByStub": 21
   }
 }

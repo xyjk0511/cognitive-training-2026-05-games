@@ -3,6 +3,7 @@ package android.os
 import java.io.Closeable
 import java.io.FileDescriptor
 import java.io.FileInputStream
+import java.io.FileOutputStream
 
 open class Bundle
 
@@ -17,13 +18,23 @@ open class Binder : IBinder {
 }
 
 class ParcelFileDescriptor(val fileDescriptor: FileDescriptor = FileDescriptor()) : Closeable {
-    companion object { fun dup(fd: FileDescriptor): ParcelFileDescriptor = ParcelFileDescriptor(fd) }
+    var isClosed: Boolean = false
+        private set
+    companion object {
+        fun dup(fd: FileDescriptor): ParcelFileDescriptor = ParcelFileDescriptor(fd)
+        fun createPipe(): Array<ParcelFileDescriptor> = arrayOf(ParcelFileDescriptor(), ParcelFileDescriptor())
+    }
     class AutoCloseInputStream(private val descriptor: ParcelFileDescriptor) : FileInputStream(descriptor.fileDescriptor) {
         override fun close() {
             try { super.close() } finally { descriptor.close() }
         }
     }
-    override fun close() = Unit
+    class AutoCloseOutputStream(private val descriptor: ParcelFileDescriptor) : FileOutputStream(descriptor.fileDescriptor) {
+        override fun close() {
+            try { super.close() } finally { descriptor.close() }
+        }
+    }
+    override fun close() { isClosed = true }
 }
 
 object SystemClock { fun uptimeMillis(): Long = 0L }

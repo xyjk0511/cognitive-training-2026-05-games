@@ -15,9 +15,9 @@ def load_profile() -> dict:
 def test_profile_budget_and_contract() -> None:
     p = load_profile()
     assert p["profile"] == "A620-ARS-1"
-    assert p["candidateRevision"] == "rc3-baseline.7"
+    assert p["candidateRevision"] == "rc3-baseline.8"
     assert p["wireContractVersion"] == "A620-TRC-1.1"
-    assert p["status"] == "GATE_AB_RUNTIME_INGRESS_CANDIDATE_NOT_DEVICE_APPROVED"
+    assert p["status"] == "GATE_AB_AUTHENTICATED_DURABLE_CONTROLLER_CANDIDATE_NOT_DEVICE_APPROVED"
     assert p["binder"]["inlineCanonicalMaxBytes"] == 49_152
     assert p["binder"]["inlineCanonicalMaxBytes"] < 64 * 1024
     assert p["binder"]["bulkCanonicalMaxBytes"] == 2 * 1024 * 1024
@@ -31,6 +31,20 @@ def test_profile_budget_and_contract() -> None:
     assert p["inputGate"]["cancelActiveStreamOnBoundary"] is True
 
 
+
+def test_channel_authentication_profile_is_fail_closed() -> None:
+    p = load_profile()["processIsolation"]["channelAuthentication"]
+    assert p["profile"] == "A620-ACS-1"
+    assert p["controllerGenerated"] is True
+    assert p["tokenBytes"] == 32 and p["tokenChars"] == 64
+    assert p["includeOnEveryAidlCall"] is True
+    assert p["includeOnEveryCallback"] is True
+    assert p["servicePersistsRawToken"] is False
+    assert p["serviceRetainsRawTokenInMemoryForCallbacks"] is True
+    assert p["constantTimeComparison"] is True
+    assert p["persistRawToken"] is False
+
+
 def test_process_death_never_auto_resumes() -> None:
     p = load_profile()["processIsolation"]
     assert p["trainingProcessSuffix"] == ":training"
@@ -42,15 +56,12 @@ def test_process_death_never_auto_resumes() -> None:
 
 def test_toolchain_is_explicit_but_not_claimed_as_built() -> None:
     p = load_profile()
-    assert p["toolchainCandidate"] == {
-        "androidGradlePlugin": "9.3.1",
-        "gradle": "9.5.0",
-        "jdk": 17,
-        "compileSdk": 36,
-        "targetSdk": 36,
-        "minSdk": 30,
-        "buildTools": "36.0.0",
-    }
+    toolchain = p["toolchainCandidate"]
+    assert toolchain["androidGradlePlugin"] == "9.3.1"
+    assert toolchain["gradle"] == "9.5.0"
+    assert toolchain["jdk"] == 17 and toolchain["jdkMinimum"] == 17
+    assert toolchain["compileSdk"] == 36 and toolchain["targetSdk"] == 36
+    assert toolchain["minSdk"] == 30 and toolchain["buildTools"] == "36.0.0"
     assert p["sourceScaffold"]["androidSdkBuildPerformed"] is False
     assert p["sourceScaffold"]["deviceApprovalPerformed"] is False
 

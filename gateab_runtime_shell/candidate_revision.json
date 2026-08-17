@@ -1,17 +1,26 @@
 {
   "contractVersion": "A620-TRC-1.1",
-  "implementationCandidateRevision": "rc3-baseline.7",
-  "inheritsWireBytesFrom": "rc3-baseline.6",
+  "implementationCandidateRevision": "rc3-baseline.8",
+  "inheritsWireBytesFrom": "rc3-baseline.7",
   "wireSemanticChange": false,
-  "status": "GATE_AB_RUNTIME_INGRESS_CANDIDATE_NOT_DEVICE_APPROVED",
   "scope": [
-    "strict_canonical_runtime_envelope_ingress",
-    "aidl_identity_cross_check",
-    "reserved_urgent_runtime_lane",
-    "off_actor_bulk_io_and_hash_validation",
-    "bounded_bulk_inflight_budget_and_timeout",
-    "touch_stream_cancel_on_boundary",
-    "controller_callback_ingress_hardening",
-    "android_toolchain_lock_and_sdk_build_preflight"
-  ]
+    "authenticated_same_uid_aidl_channel",
+    "constant_time_channel_token_validation",
+    "stale_binding_token_fencing",
+    "receiver_owned_pfd_lifecycle",
+    "bidirectional_inline_bulk_event_transport",
+    "strict_runtime_identity_and_sender_cursor_ledger",
+    "android_sqlite_controller_event_store",
+    "batch_evidence_and_result_commit_transaction",
+    "cross_reboot_retry_uses_utc_deadlines",
+    "raw_aidl_interface_hidden_behind_authenticated_client",
+    "jdk17_or_newer_android_toolchain_preflight",
+    "fenced_controller_ack_outbox_dispatcher",
+    "binder_failure_does_not_reclassify_committed_result",
+    "persistent_sender_uptime_cursor",
+    "exact_result_ready_replay_requeues_original_commit_ack",
+    "controller_outbox_strict_sender_sequence_order",
+    "future_due_outbox_wakeup"
+  ],
+  "status": "GATE_AB_AUTHENTICATED_DURABLE_CONTROLLER_CANDIDATE_NOT_DEVICE_APPROVED"
 }
