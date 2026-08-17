@@ -5,6 +5,7 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 OUT_DIR="${1:-/mnt/data}"
 DATE_TAG="${DATE_TAG:-20260817}"
 BASENAME="A620_Gate0_rc3_baseline2_${DATE_TAG}"
+EXPECTED_TAG="a620-trc-1.1-rc3-baseline.2"
 SOURCE_ZIP="$OUT_DIR/${BASENAME}_source.zip"
 BUNDLE="$OUT_DIR/${BASENAME}_source.git.bundle"
 PACKAGE_ZIP="$OUT_DIR/${BASENAME}_sample_training_packages.zip"
@@ -92,8 +93,12 @@ PY
 
 COMMIT="$(cd "$ROOT" && git rev-parse HEAD)"
 BRANCH="$(cd "$ROOT" && git branch --show-current)"
-TAG="$(cd "$ROOT" && git describe --tags --exact-match 2>/dev/null || true)"
-[[ -n "$TAG" ]] || TAG="(no exact tag)"
+TAG="$EXPECTED_TAG"
+TAG_COMMIT="$(cd "$ROOT" && git rev-list -n 1 "$TAG" 2>/dev/null || true)"
+if [[ "$TAG_COMMIT" != "$COMMIT" ]]; then
+    echo "Expected delivery tag $TAG does not point to current commit $COMMIT." >&2
+    exit 1
+fi
 
 VERIFY_DIR="$(mktemp -d)"
 trap 'rm -rf "$VERIFY_DIR"' EXIT
