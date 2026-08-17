@@ -18,6 +18,7 @@ SOURCE_MARKER="$STATE_DIR/source-verified.json"
 BUNDLE_CORE_MARKER="$STATE_DIR/bundle-core.json"
 BUNDLE_KOTLIN_MARKER="$STATE_DIR/bundle-kotlin.json"
 BUNDLE_MARKER="$STATE_DIR/bundle-verified.json"
+CORE_TESTS_MARKER="$STATE_DIR/core-tests.json"
 TESTS_MARKER="$STATE_DIR/tests.json"
 PACKAGES_MARKER="$STATE_DIR/packages.json"
 SOURCE_VERIFY_LOG="$STATE_DIR/source-verify.log"
@@ -103,14 +104,20 @@ PY
 }
 
 case "$STAGE" in
-prepare-tests)
+prepare-core)
     rm -rf "$STATE_DIR"; mkdir -p "$STATE_DIR"; : > "$RAW_TEST_LOG"
     run_logged "$RAW_TEST_LOG" BOOTSTRAP "$ROOT/scripts/bootstrap_vectors.sh"
     run_logged "$RAW_TEST_LOG" PYTHON "$ROOT/scripts/test_python.sh"
     run_logged "$RAW_TEST_LOG" TYPESCRIPT "$ROOT/scripts/test_typescript.sh"
+    write_marker "$CORE_TESTS_MARKER" commit "$(cd "$ROOT" && git rev-parse HEAD)" rawLogSha256 "$(sha256_file "$RAW_TEST_LOG")"
+    echo "DELIVERY_PREPARE_CORE_PASS"
+    ;;
+prepare-kotlin)
+    require_file "$CORE_TESTS_MARKER"
+    [[ "$(read_json_field "$CORE_TESTS_MARKER" commit)" == "$(cd "$ROOT" && git rev-parse HEAD)" ]] || { echo "HEAD changed after prepare-core." >&2; exit 1; }
     run_logged "$RAW_TEST_LOG" KOTLIN "$ROOT/scripts/test_kotlin.sh"
     write_marker "$TESTS_MARKER" commit "$(cd "$ROOT" && git rev-parse HEAD)" rawLogSha256 "$(sha256_file "$RAW_TEST_LOG")"
-    echo "DELIVERY_PREPARE_TESTS_PASS"
+    echo "DELIVERY_PREPARE_KOTLIN_PASS"
     ;;
 prepare-packages)
     require_file "$TESTS_MARKER"
@@ -284,5 +291,5 @@ PY
     unzip -t "$SOURCE_ZIP" >/dev/null; unzip -t "$PACKAGE_ZIP" >/dev/null; unzip -t "$COMPLETE_ZIP" >/dev/null
     printf '%s\n' "$COMPLETE_ZIP" "$SOURCE_ZIP" "$BUNDLE" "$PACKAGE_ZIP" "$DELIVERY_MANIFEST" "$ALL_CHECKSUMS"
     ;;
-*) echo "Usage: $0 [out_dir] {prepare-tests|prepare-packages|prepare-artifacts|verify-source-core|verify-source-kotlin|verify-source-tpkg|verify-bundle-core|verify-bundle-kotlin|verify-bundle-tpkg|assemble}" >&2; exit 2 ;;
+*) echo "Usage: $0 [out_dir] {prepare-core|prepare-kotlin|prepare-packages|prepare-artifacts|verify-source-core|verify-source-kotlin|verify-source-tpkg|verify-bundle-core|verify-bundle-kotlin|verify-bundle-tpkg|assemble}" >&2; exit 2 ;;
 esac
