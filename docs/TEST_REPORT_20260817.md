@@ -11,7 +11,7 @@
 - Python：22 项结构、语义、状态机、批次证据、SQLite 事务和训练包安全测试通过；
 - TypeScript：规范化 JSON 与公共状态机测试通过；
 - Kotlin/JVM：规范化 JSON、状态机和批次账本测试通过；
-- `.tpkg`：两份空插件样例包完成构建、Ed25519 签名验证、文件哈希和归档安全校验；
+- `.tpkg`：两份空插件样例包完成确定性构建、Ed25519 签名验证、文件哈希和归档安全校验；
 - 正常完成、暂停后完成、管理端终止、同毫秒终止优先和运行故障均有合法终局；
 - 缺少 `COMMAND_ACCEPTED`、READY/STARTED 回显错误、运行中直接 RESULT_READY、批次替换、ACK 哈希错误、发送时钟倒退、HEARTBEAT 谎报状态和 QUERY_STATE 无响应均被拒绝。
 

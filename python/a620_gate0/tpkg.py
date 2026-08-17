@@ -17,6 +17,8 @@ MAX_ENTRIES = 4096
 MAX_TOTAL_UNCOMPRESSED = 512 * 1024 * 1024
 MAX_FILE_UNCOMPRESSED = 128 * 1024 * 1024
 MAX_COMPRESSION_RATIO = 100
+FIXED_ZIP_TIMESTAMP = (1980, 1, 1, 0, 0, 0)
+
 
 class TpkgError(ValueError):
     pass
@@ -53,6 +55,14 @@ def _is_regular(info: zipfile.ZipInfo) -> bool:
     file_type = stat.S_IFMT(mode)
     return file_type in {0, stat.S_IFREG}
 
+def _deterministic_zip_info(name: str) -> zipfile.ZipInfo:
+    info = zipfile.ZipInfo(name, date_time=FIXED_ZIP_TIMESTAMP)
+    info.compress_type = zipfile.ZIP_DEFLATED
+    info.create_system = 3
+    info.external_attr = (stat.S_IFREG | 0o644) << 16
+    info.flag_bits |= 0x800
+    return info
+
 def _content_tree(files: list[dict[str, Any]]) -> str:
     projection = [{"path": f["path"], "sizeBytes": f["sizeBytes"], "sha256": f["sha256"]} for f in sorted(files, key=lambda x: x["path"])]
     return canonical_sha256(projection)
@@ -83,10 +93,15 @@ def build_tpkg(source_dir: Path, output_path: Path, manifest_base: dict[str, Any
     }
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(output_path, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as zf:
-        zf.writestr("manifest.json", manifest_bytes)
-        zf.writestr("manifest.sig.json", canonical_bytes(signature_record))
+        zf.writestr(_deterministic_zip_info("manifest.json"), manifest_bytes, compresslevel=9)
+        zf.writestr(
+            _deterministic_zip_info("manifest.sig.json"),
+            canonical_bytes(signature_record),
+            compresslevel=9,
+        )
         for entry in content_files:
-            zf.write(source_dir / entry["path"], entry["path"])
+            data = (source_dir / entry["path"]).read_bytes()
+            zf.writestr(_deterministic_zip_info(entry["path"]), data, compresslevel=9)
     return manifest
 
 def validate_tpkg(path: Path, trust_store: dict[str, str]) -> dict[str, Any]:

@@ -34,6 +34,14 @@ excluded_dirs = {
 }
 excluded_suffixes = {".pyc", ".jar", ".class", ".tpkg", ".tmp"}
 
+def zip_info(name: str, compression: int) -> zipfile.ZipInfo:
+    info = zipfile.ZipInfo(name, date_time=(1980, 1, 1, 0, 0, 0))
+    info.compress_type = compression
+    info.create_system = 3
+    info.external_attr = (0o100644 << 16)
+    info.flag_bits |= 0x800
+    return info
+
 with zipfile.ZipFile(out, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as zf:
     for path in sorted(root.rglob("*")):
         if not path.is_file():
@@ -43,7 +51,8 @@ with zipfile.ZipFile(out, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9
             continue
         if path.suffix in excluded_suffixes:
             continue
-        zf.write(path, Path(prefix) / rel)
+        archive_name = (Path(prefix) / rel).as_posix()
+        zf.writestr(zip_info(archive_name, zipfile.ZIP_DEFLATED), path.read_bytes(), compresslevel=9)
 PY
 
 (
@@ -63,9 +72,17 @@ packages = [
     root / "build/packages/catch-light-gate0.tpkg",
     root / "build/packages/signal-station-gate0.tpkg",
 ]
+def zip_info(name: str) -> zipfile.ZipInfo:
+    info = zipfile.ZipInfo(name, date_time=(1980, 1, 1, 0, 0, 0))
+    info.compress_type = zipfile.ZIP_STORED
+    info.create_system = 3
+    info.external_attr = (0o100644 << 16)
+    info.flag_bits |= 0x800
+    return info
+
 with zipfile.ZipFile(out, "w", compression=zipfile.ZIP_STORED) as zf:
     for package in packages:
-        zf.write(package, package.name)
+        zf.writestr(zip_info(package.name), package.read_bytes())
 PY
 
 sha256sum \

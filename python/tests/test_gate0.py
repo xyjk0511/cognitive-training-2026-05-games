@@ -49,6 +49,10 @@ def test_tpkg_roundtrip_and_attacks(tmp_path):
     pkg=tmp_path/'ok.tpkg'; build_tpkg(src,pkg,manifest,private)
     valid=validate_tpkg(pkg,trust); assert valid['gameCode']=='CATCH_LIGHT'
 
+    # The same source and manifest must produce byte-identical archives.
+    pkg2=tmp_path/'ok-2.tpkg'; build_tpkg(src,pkg2,manifest,private)
+    assert pkg.read_bytes() == pkg2.read_bytes()
+
     # Duplicate entry attack.
     dup=tmp_path/'dup.tpkg'
     with zipfile.ZipFile(pkg) as zsrc, zipfile.ZipFile(dup,'w') as zout:

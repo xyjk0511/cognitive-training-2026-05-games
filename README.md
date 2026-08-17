@@ -32,6 +32,7 @@
 5. Kotlin 编译和状态机测试；
 6. Python / TypeScript / Kotlin 规范化 JSON golden vectors；
 7. 实际 `.tpkg` 文件清单、路径、哈希、签名和压缩安全校验。
+8. 相同输入生成字节一致的 `.tpkg` 与交付 ZIP。
 
 ## 版本约定
 
