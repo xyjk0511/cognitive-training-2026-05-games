@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:a620:training-package-manifest:1.1",
+  "title": "A620 Training Package Manifest 1.1",
+  "type": "object",
+  "required": [
+    "manifestVersion",
+    "gameCode",
+    "packageVersion",
+    "runtimeContractVersion",
+    "coreProtocolVersion",
+    "resultSchemaVersion",
+    "generatorVersion",
+    "entryBundle",
+    "entryScene",
+    "minApkVersionInclusive",
+    "maxApkVersionExclusive",
+    "cocosVersion",
+    "releaseSequence",
+    "files",
+    "contentTreeSha256",
+    "signatureProfile",
+    "signingKeyId"
+  ],
+  "properties": {
+    "manifestVersion": {
+      "const": "A620-TPM-1.1"
+    },
+    "gameCode": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "packageVersion": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+    },
+    "runtimeContractVersion": {
+      "const": "A620-TRC-1.1"
+    },
+    "coreProtocolVersion": {
+      "type": "string",
+      "minLength": 1
+    },
+    "resultSchemaVersion": {
+      "const": "A620-TRR-1.1"
+    },
+    "generatorVersion": {
+      "type": "string",
+      "minLength": 1
+    },
+    "entryBundle": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "entryScene": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "minApkVersionInclusive": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+    },
+    "maxApkVersionExclusive": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+    },
+    "cocosVersion": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+    },
+    "releaseSequence": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "files": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 4096,
+      "items": {
+        "type": "object",
+        "required": [
+          "path",
+          "sizeBytes",
+          "sha256"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "sizeBytes": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "contentTreeSha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "signatureProfile": {
+      "const": "A620-ED25519-1"
+    },
+    "signingKeyId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    }
+  },
+  "additionalProperties": false
+}

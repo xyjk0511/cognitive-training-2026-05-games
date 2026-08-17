@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:a620:training-execution-outcome:1.1",
+  "title": "A620 Training Execution Outcome 1.1",
+  "type": "object",
+  "required": [
+    "recordVersion",
+    "systemId",
+    "deviceId",
+    "taskId",
+    "taskItemId",
+    "executionAttempt",
+    "runtimeSessionId",
+    "gameCode",
+    "contractVersion",
+    "completionState",
+    "reasonCode",
+    "activeElapsedMs",
+    "recordedAtUtc",
+    "recordedAtUptimeMs",
+    "auditSnapshot"
+  ],
+  "properties": {
+    "recordVersion": {
+      "const": "A620-TEO-1.1"
+    },
+    "systemId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "deviceId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "taskId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "taskItemId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "executionAttempt": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "runtimeSessionId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "gameCode": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "contractVersion": {
+      "const": "A620-TRC-1.1"
+    },
+    "completionState": {
+      "enum": [
+        "INTERRUPTED",
+        "DISCARDED"
+      ]
+    },
+    "reasonCode": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "activeElapsedMs": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 300000
+    },
+    "recordedAtUtc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "recordedAtUptimeMs": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "auditSnapshot": {
+      "type": "object",
+      "maxProperties": 256
+    }
+  },
+  "additionalProperties": false
+}

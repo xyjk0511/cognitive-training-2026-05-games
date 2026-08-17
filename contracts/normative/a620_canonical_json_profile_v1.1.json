@@ -1,0 +1,29 @@
+{
+  "profileId": "A620-JCS-1",
+  "basis": "RFC 8785 compatible restricted profile",
+  "encoding": "UTF-8",
+  "allowedJsonTypes": [
+    "null",
+    "boolean",
+    "string",
+    "safe-integer",
+    "array",
+    "object"
+  ],
+  "safeIntegerRange": {
+    "minimum": -9007199254740991,
+    "maximum": 9007199254740991
+  },
+  "forbidden": [
+    "floating-point",
+    "NaN",
+    "Infinity",
+    "negative-zero",
+    "duplicate-object-keys"
+  ],
+  "objectKeyOrder": "lexicographic order of UTF-16 code units",
+  "arrayOrder": "preserved",
+  "missingVsNull": "different",
+  "stringNormalization": "none; input strings are not Unicode-normalized",
+  "signatureProjection": "signature bytes/value field is excluded by the owning profile before canonicalization"
+}

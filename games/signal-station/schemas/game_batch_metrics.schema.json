@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "H",
+    "T",
+    "F",
+    "D"
+  ],
+  "properties": {
+    "H": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000
+    },
+    "T": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000
+    },
+    "F": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000
+    },
+    "D": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000
+    }
+  },
+  "additionalProperties": false,
+  "$id": "urn:a620:signal-station:batch-metrics:1.2.1",
+  "title": "Signal Station Batch Metrics 1.2.1"
+}

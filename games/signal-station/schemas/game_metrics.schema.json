@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:a620:signal-station:game-metrics:gate0",
+  "title": "SIGNAL_STATION Gate0 Session Metrics",
+  "type": "object",
+  "properties": {
+    "totalTouches": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000000
+    }
+  },
+  "additionalProperties": true,
+  "maxProperties": 64
+}

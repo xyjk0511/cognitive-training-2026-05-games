@@ -1,0 +1,2822 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:a620:training-runtime-message:1.1",
+  "title": "A620 Training Runtime Message 1.1",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": [
+        "contractVersion",
+        "messageType",
+        "messageId",
+        "correlationId",
+        "senderRole",
+        "senderSeq",
+        "sentAtUtc",
+        "sentAtUptimeMs",
+        "monotonicEpochId",
+        "systemId",
+        "deviceId",
+        "taskId",
+        "taskItemId",
+        "executionAttempt",
+        "runtimeSessionId",
+        "packageVersion",
+        "coreProtocolVersion",
+        "payload"
+      ],
+      "properties": {
+        "contractVersion": {
+          "const": "A620-TRC-1.1"
+        },
+        "messageType": {
+          "const": "PREPARE"
+        },
+        "messageId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "correlationId": {
+          "type": "null"
+        },
+        "senderRole": {
+          "const": "ANDROID_CONTROLLER"
+        },
+        "senderSeq": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "sentAtUtc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "sentAtUptimeMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "monotonicEpochId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "systemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "deviceId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskItemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "executionAttempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "runtimeSessionId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "packageVersion": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+        },
+        "coreProtocolVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "payload": {
+          "type": "object",
+          "required": [
+            "clockProfile",
+            "durationMs",
+            "sessionSeed",
+            "sessionStartLevel",
+            "designMaxLevel",
+            "plannedBatchCount",
+            "runtimeConfigHash",
+            "scoringRuleVersion",
+            "resultSchemaVersion",
+            "generatorVersion",
+            "gameCode",
+            "gameConfigSchemaId",
+            "gameConfig"
+          ],
+          "properties": {
+            "clockProfile": {
+              "const": "A620-UPTIME-MS-1"
+            },
+            "durationMs": {
+              "const": 300000
+            },
+            "sessionSeed": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295
+            },
+            "sessionStartLevel": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "designMaxLevel": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "plannedBatchCount": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "runtimeConfigHash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "scoringRuleVersion": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "resultSchemaVersion": {
+              "const": "A620-TRR-1.1"
+            },
+            "generatorVersion": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "gameCode": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            },
+            "gameConfigSchemaId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "gameConfig": {
+              "type": "object",
+              "maxProperties": 256
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "contractVersion",
+        "messageType",
+        "messageId",
+        "correlationId",
+        "senderRole",
+        "senderSeq",
+        "sentAtUtc",
+        "sentAtUptimeMs",
+        "monotonicEpochId",
+        "systemId",
+        "deviceId",
+        "taskId",
+        "taskItemId",
+        "executionAttempt",
+        "runtimeSessionId",
+        "packageVersion",
+        "coreProtocolVersion",
+        "payload"
+      ],
+      "properties": {
+        "contractVersion": {
+          "const": "A620-TRC-1.1"
+        },
+        "messageType": {
+          "const": "START"
+        },
+        "messageId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "correlationId": {
+          "type": "null"
+        },
+        "senderRole": {
+          "const": "ANDROID_CONTROLLER"
+        },
+        "senderSeq": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "sentAtUtc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "sentAtUptimeMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "monotonicEpochId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "systemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "deviceId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskItemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "executionAttempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "runtimeSessionId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "packageVersion": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+        },
+        "coreProtocolVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "payload": {
+          "type": "object",
+          "required": [
+            "effectiveStartUptimeMs",
+            "cutoffUptimeMs",
+            "activeElapsedMs",
+            "clockRevision",
+            "commandLeadTimeMs"
+          ],
+          "properties": {
+            "effectiveStartUptimeMs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "cutoffUptimeMs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "activeElapsedMs": {
+              "const": 0
+            },
+            "clockRevision": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "commandLeadTimeMs": {
+              "type": "integer",
+              "minimum": 500,
+              "maximum": 10000
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "contractVersion",
+        "messageType",
+        "messageId",
+        "correlationId",
+        "senderRole",
+        "senderSeq",
+        "sentAtUtc",
+        "sentAtUptimeMs",
+        "monotonicEpochId",
+        "systemId",
+        "deviceId",
+        "taskId",
+        "taskItemId",
+        "executionAttempt",
+        "runtimeSessionId",
+        "packageVersion",
+        "coreProtocolVersion",
+        "payload"
+      ],
+      "properties": {
+        "contractVersion": {
+          "const": "A620-TRC-1.1"
+        },
+        "messageType": {
+          "const": "PAUSE"
+        },
+        "messageId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "correlationId": {
+          "type": "null"
+        },
+        "senderRole": {
+          "const": "ANDROID_CONTROLLER"
+        },
+        "senderSeq": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "sentAtUtc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "sentAtUptimeMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "monotonicEpochId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "systemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "deviceId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskItemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "executionAttempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "runtimeSessionId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "packageVersion": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+        },
+        "coreProtocolVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "payload": {
+          "type": "object",
+          "required": [
+            "effectivePauseUptimeMs",
+            "activeElapsedMs",
+            "clockRevision",
+            "pauseLeadTimeMs",
+            "reasonCode"
+          ],
+          "properties": {
+            "effectivePauseUptimeMs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "activeElapsedMs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "clockRevision": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "pauseLeadTimeMs": {
+              "type": "integer",
+              "minimum": 300,
+              "maximum": 10000
+            },
+            "reasonCode": {
+              "enum": [
+                "THERAPIST_PAUSE",
+                "CONTROLLER_GUARD"
+              ]
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "contractVersion",
+        "messageType",
+        "messageId",
+        "correlationId",
+        "senderRole",
+        "senderSeq",
+        "sentAtUtc",
+        "sentAtUptimeMs",
+        "monotonicEpochId",
+        "systemId",
+        "deviceId",
+        "taskId",
+        "taskItemId",
+        "executionAttempt",
+        "runtimeSessionId",
+        "packageVersion",
+        "coreProtocolVersion",
+        "payload"
+      ],
+      "properties": {
+        "contractVersion": {
+          "const": "A620-TRC-1.1"
+        },
+        "messageType": {
+          "const": "RESUME"
+        },
+        "messageId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "correlationId": {
+          "type": "null"
+        },
+        "senderRole": {
+          "const": "ANDROID_CONTROLLER"
+        },
+        "senderSeq": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "sentAtUtc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "sentAtUptimeMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "monotonicEpochId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "systemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "deviceId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskItemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "executionAttempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "runtimeSessionId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "packageVersion": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+        },
+        "coreProtocolVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "payload": {
+          "type": "object",
+          "required": [
+            "countdownMs",
+            "resumeInputEnabledUptimeMs",
+            "cutoffUptimeMs",
+            "activeElapsedMs",
+            "clockRevision"
+          ],
+          "properties": {
+            "countdownMs": {
+              "const": 3000
+            },
+            "resumeInputEnabledUptimeMs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "cutoffUptimeMs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "activeElapsedMs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "clockRevision": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "contractVersion",
+        "messageType",
+        "messageId",
+        "correlationId",
+        "senderRole",
+        "senderSeq",
+        "sentAtUtc",
+        "sentAtUptimeMs",
+        "monotonicEpochId",
+        "systemId",
+        "deviceId",
+        "taskId",
+        "taskItemId",
+        "executionAttempt",
+        "runtimeSessionId",
+        "packageVersion",
+        "coreProtocolVersion",
+        "payload"
+      ],
+      "properties": {
+        "contractVersion": {
+          "const": "A620-TRC-1.1"
+        },
+        "messageType": {
+          "const": "DEADLINE"
+        },
+        "messageId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "correlationId": {
+          "type": "null"
+        },
+        "senderRole": {
+          "const": "ANDROID_CONTROLLER"
+        },
+        "senderSeq": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "sentAtUtc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "sentAtUptimeMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "monotonicEpochId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "systemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "deviceId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskItemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "executionAttempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "runtimeSessionId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "packageVersion": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+        },
+        "coreProtocolVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "payload": {
+          "type": "object",
+          "required": [
+            "cutoffUptimeMs",
+            "activeElapsedMs",
+            "clockRevision"
+          ],
+          "properties": {
+            "cutoffUptimeMs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "activeElapsedMs": {
+              "const": 300000
+            },
+            "clockRevision": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "contractVersion",
+        "messageType",
+        "messageId",
+        "correlationId",
+        "senderRole",
+        "senderSeq",
+        "sentAtUtc",
+        "sentAtUptimeMs",
+        "monotonicEpochId",
+        "systemId",
+        "deviceId",
+        "taskId",
+        "taskItemId",
+        "executionAttempt",
+        "runtimeSessionId",
+        "packageVersion",
+        "coreProtocolVersion",
+        "payload"
+      ],
+      "properties": {
+        "contractVersion": {
+          "const": "A620-TRC-1.1"
+        },
+        "messageType": {
+          "const": "TERMINATE"
+        },
+        "messageId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "correlationId": {
+          "type": "null"
+        },
+        "senderRole": {
+          "const": "ANDROID_CONTROLLER"
+        },
+        "senderSeq": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "sentAtUtc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "sentAtUptimeMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "monotonicEpochId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "systemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "deviceId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskItemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "executionAttempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "runtimeSessionId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "packageVersion": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+        },
+        "coreProtocolVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "payload": {
+          "type": "object",
+          "required": [
+            "effectiveTerminateUptimeMs",
+            "clockRevision",
+            "reasonCode"
+          ],
+          "properties": {
+            "effectiveTerminateUptimeMs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "clockRevision": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "reasonCode": {
+              "enum": [
+                "MANAGER_TERMINATE",
+                "TASK_REVOKED",
+                "DEVICE_UNBOUND",
+                "CONTROLLER_ABORT"
+              ]
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "contractVersion",
+        "messageType",
+        "messageId",
+        "correlationId",
+        "senderRole",
+        "senderSeq",
+        "sentAtUtc",
+        "sentAtUptimeMs",
+        "monotonicEpochId",
+        "systemId",
+        "deviceId",
+        "taskId",
+        "taskItemId",
+        "executionAttempt",
+        "runtimeSessionId",
+        "packageVersion",
+        "coreProtocolVersion",
+        "payload"
+      ],
+      "properties": {
+        "contractVersion": {
+          "const": "A620-TRC-1.1"
+        },
+        "messageType": {
+          "const": "QUERY_STATE"
+        },
+        "messageId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "correlationId": {
+          "type": "null"
+        },
+        "senderRole": {
+          "const": "ANDROID_CONTROLLER"
+        },
+        "senderSeq": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "sentAtUtc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "sentAtUptimeMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "monotonicEpochId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "systemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "deviceId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskItemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "executionAttempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "runtimeSessionId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "packageVersion": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+        },
+        "coreProtocolVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "payload": {
+          "type": "object",
+          "maxProperties": 0,
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "contractVersion",
+        "messageType",
+        "messageId",
+        "correlationId",
+        "senderRole",
+        "senderSeq",
+        "sentAtUtc",
+        "sentAtUptimeMs",
+        "monotonicEpochId",
+        "systemId",
+        "deviceId",
+        "taskId",
+        "taskItemId",
+        "executionAttempt",
+        "runtimeSessionId",
+        "packageVersion",
+        "coreProtocolVersion",
+        "payload"
+      ],
+      "properties": {
+        "contractVersion": {
+          "const": "A620-TRC-1.1"
+        },
+        "messageType": {
+          "const": "ACK_RESULT_COMMITTED"
+        },
+        "messageId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "correlationId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "senderRole": {
+          "const": "ANDROID_CONTROLLER"
+        },
+        "senderSeq": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "sentAtUtc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "sentAtUptimeMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "monotonicEpochId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "systemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "deviceId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskItemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "executionAttempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "runtimeSessionId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "packageVersion": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+        },
+        "coreProtocolVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "payload": {
+          "type": "object",
+          "required": [
+            "resultId",
+            "resultPayloadSha256",
+            "committedAtUtc",
+            "committedAtUptimeMs"
+          ],
+          "properties": {
+            "resultId": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            },
+            "resultPayloadSha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "committedAtUtc": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "committedAtUptimeMs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "contractVersion",
+        "messageType",
+        "messageId",
+        "correlationId",
+        "senderRole",
+        "senderSeq",
+        "sentAtUtc",
+        "sentAtUptimeMs",
+        "monotonicEpochId",
+        "systemId",
+        "deviceId",
+        "taskId",
+        "taskItemId",
+        "executionAttempt",
+        "runtimeSessionId",
+        "packageVersion",
+        "coreProtocolVersion",
+        "payload"
+      ],
+      "properties": {
+        "contractVersion": {
+          "const": "A620-TRC-1.1"
+        },
+        "messageType": {
+          "const": "READY"
+        },
+        "messageId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "correlationId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "senderRole": {
+          "const": "COCOS_RUNTIME"
+        },
+        "senderSeq": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "sentAtUtc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "sentAtUptimeMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "monotonicEpochId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "systemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "deviceId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskItemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "executionAttempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "runtimeSessionId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "packageVersion": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+        },
+        "coreProtocolVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "payload": {
+          "type": "object",
+          "required": [
+            "runtimeConfigHash",
+            "plannedBatchCount",
+            "runtimeState"
+          ],
+          "properties": {
+            "runtimeConfigHash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "plannedBatchCount": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "runtimeState": {
+              "const": "READY"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "contractVersion",
+        "messageType",
+        "messageId",
+        "correlationId",
+        "senderRole",
+        "senderSeq",
+        "sentAtUtc",
+        "sentAtUptimeMs",
+        "monotonicEpochId",
+        "systemId",
+        "deviceId",
+        "taskId",
+        "taskItemId",
+        "executionAttempt",
+        "runtimeSessionId",
+        "packageVersion",
+        "coreProtocolVersion",
+        "payload"
+      ],
+      "properties": {
+        "contractVersion": {
+          "const": "A620-TRC-1.1"
+        },
+        "messageType": {
+          "const": "COMMAND_ACCEPTED"
+        },
+        "messageId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "correlationId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "senderRole": {
+          "const": "COCOS_RUNTIME"
+        },
+        "senderSeq": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "sentAtUtc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "sentAtUptimeMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "monotonicEpochId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "systemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "deviceId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskItemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "executionAttempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "runtimeSessionId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "packageVersion": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+        },
+        "coreProtocolVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "payload": {
+          "type": "object",
+          "required": [
+            "acceptedMessageType",
+            "effectiveAtUptimeMs",
+            "runtimeState",
+            "clockRevision"
+          ],
+          "properties": {
+            "acceptedMessageType": {
+              "enum": [
+                "START",
+                "PAUSE",
+                "RESUME",
+                "TERMINATE"
+              ]
+            },
+            "effectiveAtUptimeMs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "runtimeState": {
+              "enum": [
+                "START_SCHEDULED",
+                "PAUSE_SCHEDULED",
+                "RESUME_SCHEDULED",
+                "TERMINATING"
+              ]
+            },
+            "clockRevision": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "contractVersion",
+        "messageType",
+        "messageId",
+        "correlationId",
+        "senderRole",
+        "senderSeq",
+        "sentAtUtc",
+        "sentAtUptimeMs",
+        "monotonicEpochId",
+        "systemId",
+        "deviceId",
+        "taskId",
+        "taskItemId",
+        "executionAttempt",
+        "runtimeSessionId",
+        "packageVersion",
+        "coreProtocolVersion",
+        "payload"
+      ],
+      "properties": {
+        "contractVersion": {
+          "const": "A620-TRC-1.1"
+        },
+        "messageType": {
+          "const": "STARTED"
+        },
+        "messageId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "correlationId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "senderRole": {
+          "const": "COCOS_RUNTIME"
+        },
+        "senderSeq": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "sentAtUtc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "sentAtUptimeMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "monotonicEpochId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "systemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "deviceId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskItemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "executionAttempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "runtimeSessionId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "packageVersion": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+        },
+        "coreProtocolVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "payload": {
+          "type": "object",
+          "required": [
+            "effectiveStartUptimeMs",
+            "cutoffUptimeMs",
+            "runtimeState",
+            "clockRevision"
+          ],
+          "properties": {
+            "effectiveStartUptimeMs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "cutoffUptimeMs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "runtimeState": {
+              "const": "RUNNING"
+            },
+            "clockRevision": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "contractVersion",
+        "messageType",
+        "messageId",
+        "correlationId",
+        "senderRole",
+        "senderSeq",
+        "sentAtUtc",
+        "sentAtUptimeMs",
+        "monotonicEpochId",
+        "systemId",
+        "deviceId",
+        "taskId",
+        "taskItemId",
+        "executionAttempt",
+        "runtimeSessionId",
+        "packageVersion",
+        "coreProtocolVersion",
+        "payload"
+      ],
+      "properties": {
+        "contractVersion": {
+          "const": "A620-TRC-1.1"
+        },
+        "messageType": {
+          "const": "PAUSED"
+        },
+        "messageId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "correlationId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "senderRole": {
+          "const": "COCOS_RUNTIME"
+        },
+        "senderSeq": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "sentAtUtc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "sentAtUptimeMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "monotonicEpochId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "systemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "deviceId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskItemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "executionAttempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "runtimeSessionId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "packageVersion": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+        },
+        "coreProtocolVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "payload": {
+          "type": "object",
+          "required": [
+            "effectivePauseUptimeMs",
+            "activeElapsedMs",
+            "runtimeState",
+            "clockRevision"
+          ],
+          "properties": {
+            "effectivePauseUptimeMs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "activeElapsedMs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "runtimeState": {
+              "const": "PAUSED"
+            },
+            "clockRevision": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "contractVersion",
+        "messageType",
+        "messageId",
+        "correlationId",
+        "senderRole",
+        "senderSeq",
+        "sentAtUtc",
+        "sentAtUptimeMs",
+        "monotonicEpochId",
+        "systemId",
+        "deviceId",
+        "taskId",
+        "taskItemId",
+        "executionAttempt",
+        "runtimeSessionId",
+        "packageVersion",
+        "coreProtocolVersion",
+        "payload"
+      ],
+      "properties": {
+        "contractVersion": {
+          "const": "A620-TRC-1.1"
+        },
+        "messageType": {
+          "const": "RESUMED"
+        },
+        "messageId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "correlationId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "senderRole": {
+          "const": "COCOS_RUNTIME"
+        },
+        "senderSeq": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "sentAtUtc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "sentAtUptimeMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "monotonicEpochId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "systemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "deviceId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskItemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "executionAttempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "runtimeSessionId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "packageVersion": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+        },
+        "coreProtocolVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "payload": {
+          "type": "object",
+          "required": [
+            "resumeInputEnabledUptimeMs",
+            "cutoffUptimeMs",
+            "activeElapsedMs",
+            "runtimeState",
+            "clockRevision"
+          ],
+          "properties": {
+            "resumeInputEnabledUptimeMs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "cutoffUptimeMs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "activeElapsedMs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "runtimeState": {
+              "const": "RUNNING"
+            },
+            "clockRevision": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "contractVersion",
+        "messageType",
+        "messageId",
+        "correlationId",
+        "senderRole",
+        "senderSeq",
+        "sentAtUtc",
+        "sentAtUptimeMs",
+        "monotonicEpochId",
+        "systemId",
+        "deviceId",
+        "taskId",
+        "taskItemId",
+        "executionAttempt",
+        "runtimeSessionId",
+        "packageVersion",
+        "coreProtocolVersion",
+        "payload"
+      ],
+      "properties": {
+        "contractVersion": {
+          "const": "A620-TRC-1.1"
+        },
+        "messageType": {
+          "const": "STATE_SNAPSHOT"
+        },
+        "messageId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "correlationId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "senderRole": {
+          "const": "COCOS_RUNTIME"
+        },
+        "senderSeq": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "sentAtUtc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "sentAtUptimeMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "monotonicEpochId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "systemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "deviceId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskItemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "executionAttempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "runtimeSessionId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "packageVersion": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+        },
+        "coreProtocolVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "payload": {
+          "type": "object",
+          "required": [
+            "runtimeState",
+            "activeElapsedMs",
+            "clockRevision",
+            "lastAppliedControllerSeq"
+          ],
+          "properties": {
+            "runtimeState": {
+              "enum": [
+                "UNPREPARED",
+                "PREPARING",
+                "READY",
+                "START_SCHEDULED",
+                "RUNNING",
+                "PAUSE_SCHEDULED",
+                "PAUSED",
+                "RESUME_SCHEDULED",
+                "FINALIZING",
+                "RESULT_PENDING_COMMIT",
+                "RESULT_COMMITTED",
+                "TERMINATING",
+                "TERMINATED",
+                "ERROR"
+              ]
+            },
+            "activeElapsedMs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 300000
+            },
+            "clockRevision": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "lastAppliedControllerSeq": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "contractVersion",
+        "messageType",
+        "messageId",
+        "correlationId",
+        "senderRole",
+        "senderSeq",
+        "sentAtUtc",
+        "sentAtUptimeMs",
+        "monotonicEpochId",
+        "systemId",
+        "deviceId",
+        "taskId",
+        "taskItemId",
+        "executionAttempt",
+        "runtimeSessionId",
+        "packageVersion",
+        "coreProtocolVersion",
+        "payload"
+      ],
+      "properties": {
+        "contractVersion": {
+          "const": "A620-TRC-1.1"
+        },
+        "messageType": {
+          "const": "TERMINATED"
+        },
+        "messageId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "correlationId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "senderRole": {
+          "const": "COCOS_RUNTIME"
+        },
+        "senderSeq": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "sentAtUtc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "sentAtUptimeMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "monotonicEpochId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "systemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "deviceId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskItemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "executionAttempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "runtimeSessionId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "packageVersion": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+        },
+        "coreProtocolVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "payload": {
+          "type": "object",
+          "required": [
+            "effectiveTerminateUptimeMs",
+            "runtimeState",
+            "reasonCode"
+          ],
+          "properties": {
+            "effectiveTerminateUptimeMs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "runtimeState": {
+              "const": "TERMINATED"
+            },
+            "reasonCode": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "contractVersion",
+        "messageType",
+        "messageId",
+        "correlationId",
+        "senderRole",
+        "senderSeq",
+        "sentAtUtc",
+        "sentAtUptimeMs",
+        "monotonicEpochId",
+        "systemId",
+        "deviceId",
+        "taskId",
+        "taskItemId",
+        "executionAttempt",
+        "runtimeSessionId",
+        "packageVersion",
+        "coreProtocolVersion",
+        "payload"
+      ],
+      "properties": {
+        "contractVersion": {
+          "const": "A620-TRC-1.1"
+        },
+        "messageType": {
+          "const": "COMMAND_REJECTED"
+        },
+        "messageId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "correlationId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "senderRole": {
+          "const": "COCOS_RUNTIME"
+        },
+        "senderSeq": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "sentAtUtc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "sentAtUptimeMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "monotonicEpochId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "systemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "deviceId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskItemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "executionAttempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "runtimeSessionId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "packageVersion": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+        },
+        "coreProtocolVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "payload": {
+          "type": "object",
+          "required": [
+            "rejectedMessageType",
+            "errorCode",
+            "runtimeState"
+          ],
+          "properties": {
+            "rejectedMessageType": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            "errorCode": {
+              "type": "string",
+              "pattern": "^A620-[A-Z0-9-]{3,64}$"
+            },
+            "runtimeState": {
+              "enum": [
+                "UNPREPARED",
+                "PREPARING",
+                "READY",
+                "START_SCHEDULED",
+                "RUNNING",
+                "PAUSE_SCHEDULED",
+                "PAUSED",
+                "RESUME_SCHEDULED",
+                "FINALIZING",
+                "RESULT_PENDING_COMMIT",
+                "RESULT_COMMITTED",
+                "TERMINATING",
+                "TERMINATED",
+                "ERROR"
+              ]
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "contractVersion",
+        "messageType",
+        "messageId",
+        "correlationId",
+        "senderRole",
+        "senderSeq",
+        "sentAtUtc",
+        "sentAtUptimeMs",
+        "monotonicEpochId",
+        "systemId",
+        "deviceId",
+        "taskId",
+        "taskItemId",
+        "executionAttempt",
+        "runtimeSessionId",
+        "packageVersion",
+        "coreProtocolVersion",
+        "payload"
+      ],
+      "properties": {
+        "contractVersion": {
+          "const": "A620-TRC-1.1"
+        },
+        "messageType": {
+          "const": "BATCH_CLOSED"
+        },
+        "messageId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "correlationId": {
+          "type": "null"
+        },
+        "senderRole": {
+          "const": "COCOS_RUNTIME"
+        },
+        "senderSeq": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "sentAtUtc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "sentAtUptimeMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "monotonicEpochId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "systemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "deviceId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskItemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "executionAttempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "runtimeSessionId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "packageVersion": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+        },
+        "coreProtocolVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "payload": {
+          "type": "object",
+          "required": [
+            "batchOrdinal",
+            "closed",
+            "decisionEligible",
+            "levelBefore",
+            "resultZone",
+            "levelTransition",
+            "levelAfter",
+            "batchScore",
+            "closedAtActiveMs",
+            "batchPayloadSha256",
+            "gameBatchMetrics"
+          ],
+          "properties": {
+            "batchOrdinal": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "closed": {
+              "const": true
+            },
+            "decisionEligible": {
+              "const": true
+            },
+            "levelBefore": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "resultZone": {
+              "enum": [
+                "UPGRADE",
+                "HOLD",
+                "FAIL"
+              ]
+            },
+            "levelTransition": {
+              "enum": [
+                "UP",
+                "HOLD",
+                "RETRY",
+                "DOWN",
+                "HOLD_MAX",
+                "HOLD_MIN"
+              ]
+            },
+            "levelAfter": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "batchScore": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "closedAtActiveMs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 300000
+            },
+            "batchPayloadSha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "gameBatchMetrics": {
+              "type": "object",
+              "maxProperties": 128
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "contractVersion",
+        "messageType",
+        "messageId",
+        "correlationId",
+        "senderRole",
+        "senderSeq",
+        "sentAtUtc",
+        "sentAtUptimeMs",
+        "monotonicEpochId",
+        "systemId",
+        "deviceId",
+        "taskId",
+        "taskItemId",
+        "executionAttempt",
+        "runtimeSessionId",
+        "packageVersion",
+        "coreProtocolVersion",
+        "payload"
+      ],
+      "properties": {
+        "contractVersion": {
+          "const": "A620-TRC-1.1"
+        },
+        "messageType": {
+          "const": "RESULT_READY"
+        },
+        "messageId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "correlationId": {
+          "type": "null"
+        },
+        "senderRole": {
+          "const": "COCOS_RUNTIME"
+        },
+        "senderSeq": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "sentAtUtc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "sentAtUptimeMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "monotonicEpochId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "systemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "deviceId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskItemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "executionAttempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "runtimeSessionId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "packageVersion": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+        },
+        "coreProtocolVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "payload": {
+          "type": "object",
+          "required": [
+            "resultDraftSha256",
+            "gamePayload"
+          ],
+          "properties": {
+            "resultDraftSha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "gamePayload": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "urn:a620:training-game-payload:1.1",
+              "title": "A620 Training Game Payload 1.1",
+              "type": "object",
+              "required": [
+                "gameCode",
+                "gamePayloadVersion",
+                "runtimeConfigHash",
+                "plannedBatchCount",
+                "eligibleBatchCount",
+                "eligibleBatches",
+                "incompleteBatchAudit",
+                "sessionStartLevel",
+                "sessionEndLevel",
+                "sessionHighestPresentedLevel",
+                "sessionHighestPassedLevel",
+                "nextStartLevel",
+                "sessionRawScore",
+                "sessionRawScoreMax",
+                "actualTrainingMs",
+                "gameMetrics"
+              ],
+              "properties": {
+                "gameCode": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+                },
+                "gamePayloadVersion": {
+                  "const": "A620-GP-1.1"
+                },
+                "runtimeConfigHash": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "plannedBatchCount": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991
+                },
+                "eligibleBatchCount": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "eligibleBatches": {
+                  "type": "array",
+                  "maxItems": 1024,
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "batchOrdinal",
+                      "closed",
+                      "decisionEligible",
+                      "levelBefore",
+                      "resultZone",
+                      "levelTransition",
+                      "levelAfter",
+                      "batchScore",
+                      "closedAtActiveMs",
+                      "batchPayloadSha256",
+                      "gameBatchMetrics"
+                    ],
+                    "properties": {
+                      "batchOrdinal": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "closed": {
+                        "const": true
+                      },
+                      "decisionEligible": {
+                        "const": true
+                      },
+                      "levelBefore": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "resultZone": {
+                        "enum": [
+                          "UPGRADE",
+                          "HOLD",
+                          "FAIL"
+                        ]
+                      },
+                      "levelTransition": {
+                        "enum": [
+                          "UP",
+                          "HOLD",
+                          "RETRY",
+                          "DOWN",
+                          "HOLD_MAX",
+                          "HOLD_MIN"
+                        ]
+                      },
+                      "levelAfter": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "batchScore": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 100
+                      },
+                      "closedAtActiveMs": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 300000
+                      },
+                      "batchPayloadSha256": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$"
+                      },
+                      "gameBatchMetrics": {
+                        "type": "object",
+                        "maxProperties": 128
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "incompleteBatchAudit": {
+                  "type": "array",
+                  "maxItems": 1024,
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "batchOrdinal",
+                      "cutoffReason",
+                      "startedAtActiveMs",
+                      "cutoffAtActiveMs",
+                      "partialMetrics"
+                    ],
+                    "properties": {
+                      "batchOrdinal": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "cutoffReason": {
+                        "const": "DEADLINE"
+                      },
+                      "startedAtActiveMs": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 300000
+                      },
+                      "cutoffAtActiveMs": {
+                        "const": 300000
+                      },
+                      "partialMetrics": {
+                        "type": "object",
+                        "maxProperties": 128
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "sessionStartLevel": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991
+                },
+                "sessionEndLevel": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991
+                },
+                "sessionHighestPresentedLevel": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991
+                },
+                "sessionHighestPassedLevel": {
+                  "oneOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 9007199254740991
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "nextStartLevel": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991
+                },
+                "sessionRawScore": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 102400
+                },
+                "sessionRawScoreMax": {
+                  "type": "integer",
+                  "minimum": 100,
+                  "maximum": 102400
+                },
+                "actualTrainingMs": {
+                  "const": 300000
+                },
+                "gameMetrics": {
+                  "type": "object",
+                  "maxProperties": 256
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "contractVersion",
+        "messageType",
+        "messageId",
+        "correlationId",
+        "senderRole",
+        "senderSeq",
+        "sentAtUtc",
+        "sentAtUptimeMs",
+        "monotonicEpochId",
+        "systemId",
+        "deviceId",
+        "taskId",
+        "taskItemId",
+        "executionAttempt",
+        "runtimeSessionId",
+        "packageVersion",
+        "coreProtocolVersion",
+        "payload"
+      ],
+      "properties": {
+        "contractVersion": {
+          "const": "A620-TRC-1.1"
+        },
+        "messageType": {
+          "const": "RUNTIME_ERROR"
+        },
+        "messageId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "correlationId": {
+          "type": "null"
+        },
+        "senderRole": {
+          "const": "COCOS_RUNTIME"
+        },
+        "senderSeq": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "sentAtUtc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "sentAtUptimeMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "monotonicEpochId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "systemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "deviceId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskItemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "executionAttempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "runtimeSessionId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "packageVersion": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+        },
+        "coreProtocolVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "payload": {
+          "type": "object",
+          "required": [
+            "errorCode",
+            "fatal",
+            "runtimeState"
+          ],
+          "properties": {
+            "errorCode": {
+              "type": "string",
+              "pattern": "^A620-[A-Z0-9-]{3,64}$"
+            },
+            "fatal": {
+              "const": true
+            },
+            "runtimeState": {
+              "enum": [
+                "UNPREPARED",
+                "PREPARING",
+                "READY",
+                "START_SCHEDULED",
+                "RUNNING",
+                "PAUSE_SCHEDULED",
+                "PAUSED",
+                "RESUME_SCHEDULED",
+                "FINALIZING",
+                "RESULT_PENDING_COMMIT",
+                "RESULT_COMMITTED",
+                "TERMINATING",
+                "TERMINATED",
+                "ERROR"
+              ]
+            },
+            "details": {
+              "type": "object",
+              "maxProperties": 64
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "contractVersion",
+        "messageType",
+        "messageId",
+        "correlationId",
+        "senderRole",
+        "senderSeq",
+        "sentAtUtc",
+        "sentAtUptimeMs",
+        "monotonicEpochId",
+        "systemId",
+        "deviceId",
+        "taskId",
+        "taskItemId",
+        "executionAttempt",
+        "runtimeSessionId",
+        "packageVersion",
+        "coreProtocolVersion",
+        "payload"
+      ],
+      "properties": {
+        "contractVersion": {
+          "const": "A620-TRC-1.1"
+        },
+        "messageType": {
+          "const": "HEARTBEAT"
+        },
+        "messageId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "correlationId": {
+          "type": "null"
+        },
+        "senderRole": {
+          "const": "COCOS_RUNTIME"
+        },
+        "senderSeq": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "sentAtUtc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "sentAtUptimeMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "monotonicEpochId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "systemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "deviceId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "taskItemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "executionAttempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "runtimeSessionId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "packageVersion": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+        },
+        "coreProtocolVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "payload": {
+          "type": "object",
+          "required": [
+            "runtimeState",
+            "activeElapsedMs",
+            "clockRevision",
+            "lastAppliedControllerSeq"
+          ],
+          "properties": {
+            "runtimeState": {
+              "enum": [
+                "UNPREPARED",
+                "PREPARING",
+                "READY",
+                "START_SCHEDULED",
+                "RUNNING",
+                "PAUSE_SCHEDULED",
+                "PAUSED",
+                "RESUME_SCHEDULED",
+                "FINALIZING",
+                "RESULT_PENDING_COMMIT",
+                "RESULT_COMMITTED",
+                "TERMINATING",
+                "TERMINATED",
+                "ERROR"
+              ]
+            },
+            "activeElapsedMs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 300000
+            },
+            "clockRevision": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "lastAppliedControllerSeq": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  ]
+}

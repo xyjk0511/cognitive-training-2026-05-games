@@ -1,0 +1,63 @@
+[
+  {
+    "id": "object-order",
+    "value": {
+      "z": 0,
+      "a": 1,
+      "nested": {
+        "b": 2,
+        "a": 1
+      }
+    },
+    "canonicalUtf8": "{\"a\":1,\"nested\":{\"a\":1,\"b\":2},\"z\":0}",
+    "sha256": "de6d5837bffbabc0142195f05912acbede00bea67f857e37633d8da8281bd9ba"
+  },
+  {
+    "id": "strings",
+    "value": {
+      "line": "a\nb",
+      "quote": "\"",
+      "slash": "/",
+      "unicode": "捕光行动",
+      "emoji": "🍎"
+    },
+    "canonicalUtf8": "{\"emoji\":\"🍎\",\"line\":\"a\\nb\",\"quote\":\"\\\"\",\"slash\":\"/\",\"unicode\":\"捕光行动\"}",
+    "sha256": "76952fb9b72b14b97f8de15d4055092c00f6774378e13df7d114fc4e7d179509"
+  },
+  {
+    "id": "safe-integers",
+    "value": {
+      "min": -9007199254740991,
+      "max": 9007199254740991,
+      "zero": 0
+    },
+    "canonicalUtf8": "{\"max\":9007199254740991,\"min\":-9007199254740991,\"zero\":0}",
+    "sha256": "b7b2401ddca2165824e98c61890c0aaec470258d3119dd265d02be9438bf47e6"
+  },
+  {
+    "id": "utf16-key-order",
+    "value": {
+      "😀": 1,
+      "": 2,
+      "a": 3
+    },
+    "canonicalUtf8": "{\"a\":3,\"😀\":1,\"\":2}",
+    "sha256": "a901d5c9340048b768183fd6fb82e7d0f7792049a0aafa9d2c7ccd845d984ad3"
+  },
+  {
+    "id": "arrays",
+    "value": [
+      3,
+      {
+        "b": 2,
+        "a": 1
+      },
+      null,
+      true,
+      false,
+      "x"
+    ],
+    "canonicalUtf8": "[3,{\"a\":1,\"b\":2},null,true,false,\"x\"]",
+    "sha256": "b7a76631087e5b23ada39b66afc29327864d9be05e2a4b84f4df71b61e21fb11"
+  }
+]

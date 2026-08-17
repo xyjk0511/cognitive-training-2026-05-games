@@ -1,0 +1,53 @@
+[
+  {
+    "id": "object-order",
+    "value": {
+      "z": 0,
+      "a": 1,
+      "nested": {
+        "b": 2,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "strings",
+    "value": {
+      "line": "a\nb",
+      "quote": "\"",
+      "slash": "/",
+      "unicode": "捕光行动",
+      "emoji": "🍎"
+    }
+  },
+  {
+    "id": "safe-integers",
+    "value": {
+      "min": -9007199254740991,
+      "max": 9007199254740991,
+      "zero": 0
+    }
+  },
+  {
+    "id": "utf16-key-order",
+    "value": {
+      "😀": 1,
+      "": 2,
+      "a": 3
+    }
+  },
+  {
+    "id": "arrays",
+    "value": [
+      3,
+      {
+        "b": 2,
+        "a": 1
+      },
+      null,
+      true,
+      false,
+      "x"
+    ]
+  }
+]
