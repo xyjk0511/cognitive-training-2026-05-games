@@ -27,6 +27,7 @@ ALL_GATE0_IMPLEMENTATION_TESTS_PASS
 - 密钥 `ACTIVE/NEXT/REVOKED`、releaseSequence 防回滚、APK 版本范围、请求游戏身份、路径穿越、重复 ZIP entry、软链接、高压缩比和内容篡改均有回归测试；
 - 正式结果重试返回第一次事务提交时间，不会因为 ACK 丢失时使用了新的重试时间而生成冲突；
 - 正式结果中不能混入 `syncState` 或 `taskSlotState`，中断/作废执行不能产生正式结果。
+- 发布脚本会分别从源码 ZIP 与 Git bundle 在全新临时目录重建并重跑全部测试，防止交付包遗漏文件、丢失脚本执行权限或只在原工作区可用。
 
 ## 代码与规范规模
 

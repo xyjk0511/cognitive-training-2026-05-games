@@ -4,7 +4,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 OUT_DIR="${1:-/mnt/data}"
 DATE_TAG="${DATE_TAG:-20260817}"
-BASENAME="A620_Gate0_rc3_baseline1_${DATE_TAG}"
+BASENAME="A620_Gate0_rc3_baseline2_${DATE_TAG}"
 SOURCE_ZIP="$OUT_DIR/${BASENAME}_source.zip"
 BUNDLE="$OUT_DIR/${BASENAME}_source.git.bundle"
 PACKAGE_ZIP="$OUT_DIR/${BASENAME}_sample_training_packages.zip"
@@ -62,11 +62,11 @@ excluded_dirs = {
 }
 excluded_suffixes = {".pyc", ".jar", ".class", ".tpkg", ".tmp"}
 
-def zip_info(name: str, compression: int) -> zipfile.ZipInfo:
+def zip_info(name: str, compression: int, executable: bool) -> zipfile.ZipInfo:
     info = zipfile.ZipInfo(name, date_time=(1980, 1, 1, 0, 0, 0))
     info.compress_type = compression
     info.create_system = 3
-    info.external_attr = 0o100644 << 16
+    info.external_attr = (0o100755 if executable else 0o100644) << 16
     info.flag_bits |= 0x800
     return info
 
@@ -80,7 +80,8 @@ with zipfile.ZipFile(out, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9
         if path.suffix in excluded_suffixes:
             continue
         archive_name = (Path(prefix) / rel).as_posix()
-        zf.writestr(zip_info(archive_name, zipfile.ZIP_DEFLATED), path.read_bytes(), compresslevel=9)
+        executable = bool(path.stat().st_mode & 0o111)
+        zf.writestr(zip_info(archive_name, zipfile.ZIP_DEFLATED, executable), path.read_bytes(), compresslevel=9)
 PY
 
 (
@@ -88,6 +89,32 @@ PY
     git bundle create "$BUNDLE" --all
     git bundle verify "$BUNDLE" >/dev/null
 )
+
+COMMIT="$(cd "$ROOT" && git rev-parse HEAD)"
+BRANCH="$(cd "$ROOT" && git branch --show-current)"
+TAG="$(cd "$ROOT" && git describe --tags --exact-match 2>/dev/null || true)"
+[[ -n "$TAG" ]] || TAG="(no exact tag)"
+
+VERIFY_DIR="$(mktemp -d)"
+trap 'rm -rf "$VERIFY_DIR"' EXIT
+mkdir -p "$VERIFY_DIR/source"
+unzip -q "$SOURCE_ZIP" -d "$VERIFY_DIR/source"
+SOURCE_ROOT="$(find "$VERIFY_DIR/source" -mindepth 1 -maxdepth 1 -type d | head -n 1)"
+(
+    cd "$SOURCE_ROOT"
+    ./scripts/bootstrap_vectors.sh
+    ./scripts/test_all.sh >/dev/null
+)
+git clone -q "$BUNDLE" "$VERIFY_DIR/bundle"
+(
+    cd "$VERIFY_DIR/bundle"
+    git checkout -q "$COMMIT"
+    ./scripts/bootstrap_vectors.sh
+    ./scripts/test_all.sh >/dev/null
+)
+printf '%s\n' 'SOURCE_ZIP_REHYDRATE_PASS' 'GIT_BUNDLE_REHYDRATE_PASS' >> "$TEST_LOG"
+rm -rf "$VERIFY_DIR"
+trap - EXIT
 
 python3 - "$ROOT" "$PACKAGE_ZIP" <<'PY'
 import sys
@@ -128,16 +155,12 @@ for path in paths:
 out.write_text("\n".join(lines) + "\n", encoding="utf-8")
 PY
 
-COMMIT="$(cd "$ROOT" && git rev-parse HEAD)"
-BRANCH="$(cd "$ROOT" && git branch --show-current)"
-TAG="$(cd "$ROOT" && git describe --tags --exact-match 2>/dev/null || true)"
-[[ -n "$TAG" ]] || TAG="(no exact tag)"
 PYTHON_VERSION="$(python3 --version 2>&1)"
 NODE_VERSION="$(node --version 2>&1)"
 KOTLIN_VERSION="$(kotlinc -version 2>&1 | head -n 1)"
 
 cat > "$DELIVERY_MANIFEST" <<EOF_MANIFEST
-# A620 Gate 0 rc3 baseline.1 交付清单
+# A620 Gate 0 rc3 baseline.2 交付清单
 
 - 候选状态：\`GATE_0_IMPLEMENTATION_CANDIDATE_NOT_APPROVED\`
 - Git 分支：\`$BRANCH\`
@@ -147,7 +170,7 @@ cat > "$DELIVERY_MANIFEST" <<EOF_MANIFEST
 
 ## 自动测试
 
-\`34 passed / TYPESCRIPT_GATE0_TESTS_PASS / KOTLIN_GATE0_TESTS_PASS / SAMPLE_TPKG_BUILD_AND_VALIDATE_PASS\`
+\`34 passed / TYPESCRIPT_GATE0_TESTS_PASS / KOTLIN_GATE0_TESTS_PASS / SAMPLE_TPKG_BUILD_AND_VALIDATE_PASS / SOURCE_ZIP_REHYDRATE_PASS / GIT_BUNDLE_REHYDRATE_PASS\`
 
 ## 工具链
 

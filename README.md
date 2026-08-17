@@ -1,6 +1,6 @@
 # A620 Cognitive Training Platform — Gate 0 单线施工候选基线
 
-状态：`GATE_0_IMPLEMENTATION_CANDIDATE_RC3_BASELINE_1_NOT_APPROVED`
+状态：`GATE_0_IMPLEMENTATION_CANDIDATE_RC3_BASELINE_2_NOT_APPROVED`
 
 本仓库是从零建立的公共平台首批代码，不包含《捕光行动》120 级或《信号反应站》96 级的全量实现。当前范围严格限定为：
 
@@ -49,7 +49,7 @@ canonicalJsonProfile = A620-JCS-1
 
 ```text
 release/candidate.json
-candidateRevision = rc3-baseline.1
+candidateRevision = rc3-baseline.2
 ```
 
 Gate 0 只有在 Android、Cocos Creator、候选平板和故障注入全部完成后才能批准。当前仓库只是实现候选基线，不能据此宣称 Gate 0 已通过。
