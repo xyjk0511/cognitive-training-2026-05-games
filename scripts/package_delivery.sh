@@ -97,25 +97,37 @@ TAG="$(cd "$ROOT" && git describe --tags --exact-match 2>/dev/null || true)"
 
 VERIFY_DIR="$(mktemp -d)"
 trap 'rm -rf "$VERIFY_DIR"' EXIT
+
+run_rehydrated_suite() {
+    local checkout_root="$1"
+    local label="$2"
+    (
+        cd "$checkout_root"
+        echo "${label}_BOOTSTRAP"
+        timeout 90 ./scripts/bootstrap_vectors.sh >/dev/null
+        echo "${label}_PYTHON"
+        timeout 90 ./scripts/test_python.sh >/dev/null
+        echo "${label}_TYPESCRIPT"
+        timeout 90 ./scripts/test_typescript.sh >/dev/null
+        echo "${label}_KOTLIN"
+        timeout 90 ./scripts/test_kotlin.sh >/dev/null
+        echo "${label}_TPKG"
+        timeout 90 ./scripts/build_sample_packages.sh >/dev/null
+    )
+}
+
 mkdir -p "$VERIFY_DIR/source"
 unzip -q "$SOURCE_ZIP" -d "$VERIFY_DIR/source"
 SOURCE_ROOT="$(find "$VERIFY_DIR/source" -mindepth 1 -maxdepth 1 -type d | head -n 1)"
-(
-    cd "$SOURCE_ROOT"
-    ./scripts/bootstrap_vectors.sh
-    ./scripts/test_all.sh
-) >"$VERIFY_DIR/source-rehydrate.log" 2>&1 &
-SOURCE_VERIFY_PID=$!
+run_rehydrated_suite "$SOURCE_ROOT" "SOURCE_ZIP"
+
 git clone -q "$BUNDLE" "$VERIFY_DIR/bundle"
 (
     cd "$VERIFY_DIR/bundle"
     git checkout -q "$COMMIT"
-    ./scripts/bootstrap_vectors.sh
-    ./scripts/test_all.sh
-) >"$VERIFY_DIR/bundle-rehydrate.log" 2>&1 &
-BUNDLE_VERIFY_PID=$!
-wait "$SOURCE_VERIFY_PID"
-wait "$BUNDLE_VERIFY_PID"
+)
+run_rehydrated_suite "$VERIFY_DIR/bundle" "GIT_BUNDLE"
+
 printf '%s\n' 'SOURCE_ZIP_REHYDRATE_PASS' 'GIT_BUNDLE_REHYDRATE_PASS' >> "$TEST_LOG"
 rm -rf "$VERIFY_DIR"
 trap - EXIT
