@@ -59,6 +59,34 @@ object Gate0Main {
         expectRejected { RuntimeStateMachine.reduce(RuntimeState.TERMINATING, RuntimeInput.TERMINATE) }
         check(RuntimeStateMachine.reduce(RuntimeState.RUNNING, RuntimeInput.COMMAND_REJECTED) == RuntimeState.ERROR)
 
+
+        // Exhaust every RuntimeState × RuntimeInput pair against the generated
+        // normative tables. Any unspecified pair must reject.
+        RuntimeState.entries.forEach { candidateState ->
+            RuntimeInput.entries.forEach { candidateInput ->
+                val expectedTarget = GeneratedStateMachineContract.transitions[candidateState to candidateInput]
+                val nonMutating = candidateState in GeneratedStateMachineContract.nonMutating[candidateInput].orEmpty()
+                if (expectedTarget != null) {
+                    check(RuntimeStateMachine.reduce(candidateState, candidateInput) == expectedTarget)
+                } else if (nonMutating) {
+                    check(RuntimeStateMachine.reduce(candidateState, candidateInput) == candidateState)
+                } else {
+                    expectRejected { RuntimeStateMachine.reduce(candidateState, candidateInput) }
+                }
+            }
+        }
+
+        val envelope = MessageEnvelope(
+            messageType = "QUERY_STATE", messageId = "MSG-DTO", correlationId = null,
+            senderRole = "ANDROID_CONTROLLER", senderSeq = 1,
+            sentAtUtc = "2026-08-17T00:00:00Z", sentAtUptimeMs = 1,
+            monotonicEpochId = "BOOT-A", systemId = "SYS-1", deviceId = "TAB-1",
+            taskId = "TASK-1", taskItemId = "ITEM-1", executionAttempt = 1,
+            runtimeSessionId = "RUN-1", packageVersion = "1.0.0",
+            coreProtocolVersion = "1.0.0", payload = emptyMap<String, String>(),
+        )
+        check(envelope.identity().runtimeSessionId == "RUN-1")
+
         val ledger = BatchEvidenceLedger(8)
         ledger.record(BatchEvidence(1, "a".repeat(64), 37500, "evt-1", 1, 100))
         ledger.reconcile(mapOf(1 to "a".repeat(64)))

@@ -47,7 +47,8 @@
     "RUNTIME_ERROR from any nonterminal state transitions to ERROR and produces ExecutionOutcome only.",
     "Cocos self-triggers internal time boundaries; DEADLINE delivery confirms the already-known cutoff.",
     "RESULT_READY is legal only in FINALIZING.",
-    "TERMINATE has priority over DEADLINE at the same uptime millisecond."
+    "TERMINATE has priority over DEADLINE at the same uptime millisecond.",
+    "PAUSE effective time must be strictly before the active DEADLINE; equal-time PAUSE is rejected because DEADLINE has higher priority."
   ],
   "transitions": [
     {

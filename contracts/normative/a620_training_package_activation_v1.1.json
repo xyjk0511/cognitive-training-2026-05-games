@@ -1,0 +1,42 @@
+{
+  "activationProfile": "A620-TPA-1.1",
+  "packageManifestVersion": "A620-TPM-1.1",
+  "maintenanceStateRequired": "IDLE_NO_TASK",
+  "slots": [
+    "slot-a",
+    "slot-b"
+  ],
+  "stagingRules": [
+    "Copy into inactive-slot temporary file.",
+    "fsync staged bytes.",
+    "Validate staged archive bytes, manifest, file hashes, signature, compatibility and release floor.",
+    "Atomically replace inactive slot package.",
+    "Atomically replace active pointer only after validation.",
+    "Advance durable release floor after pointer commit."
+  ],
+  "archiveLimits": {
+    "maximumEntries": 4096,
+    "maximumCompressedBytes": 629145600,
+    "maximumTotalUncompressedBytes": 536870912,
+    "maximumFileUncompressedBytes": 134217728,
+    "maximumCompressionRatio": 100,
+    "maximumManifestBytes": 1048576,
+    "maximumSignatureRecordBytes": 16384
+  },
+  "forbiddenArchiveFeatures": [
+    "path traversal",
+    "absolute paths",
+    "non-ASCII paths",
+    "duplicate entries",
+    "symlinks",
+    "non-regular files",
+    "encryption",
+    "archive comments",
+    "entry comments",
+    "prepended or trailing data",
+    "multi-disk ZIP"
+  ],
+  "antiRollback": "Candidate releaseSequence must be strictly greater than the durable per-game release floor. Exact replay is allowed only when bytes equal the currently active package after revalidation under the current trust store and APK compatibility policy.",
+  "failureRule": "Any failure before active-pointer commit leaves the previous active package unchanged.",
+  "recoveryRule": "If the active pointer is unavailable, reconstruct only the package whose releaseSequence equals the durable committed release floor. Never promote a newer staged but uncommitted inactive-slot package."
+}

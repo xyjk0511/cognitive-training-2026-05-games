@@ -4,8 +4,8 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 OUT_DIR="${1:-/mnt/data}"
 DATE_TAG="${DATE_TAG:-20260817}"
-BASENAME="A620_Gate0_rc3_baseline2_${DATE_TAG}"
-EXPECTED_TAG="a620-trc-1.1-rc3-baseline.2"
+BASENAME="A620_Gate0_rc3_baseline3_${DATE_TAG}"
+EXPECTED_TAG="a620-trc-1.1-rc3-baseline.3"
 SOURCE_ZIP="$OUT_DIR/${BASENAME}_source.zip"
 BUNDLE="$OUT_DIR/${BASENAME}_source.git.bundle"
 PACKAGE_ZIP="$OUT_DIR/${BASENAME}_sample_training_packages.zip"
@@ -20,15 +20,17 @@ mkdir -p "$OUT_DIR" "$ROOT/build/reports"
 "$ROOT/scripts/bootstrap_vectors.sh"
 set -o pipefail
 "$ROOT/scripts/test_all.sh" 2>&1 | tee "$RAW_TEST_LOG"
-python3 - "$RAW_TEST_LOG" "$TEST_LOG" <<'PY_NORMALIZE'
+python3 - "$RAW_TEST_LOG" "$TEST_LOG" "$ROOT" <<'PY_NORMALIZE'
 from pathlib import Path
 import re
 import sys
 
 raw = Path(sys.argv[1]).read_text(encoding="utf-8")
-# Pytest wall-clock duration is intentionally removed from the exported log so
-# identical source and tools produce byte-identical delivery archives.
+root = str(Path(sys.argv[3]).resolve())
+# Remove wall-clock duration and checkout-specific absolute paths so the
+# exported evidence log is stable across clean rehydration locations.
 normalized = re.sub(r"(\d+ passed)(?:, \d+ warning(?:s)?)? in \d+(?:\.\d+)?s", r"\1", raw)
+normalized = normalized.replace(root, "<REPO>")
 Path(sys.argv[2]).write_text(normalized, encoding="utf-8")
 PY_NORMALIZE
 cp "$TEST_LOG" "$ROOT/build/reports/test_all_${DATE_TAG}.txt"
@@ -179,9 +181,14 @@ PY
 PYTHON_VERSION="$(python3 --version 2>&1)"
 NODE_VERSION="$(node --version 2>&1)"
 KOTLIN_VERSION="$(kotlinc -version 2>&1 | head -n 1)"
+PYTEST_SUMMARY="$(grep -E '^[0-9]+ passed$' "$TEST_LOG" | tail -n 1)"
+if [[ -z "$PYTEST_SUMMARY" ]]; then
+    echo "Could not find normalized pytest summary in $TEST_LOG" >&2
+    exit 1
+fi
 
 cat > "$DELIVERY_MANIFEST" <<EOF_MANIFEST
-# A620 Gate 0 rc3 baseline.2 交付清单
+# A620 Gate 0 rc3 baseline.3 交付清单
 
 - 候选状态：\`GATE_0_IMPLEMENTATION_CANDIDATE_NOT_APPROVED\`
 - Git 分支：\`$BRANCH\`
@@ -191,7 +198,7 @@ cat > "$DELIVERY_MANIFEST" <<EOF_MANIFEST
 
 ## 自动测试
 
-\`34 passed / TYPESCRIPT_GATE0_TESTS_PASS / KOTLIN_GATE0_TESTS_PASS / SAMPLE_TPKG_BUILD_AND_VALIDATE_PASS / SOURCE_ZIP_REHYDRATE_PASS / GIT_BUNDLE_REHYDRATE_PASS\`
+\`$PYTEST_SUMMARY / TYPESCRIPT_GATE0_TESTS_PASS / KOTLIN_GATE0_TESTS_PASS / SAMPLE_TPKG_BUILD_AND_VALIDATE_PASS / SOURCE_ZIP_REHYDRATE_PASS / GIT_BUNDLE_REHYDRATE_PASS\`
 
 ## 工具链
 
@@ -209,10 +216,10 @@ cat > "$DELIVERY_MANIFEST" <<EOF_MANIFEST
 
 ## 明确限制
 
-本交付不包含 Android APK、Cocos Creator 工程、真实 AIDL/Binder、Room、原生触摸门、两款游戏代表等级、正式素材或生产密钥。它不能用于患者任务，也不能据此宣称 Gate 0 已通过。
+本交付不包含 Android APK、Cocos Creator 工程、真实 AIDL/Binder、Room、原生触摸门、两款游戏代表等级、正式素材或生产密钥。SQLite 与 A/B 槽均为参考实现，尚未替代候选平板上的进程杀死、真实闪存断电和文件系统验证。它不能用于患者任务，也不能据此宣称 Gate 0 已通过。
 EOF_MANIFEST
 
-python3 - "$COMPLETE_ZIP" "$SOURCE_ZIP" "$BUNDLE" "$PACKAGE_ZIP" "$COMPONENT_CHECKSUMS" "$DELIVERY_MANIFEST" "$TEST_LOG" "$ROOT/docs/TEST_REPORT_20260817.md" <<'PY'
+python3 - "$COMPLETE_ZIP" "$SOURCE_ZIP" "$BUNDLE" "$PACKAGE_ZIP" "$COMPONENT_CHECKSUMS" "$DELIVERY_MANIFEST" "$TEST_LOG" "$ROOT/docs/TEST_REPORT_20260817.md" "$ROOT/docs/HARDENING_BASELINE3_20260817.md" <<'PY'
 import sys
 import zipfile
 from pathlib import Path

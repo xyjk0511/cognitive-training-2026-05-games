@@ -126,17 +126,17 @@
             "sessionStartLevel": {
               "type": "integer",
               "minimum": 1,
-              "maximum": 9007199254740991
+              "maximum": 10000
             },
             "designMaxLevel": {
               "type": "integer",
               "minimum": 1,
-              "maximum": 9007199254740991
+              "maximum": 10000
             },
             "plannedBatchCount": {
               "type": "integer",
               "minimum": 1,
-              "maximum": 9007199254740991
+              "maximum": 1024
             },
             "runtimeConfigHash": {
               "type": "string",

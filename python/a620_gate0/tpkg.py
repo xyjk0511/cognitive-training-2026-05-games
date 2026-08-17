@@ -2,7 +2,11 @@ from __future__ import annotations
 
 import base64
 import hashlib
+import os
+import re
 import stat
+import struct
+import tempfile
 import zipfile
 from pathlib import Path, PurePosixPath
 from typing import Any, BinaryIO
@@ -17,6 +21,9 @@ MAX_ENTRIES = 4096
 MAX_TOTAL_UNCOMPRESSED = 512 * 1024 * 1024
 MAX_FILE_UNCOMPRESSED = 128 * 1024 * 1024
 MAX_COMPRESSION_RATIO = 100
+MAX_ARCHIVE_BYTES = 600 * 1024 * 1024
+MAX_MANIFEST_BYTES = 1024 * 1024
+MAX_SIGNATURE_RECORD_BYTES = 16 * 1024
 READ_CHUNK = 1024 * 1024
 RESERVED_ARCHIVE_PATHS = {"manifest.json", "manifest.sig.json"}
 ALLOWED_COMPRESSION = {zipfile.ZIP_STORED, zipfile.ZIP_DEFLATED}
@@ -108,10 +115,83 @@ def _read_and_hash(stream: BinaryIO, *, expected_size: int, path: str) -> tuple[
     return count, digest.hexdigest()
 
 
+def _validate_zip_container_layout(path: Path) -> None:
+    """Reject prepended/trailing payloads and multi-disk/noncanonical EOCD."""
+
+    size = path.stat().st_size
+    if size < 22:
+        raise TpkgError("training package is too short to contain ZIP EOCD")
+    window_size = min(size, 22 + 65535)
+    with path.open("rb") as stream:
+        stream.seek(size - window_size)
+        tail = stream.read(window_size)
+    position = tail.rfind(b"PK\x05\x06")
+    if position < 0 or position + 22 > len(tail):
+        raise TpkgError("training package has trailing data or a noncanonical EOCD")
+    try:
+        signature, disk_no, cd_disk, disk_entries, total_entries, cd_size, cd_offset, comment_len = struct.unpack(
+            "<4s4H2LH", tail[position:position + 22]
+        )
+    except struct.error as exc:
+        raise TpkgError("training package EOCD is malformed") from exc
+    if signature != b"PK\x05\x06":
+        raise TpkgError("training package EOCD signature is invalid")
+    if position + 22 + comment_len != len(tail):
+        raise TpkgError("training package has trailing data after EOCD")
+    if comment_len != 0:
+        raise TpkgError("archive comments are forbidden")
+    if disk_no != 0 or cd_disk != 0 or disk_entries != total_entries:
+        raise TpkgError("multi-disk ZIP archives are forbidden")
+    absolute_eocd = size - window_size + position
+    if cd_offset + cd_size != absolute_eocd:
+        raise TpkgError("ZIP central directory does not exactly precede EOCD")
+
+
+def _validate_trust_store(trust_store: dict[str, Any]) -> None:
+    if set(trust_store) != {"trustStoreVersion", "minimumAcceptedReleaseSequence", "keys"}:
+        raise TpkgError("trust store has unexpected or missing fields")
+    if trust_store.get("trustStoreVersion") != 1:
+        raise TpkgError("unsupported trust store version")
+    minima = trust_store.get("minimumAcceptedReleaseSequence")
+    if not isinstance(minima, dict) or len(minima) > 256:
+        raise TpkgError("trust store minimum release map is malformed")
+    for game_code, sequence in minima.items():
+        if not isinstance(game_code, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._:-]{0,127}", game_code):
+            raise TpkgError("trust store contains invalid gameCode")
+        if isinstance(sequence, bool) or not isinstance(sequence, int) or not 1 <= sequence <= 9_007_199_254_740_991:
+            raise TpkgError("trust store minimum release sequence is invalid")
+
+    keys = trust_store.get("keys")
+    if not isinstance(keys, list) or not 1 <= len(keys) <= 64:
+        raise TpkgError("trust store key list is malformed")
+    ids: set[str] = set()
+    active = 0
+    next_count = 0
+    for item in keys:
+        if not isinstance(item, dict) or set(item) != {"keyId", "status", "publicKeyHex"}:
+            raise TpkgError("trust store key record is malformed")
+        key_id = item["keyId"]
+        if not isinstance(key_id, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._:-]{0,127}", key_id):
+            raise TpkgError("trust store keyId is invalid")
+        if key_id in ids:
+            raise TpkgError("trust store contains duplicate keyId")
+        ids.add(key_id)
+        status = item["status"]
+        if status not in {"ACTIVE", "NEXT", "REVOKED"}:
+            raise TpkgError("trust store key has unsupported status")
+        active += status == "ACTIVE"
+        next_count += status == "NEXT"
+        public_hex = item["publicKeyHex"]
+        if not isinstance(public_hex, str) or not re.fullmatch(r"[0-9a-f]{64}", public_hex):
+            raise TpkgError("trust store Ed25519 public key is invalid")
+    if active != 1:
+        raise TpkgError("trust store must contain exactly one ACTIVE key")
+    if next_count > 1:
+        raise TpkgError("trust store may contain at most one NEXT key")
+
+
 def _trust_key(trust_store: dict[str, Any], key_id: str) -> bytes:
-    if trust_store.get("trustStoreVersion") != 1 or not isinstance(trust_store.get("keys"), list):
-        raise TpkgError("unsupported or malformed trust store")
-    matches = [item for item in trust_store["keys"] if item.get("keyId") == key_id]
+    matches = [item for item in trust_store["keys"] if item["keyId"] == key_id]
     if len(matches) != 1:
         raise TpkgError("signing key is missing or duplicated in trust store")
     item = matches[0]
@@ -129,13 +209,37 @@ def _trust_key(trust_store: dict[str, Any], key_id: str) -> bytes:
     return raw
 
 
+def _fsync_directory(path: Path) -> None:
+    try:
+        descriptor = os.open(path, os.O_RDONLY)
+    except OSError:
+        return
+    try:
+        os.fsync(descriptor)
+    finally:
+        os.close(descriptor)
+
+
 def build_tpkg(
     source_dir: Path,
     output_path: Path,
     manifest_base: dict[str, Any],
     private_key_hex: str,
 ) -> dict[str, Any]:
+    """Build a deterministic package through an atomic sibling temporary file.
+
+    Source files are hashed once for the signed manifest and a second time
+    while they are streamed into the archive. A source mutation between those
+    passes aborts the build; a failed build never leaves a partial final path.
+    """
+
     source_dir = source_dir.resolve()
+    if not source_dir.is_dir():
+        raise TpkgError("training package source is not a directory")
+    output_path = output_path.resolve()
+    if output_path == source_dir or source_dir in output_path.parents:
+        raise TpkgError("output package must not be placed inside the source tree")
+
     content_files: list[dict[str, Any]] = []
     for path in sorted(source_dir.rglob("*")):
         if path.is_symlink():
@@ -145,17 +249,22 @@ def build_tpkg(
         resolved = path.resolve()
         if source_dir not in resolved.parents:
             raise TpkgError(f"source file escapes package root: {path}")
-        rel = path.relative_to(source_dir).as_posix()
-        rel = _normalise_path(rel)
+        rel = _normalise_path(path.relative_to(source_dir).as_posix())
         if rel in RESERVED_ARCHIVE_PATHS:
             raise TpkgError(f"source package uses reserved path: {rel}")
         size = path.stat().st_size
         if size > MAX_FILE_UNCOMPRESSED:
             raise TpkgError(f"source file exceeds maximum size: {rel}")
         digest = hashlib.sha256()
+        count = 0
         with path.open("rb") as stream:
             while chunk := stream.read(READ_CHUNK):
+                count += len(chunk)
+                if count > size:
+                    raise TpkgError(f"source file grew while being hashed: {rel}")
                 digest.update(chunk)
+        if count != size:
+            raise TpkgError(f"source file changed size while being hashed: {rel}")
         content_files.append({"path": rel, "sizeBytes": size, "sha256": digest.hexdigest()})
 
     if not content_files:
@@ -169,6 +278,8 @@ def build_tpkg(
     validate_schema(manifest, "a620_training_package_manifest.schema.json")
     _validate_manifest_semantics(manifest)
     manifest_bytes = canonical_bytes(manifest)
+    if len(manifest_bytes) > MAX_MANIFEST_BYTES:
+        raise TpkgError("manifest exceeds size limit")
 
     try:
         private_bytes = bytes.fromhex(private_key_hex)
@@ -182,26 +293,52 @@ def build_tpkg(
         "manifestSha256": hashlib.sha256(manifest_bytes).hexdigest(),
         "signatureBase64": base64.b64encode(signature).decode("ascii"),
     }
+    signature_bytes = canonical_bytes(signature_record)
+    if len(signature_bytes) > MAX_SIGNATURE_RECORD_BYTES:
+        raise TpkgError("signature record exceeds size limit")
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    with zipfile.ZipFile(output_path, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9, strict_timestamps=True) as archive:
-        archive.writestr(_deterministic_zip_info("manifest.json"), manifest_bytes, compresslevel=9)
-        archive.writestr(
-            _deterministic_zip_info("manifest.sig.json"),
-            canonical_bytes(signature_record),
+    fd, temporary_name = tempfile.mkstemp(prefix=f".{output_path.name}.", suffix=".tmp", dir=output_path.parent)
+    os.close(fd)
+    temporary_path = Path(temporary_name)
+    try:
+        with zipfile.ZipFile(
+            temporary_path,
+            "w",
+            compression=zipfile.ZIP_DEFLATED,
             compresslevel=9,
-        )
-        for entry in content_files:
-            info = _deterministic_zip_info(entry["path"])
-            # Stream source files into the deterministic archive so the
-            # builder's memory use is bounded even near the per-file limit.
-            with (source_dir / entry["path"]).open("rb") as source, archive.open(
-                info,
-                "w",
-                force_zip64=True,
-            ) as target:
-                while chunk := source.read(READ_CHUNK):
-                    target.write(chunk)
+            strict_timestamps=True,
+        ) as archive:
+            archive.comment = b""
+            archive.writestr(_deterministic_zip_info("manifest.json"), manifest_bytes, compresslevel=9)
+            archive.writestr(_deterministic_zip_info("manifest.sig.json"), signature_bytes, compresslevel=9)
+            for entry in content_files:
+                info = _deterministic_zip_info(entry["path"])
+                digest = hashlib.sha256()
+                count = 0
+                with (source_dir / entry["path"]).open("rb") as source, archive.open(
+                    info,
+                    "w",
+                    force_zip64=True,
+                ) as target:
+                    while chunk := source.read(READ_CHUNK):
+                        count += len(chunk)
+                        if count > entry["sizeBytes"]:
+                            raise TpkgError(f"source file grew after manifest signing: {entry['path']}")
+                        digest.update(chunk)
+                        target.write(chunk)
+                if count != entry["sizeBytes"] or digest.hexdigest() != entry["sha256"]:
+                    raise TpkgError(f"source file changed after manifest signing: {entry['path']}")
+
+        if temporary_path.stat().st_size > MAX_ARCHIVE_BYTES:
+            raise TpkgError("built archive exceeds compressed size limit")
+        with temporary_path.open("rb") as stream:
+            os.fsync(stream.fileno())
+        os.replace(temporary_path, output_path)
+        _fsync_directory(output_path.parent)
+    except Exception:
+        temporary_path.unlink(missing_ok=True)
+        raise
     return manifest
 
 
@@ -214,11 +351,17 @@ def validate_tpkg(
     expected_game_code: str | None = None,
 ) -> dict[str, Any]:
     try:
+        if path.stat().st_size > MAX_ARCHIVE_BYTES:
+            raise TpkgError("training package compressed size exceeds limit")
+        _validate_trust_store(trust_store)
+        _validate_zip_container_layout(path)
         archive = zipfile.ZipFile(path, "r")
     except (OSError, zipfile.BadZipFile) as exc:
         raise TpkgError("training package is not a valid ZIP archive") from exc
 
     with archive:
+        if archive.comment:
+            raise TpkgError("archive comments are forbidden")
         infos = archive.infolist()
         if len(infos) > MAX_ENTRIES:
             raise TpkgError("archive entry count exceeds limit")
@@ -229,6 +372,8 @@ def validate_tpkg(
             if normal in seen:
                 raise TpkgError(f"duplicate archive entry: {normal}")
             seen.add(normal)
+            if info.comment:
+                raise TpkgError(f"archive entry comments are forbidden: {normal}")
             if info.flag_bits & 0x1:
                 raise TpkgError(f"encrypted archive entry is forbidden: {normal}")
             if info.compress_type not in ALLOWED_COMPRESSION:
@@ -247,6 +392,12 @@ def validate_tpkg(
 
         if not RESERVED_ARCHIVE_PATHS.issubset(seen):
             raise TpkgError("manifest files are missing")
+
+        info_by_name = {info.filename: info for info in infos}
+        if info_by_name["manifest.json"].file_size > MAX_MANIFEST_BYTES:
+            raise TpkgError("manifest exceeds size limit")
+        if info_by_name["manifest.sig.json"].file_size > MAX_SIGNATURE_RECORD_BYTES:
+            raise TpkgError("signature record exceeds size limit")
 
         manifest_raw = archive.read("manifest.json")
         manifest = strict_json_loads(manifest_raw)
@@ -299,7 +450,6 @@ def validate_tpkg(
         if set(declared) != actual_content:
             raise TpkgError("manifest file set does not match archive entries")
 
-        info_by_name = {info.filename: info for info in infos}
         computed: list[dict[str, Any]] = []
         for rel in sorted(actual_content):
             info = info_by_name[rel]

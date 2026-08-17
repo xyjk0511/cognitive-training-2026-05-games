@@ -321,6 +321,28 @@ mutations["invalid_pause_active_elapsed"] = deepcopy(pause_flow())
 pause_message = next(m for m in mutations["invalid_pause_active_elapsed"] if m["messageType"] == "PAUSE")
 pause_message["payload"]["activeElapsedMs"] = 100
 
+mutations["invalid_pause_at_deadline"] = deepcopy(pause_flow())
+start_message = next(m for m in mutations["invalid_pause_at_deadline"] if m["messageType"] == "START")
+pause_message = next(m for m in mutations["invalid_pause_at_deadline"] if m["messageType"] == "PAUSE")
+cutoff = start_message["payload"]["cutoffUptimeMs"]
+pause_message["sentAtUptimeMs"] = cutoff - 300
+pause_message["payload"]["effectivePauseUptimeMs"] = cutoff
+pause_message["payload"]["pauseLeadTimeMs"] = 300
+pause_message["payload"]["activeElapsedMs"] = 300000
+
+mutations["invalid_prepare_start_above_max"] = deepcopy(base)
+prepare_message = next(m for m in mutations["invalid_prepare_start_above_max"] if m["messageType"] == "PREPARE")
+prepare_message["payload"]["sessionStartLevel"] = 121
+prepare_message["payload"]["designMaxLevel"] = 120
+projection = deepcopy(prepare_message["payload"]); projection.pop("runtimeConfigHash")
+prepare_message["payload"]["runtimeConfigHash"] = canonical_sha256(projection)
+
+mutations["invalid_prepare_batches_over_limit"] = deepcopy(base)
+prepare_message = next(m for m in mutations["invalid_prepare_batches_over_limit"] if m["messageType"] == "PREPARE")
+prepare_message["payload"]["plannedBatchCount"] = 1025
+projection = deepcopy(prepare_message["payload"]); projection.pop("runtimeConfigHash")
+prepare_message["payload"]["runtimeConfigHash"] = canonical_sha256(projection)
+
 mutations["invalid_level_chain"] = deepcopy(base)
 closed = next(m for m in mutations["invalid_level_chain"] if m["messageType"] == "BATCH_CLOSED" and m["payload"]["batchOrdinal"] == 2)
 closed["payload"]["levelBefore"] = 99

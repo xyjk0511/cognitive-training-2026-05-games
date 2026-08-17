@@ -24,6 +24,9 @@ for (const vector of vectors) {
 }
 assertRejected(() => canonicalString({ bad: "\ud800" }), "unpaired surrogate must be rejected");
 assertRejected(() => canonicalString({ bad: -0 }), "negative zero must be rejected");
+assert(canonicalSha256({}) === "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a", "pure TypeScript SHA-256 known vector");
+const canonicalSource = readFileSync(resolve(process.cwd(), "src/canonical.ts"), "utf8");
+assert(!canonicalSource.includes('from "node:crypto"'), "runtime canonicalizer must not import Node crypto");
 
 const stateSpec = JSON.parse(
   readFileSync(resolve(process.cwd(), "../contracts/normative/a620_runtime_state_machine_v1.1.json"), "utf8"),
@@ -31,20 +34,42 @@ const stateSpec = JSON.parse(
   transitions: Array<{from: RuntimeState[]; input: string; to: RuntimeState}>;
   nonMutatingInputLegality: Record<string, RuntimeState[]>;
 };
+const expectedMatrix = new Map<string, RuntimeState>();
+const legalNoMutation = new Set<string>();
+const allInputs = new Set<string>();
 for (const transition of stateSpec.transitions) {
+  allInputs.add(transition.input);
   for (const source of transition.from) {
-    assert(
-      reduceState(source, transition.input as Parameters<typeof reduceState>[1]) === transition.to,
-      `generated transition mismatch: ${source} + ${transition.input}`,
-    );
+    const key = `${source}|${transition.input}`;
+    assert(!expectedMatrix.has(key) && !legalNoMutation.has(key), `duplicate normative pair: ${key}`);
+    expectedMatrix.set(key, transition.to);
   }
 }
 for (const [input, states] of Object.entries(stateSpec.nonMutatingInputLegality)) {
+  allInputs.add(input);
   for (const source of states) {
-    assert(
-      reduceState(source, input as Parameters<typeof reduceState>[1]) === source,
-      `generated non-mutating legality mismatch: ${source} + ${input}`,
-    );
+    const key = `${source}|${input}`;
+    assert(!expectedMatrix.has(key) && !legalNoMutation.has(key), `overlapping normative pair: ${key}`);
+    legalNoMutation.add(key);
+  }
+}
+
+// Exhaust every declared state × input pair. Legal entries must reduce to the
+// exact normative target; every unspecified pair must reject.
+const allStates = [...new Set([
+  ...stateSpec.transitions.flatMap(row => [...row.from, row.to]),
+  ...Object.values(stateSpec.nonMutatingInputLegality).flat(),
+])] as RuntimeState[];
+for (const state of allStates) {
+  for (const input of allInputs) {
+    const key = `${state}|${input}`;
+    if (expectedMatrix.has(key)) {
+      assert(reduceState(state, input as Parameters<typeof reduceState>[1]) === expectedMatrix.get(key), `generated transition mismatch: ${key}`);
+    } else if (legalNoMutation.has(key)) {
+      assert(reduceState(state, input as Parameters<typeof reduceState>[1]) === state, `generated non-mutating legality mismatch: ${key}`);
+    } else {
+      assertRejected(() => reduceState(state, input as Parameters<typeof reduceState>[1]), `unspecified pair must reject: ${key}`);
+    }
   }
 }
 

@@ -51,5 +51,37 @@
     "OCCUPIED",
     "END_RECONCILING",
     "INTERRUPTED_WAIT"
-  ]
+  ],
+  "prepareBounds": {
+    "sessionStartLevel": {
+      "minimum": 1,
+      "maximumBy": "designMaxLevel"
+    },
+    "designMaxLevel": {
+      "minimum": 1,
+      "maximum": 10000
+    },
+    "plannedBatchCount": {
+      "minimum": 1,
+      "maximum": 1024
+    }
+  },
+  "wireByteLimits": {
+    "global": 2097152,
+    "default": 65536,
+    "PREPARE": 524288,
+    "BATCH_CLOSED": 262144,
+    "STATE_SNAPSHOT": 262144,
+    "RESULT_READY": 2097152,
+    "HEARTBEAT": 16384
+  },
+  "durableIntakeRule": "For active messages, canonical message row, sender high-water marks and post-message A620-RSN-1.1 reducer snapshot must commit in one local transaction; exact replay is idempotent, conflicting reuse is fatal, and stale execution/runtime/epoch is audit-only.",
+  "reducerCheckpoint": {
+    "profile": "A620-RSN-1.1",
+    "maximumBytes": 4194304,
+    "requireCanonicalHash": true,
+    "requireEmbeddedIdentityMatch": true
+  },
+  "pauseDeadlinePriorityRule": "effectivePauseUptimeMs must be strictly less than cutoffUptimeMs; DEADLINE wins at equal uptime.",
+  "activeRuntimeReplacementRule": "runtimeSessionId is never reused; replacing the same task item requires a strictly greater executionAttempt."
 }

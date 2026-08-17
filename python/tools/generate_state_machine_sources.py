@@ -2,9 +2,13 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "python"))
+from a620_gate0.state_spec import validate_state_machine_spec
+
 SOURCE = ROOT / "contracts/normative/a620_runtime_state_machine_v1.1.json"
 TS_TARGET = ROOT / "typescript/src/generated-state-machine.ts"
 KT_TARGET = ROOT / "kotlin/src/main/kotlin/a620/GeneratedStateMachineContract.kt"
@@ -111,6 +115,7 @@ def main() -> None:
     args = parser.parse_args()
 
     spec = json.loads(SOURCE.read_text(encoding="utf-8"))
+    validate_state_machine_spec(spec)
     _write_or_check(TS_TARGET, _typescript(spec), args.check)
     _write_or_check(KT_TARGET, _kotlin(spec), args.check)
 

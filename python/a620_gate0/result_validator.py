@@ -66,6 +66,8 @@ def validate_game_payload(
     expected_runtime_config_hash: str | None = None,
     expected_planned_batch_count: int | None = None,
     expected_design_max_level: int | None = None,
+    expected_session_start_level: int | None = None,
+    expected_duration_ms: int | None = None,
 ) -> str:
     validate_schema(payload, "a620_training_game_payload.schema.json")
     validate_game_specific_payload(payload)
@@ -78,6 +80,10 @@ def validate_game_payload(
         _require(payload["plannedBatchCount"] == expected_planned_batch_count, "plannedBatchCount differs from PREPARE")
     if expected_design_max_level is not None:
         _require(payload["designMaxLevel"] == expected_design_max_level, "designMaxLevel differs from PREPARE")
+    if expected_session_start_level is not None:
+        _require(payload["sessionStartLevel"] == expected_session_start_level, "sessionStartLevel differs from PREPARE")
+    if expected_duration_ms is not None:
+        _require(payload["actualTrainingMs"] == expected_duration_ms, "actualTrainingMs differs from PREPARE durationMs")
 
     eligible = payload["eligibleBatches"]
     incomplete = payload["incompleteBatchAudit"]

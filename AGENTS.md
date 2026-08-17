@@ -9,3 +9,5 @@
 7. 游戏不得读取患者姓名、就诊号、管理端地址或上传凭据。
 8. 修改公共协议时必须同时更新 Python、TypeScript、Kotlin 和 golden vectors。
 9. 每次提交前运行 `./scripts/test_all.sh`。
+10. 活动运行消息、sender cursor 与处理后的 reducer 快照必须同事务提交；不得先标记消息已消费再异步补写状态。
+11. A/B 训练包恢复只能暴露 durable release floor 对应的已提交版本；不得把 inactive slot 中更高但未完成 pointer commit 的候选包自动提升为活动包。

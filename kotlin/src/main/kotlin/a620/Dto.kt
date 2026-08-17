@@ -17,6 +17,11 @@ data class Identity(
     val monotonicEpochId: String,
 )
 
+/**
+ * Exact wire envelope shape. Identity fields are intentionally flattened to
+ * match a620_training_runtime_message.schema.json and the TypeScript DTO.
+ * A nested domain Identity can be reconstructed with [identity].
+ */
 data class MessageEnvelope<P>(
     val contractVersion: String = CONTRACT_VERSION,
     val messageType: String,
@@ -26,9 +31,29 @@ data class MessageEnvelope<P>(
     val senderSeq: Long,
     val sentAtUtc: String,
     val sentAtUptimeMs: Long,
-    val identity: Identity,
+    val monotonicEpochId: String,
+    val systemId: String,
+    val deviceId: String,
+    val taskId: String,
+    val taskItemId: String,
+    val executionAttempt: Long,
+    val runtimeSessionId: String,
+    val packageVersion: String,
+    val coreProtocolVersion: String,
     val payload: P,
-)
+) {
+    fun identity(): Identity = Identity(
+        systemId = systemId,
+        deviceId = deviceId,
+        taskId = taskId,
+        taskItemId = taskItemId,
+        executionAttempt = executionAttempt,
+        runtimeSessionId = runtimeSessionId,
+        packageVersion = packageVersion,
+        coreProtocolVersion = coreProtocolVersion,
+        monotonicEpochId = monotonicEpochId,
+    )
+}
 
 data class BatchEvidence(
     val batchOrdinal: Int,

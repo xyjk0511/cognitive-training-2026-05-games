@@ -9,6 +9,7 @@ from .canonical import canonical_bytes, canonical_sha256
 from .game_schema import GameSchemaError, validate_game_config
 from .result_validator import ResultValidationError, validate_game_payload
 from .schema import validate_schema
+from .wire import parse_runtime_message
 
 
 class ValidationError(ValueError):
@@ -34,6 +35,11 @@ class FlowValidator:
 
     COMMAND_ACCEPTED_REQUIRED = {"START", "PAUSE", "RESUME", "TERMINATE"}
     TERMINAL_STATES = {"RESULT_COMMITTED", "TERMINATED", "ERROR"}
+    STATE_SET = {
+        "UNPREPARED", "PREPARING", "READY", "START_SCHEDULED", "RUNNING",
+        "PAUSE_SCHEDULED", "PAUSED", "RESUME_SCHEDULED", "FINALIZING",
+        "RESULT_PENDING_COMMIT", "RESULT_COMMITTED", "TERMINATING", "TERMINATED", "ERROR",
+    }
     BOUNDARY_PRIORITY = {"TERMINATE": 0, "DEADLINE": 1, "PAUSE": 2, "RESUME": 3, "START": 4}
 
     def __init__(self) -> None:
@@ -45,6 +51,7 @@ class FlowValidator:
 
         self.commands: dict[str, dict[str, Any]] = {}
         self.accepted_commands: set[str] = set()
+        self.command_accept_deadlines: dict[str, int] = {}
         self.pending_query_commands: set[str] = set()
         self.expected_confirmation: dict[str, str] = {}
         self.boundaries: list[ScheduledBoundary] = []
@@ -53,6 +60,7 @@ class FlowValidator:
         self.game_code: str | None = None
         self.design_max_level: int | None = None
         self.planned_batch_count: int | None = None
+        self.session_start_level: int | None = None
         self.duration_ms = 300000
 
         self.clock_revision = 0
@@ -112,6 +120,16 @@ class FlowValidator:
         self.last_sender_uptime[role] = msg["sentAtUptimeMs"]
         self.seen_messages[message_id] = encoded
         return False
+
+    def _check_command_accept_timeouts(self, now_ms: int, *, inclusive: bool) -> None:
+        expired = [
+            command_id
+            for command_id, deadline in self.command_accept_deadlines.items()
+            if (deadline <= now_ms if inclusive else deadline < now_ms)
+            and command_id not in self.accepted_commands
+        ]
+        if expired:
+            self._fail(f"COMMAND_ACCEPTED timeout for commands: {sorted(expired)}")
 
     def _schedule(self, kind: str, at_ms: int, correlation_id: str, revision: int) -> None:
         self.boundaries.append(ScheduledBoundary(kind, at_ms, correlation_id, revision))
@@ -187,6 +205,8 @@ class FlowValidator:
         self.commands[msg["messageId"]] = msg
         payload = msg["payload"]
         now = msg["sentAtUptimeMs"]
+        if message_type in self.COMMAND_ACCEPTED_REQUIRED:
+            self.command_accept_deadlines[msg["messageId"]] = now + 100
 
         if message_type == "PREPARE":
             if self.state != "UNPREPARED":
@@ -195,10 +215,15 @@ class FlowValidator:
                 validate_game_config(payload["gameCode"], payload["gameConfigSchemaId"], payload["gameConfig"])
             except GameSchemaError as exc:
                 self._fail(str(exc))
+            if not 1 <= payload["sessionStartLevel"] <= payload["designMaxLevel"] <= 10000:
+                self._fail("PREPARE levels must satisfy 1 <= sessionStartLevel <= designMaxLevel <= 10000")
+            if not 1 <= payload["plannedBatchCount"] <= 1024:
+                self._fail("PREPARE plannedBatchCount must be within 1..1024")
             self.runtime_config_hash = self._runtime_config_hash(payload)
             self.game_code = payload["gameCode"]
             self.design_max_level = payload["designMaxLevel"]
             self.planned_batch_count = payload["plannedBatchCount"]
+            self.session_start_level = payload["sessionStartLevel"]
             self.duration_ms = payload["durationMs"]
             self.state = "PREPARING"
             return
@@ -229,7 +254,11 @@ class FlowValidator:
             lead = payload["effectivePauseUptimeMs"] - now
             if lead < 300 or payload["pauseLeadTimeMs"] != lead:
                 self._fail("PAUSE lead time must equal the declared value and be at least 300 ms")
+            if self.cutoff_ms is None or payload["effectivePauseUptimeMs"] >= self.cutoff_ms:
+                self._fail("PAUSE must become effective strictly before the authoritative deadline")
             expected_active = self._expected_active_at(payload["effectivePauseUptimeMs"])
+            if expected_active >= self.duration_ms:
+                self._fail("PAUSE cannot displace or follow the active-time deadline")
             if payload["activeElapsedMs"] != expected_active:
                 self._fail("PAUSE activeElapsedMs does not match the authoritative clock ledger")
             if payload["clockRevision"] <= self.clock_revision:
@@ -237,6 +266,9 @@ class FlowValidator:
             self.clock_revision = payload["clockRevision"]
             self.state = "PAUSE_SCHEDULED"
             self._schedule("PAUSE", payload["effectivePauseUptimeMs"], msg["messageId"], self.clock_revision)
+            # A valid PAUSE is strictly before cutoff, so it may suspend the
+            # current deadline. Equal-time PAUSE is rejected above because
+            # DEADLINE has higher same-timestamp priority.
             self.boundaries = [boundary for boundary in self.boundaries if boundary.kind != "DEADLINE"]
             self.deadline_confirmed = False
             return
@@ -360,6 +392,7 @@ class FlowValidator:
             if payload["acceptedMessageType"] == "PAUSE" and payload["effectiveAtUptimeMs"] - msg["sentAtUptimeMs"] < 150:
                 self._fail("PAUSE acceptance safety margin below 150 ms")
             self.accepted_commands.add(command["messageId"])
+            self.command_accept_deadlines.pop(command["messageId"], None)
             return
 
         if message_type == "STARTED":
@@ -459,6 +492,8 @@ class FlowValidator:
                     expected_runtime_config_hash=self.runtime_config_hash,
                     expected_planned_batch_count=self.planned_batch_count,
                     expected_design_max_level=self.design_max_level,
+                    expected_session_start_level=self.session_start_level,
+                    expected_duration_ms=self.duration_ms,
                 )
             except (ResultValidationError, GameSchemaError) as exc:
                 self._fail(str(exc))
@@ -522,11 +557,19 @@ class FlowValidator:
         self.expected_confirmation.pop(confirmation_type, None)
         return command
 
+    def process_wire(self, raw: bytes | str) -> None:
+        self.process(parse_runtime_message(raw))
+
     def process(self, msg: dict[str, Any]) -> None:
         validate_schema(msg, "a620_training_runtime_message.schema.json")
         self._check_identity(msg)
         if self._check_replay_and_sequence(msg):
             return
+
+        now = msg["sentAtUptimeMs"]
+        # An acceptance at exactly command+100ms is legal. Any other message
+        # after that boundary exposes the missing acceptance immediately.
+        self._check_command_accept_timeouts(now, inclusive=False)
 
         # TERMINATE wins against a DEADLINE at the same uptime millisecond.
         terminate_preempts = (
@@ -539,6 +582,7 @@ class FlowValidator:
             self._advance_time(msg["sentAtUptimeMs"], inclusive=False)
             self._command(msg)
             self._advance_time(msg["sentAtUptimeMs"], inclusive=True)
+            self._check_command_accept_timeouts(now, inclusive=True)
             return
 
         self._advance_time(msg["sentAtUptimeMs"])
@@ -546,6 +590,156 @@ class FlowValidator:
             self._command(msg)
         else:
             self._event(msg)
+        self._check_command_accept_timeouts(now, inclusive=True)
+
+    def snapshot(self) -> dict[str, Any]:
+        """Return a canonical-JSON-safe complete reducer checkpoint."""
+
+        return {
+            "snapshotVersion": "A620-RSN-1.1",
+            "state": self.state,
+            "identity": deepcopy(self.identity),
+            "seenMessageCanonicalHex": {key: value.hex() for key, value in self.seen_messages.items()},
+            "lastSenderSeq": dict(self.last_sender_seq),
+            "lastSenderUptimeMs": dict(self.last_sender_uptime),
+            "commands": deepcopy(self.commands),
+            "acceptedCommands": sorted(self.accepted_commands),
+            "commandAcceptDeadlines": dict(self.command_accept_deadlines),
+            "pendingQueryCommands": sorted(self.pending_query_commands),
+            "expectedConfirmation": dict(self.expected_confirmation),
+            "boundaries": [
+                {
+                    "kind": boundary.kind,
+                    "atMs": boundary.at_ms,
+                    "correlationId": boundary.correlation_id,
+                    "clockRevision": boundary.clock_revision,
+                }
+                for boundary in self.boundaries
+            ],
+            "runtimeConfigHash": self.runtime_config_hash,
+            "gameCode": self.game_code,
+            "designMaxLevel": self.design_max_level,
+            "plannedBatchCount": self.planned_batch_count,
+            "sessionStartLevel": self.session_start_level,
+            "durationMs": self.duration_ms,
+            "clockRevision": self.clock_revision,
+            "cutoffUptimeMs": self.cutoff_ms,
+            "runAnchorUptimeMs": self.run_anchor_uptime_ms,
+            "runAnchorActiveMs": self.run_anchor_active_ms,
+            "activeElapsedMs": self.active_elapsed_ms,
+            "deadlineConfirmed": self.deadline_confirmed,
+            "evidenceLedger": {str(key): value for key, value in self.evidence_ledger.items()},
+            "lastBatchClosedActiveMs": self.last_batch_closed_active_ms,
+            "resultReadyMessage": deepcopy(self.result_ready_message),
+            "resultPayloadSha256": self.result_payload_hash,
+            "finalFormalResultId": self.final_formal_result_id,
+        }
+
+    @classmethod
+    def from_snapshot(cls, snapshot: dict[str, Any]) -> "FlowValidator":
+        expected_keys = {
+            "snapshotVersion", "state", "identity", "seenMessageCanonicalHex", "lastSenderSeq",
+            "lastSenderUptimeMs", "commands", "acceptedCommands", "commandAcceptDeadlines",
+            "pendingQueryCommands", "expectedConfirmation", "boundaries", "runtimeConfigHash",
+            "gameCode", "designMaxLevel", "plannedBatchCount", "sessionStartLevel", "durationMs",
+            "clockRevision", "cutoffUptimeMs", "runAnchorUptimeMs", "runAnchorActiveMs",
+            "activeElapsedMs", "deadlineConfirmed", "evidenceLedger", "lastBatchClosedActiveMs",
+            "resultReadyMessage", "resultPayloadSha256", "finalFormalResultId",
+        }
+        if set(snapshot) != expected_keys or snapshot.get("snapshotVersion") != "A620-RSN-1.1":
+            raise ValidationError("runtime reducer snapshot has an unsupported shape/version")
+        # Canonical validation rejects floats, unsafe integers and malformed
+        # Unicode before any state is restored.
+        canonical_bytes(snapshot)
+        if snapshot["state"] not in cls.STATE_SET:
+            raise ValidationError("runtime reducer snapshot contains an unknown state")
+
+        validator = cls()
+        validator.state = snapshot["state"]
+        validator.identity = deepcopy(snapshot["identity"])
+        if validator.identity is not None and set(validator.identity) != {
+            "systemId", "deviceId", "taskId", "taskItemId", "executionAttempt",
+            "runtimeSessionId", "packageVersion", "coreProtocolVersion", "monotonicEpochId",
+        }:
+            raise ValidationError("runtime reducer snapshot identity is malformed")
+
+        try:
+            validator.seen_messages = {
+                key: bytes.fromhex(value) for key, value in snapshot["seenMessageCanonicalHex"].items()
+            }
+        except (AttributeError, ValueError) as exc:
+            raise ValidationError("runtime reducer snapshot message cache is malformed") from exc
+        validator.last_sender_seq = dict(snapshot["lastSenderSeq"])
+        validator.last_sender_uptime = dict(snapshot["lastSenderUptimeMs"])
+        if set(validator.last_sender_seq) != {"ANDROID_CONTROLLER", "COCOS_RUNTIME"}:
+            raise ValidationError("runtime reducer snapshot sender sequence map is malformed")
+        if set(validator.last_sender_uptime) != {"ANDROID_CONTROLLER", "COCOS_RUNTIME"}:
+            raise ValidationError("runtime reducer snapshot sender clock map is malformed")
+
+        validator.commands = deepcopy(snapshot["commands"])
+        for command_id, command in validator.commands.items():
+            validate_schema(command, "a620_training_runtime_message.schema.json")
+            if command["messageId"] != command_id or command["senderRole"] != "ANDROID_CONTROLLER":
+                raise ValidationError("runtime reducer snapshot command map is malformed")
+        validator.accepted_commands = set(snapshot["acceptedCommands"])
+        validator.command_accept_deadlines = {
+            str(key): int(value) for key, value in snapshot["commandAcceptDeadlines"].items()
+        }
+        validator.pending_query_commands = set(snapshot["pendingQueryCommands"])
+        validator.expected_confirmation = dict(snapshot["expectedConfirmation"])
+
+        try:
+            validator.boundaries = [
+                ScheduledBoundary(
+                    kind=item["kind"],
+                    at_ms=item["atMs"],
+                    correlation_id=item["correlationId"],
+                    clock_revision=item["clockRevision"],
+                )
+                for item in snapshot["boundaries"]
+            ]
+        except (KeyError, TypeError) as exc:
+            raise ValidationError("runtime reducer snapshot boundaries are malformed") from exc
+        if any(boundary.kind not in cls.BOUNDARY_PRIORITY for boundary in validator.boundaries):
+            raise ValidationError("runtime reducer snapshot contains unknown boundary kind")
+        if validator.boundaries != sorted(
+            validator.boundaries,
+            key=lambda boundary: (boundary.at_ms, cls.BOUNDARY_PRIORITY[boundary.kind]),
+        ):
+            raise ValidationError("runtime reducer snapshot boundaries are not ordered")
+
+        validator.runtime_config_hash = snapshot["runtimeConfigHash"]
+        validator.game_code = snapshot["gameCode"]
+        validator.design_max_level = snapshot["designMaxLevel"]
+        validator.planned_batch_count = snapshot["plannedBatchCount"]
+        validator.session_start_level = snapshot["sessionStartLevel"]
+        validator.duration_ms = snapshot["durationMs"]
+        validator.clock_revision = snapshot["clockRevision"]
+        validator.cutoff_ms = snapshot["cutoffUptimeMs"]
+        validator.run_anchor_uptime_ms = snapshot["runAnchorUptimeMs"]
+        validator.run_anchor_active_ms = snapshot["runAnchorActiveMs"]
+        validator.active_elapsed_ms = snapshot["activeElapsedMs"]
+        validator.deadline_confirmed = snapshot["deadlineConfirmed"]
+        try:
+            validator.evidence_ledger = {int(key): value for key, value in snapshot["evidenceLedger"].items()}
+        except (TypeError, ValueError) as exc:
+            raise ValidationError("runtime reducer snapshot evidence ledger is malformed") from exc
+        if sorted(validator.evidence_ledger) != list(range(1, len(validator.evidence_ledger) + 1)):
+            raise ValidationError("runtime reducer snapshot evidence ledger is not contiguous")
+        validator.last_batch_closed_active_ms = snapshot["lastBatchClosedActiveMs"]
+        validator.result_ready_message = deepcopy(snapshot["resultReadyMessage"])
+        if validator.result_ready_message is not None:
+            validate_schema(validator.result_ready_message, "a620_training_runtime_message.schema.json")
+            if validator.result_ready_message["messageType"] != "RESULT_READY":
+                raise ValidationError("runtime reducer snapshot resultReadyMessage is malformed")
+        validator.result_payload_hash = snapshot["resultPayloadSha256"]
+        validator.final_formal_result_id = snapshot["finalFormalResultId"]
+
+        if not 0 <= validator.active_elapsed_ms <= validator.duration_ms:
+            raise ValidationError("runtime reducer snapshot activeElapsedMs is invalid")
+        if validator.state == "RESULT_COMMITTED" and validator.final_formal_result_id is None:
+            raise ValidationError("RESULT_COMMITTED snapshot requires finalFormalResultId")
+        return validator
 
     def finalize(self, expected_outcome: str) -> None:
         expected_state = {
