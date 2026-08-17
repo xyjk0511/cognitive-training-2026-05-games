@@ -103,15 +103,19 @@ SOURCE_ROOT="$(find "$VERIFY_DIR/source" -mindepth 1 -maxdepth 1 -type d | head 
 (
     cd "$SOURCE_ROOT"
     ./scripts/bootstrap_vectors.sh
-    ./scripts/test_all.sh >/dev/null
-)
+    ./scripts/test_all.sh
+) >"$VERIFY_DIR/source-rehydrate.log" 2>&1 &
+SOURCE_VERIFY_PID=$!
 git clone -q "$BUNDLE" "$VERIFY_DIR/bundle"
 (
     cd "$VERIFY_DIR/bundle"
     git checkout -q "$COMMIT"
     ./scripts/bootstrap_vectors.sh
-    ./scripts/test_all.sh >/dev/null
-)
+    ./scripts/test_all.sh
+) >"$VERIFY_DIR/bundle-rehydrate.log" 2>&1 &
+BUNDLE_VERIFY_PID=$!
+wait "$SOURCE_VERIFY_PID"
+wait "$BUNDLE_VERIFY_PID"
 printf '%s\n' 'SOURCE_ZIP_REHYDRATE_PASS' 'GIT_BUNDLE_REHYDRATE_PASS' >> "$TEST_LOG"
 rm -rf "$VERIFY_DIR"
 trap - EXIT
