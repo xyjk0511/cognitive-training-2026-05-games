@@ -7,6 +7,7 @@ interface ITrainingRuntime {
     void registerCallback(ITrainingRuntimeCallback callback, long channelGeneration);
 
     oneway void submitInline(
+        String messageType,
         String messageId,
         long senderSeq,
         in byte[] canonicalJson,
@@ -15,6 +16,7 @@ interface ITrainingRuntime {
     );
 
     oneway void submitBulk(
+        String messageType,
         String messageId,
         long senderSeq,
         in ParcelFileDescriptor payloadFd,

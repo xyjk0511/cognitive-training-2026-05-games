@@ -3,11 +3,11 @@ package a620.shell.generated
 
 object RuntimeShellProfiles {
     const val ANDROID_SHELL_PROFILE = "A620-ARS-1"
-    const val CANDIDATE_REVISION = "rc3-baseline.6"
+    const val CANDIDATE_REVISION = "rc3-baseline.7"
     const val WIRE_CONTRACT_VERSION = "A620-TRC-1.1"
     const val CONTROLLER_PROCESS = "com.a620.tablet"
     const val TRAINING_PROCESS_SUFFIX = ":training"
-    const val STATUS = "GATE_AB_RUNTIME_SHELL_CANDIDATE_NOT_DEVICE_APPROVED"
+    const val STATUS = "GATE_AB_RUNTIME_INGRESS_CANDIDATE_NOT_DEVICE_APPROVED"
     const val SERVICE_EXPORTED = false
     const val SAME_UID_REQUIRED = true
     const val AUTO_RESUME_AFTER_PROCESS_DEATH = false
@@ -18,14 +18,30 @@ object RuntimeShellProfiles {
     const val INLINE_DESCRIPTOR_MAX_BYTES: Int = 8192
     const val BULK_CANONICAL_MAX_BYTES: Int = 2097152
     const val BULK_LEASE_MS: Long = 15000L
-    const val ACTOR_QUEUE_MAX_MESSAGES: Int = 256
-    const val ACTOR_QUEUE_MAX_BYTES: Int = 4194304
+    const val ACTOR_QUEUE_MAX_MESSAGES: Int = 96
+    const val ACTOR_QUEUE_MAX_BYTES: Int = 5242880
+    const val URGENT_QUEUE_MAX_MESSAGES: Int = 32
+    const val URGENT_QUEUE_MAX_BYTES: Int = 4194304
+    const val NORMAL_QUEUE_MAX_MESSAGES: Int = 64
+    const val NORMAL_QUEUE_MAX_BYTES: Int = 1048576
+    const val PRESERVE_INGRESS_ORDER_ACROSS_RESERVED_LANES = true
+    const val BULK_IO_WORKERS: Int = 2
+    const val BULK_IO_QUEUE_MAX_MESSAGES: Int = 4
+    const val MAX_INFLIGHT_BULK_MESSAGES: Int = 4
+    const val MAX_INFLIGHT_BULK_BYTES: Int = 4194304
+    const val BULK_READ_TIMEOUT_MS: Long = 15000L
+    const val STRICT_CANONICAL_ENVELOPE_REQUIRED = true
+    const val COMPARE_AIDL_IDENTITY_TO_ENVELOPE = true
+    val URGENT_MESSAGE_TYPES: Set<String> = setOf("TERMINATE","DEADLINE","PAUSE","ACK_RESULT_COMMITTED","READY","STARTED","BATCH_CLOSED","PAUSED","RESUMED","RESULT_READY","TERMINATED","COMMAND_ACCEPTED","COMMAND_REJECTED","RUNTIME_ERROR")
+    val DROPPABLE_ON_BACKPRESSURE_MESSAGE_TYPES: Set<String> = setOf("HEARTBEAT","STATE_SNAPSHOT")
     const val ONEWAY_SUBMISSION = true
     const val DUPLICATE_FD_BEFORE_ASYNC_USE = true
     const val INPUT_CLOCK_PROFILE = "A620-UPTIME-MS-1"
     const val INPUT_INTERVAL = "HALF_OPEN"
     const val MAX_POINTERS: Int = 10
     const val REJECT_UNKNOWN_POINTER_UP = true
+    const val CANCEL_ACTIVE_STREAM_ON_BOUNDARY = true
+    const val FORWARD_PLATFORM_CANCEL = true
 
     const val ANDROID_GRADLE_PLUGIN = "9.3.1"
     const val GRADLE = "9.5.0"
@@ -33,6 +49,7 @@ object RuntimeShellProfiles {
     const val COMPILE_SDK: Int = 36
     const val TARGET_SDK: Int = 36
     const val MIN_SDK: Int = 30
+    const val BUILD_TOOLS = "36.0.0"
 
     const val STORAGE_PROFILE = "A620-DSP-1"
     const val STORAGE_SCHEMA_VERSION: Int = 2
@@ -42,8 +59,8 @@ object RuntimeShellProfiles {
     const val CRITICAL_RESERVE_BYTES_PER_RUNTIME: Int = 1048576
     const val RESULT_COMMIT_PROFILE = "A620-RCP-1"
 
-    const val ANDROID_PROFILE_SHA256 = "f9fa8a11b7bbb31d0732a5746145be9eb13755d45d406d0abd0e3c148cd9f8e7"
+    const val ANDROID_PROFILE_SHA256 = "ad5f742e1ec5b61f970737d117264e4194d7c907fe4d335d6031d6ba065d86a5"
     const val STORAGE_PROFILE_SHA256 = "a6a48e89a548f4ee27ec67c635e50116060fb1b663606d5a12be0b59f699eb58"
     const val RESULT_COMMIT_PROFILE_SHA256 = "9f530a96c2e3a4784aba3415068c4634ab0ae7350297753cfbe1422cb51cf325"
-    const val AGGREGATE_PROFILE_SHA256 = "d6fd9d0e141a5d88b533271b07f821b19a141327f2f29c64c3645d17c767c837"
+    const val AGGREGATE_PROFILE_SHA256 = "2b99104f5581cd243bc7de523bdf8b7bb060a0a38eee7bd63d015429afdff5ca"
 }

@@ -6,8 +6,8 @@ import android.os.ParcelFileDescriptor
 
 interface ITrainingRuntime {
     fun registerCallback(newCallback: ITrainingRuntimeCallback, generation: Long)
-    fun submitInline(messageId: String, senderSeq: Long, canonicalJson: ByteArray, canonicalSha256: String, generation: Long)
-    fun submitBulk(messageId: String, senderSeq: Long, payloadFd: ParcelFileDescriptor, byteLength: Long, canonicalSha256: String, generation: Long)
+    fun submitInline(messageType: String, messageId: String, senderSeq: Long, canonicalJson: ByteArray, canonicalSha256: String, generation: Long)
+    fun submitBulk(messageType: String, messageId: String, senderSeq: Long, payloadFd: ParcelFileDescriptor, byteLength: Long, canonicalSha256: String, generation: Long)
     fun closeChannel(generation: Long, reason: String)
 
     abstract class Stub : Binder(), ITrainingRuntime {
@@ -16,8 +16,8 @@ interface ITrainingRuntime {
 }
 
 interface ITrainingRuntimeCallback {
-    fun onInlineEvent(canonicalJson: ByteArray, canonicalSha256: String, channelGeneration: Long)
-    fun onBulkEvent(payloadFd: ParcelFileDescriptor, byteLength: Long, canonicalSha256: String, channelGeneration: Long)
+    fun onInlineEvent(messageType: String, messageId: String, senderSeq: Long, canonicalJson: ByteArray, canonicalSha256: String, channelGeneration: Long)
+    fun onBulkEvent(messageType: String, messageId: String, senderSeq: Long, payloadFd: ParcelFileDescriptor, byteLength: Long, canonicalSha256: String, channelGeneration: Long)
     fun onRuntimeInterrupted(runtimeSessionId: String, executionAttempt: Long, reason: String, observedAtUptimeMs: Long)
     fun asBinder(): IBinder
 

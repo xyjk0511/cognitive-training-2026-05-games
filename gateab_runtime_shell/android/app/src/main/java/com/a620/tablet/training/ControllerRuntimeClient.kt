@@ -7,6 +7,7 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import android.os.ParcelFileDescriptor
 import android.os.SystemClock
+import a620.RuntimeIngressPriority
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
@@ -20,18 +21,28 @@ interface ExecutionOutcomeWriter {
 }
 
 /**
- * Main-process source scaffold. Binder death never resumes the same attempt;
- * it records INTERRUPTED and leaves the treatment flow to create a new attempt.
+ * Main-process source scaffold. Runtime callbacks receive the same strict
+ * canonical/hash/envelope checks as controller-to-training traffic.
  */
 class ControllerRuntimeClient(
     private val context: Context,
     private val runtimeSessionId: String,
     private val executionAttempt: Long,
     private val outcomeWriter: ExecutionOutcomeWriter,
+    private val eventSink: RuntimeMessageSink = RejectingPlaceholderSink(),
 ) : ServiceConnection {
     private val generationCounter = AtomicLong(0)
     private val terminal = AtomicBoolean(false)
     private val connectionLock = Any()
+    private val eventActor = TrainingRuntimeActor { error ->
+        eventSink.onFatalInfrastructureFailure("CONTROLLER_EVENT_ACTOR_FAILURE: ${error.message ?: error::class.java.simpleName}")
+    }
+    private val eventIngress = CanonicalIngressCoordinator(
+        expectedSenderRole = "COCOS_RUNTIME",
+        actor = eventActor,
+        sink = eventSink,
+        requireLiveGeneration = ::requireLiveGeneration,
+    )
 
     @Volatile private var runtime: ITrainingRuntime? = null
     @Volatile private var currentGeneration = 0L
@@ -42,7 +53,6 @@ class ControllerRuntimeClient(
     private fun handleRuntimeDeath(generation: Long, binder: IBinder?, reason: String) {
         synchronized(connectionLock) {
             if (terminal.get()) return
-            // An old service's delayed death callback cannot terminate a newer channel.
             if (generation != currentGeneration || (binder != null && currentBinder !== binder)) return
             if (!terminal.compareAndSet(false, true)) return
             runtime = null
@@ -50,32 +60,50 @@ class ControllerRuntimeClient(
             currentBinder = null
             currentDeathRecipient = null
         }
-        outcomeWriter.recordInterrupted(
-            runtimeSessionId,
-            executionAttempt,
-            reason,
-            SystemClock.uptimeMillis(),
-        )
+        outcomeWriter.recordInterrupted(runtimeSessionId, executionAttempt, reason, SystemClock.uptimeMillis())
+        eventIngress.close()
+        eventActor.shutdownNow()
     }
 
     private val callback = object : ITrainingRuntimeCallback.Stub() {
-        override fun onInlineEvent(canonicalJson: ByteArray, canonicalSha256: String, channelGeneration: Long) {
+        override fun onInlineEvent(
+            messageType: String,
+            messageId: String,
+            senderSeq: Long,
+            canonicalJson: ByteArray,
+            canonicalSha256: String,
+            channelGeneration: Long,
+        ) {
             if (terminal.get() || channelGeneration != currentGeneration) return
-            // Production implementation must enqueue into the controller's
-            // durable inbox/reducer transaction, not mutate UI on a Binder thread.
+            eventIngress.submitInline(
+                messageType,
+                messageId,
+                senderSeq,
+                canonicalJson,
+                canonicalSha256,
+                channelGeneration,
+            )
         }
 
         override fun onBulkEvent(
+            messageType: String,
+            messageId: String,
+            senderSeq: Long,
             payloadFd: ParcelFileDescriptor,
             byteLength: Long,
             canonicalSha256: String,
             channelGeneration: Long,
         ) {
             if (terminal.get() || channelGeneration != currentGeneration) return
-            // Duplicate before asynchronous use, mirroring the service side.
-            ParcelFileDescriptor.dup(payloadFd.fileDescriptor).use { _ ->
-                // Production code must queue and hash-verify ownedFd before use.
-            }
+            eventIngress.submitBulk(
+                messageType,
+                messageId,
+                senderSeq,
+                payloadFd,
+                byteLength,
+                canonicalSha256,
+                channelGeneration,
+            )
         }
 
         override fun onRuntimeInterrupted(
@@ -87,14 +115,17 @@ class ControllerRuntimeClient(
             if (runtimeSessionId != this@ControllerRuntimeClient.runtimeSessionId ||
                 executionAttempt != this@ControllerRuntimeClient.executionAttempt
             ) return
-            if (!terminal.compareAndSet(false, true)) return
-            runtime = null
-            outcomeWriter.recordInterrupted(
-                runtimeSessionId,
-                executionAttempt,
-                reason,
-                observedAtUptimeMs,
-            )
+            try {
+                eventActor.submit(RuntimeIngressPriority.URGENT, 1) {
+                    if (!terminal.compareAndSet(false, true)) return@submit
+                    runtime = null
+                    outcomeWriter.recordInterrupted(runtimeSessionId, executionAttempt, reason, observedAtUptimeMs)
+                    eventIngress.close()
+                    eventActor.shutdownNow()
+                }
+            } catch (_: Throwable) {
+                handleRuntimeDeath(currentGeneration, currentBinder, "CONTROLLER_EVENT_URGENT_LANE_UNAVAILABLE")
+            }
         }
     }
 
@@ -127,17 +158,14 @@ class ControllerRuntimeClient(
         }
     }
 
-    override fun onServiceDisconnected(name: ComponentName) {
+    override fun onServiceDisconnected(name: ComponentName) =
         handleRuntimeDeath(currentGeneration, currentBinder, "TRAINING_PROCESS_DISCONNECTED")
-    }
 
-    override fun onBindingDied(name: ComponentName) {
+    override fun onBindingDied(name: ComponentName) =
         handleRuntimeDeath(currentGeneration, currentBinder, "TRAINING_BINDING_DIED")
-    }
 
-    override fun onNullBinding(name: ComponentName) {
+    override fun onNullBinding(name: ComponentName) =
         handleRuntimeDeath(currentGeneration, currentBinder, "TRAINING_NULL_BINDING")
-    }
 
     fun requireRuntime(): ITrainingRuntime {
         check(!terminal.get()) { "runtime is terminal" }
@@ -155,9 +183,17 @@ class ControllerRuntimeClient(
             currentBinder = null
             runtime = null
         }
+        eventIngress.close()
+        eventActor.shutdownNow()
         if (bound) {
             context.unbindService(this)
             bound = false
+        }
+    }
+
+    private fun requireLiveGeneration(generation: Long) {
+        require(!terminal.get() && generation == currentGeneration && runtime != null) {
+            "stale or terminal controller event channel"
         }
     }
 }

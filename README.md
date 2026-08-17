@@ -1,29 +1,37 @@
-# A620 Cognitive Training Platform — 单线施工 rc3-baseline.6
+# A620 Cognitive Training Platform — 单线施工 rc3-baseline.7
 
-状态：`GATE_AB_RUNTIME_SHELL_CANDIDATE_NOT_DEVICE_APPROVED`
+状态：`GATE_AB_RUNTIME_INGRESS_CANDIDATE_NOT_DEVICE_APPROVED`
 
-本仓库仍坚持一个 A620 主 APK、一个入口和多个受控训练包。当前版本没有进入两款游戏的正式关卡开发，而是把公共参考底座推进到“Android 形态运行壳 + 可执行持久化语义”阶段。
+本仓库坚持一个 A620 主 APK、一个入口和多个受控训练包。baseline.7
+仍在公共底座阶段，没有提前进入《信号反应站》或《捕光行动》的正式关卡开发。
 
-## baseline.6 新增
+## 继承能力
 
-1. **持久数据统一使用 A620-JCS-1**：SQLite 内 JSON 不再用 Python 默认 `sort_keys`；与 wire 层共享 UTF-16 键排序、资源预算、非法 Unicode 和安全整数规则。
-2. **读前完整性验证**：snapshot、inbox outcome、outbox ACK 集、watchdog details、包 manifest 均绑定 SHA-256，并在恢复或使用前验证规范化字节。
-3. **版本化数据库迁移**：baseline.5 数据库可迁移到 runtime schema 2 / package schema 2；未知未来版本拒绝猜测性打开。
-4. **单调时钟防回退**：同一 uptime epoch 内时间倒退立即失败；安装协调器发现新 boot epoch 时清锁并作废未提交安装，不跨时钟域比较租约。
-5. **看门狗边界修复**：无 sourceMessageId 的 obligation 使用规范 sentinel 建立真实唯一键；同一 runtime 任一到期看门狗均优先于同毫秒到达的任意 ACK。
-6. **跨表一致性审计**：启动和按需检查 SQLite、外键、hash、状态 revision、终局/租约/outbox/watchdog、active package/release floor 和安装 journal。
-7. **Gate A/B 运行壳**：新增单入口 Android Studio 源码骨架、同 APK `:training` 服务、AIDL、同 UID 校验、inline/bulk PFD 传输、单消费者 actor、原生 `MotionEvent.eventTime` 半开输入门和 Binder death 中断路径。
-8. **可执行 MockGame 闭环**：Kotlin/JVM 参考会话覆盖 8 个批次、300 秒逻辑截止、暂停恢复、批次证据、结果提交幂等和新 executionAttempt 隔离。
-9. **控制器数据库参考**：Python/SQLite 参考实现覆盖 legacy migration、boot epoch 收口、batch evidence、正式结果 + sync queue + controller state + ACK 的同事务提交和故障注入回滚。
-10. **生成式规范**：baseline.5 协调 profile、baseline.6 存储 profile 和 Gate A/B runtime shell profile 均从 normative JSON 生成到 Python/TypeScript/Kotlin；Android `RuntimePolicy.kt` 也不再手抄。
+- A620-TRC-1.1 wire、Schema、状态机、JCS、毫秒 uptime 和训练包安全参考实现；
+- baseline.5 并发 inbox/outbox、租约 fencing、watchdog/retry 与安装协调；
+- baseline.6 持久 JSON hash、显式数据库迁移、boot epoch、跨表完整性审计、
+  Android 形态 AIDL/PFD 运行壳、MockGame 和结果七步事务。
 
-## 一键验证
+## baseline.7 新增
+
+1. 严格、资源受限的 Kotlin canonical JSON 解析器；
+2. AIDL `messageType/messageId/senderSeq` 与 canonical envelope 三项交叉核对；
+3. 大载荷 PFD 读取、长度/hash/解析移出单一状态 actor；
+4. bulk 独立并发和字节预算，以及 15 秒读取租约；
+5. 入口顺序屏障：后完成的快速消息不能越过先到但仍在读取的 bulk 消息；
+6. 紧急消息拥有独立准入容量，但不允许违反因果 FIFO；
+7. `HEARTBEAT/STATE_SNAPSHOT` 可在反压时丢弃，正式批次、结果和终止消息不可丢弃；
+8. 触摸跨越暂停/截止边界时返回 `CANCEL_STREAM`，不再留下 Cocos 卡住的 pointer；
+9. Android 主控回调方向使用同一严格入口；
+10. Android 工具链锁由规范生成，并明确标记 SDK build、依赖解析和设备验证尚未完成。
+
+## 验证
 
 ```bash
 ./scripts/test_all.sh
 ```
 
-若宿主环境对多次 Kotlin 编译存在进程限制，可分阶段执行：
+也可分阶段执行：
 
 ```bash
 ./scripts/test_python.sh
@@ -32,17 +40,20 @@
 ./scripts/build_sample_packages.sh
 ./baseline5_hardening/scripts/test_baseline5_hardening.sh
 ./baseline6_hardening/scripts/test_baseline6_hardening.sh
-./gateab_runtime_shell/tools/test_baseline6.sh
+./gateab_runtime_shell/tools/test_baseline7.sh
+```
+
+Android SDK 预检：
+
+```bash
+./gateab_runtime_shell/android/ci/android_sdk_preflight.sh
 ```
 
 ## 仍未完成
 
-- 未使用 Android SDK 编译、lint 或安装 APK；
-- 未生成和验证 Gradle Wrapper；
-- 未接入 Room 生成代码；
-- 未接入真实 Cocos Creator 工程；
-- 未在候选平板测 Binder P95/P99、进程杀死、输入边界、休眠和断电；
-- 未实现《信号反应站》L1 或《捕光行动》L1；
-- 未使用生产签名密钥。
+- 当前环境没有 Gradle 9.5.0、Android SDK 或依赖网络，因此没有真实 `assembleDebug/lintDebug` 结果；
+- 没有 Gradle Wrapper JAR、Room 生产实现、Cocos Creator 原生工程或候选平板测试；
+- 没有真实 Binder/PFD、kill -9、300 秒边界、闪存断电和安装回退设备证据；
+- 没有两款游戏 L1、生产素材或生产密钥。
 
-因此 baseline.6 不是 Gate 0/Gate A/Gate B 通过证明，也不能用于患者任务。
+baseline.7 不能用于患者任务，也不构成 Gate A/B 通过证明。

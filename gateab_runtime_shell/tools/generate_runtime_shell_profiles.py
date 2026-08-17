@@ -45,6 +45,8 @@ def render() -> dict[Path, str]:
     binder = ars["binder"]
     proc = ars["processIsolation"]
     gate = ars["inputGate"]
+    urgent_message_types_kt = ",".join(json.dumps(x) for x in binder["urgentMessageTypes"])
+    droppable_message_types_kt = ",".join(json.dumps(x) for x in binder["droppableOnBackpressureMessageTypes"])
     dsp = profiles["durable_storage.json"]
     ob = dsp["outbox"]
     rcp = profiles["result_commit.json"]
@@ -70,12 +72,28 @@ object RuntimeShellProfiles {{
     const val BULK_LEASE_MS: Long = {binder['bulkLeaseMs']}L
     const val ACTOR_QUEUE_MAX_MESSAGES: Int = {binder['singleConsumerQueueMaxMessages']}
     const val ACTOR_QUEUE_MAX_BYTES: Int = {binder['singleConsumerQueueMaxBytes']}
+    const val URGENT_QUEUE_MAX_MESSAGES: Int = {binder['urgentQueueMaxMessages']}
+    const val URGENT_QUEUE_MAX_BYTES: Int = {binder['urgentQueueMaxBytes']}
+    const val NORMAL_QUEUE_MAX_MESSAGES: Int = {binder['normalQueueMaxMessages']}
+    const val NORMAL_QUEUE_MAX_BYTES: Int = {binder['normalQueueMaxBytes']}
+    const val PRESERVE_INGRESS_ORDER_ACROSS_RESERVED_LANES = {str(binder['preserveIngressOrderAcrossReservedLanes']).lower()}
+    const val BULK_IO_WORKERS: Int = {binder['bulkIoWorkers']}
+    const val BULK_IO_QUEUE_MAX_MESSAGES: Int = {binder['bulkIoQueueMaxMessages']}
+    const val MAX_INFLIGHT_BULK_MESSAGES: Int = {binder['maxInflightBulkMessages']}
+    const val MAX_INFLIGHT_BULK_BYTES: Int = {binder['maxInflightBulkBytes']}
+    const val BULK_READ_TIMEOUT_MS: Long = {binder['bulkReadTimeoutMs']}L
+    const val STRICT_CANONICAL_ENVELOPE_REQUIRED = {str(binder['strictCanonicalEnvelopeRequired']).lower()}
+    const val COMPARE_AIDL_IDENTITY_TO_ENVELOPE = {str(binder['compareAidlIdentityToEnvelope']).lower()}
+    val URGENT_MESSAGE_TYPES: Set<String> = setOf({urgent_message_types_kt})
+    val DROPPABLE_ON_BACKPRESSURE_MESSAGE_TYPES: Set<String> = setOf({droppable_message_types_kt})
     const val ONEWAY_SUBMISSION = {str(binder['onewaySubmission']).lower()}
     const val DUPLICATE_FD_BEFORE_ASYNC_USE = {str(binder['duplicateFileDescriptorBeforeAsyncUse']).lower()}
     const val INPUT_CLOCK_PROFILE = "{gate['clockProfile']}"
     const val INPUT_INTERVAL = "{gate['interval']}"
     const val MAX_POINTERS: Int = {gate['maxPointers']}
     const val REJECT_UNKNOWN_POINTER_UP = {str(gate['rejectUnknownPointerUp']).lower()}
+    const val CANCEL_ACTIVE_STREAM_ON_BOUNDARY = {str(gate['cancelActiveStreamOnBoundary']).lower()}
+    const val FORWARD_PLATFORM_CANCEL = {str(gate['forwardPlatformCancel']).lower()}
 
     const val ANDROID_GRADLE_PLUGIN = "{ars['toolchainCandidate']['androidGradlePlugin']}"
     const val GRADLE = "{ars['toolchainCandidate']['gradle']}"
@@ -83,6 +101,7 @@ object RuntimeShellProfiles {{
     const val COMPILE_SDK: Int = {ars['toolchainCandidate']['compileSdk']}
     const val TARGET_SDK: Int = {ars['toolchainCandidate']['targetSdk']}
     const val MIN_SDK: Int = {ars['toolchainCandidate']['minSdk']}
+    const val BUILD_TOOLS = "{ars['toolchainCandidate']['buildTools']}"
 
     const val STORAGE_PROFILE = "{dsp['profile']}"
     const val STORAGE_SCHEMA_VERSION: Int = {dsp['schemaVersion']}
@@ -115,6 +134,20 @@ object AndroidShellProfile {{
     const val BulkLeaseMs = {binder['bulkLeaseMs']}L
     const val ActorQueueMaxMessages = {binder['singleConsumerQueueMaxMessages']}
     const val ActorQueueMaxBytes = {binder['singleConsumerQueueMaxBytes']}
+    const val UrgentQueueMaxMessages = {binder['urgentQueueMaxMessages']}
+    const val UrgentQueueMaxBytes = {binder['urgentQueueMaxBytes']}
+    const val NormalQueueMaxMessages = {binder['normalQueueMaxMessages']}
+    const val NormalQueueMaxBytes = {binder['normalQueueMaxBytes']}
+    const val PreserveIngressOrderAcrossReservedLanes = {str(binder['preserveIngressOrderAcrossReservedLanes']).lower()}
+    const val BulkIoWorkers = {binder['bulkIoWorkers']}
+    const val BulkIoQueueMaxMessages = {binder['bulkIoQueueMaxMessages']}
+    const val MaxInflightBulkMessages = {binder['maxInflightBulkMessages']}
+    const val MaxInflightBulkBytes = {binder['maxInflightBulkBytes']}
+    const val BulkReadTimeoutMs = {binder['bulkReadTimeoutMs']}L
+    const val StrictCanonicalEnvelopeRequired = {str(binder['strictCanonicalEnvelopeRequired']).lower()}
+    const val CompareAidlIdentityToEnvelope = {str(binder['compareAidlIdentityToEnvelope']).lower()}
+    val UrgentMessageTypes: Set<String> = setOf({urgent_message_types_kt})
+    val DroppableOnBackpressureMessageTypes: Set<String> = setOf({droppable_message_types_kt})
     const val SameUidRequired = {str(proc['sameUidRequired']).lower()}
     const val OnewaySubmission = {str(binder['onewaySubmission']).lower()}
     const val DuplicateFdBeforeAsyncUse = {str(binder['duplicateFileDescriptorBeforeAsyncUse']).lower()}
@@ -123,6 +156,8 @@ object AndroidShellProfile {{
     const val InputInterval = "{gate['interval']}"
     const val MaxPointers = {gate['maxPointers']}
     const val RejectUnknownPointerUp = {str(gate['rejectUnknownPointerUp']).lower()}
+    const val CancelActiveStreamOnBoundary = {str(gate['cancelActiveStreamOnBoundary']).lower()}
+    const val ForwardPlatformCancel = {str(gate['forwardPlatformCancel']).lower()}
 
     const val TrainingProcessSuffix = "{proc['trainingProcessSuffix']}"
     const val ServiceExported = {str(proc['serviceExported']).lower()}
@@ -144,9 +179,41 @@ object RuntimePolicy {{
     const val BULK_CANONICAL_MAX_BYTES = {binder['bulkCanonicalMaxBytes']}
     const val ACTOR_QUEUE_MAX_MESSAGES = {binder['singleConsumerQueueMaxMessages']}
     const val ACTOR_QUEUE_MAX_BYTES = {binder['singleConsumerQueueMaxBytes']}
+    const val URGENT_QUEUE_MAX_MESSAGES = {binder['urgentQueueMaxMessages']}
+    const val URGENT_QUEUE_MAX_BYTES = {binder['urgentQueueMaxBytes']}
+    const val NORMAL_QUEUE_MAX_MESSAGES = {binder['normalQueueMaxMessages']}
+    const val NORMAL_QUEUE_MAX_BYTES = {binder['normalQueueMaxBytes']}
+    const val PRESERVE_INGRESS_ORDER_ACROSS_RESERVED_LANES = {str(binder['preserveIngressOrderAcrossReservedLanes']).lower()}
+    const val BULK_IO_WORKERS = {binder['bulkIoWorkers']}
+    const val BULK_IO_QUEUE_MAX_MESSAGES = {binder['bulkIoQueueMaxMessages']}
+    const val MAX_INFLIGHT_BULK_MESSAGES = {binder['maxInflightBulkMessages']}
+    const val MAX_INFLIGHT_BULK_BYTES = {binder['maxInflightBulkBytes']}
+    const val BULK_READ_TIMEOUT_MS = {binder['bulkReadTimeoutMs']}L
+    val URGENT_MESSAGE_TYPES: Set<String> = setOf({urgent_message_types_kt})
+    val DROPPABLE_ON_BACKPRESSURE_MESSAGE_TYPES: Set<String> = setOf({droppable_message_types_kt})
+    const val MAX_POINTERS = {gate['maxPointers']}
+    const val CANCEL_ACTIVE_STREAM_ON_BOUNDARY = {str(gate['cancelActiveStreamOnBoundary']).lower()}
+    const val FORWARD_PLATFORM_CANCEL = {str(gate['forwardPlatformCancel']).lower()}
     const val CALLBACK_REGISTRATION_TIMEOUT_MS = {proc['callbackRegistrationTimeoutMs']}L
 }}
 '''
+
+    toolchain_lock = json.dumps({
+        "profile": "A620-ANDROID-TOOLCHAIN-1",
+        "candidateRevision": ars["candidateRevision"],
+        "androidGradlePlugin": ars["toolchainCandidate"]["androidGradlePlugin"],
+        "gradle": ars["toolchainCandidate"]["gradle"],
+        "jdk": ars["toolchainCandidate"]["jdk"],
+        "compileSdk": ars["toolchainCandidate"]["compileSdk"],
+        "targetSdk": ars["toolchainCandidate"]["targetSdk"],
+        "minSdk": ars["toolchainCandidate"]["minSdk"],
+        "buildTools": ars["toolchainCandidate"]["buildTools"],
+        "gradleWrapperJarPresent": ars["sourceScaffold"]["gradleWrapperJarPresent"],
+        "dependencyResolutionVerified": ars["sourceScaffold"]["dependencyResolutionVerified"],
+        "androidSdkBuildVerified": ars["sourceScaffold"]["androidSdkBuildPerformed"],
+        "candidateDeviceVerified": ars["sourceScaffold"]["deviceApprovalPerformed"],
+        "reason": "The current build environment has neither Android SDK nor dependency-network access; JVM/stub compilation is not an Android SDK build.",
+    }, indent=2, ensure_ascii=False) + "\n"
 
     return {
         GEN / "runtime_shell_profiles.py": py,
@@ -157,6 +224,7 @@ object RuntimePolicy {{
         ROOT / "kotlin/src/main/kotlin/a620/shell/generated/RuntimeShellProfiles.kt": kt,
         ROOT / "kotlin/src/main/kotlin/a620/shell/AndroidShellProfile.kt": android_compat_kt,
         ROOT / "android/app/src/main/java/com/a620/tablet/training/RuntimePolicy.kt": android_runtime_policy_kt,
+        ROOT / "android/toolchain.lock.json": toolchain_lock,
     }
 
 

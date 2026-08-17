@@ -1,8 +1,8 @@
 {
   "profile": "A620-ARS-1",
-  "candidateRevision": "rc3-baseline.6",
+  "candidateRevision": "rc3-baseline.7",
   "wireContractVersion": "A620-TRC-1.1",
-  "status": "GATE_AB_RUNTIME_SHELL_CANDIDATE_NOT_DEVICE_APPROVED",
+  "status": "GATE_AB_RUNTIME_INGRESS_CANDIDATE_NOT_DEVICE_APPROVED",
   "processIsolation": {
     "controllerProcess": "com.a620.tablet",
     "trainingProcessSuffix": ":training",
@@ -18,22 +18,58 @@
     "inlineDescriptorMaxBytes": 8192,
     "bulkCanonicalMaxBytes": 2097152,
     "bulkLeaseMs": 15000,
-    "singleConsumerQueueMaxMessages": 256,
-    "singleConsumerQueueMaxBytes": 4194304,
+    "singleConsumerQueueMaxMessages": 96,
+    "singleConsumerQueueMaxBytes": 5242880,
     "onewaySubmission": true,
-    "duplicateFileDescriptorBeforeAsyncUse": true
+    "duplicateFileDescriptorBeforeAsyncUse": true,
+    "urgentQueueMaxMessages": 32,
+    "urgentQueueMaxBytes": 4194304,
+    "normalQueueMaxMessages": 64,
+    "normalQueueMaxBytes": 1048576,
+    "bulkIoWorkers": 2,
+    "bulkIoQueueMaxMessages": 4,
+    "maxInflightBulkMessages": 4,
+    "maxInflightBulkBytes": 4194304,
+    "bulkReadTimeoutMs": 15000,
+    "strictCanonicalEnvelopeRequired": true,
+    "compareAidlIdentityToEnvelope": true,
+    "urgentMessageTypes": [
+      "TERMINATE",
+      "DEADLINE",
+      "PAUSE",
+      "ACK_RESULT_COMMITTED",
+      "READY",
+      "STARTED",
+      "BATCH_CLOSED",
+      "PAUSED",
+      "RESUMED",
+      "RESULT_READY",
+      "TERMINATED",
+      "COMMAND_ACCEPTED",
+      "COMMAND_REJECTED",
+      "RUNTIME_ERROR"
+    ],
+    "preserveIngressOrderAcrossReservedLanes": true,
+    "droppableOnBackpressureMessageTypes": [
+      "HEARTBEAT",
+      "STATE_SNAPSHOT"
+    ]
   },
   "inputGate": {
     "clockProfile": "A620-UPTIME-MS-1",
     "interval": "HALF_OPEN",
     "maxPointers": 10,
-    "rejectUnknownPointerUp": true
+    "rejectUnknownPointerUp": true,
+    "cancelActiveStreamOnBoundary": true,
+    "forwardPlatformCancel": true
   },
   "sourceScaffold": {
     "minAndroidApiCandidate": 30,
     "toolchainMustBeLockedBeforeApkBuild": true,
     "androidSdkBuildPerformed": false,
-    "deviceApprovalPerformed": false
+    "deviceApprovalPerformed": false,
+    "gradleWrapperJarPresent": false,
+    "dependencyResolutionVerified": false
   },
   "toolchainCandidate": {
     "androidGradlePlugin": "9.3.1",
@@ -41,6 +77,7 @@
     "jdk": 17,
     "compileSdk": 36,
     "targetSdk": 36,
-    "minSdk": 30
+    "minSdk": 30,
+    "buildTools": "36.0.0"
   }
 }

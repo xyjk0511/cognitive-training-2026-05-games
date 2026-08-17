@@ -15,14 +15,20 @@ def load_profile() -> dict:
 def test_profile_budget_and_contract() -> None:
     p = load_profile()
     assert p["profile"] == "A620-ARS-1"
-    assert p["candidateRevision"] == "rc3-baseline.6"
+    assert p["candidateRevision"] == "rc3-baseline.7"
     assert p["wireContractVersion"] == "A620-TRC-1.1"
-    assert p["status"] == "GATE_AB_RUNTIME_SHELL_CANDIDATE_NOT_DEVICE_APPROVED"
+    assert p["status"] == "GATE_AB_RUNTIME_INGRESS_CANDIDATE_NOT_DEVICE_APPROVED"
     assert p["binder"]["inlineCanonicalMaxBytes"] == 49_152
     assert p["binder"]["inlineCanonicalMaxBytes"] < 64 * 1024
     assert p["binder"]["bulkCanonicalMaxBytes"] == 2 * 1024 * 1024
-    assert p["binder"]["singleConsumerQueueMaxMessages"] == 256
+    assert p["binder"]["singleConsumerQueueMaxMessages"] == 96
     assert p["processIsolation"]["sameUidRequired"] is True
+    assert p["binder"]["urgentQueueMaxMessages"] == 32
+    assert p["binder"]["normalQueueMaxMessages"] == 64
+    assert p["binder"]["urgentQueueMaxMessages"] + p["binder"]["normalQueueMaxMessages"] == 96
+    assert p["binder"]["maxInflightBulkMessages"] == 4
+    assert p["binder"]["bulkReadTimeoutMs"] == 15_000
+    assert p["inputGate"]["cancelActiveStreamOnBoundary"] is True
 
 
 def test_process_death_never_auto_resumes() -> None:
@@ -43,6 +49,7 @@ def test_toolchain_is_explicit_but_not_claimed_as_built() -> None:
         "compileSdk": 36,
         "targetSdk": 36,
         "minSdk": 30,
+        "buildTools": "36.0.0",
     }
     assert p["sourceScaffold"]["androidSdkBuildPerformed"] is False
     assert p["sourceScaffold"]["deviceApprovalPerformed"] is False
@@ -56,3 +63,11 @@ def test_generated_profile_hash() -> None:
     ts = (ROOT / "gateab_runtime_shell/typescript/src/generated-profile.ts").read_text()
     assert digest in kt
     assert digest in ts
+
+
+def test_reserved_urgent_bytes_can_admit_max_bulk_result() -> None:
+    p = load_profile()["binder"]
+    assert p["urgentQueueMaxBytes"] >= p["bulkCanonicalMaxBytes"]
+    assert "RESULT_READY" in p["urgentMessageTypes"]
+    assert "BATCH_CLOSED" in p["urgentMessageTypes"]
+    assert set(p["droppableOnBackpressureMessageTypes"]) == {"HEARTBEAT", "STATE_SNAPSHOT"}

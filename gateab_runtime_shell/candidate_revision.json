@@ -1,16 +1,17 @@
 {
   "contractVersion": "A620-TRC-1.1",
-  "implementationCandidateRevision": "rc3-baseline.6",
-  "inheritsWireBytesFrom": "rc3-baseline.5",
+  "implementationCandidateRevision": "rc3-baseline.7",
+  "inheritsWireBytesFrom": "rc3-baseline.6",
   "wireSemanticChange": false,
-  "status": "GATE_AB_RUNTIME_SHELL_CANDIDATE_NOT_DEVICE_APPROVED",
+  "status": "GATE_AB_RUNTIME_INGRESS_CANDIDATE_NOT_DEVICE_APPROVED",
   "scope": [
-    "binder_transport_policy",
-    "bulk_payload_file_descriptor_path",
-    "single_consumer_runtime_actor",
-    "native_input_gate_reference",
-    "process_death_interruption",
-    "mock_game_300s_result_commit_loop",
-    "android_studio_source_scaffold"
+    "strict_canonical_runtime_envelope_ingress",
+    "aidl_identity_cross_check",
+    "reserved_urgent_runtime_lane",
+    "off_actor_bulk_io_and_hash_validation",
+    "bounded_bulk_inflight_budget_and_timeout",
+    "touch_stream_cancel_on_boundary",
+    "controller_callback_ingress_hardening",
+    "android_toolchain_lock_and_sdk_build_preflight"
   ]
 }

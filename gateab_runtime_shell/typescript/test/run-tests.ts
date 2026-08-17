@@ -11,8 +11,13 @@ function check(value: boolean, message: string): void {
 }
 
 check(androidShellProfile.profile === "A620-ARS-1", "profile");
-check(androidShellProfile.candidateRevision === "rc3-baseline.6", "revision");
+check(androidShellProfile.candidateRevision === "rc3-baseline.7", "revision");
 check(profileProjectionHash() === androidShellProfileSha256, "profile hash");
+check(androidShellProfile.binder.urgentQueueMaxMessages === 32, "urgent queue reserve");
+check(androidShellProfile.binder.normalQueueMaxMessages === 64, "normal queue cap");
+check(androidShellProfile.inputGate.cancelActiveStreamOnBoundary === true, "touch cancel boundary");
+check(androidShellProfile.binder.droppableOnBackpressureMessageTypes.includes("HEARTBEAT"), "telemetry backpressure policy");
+check(androidShellProfile.binder.urgentQueueMaxBytes >= androidShellProfile.binder.bulkCanonicalMaxBytes, "max result fits urgent reserve");
 
 const inline = planCanonicalValue({ messageType: "HEARTBEAT", seq: 1 });
 check(inline.kind === "INLINE", "small payload inline");
@@ -39,4 +44,4 @@ try {
 }
 check(tooLargeRejected, "oversize rejected");
 
-console.log("TYPESCRIPT_BASELINE6_TRANSPORT_TESTS_PASS");
+console.log("TYPESCRIPT_BASELINE7_TRANSPORT_TESTS_PASS");

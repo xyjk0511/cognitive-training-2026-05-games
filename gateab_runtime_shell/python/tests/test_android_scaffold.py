@@ -35,6 +35,9 @@ def test_aidl_uses_oneway_and_file_descriptor_for_bulk() -> None:
     assert "ParcelFileDescriptor payloadFd" in text
     assert "long byteLength" in text
     assert "String canonicalSha256" in text
+    assert "String messageType" in text
+    assert "String messageId" in text
+    assert "long senderSeq" in text
     callback = (ANDROID / "app/src/main/aidl/com/a620/tablet/training/ITrainingRuntimeCallback.aidl").read_text()
     assert "oneway interface ITrainingRuntimeCallback" in callback
     assert "ParcelFileDescriptor payloadFd" in callback
@@ -43,10 +46,14 @@ def test_aidl_uses_oneway_and_file_descriptor_for_bulk() -> None:
 def test_service_enforces_same_uid_and_duplicates_fd() -> None:
     text = (ANDROID / "app/src/main/java/com/a620/tablet/training/TrainingRuntimeService.kt").read_text()
     assert "Binder.getCallingUid() != applicationInfo.uid" in text
-    assert "ParcelFileDescriptor.dup(payloadFd.fileDescriptor)" in text
+    assert "CanonicalIngressCoordinator" in text
     assert "TrainingRuntimeActor" in text
-    assert "canonicalJson.size in 1..RuntimePolicy.INLINE_CANONICAL_MAX_BYTES" in text
-    assert "byteLength in 1..RuntimePolicy.BULK_CANONICAL_MAX_BYTES" in text
+    coordinator = (ANDROID / "app/src/main/java/com/a620/tablet/training/CanonicalIngressCoordinator.kt").read_text()
+    assert "ParcelFileDescriptor.dup(payloadFd.fileDescriptor)" in coordinator
+    assert "RuntimeWireEnvelopeParser.parseCanonical" in coordinator
+    assert "bulkExecutor.execute" in coordinator
+    assert "actor.submit" in coordinator
+    assert coordinator.index("bulkExecutor.execute") < coordinator.index("actor.submit", coordinator.index("bulkExecutor.execute"))
 
 
 def test_client_marks_process_death_interrupted_without_resume() -> None:
@@ -57,10 +64,13 @@ def test_client_marks_process_death_interrupted_without_resume() -> None:
     assert "BIND_AUTO_CREATE" in text
 
 
-def test_motion_event_uses_uptime_half_open_boundary() -> None:
+def test_motion_event_uses_uptime_gate_and_explicit_cancel_stream() -> None:
     text = (ANDROID / "app/src/main/java/com/a620/tablet/training/AndroidTouchInputGate.kt").read_text()
-    assert "val time = event.eventTime" in text
-    assert "time >= enabledAtUptimeMs && time < disabledAtUptimeMs" in text
+    assert "eventTimeUptimeMs = event.eventTime" in text
+    assert "CANCEL_STREAM" in text
+    pure = (ROOT / "gateab_runtime_shell/kotlin/src/main/kotlin/a620/shell/PointerInputGate.kt").read_text()
+    assert "sample.eventTimeUptimeMs < disabledAtUptimeMs" in pure
+    assert "activePointers.clear()" in pure
 
 
 def test_sql_schema_enforces_result_outcome_exclusivity() -> None:
@@ -96,11 +106,13 @@ def test_sql_schema_enforces_result_outcome_exclusivity() -> None:
         )
 
 
-def test_service_rechecks_generation_inside_actor_and_closes_rejected_fd() -> None:
+def test_service_rechecks_generation_and_bulk_fd_is_owned_off_actor() -> None:
     text = (ANDROID / "app/src/main/java/com/a620/tablet/training/TrainingRuntimeService.kt").read_text()
-    assert text.count("requireLiveGeneration(generation)") >= 5
-    assert "ownedFd.close()" in text
     assert "channelGeneration == generation && callbackBinder === newBinder" in text
+    coordinator = (ANDROID / "app/src/main/java/com/a620/tablet/training/CanonicalIngressCoordinator.kt").read_text()
+    assert coordinator.count("requireLiveGeneration(generation)") >= 3
+    assert "ownedFd.close()" in coordinator
+    assert "BULK_PAYLOAD_LEASE_EXPIRED" in coordinator
 
 
 def test_client_ignores_old_binder_death_and_unbinds_only_if_bound() -> None:
@@ -121,3 +133,46 @@ def test_android_runtime_policy_is_generated_from_normative_profile() -> None:
     assert f'const val INLINE_CANONICAL_MAX_BYTES = {profile["binder"]["inlineCanonicalMaxBytes"]}' in text
     assert f'const val BULK_CANONICAL_MAX_BYTES = {profile["binder"]["bulkCanonicalMaxBytes"]}' in text
     assert f'const val ACTOR_QUEUE_MAX_MESSAGES = {profile["binder"]["singleConsumerQueueMaxMessages"]}' in text
+    assert f'const val URGENT_QUEUE_MAX_MESSAGES = {profile["binder"]["urgentQueueMaxMessages"]}' in text
+    assert f'const val MAX_INFLIGHT_BULK_MESSAGES = {profile["binder"]["maxInflightBulkMessages"]}' in text
+
+
+def test_strict_parser_and_aidl_identity_cross_check_are_wired() -> None:
+    parser = (ROOT / "kotlin/src/main/kotlin/a620/StrictCanonicalJson.kt").read_text()
+    envelope = (ROOT / "kotlin/src/main/kotlin/a620/RuntimeWireEnvelope.kt").read_text()
+    assert "duplicate object key" in parser
+    assert "not A620-JCS-1 canonical bytes" in parser
+    assert "AIDL messageType differs" in envelope
+    assert "AIDL messageId differs" in envelope
+    assert "AIDL senderSeq differs" in envelope
+
+
+def test_priority_actor_has_reserved_urgent_lane() -> None:
+    text = (ROOT / "gateab_runtime_shell/kotlin/src/main/kotlin/a620/shell/PriorityRuntimeActor.kt").read_text()
+    assert "urgentMaxMessages" in text and "normalMaxMessages" in text
+    assert "urgentHead.ordinal < normalHead.ordinal" in text
+    assert "normal runtime actor capacity exceeded" in text
+
+
+def test_android_toolchain_lock_is_explicit_and_not_falsely_verified() -> None:
+    import json
+    lock = json.loads((ANDROID / "toolchain.lock.json").read_text())
+    assert lock["androidGradlePlugin"] == "9.3.1"
+    assert lock["gradle"] == "9.5.0"
+    assert lock["jdk"] == 17 and lock["compileSdk"] == 36
+    assert lock["androidSdkBuildVerified"] is False
+    preflight = (ANDROID / "ci/android_sdk_preflight.sh").read_text()
+    assert ":app:assembleDebug" in preflight and ":app:lintDebug" in preflight
+
+
+def test_android_apk_source_set_excludes_reference_only_harnesses() -> None:
+    text = (ANDROID / "app/build.gradle.kts").read_text()
+    for name in (
+        "MockController.kt",
+        "ControllerHarness.kt",
+        "MockGame.kt",
+        "RuntimeActor.kt",
+        "RuntimeChannel.kt",
+        "Transport.kt",
+    ):
+        assert name in text
