@@ -1,0 +1,15 @@
+{
+  "profile": "A620-CCP-1",
+  "sqlite": {
+    "busyTimeoutMs": 5000,
+    "journalMode": "WAL",
+    "synchronous": "FULL",
+    "transactionMode": "IMMEDIATE",
+    "foreignKeys": true
+  },
+  "runtimeLeaseMs": 5000,
+  "outboxClaimLeaseMs": 5000,
+  "maxClaimsPerCycle": 128,
+  "reducerMustBePure": true,
+  "fencingRequired": true
+}

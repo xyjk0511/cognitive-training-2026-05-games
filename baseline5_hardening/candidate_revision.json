@@ -1,0 +1,7 @@
+{
+  "contractVersion": "A620-TRC-1.1",
+  "implementationCandidateRevision": "rc3-baseline.5",
+  "releaseStatus": "GATE_0_IMPLEMENTATION_CANDIDATE_NOT_APPROVED",
+  "inheritsWireBytesFrom": "rc3-baseline.4",
+  "wireSemanticChange": false
+}

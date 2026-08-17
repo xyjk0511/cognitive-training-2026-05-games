@@ -1,0 +1,9 @@
+{
+  "profile": "A620-PIL-1",
+  "installLeaseMs": 30000,
+  "installHeartbeatMs": 5000,
+  "perGameSerialization": true,
+  "stagingDirectoryIncludesInstallId": true,
+  "staleFenceMayCommit": false,
+  "activationAndReleaseFloorSingleTransaction": true
+}

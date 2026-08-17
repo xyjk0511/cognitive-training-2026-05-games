@@ -1,0 +1,9 @@
+{
+  "profile": "A620-RWC-1",
+  "deadlineTieBreaker": "WATCHDOG_BEFORE_RETRY",
+  "terminalCancelsPendingOutbox": true,
+  "terminalCancelsActiveWatchdogs": true,
+  "lateAckAfterTerminal": "REJECT",
+  "expiredClaimOnActiveRuntime": "RETURN_TO_PENDING",
+  "expiredClaimOnTerminalRuntime": "CANCEL"
+}
