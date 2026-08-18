@@ -1,15 +1,476 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:a620:signal-station:game-metrics:gate0",
-  "title": "SIGNAL_STATION Gate0 Session Metrics",
-  "type": "object",
-  "properties": {
-    "totalTouches": {
-      "type": "integer",
-      "minimum": 0,
-      "maximum": 1000000
+  "$id": "urn:a620:signal-station:game-metrics:1.2.1",
+  "title": "SIGNAL_STATION Session Metrics 1.2.1 r2",
+  "description": "The empty branch exists only for inherited baseline.8 protocol vectors.",
+  "oneOf": [
+    {
+      "type": "object",
+      "maxProperties": 0,
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "totalH",
+        "totalT",
+        "totalF",
+        "totalD",
+        "reactionTimeCount",
+        "reactionTimeTotalMs",
+        "reactionTimeMinMs",
+        "reactionTimeMaxMs",
+        "doubleIntervalCount",
+        "doubleIntervalTotalMs",
+        "pauseCount",
+        "totalPausedUptimeMs",
+        "generatedBatchCount",
+        "generatedWaveCount",
+        "eligibleBatchCount",
+        "incompleteBatchCount",
+        "verticalSliceCoverageBlocked",
+        "verticalSliceCoverageBlockReason",
+        "verticalSliceBlockedLevel",
+        "verticalSliceBlockedAfterBatchOrdinal",
+        "generatorVersion",
+        "configVersion",
+        "scoringRuleVersion",
+        "requirementVersion",
+        "contentVersion",
+        "fullLevelSetStatus",
+        "implementedLevels"
+      ],
+      "properties": {
+        "totalH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 160
+        },
+        "totalT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 160
+        },
+        "totalF": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 80
+        },
+        "totalD": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 80
+        },
+        "reactionTimeCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 160
+        },
+        "reactionTimeTotalMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 463840
+        },
+        "reactionTimeMinMs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 2899
+        },
+        "reactionTimeMaxMs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 2899
+        },
+        "doubleIntervalCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 40
+        },
+        "doubleIntervalTotalMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 47960
+        },
+        "pauseCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "totalPausedUptimeMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "generatedBatchCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8
+        },
+        "generatedWaveCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 64
+        },
+        "eligibleBatchCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8
+        },
+        "incompleteBatchCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "generatorVersion": {
+          "const": "signal-station-gen-1.2.1-r2"
+        },
+        "configVersion": {
+          "const": "A620-SS-CONFIG-1.2.1"
+        },
+        "scoringRuleVersion": {
+          "const": "signal-station-score-1.2.1"
+        },
+        "requirementVersion": {
+          "const": "1.2.1"
+        },
+        "contentVersion": {
+          "const": "signal-station-six-slice-1.2.1-r2"
+        },
+        "fullLevelSetStatus": {
+          "const": "HOLD"
+        },
+        "implementedLevels": {
+          "const": [
+            1,
+            7,
+            67,
+            79,
+            90,
+            96
+          ]
+        },
+        "verticalSliceCoverageBlocked": {
+          "type": "boolean"
+        },
+        "verticalSliceCoverageBlockReason": {
+          "enum": [
+            "LEVEL_NOT_IMPLEMENTED",
+            null
+          ]
+        },
+        "verticalSliceBlockedLevel": {
+          "enum": [
+            2,
+            6,
+            8,
+            66,
+            68,
+            78,
+            80,
+            89,
+            91,
+            95,
+            null
+          ]
+        },
+        "verticalSliceBlockedAfterBatchOrdinal": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1,
+          "maximum": 8
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "reactionTimeCount": {
+                "const": 0
+              }
+            },
+            "required": [
+              "reactionTimeCount"
+            ]
+          },
+          "then": {
+            "properties": {
+              "reactionTimeTotalMs": {
+                "const": 0
+              },
+              "reactionTimeMinMs": {
+                "type": "null"
+              },
+              "reactionTimeMaxMs": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "reactionTimeCount": {
+                "minimum": 1
+              },
+              "reactionTimeMinMs": {
+                "type": "integer"
+              },
+              "reactionTimeMaxMs": {
+                "type": "integer"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "verticalSliceCoverageBlocked": {
+                "const": false
+              }
+            },
+            "required": [
+              "verticalSliceCoverageBlocked"
+            ]
+          },
+          "then": {
+            "properties": {
+              "verticalSliceCoverageBlockReason": {
+                "type": "null"
+              },
+              "verticalSliceBlockedLevel": {
+                "type": "null"
+              },
+              "verticalSliceBlockedAfterBatchOrdinal": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "verticalSliceCoverageBlockReason": {
+                "const": "LEVEL_NOT_IMPLEMENTED"
+              },
+              "verticalSliceBlockedLevel": {
+                "type": "integer"
+              },
+              "verticalSliceBlockedAfterBatchOrdinal": {
+                "type": "integer"
+              },
+              "eligibleBatchCount": {
+                "minimum": 1
+              },
+              "incompleteBatchCount": {
+                "const": 0
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "generatedBatchCount": {
+                "const": 0
+              }
+            },
+            "required": [
+              "generatedBatchCount"
+            ]
+          },
+          "then": {
+            "properties": {
+              "generatedWaveCount": {
+                "const": 0
+              },
+              "eligibleBatchCount": {
+                "const": 0
+              },
+              "incompleteBatchCount": {
+                "const": 0
+              },
+              "totalH": {
+                "const": 0
+              },
+              "totalT": {
+                "const": 0
+              },
+              "totalF": {
+                "const": 0
+              },
+              "totalD": {
+                "const": 0
+              },
+              "doubleIntervalCount": {
+                "const": 0
+              },
+              "doubleIntervalTotalMs": {
+                "const": 0
+              },
+              "verticalSliceCoverageBlocked": {
+                "const": false
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "generatedBatchCount": {
+                "const": 1
+              }
+            },
+            "required": [
+              "generatedBatchCount"
+            ]
+          },
+          "then": {
+            "properties": {
+              "generatedWaveCount": {
+                "const": 8
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "generatedBatchCount": {
+                "const": 2
+              }
+            },
+            "required": [
+              "generatedBatchCount"
+            ]
+          },
+          "then": {
+            "properties": {
+              "generatedWaveCount": {
+                "const": 16
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "generatedBatchCount": {
+                "const": 3
+              }
+            },
+            "required": [
+              "generatedBatchCount"
+            ]
+          },
+          "then": {
+            "properties": {
+              "generatedWaveCount": {
+                "const": 24
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "generatedBatchCount": {
+                "const": 4
+              }
+            },
+            "required": [
+              "generatedBatchCount"
+            ]
+          },
+          "then": {
+            "properties": {
+              "generatedWaveCount": {
+                "const": 32
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "generatedBatchCount": {
+                "const": 5
+              }
+            },
+            "required": [
+              "generatedBatchCount"
+            ]
+          },
+          "then": {
+            "properties": {
+              "generatedWaveCount": {
+                "const": 40
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "generatedBatchCount": {
+                "const": 6
+              }
+            },
+            "required": [
+              "generatedBatchCount"
+            ]
+          },
+          "then": {
+            "properties": {
+              "generatedWaveCount": {
+                "const": 48
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "generatedBatchCount": {
+                "const": 7
+              }
+            },
+            "required": [
+              "generatedBatchCount"
+            ]
+          },
+          "then": {
+            "properties": {
+              "generatedWaveCount": {
+                "const": 56
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "generatedBatchCount": {
+                "const": 8
+              }
+            },
+            "required": [
+              "generatedBatchCount"
+            ]
+          },
+          "then": {
+            "properties": {
+              "generatedWaveCount": {
+                "const": 64
+              }
+            }
+          }
+        }
+      ]
     }
-  },
-  "additionalProperties": false,
-  "maxProperties": 64
+  ]
 }

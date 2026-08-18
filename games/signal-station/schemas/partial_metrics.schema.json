@@ -1,15 +1,822 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:a620:signal-station:partial-metrics:gate0",
-  "title": "SIGNAL_STATION Gate0 Partial Batch Metrics",
-  "type": "object",
-  "properties": {
-    "waveOrdinal": {
-      "type": "integer",
-      "minimum": 1,
-      "maximum": 8
+  "$id": "urn:a620:signal-station:partial-metrics:1.2.1",
+  "title": "SIGNAL_STATION Partial Batch Metrics 1.2.1 r2",
+  "description": "The empty branch exists only for inherited baseline.8 protocol vectors.",
+  "oneOf": [
+    {
+      "type": "object",
+      "maxProperties": 0,
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "waveOrdinal",
+        "presentedTargetCount",
+        "presentedDistractorCount",
+        "H",
+        "F",
+        "waitingDoubleCount",
+        "completedDoubleCount",
+        "timedOutTargetCount",
+        "activeElapsedInBatchMs"
+      ],
+      "properties": {
+        "waveOrdinal": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8
+        },
+        "presentedTargetCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20
+        },
+        "presentedDistractorCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "H": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20
+        },
+        "F": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "waitingDoubleCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5
+        },
+        "completedDoubleCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5
+        },
+        "timedOutTargetCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20
+        },
+        "activeElapsedInBatchMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 37500
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "oneOf": [
+            {
+              "properties": {
+                "presentedTargetCount": {
+                  "const": 0
+                },
+                "H": {
+                  "maximum": 0
+                },
+                "waitingDoubleCount": {
+                  "maximum": 0
+                },
+                "completedDoubleCount": {
+                  "maximum": 0
+                },
+                "timedOutTargetCount": {
+                  "maximum": 0
+                }
+              },
+              "required": [
+                "presentedTargetCount",
+                "H",
+                "waitingDoubleCount",
+                "completedDoubleCount",
+                "timedOutTargetCount"
+              ]
+            },
+            {
+              "properties": {
+                "presentedTargetCount": {
+                  "const": 1
+                },
+                "H": {
+                  "maximum": 1
+                },
+                "waitingDoubleCount": {
+                  "maximum": 1
+                },
+                "completedDoubleCount": {
+                  "maximum": 1
+                },
+                "timedOutTargetCount": {
+                  "maximum": 1
+                }
+              },
+              "required": [
+                "presentedTargetCount",
+                "H",
+                "waitingDoubleCount",
+                "completedDoubleCount",
+                "timedOutTargetCount"
+              ]
+            },
+            {
+              "properties": {
+                "presentedTargetCount": {
+                  "const": 2
+                },
+                "H": {
+                  "maximum": 2
+                },
+                "waitingDoubleCount": {
+                  "maximum": 2
+                },
+                "completedDoubleCount": {
+                  "maximum": 2
+                },
+                "timedOutTargetCount": {
+                  "maximum": 2
+                }
+              },
+              "required": [
+                "presentedTargetCount",
+                "H",
+                "waitingDoubleCount",
+                "completedDoubleCount",
+                "timedOutTargetCount"
+              ]
+            },
+            {
+              "properties": {
+                "presentedTargetCount": {
+                  "const": 3
+                },
+                "H": {
+                  "maximum": 3
+                },
+                "waitingDoubleCount": {
+                  "maximum": 3
+                },
+                "completedDoubleCount": {
+                  "maximum": 3
+                },
+                "timedOutTargetCount": {
+                  "maximum": 3
+                }
+              },
+              "required": [
+                "presentedTargetCount",
+                "H",
+                "waitingDoubleCount",
+                "completedDoubleCount",
+                "timedOutTargetCount"
+              ]
+            },
+            {
+              "properties": {
+                "presentedTargetCount": {
+                  "const": 4
+                },
+                "H": {
+                  "maximum": 4
+                },
+                "waitingDoubleCount": {
+                  "maximum": 4
+                },
+                "completedDoubleCount": {
+                  "maximum": 4
+                },
+                "timedOutTargetCount": {
+                  "maximum": 4
+                }
+              },
+              "required": [
+                "presentedTargetCount",
+                "H",
+                "waitingDoubleCount",
+                "completedDoubleCount",
+                "timedOutTargetCount"
+              ]
+            },
+            {
+              "properties": {
+                "presentedTargetCount": {
+                  "const": 5
+                },
+                "H": {
+                  "maximum": 5
+                },
+                "waitingDoubleCount": {
+                  "maximum": 5
+                },
+                "completedDoubleCount": {
+                  "maximum": 5
+                },
+                "timedOutTargetCount": {
+                  "maximum": 5
+                }
+              },
+              "required": [
+                "presentedTargetCount",
+                "H",
+                "waitingDoubleCount",
+                "completedDoubleCount",
+                "timedOutTargetCount"
+              ]
+            },
+            {
+              "properties": {
+                "presentedTargetCount": {
+                  "const": 6
+                },
+                "H": {
+                  "maximum": 6
+                },
+                "waitingDoubleCount": {
+                  "maximum": 5
+                },
+                "completedDoubleCount": {
+                  "maximum": 5
+                },
+                "timedOutTargetCount": {
+                  "maximum": 6
+                }
+              },
+              "required": [
+                "presentedTargetCount",
+                "H",
+                "waitingDoubleCount",
+                "completedDoubleCount",
+                "timedOutTargetCount"
+              ]
+            },
+            {
+              "properties": {
+                "presentedTargetCount": {
+                  "const": 7
+                },
+                "H": {
+                  "maximum": 7
+                },
+                "waitingDoubleCount": {
+                  "maximum": 5
+                },
+                "completedDoubleCount": {
+                  "maximum": 5
+                },
+                "timedOutTargetCount": {
+                  "maximum": 7
+                }
+              },
+              "required": [
+                "presentedTargetCount",
+                "H",
+                "waitingDoubleCount",
+                "completedDoubleCount",
+                "timedOutTargetCount"
+              ]
+            },
+            {
+              "properties": {
+                "presentedTargetCount": {
+                  "const": 8
+                },
+                "H": {
+                  "maximum": 8
+                },
+                "waitingDoubleCount": {
+                  "maximum": 5
+                },
+                "completedDoubleCount": {
+                  "maximum": 5
+                },
+                "timedOutTargetCount": {
+                  "maximum": 8
+                }
+              },
+              "required": [
+                "presentedTargetCount",
+                "H",
+                "waitingDoubleCount",
+                "completedDoubleCount",
+                "timedOutTargetCount"
+              ]
+            },
+            {
+              "properties": {
+                "presentedTargetCount": {
+                  "const": 9
+                },
+                "H": {
+                  "maximum": 9
+                },
+                "waitingDoubleCount": {
+                  "maximum": 5
+                },
+                "completedDoubleCount": {
+                  "maximum": 5
+                },
+                "timedOutTargetCount": {
+                  "maximum": 9
+                }
+              },
+              "required": [
+                "presentedTargetCount",
+                "H",
+                "waitingDoubleCount",
+                "completedDoubleCount",
+                "timedOutTargetCount"
+              ]
+            },
+            {
+              "properties": {
+                "presentedTargetCount": {
+                  "const": 10
+                },
+                "H": {
+                  "maximum": 10
+                },
+                "waitingDoubleCount": {
+                  "maximum": 5
+                },
+                "completedDoubleCount": {
+                  "maximum": 5
+                },
+                "timedOutTargetCount": {
+                  "maximum": 10
+                }
+              },
+              "required": [
+                "presentedTargetCount",
+                "H",
+                "waitingDoubleCount",
+                "completedDoubleCount",
+                "timedOutTargetCount"
+              ]
+            },
+            {
+              "properties": {
+                "presentedTargetCount": {
+                  "const": 11
+                },
+                "H": {
+                  "maximum": 11
+                },
+                "waitingDoubleCount": {
+                  "maximum": 5
+                },
+                "completedDoubleCount": {
+                  "maximum": 5
+                },
+                "timedOutTargetCount": {
+                  "maximum": 11
+                }
+              },
+              "required": [
+                "presentedTargetCount",
+                "H",
+                "waitingDoubleCount",
+                "completedDoubleCount",
+                "timedOutTargetCount"
+              ]
+            },
+            {
+              "properties": {
+                "presentedTargetCount": {
+                  "const": 12
+                },
+                "H": {
+                  "maximum": 12
+                },
+                "waitingDoubleCount": {
+                  "maximum": 5
+                },
+                "completedDoubleCount": {
+                  "maximum": 5
+                },
+                "timedOutTargetCount": {
+                  "maximum": 12
+                }
+              },
+              "required": [
+                "presentedTargetCount",
+                "H",
+                "waitingDoubleCount",
+                "completedDoubleCount",
+                "timedOutTargetCount"
+              ]
+            },
+            {
+              "properties": {
+                "presentedTargetCount": {
+                  "const": 13
+                },
+                "H": {
+                  "maximum": 13
+                },
+                "waitingDoubleCount": {
+                  "maximum": 5
+                },
+                "completedDoubleCount": {
+                  "maximum": 5
+                },
+                "timedOutTargetCount": {
+                  "maximum": 13
+                }
+              },
+              "required": [
+                "presentedTargetCount",
+                "H",
+                "waitingDoubleCount",
+                "completedDoubleCount",
+                "timedOutTargetCount"
+              ]
+            },
+            {
+              "properties": {
+                "presentedTargetCount": {
+                  "const": 14
+                },
+                "H": {
+                  "maximum": 14
+                },
+                "waitingDoubleCount": {
+                  "maximum": 5
+                },
+                "completedDoubleCount": {
+                  "maximum": 5
+                },
+                "timedOutTargetCount": {
+                  "maximum": 14
+                }
+              },
+              "required": [
+                "presentedTargetCount",
+                "H",
+                "waitingDoubleCount",
+                "completedDoubleCount",
+                "timedOutTargetCount"
+              ]
+            },
+            {
+              "properties": {
+                "presentedTargetCount": {
+                  "const": 15
+                },
+                "H": {
+                  "maximum": 15
+                },
+                "waitingDoubleCount": {
+                  "maximum": 5
+                },
+                "completedDoubleCount": {
+                  "maximum": 5
+                },
+                "timedOutTargetCount": {
+                  "maximum": 15
+                }
+              },
+              "required": [
+                "presentedTargetCount",
+                "H",
+                "waitingDoubleCount",
+                "completedDoubleCount",
+                "timedOutTargetCount"
+              ]
+            },
+            {
+              "properties": {
+                "presentedTargetCount": {
+                  "const": 16
+                },
+                "H": {
+                  "maximum": 16
+                },
+                "waitingDoubleCount": {
+                  "maximum": 5
+                },
+                "completedDoubleCount": {
+                  "maximum": 5
+                },
+                "timedOutTargetCount": {
+                  "maximum": 16
+                }
+              },
+              "required": [
+                "presentedTargetCount",
+                "H",
+                "waitingDoubleCount",
+                "completedDoubleCount",
+                "timedOutTargetCount"
+              ]
+            },
+            {
+              "properties": {
+                "presentedTargetCount": {
+                  "const": 17
+                },
+                "H": {
+                  "maximum": 17
+                },
+                "waitingDoubleCount": {
+                  "maximum": 5
+                },
+                "completedDoubleCount": {
+                  "maximum": 5
+                },
+                "timedOutTargetCount": {
+                  "maximum": 17
+                }
+              },
+              "required": [
+                "presentedTargetCount",
+                "H",
+                "waitingDoubleCount",
+                "completedDoubleCount",
+                "timedOutTargetCount"
+              ]
+            },
+            {
+              "properties": {
+                "presentedTargetCount": {
+                  "const": 18
+                },
+                "H": {
+                  "maximum": 18
+                },
+                "waitingDoubleCount": {
+                  "maximum": 5
+                },
+                "completedDoubleCount": {
+                  "maximum": 5
+                },
+                "timedOutTargetCount": {
+                  "maximum": 18
+                }
+              },
+              "required": [
+                "presentedTargetCount",
+                "H",
+                "waitingDoubleCount",
+                "completedDoubleCount",
+                "timedOutTargetCount"
+              ]
+            },
+            {
+              "properties": {
+                "presentedTargetCount": {
+                  "const": 19
+                },
+                "H": {
+                  "maximum": 19
+                },
+                "waitingDoubleCount": {
+                  "maximum": 5
+                },
+                "completedDoubleCount": {
+                  "maximum": 5
+                },
+                "timedOutTargetCount": {
+                  "maximum": 19
+                }
+              },
+              "required": [
+                "presentedTargetCount",
+                "H",
+                "waitingDoubleCount",
+                "completedDoubleCount",
+                "timedOutTargetCount"
+              ]
+            },
+            {
+              "properties": {
+                "presentedTargetCount": {
+                  "const": 20
+                },
+                "H": {
+                  "maximum": 20
+                },
+                "waitingDoubleCount": {
+                  "maximum": 5
+                },
+                "completedDoubleCount": {
+                  "maximum": 5
+                },
+                "timedOutTargetCount": {
+                  "maximum": 20
+                }
+              },
+              "required": [
+                "presentedTargetCount",
+                "H",
+                "waitingDoubleCount",
+                "completedDoubleCount",
+                "timedOutTargetCount"
+              ]
+            }
+          ]
+        },
+        {
+          "oneOf": [
+            {
+              "properties": {
+                "presentedDistractorCount": {
+                  "const": 0
+                },
+                "F": {
+                  "maximum": 0
+                }
+              },
+              "required": [
+                "presentedDistractorCount",
+                "F"
+              ]
+            },
+            {
+              "properties": {
+                "presentedDistractorCount": {
+                  "const": 1
+                },
+                "F": {
+                  "maximum": 1
+                }
+              },
+              "required": [
+                "presentedDistractorCount",
+                "F"
+              ]
+            },
+            {
+              "properties": {
+                "presentedDistractorCount": {
+                  "const": 2
+                },
+                "F": {
+                  "maximum": 2
+                }
+              },
+              "required": [
+                "presentedDistractorCount",
+                "F"
+              ]
+            },
+            {
+              "properties": {
+                "presentedDistractorCount": {
+                  "const": 3
+                },
+                "F": {
+                  "maximum": 3
+                }
+              },
+              "required": [
+                "presentedDistractorCount",
+                "F"
+              ]
+            },
+            {
+              "properties": {
+                "presentedDistractorCount": {
+                  "const": 4
+                },
+                "F": {
+                  "maximum": 4
+                }
+              },
+              "required": [
+                "presentedDistractorCount",
+                "F"
+              ]
+            },
+            {
+              "properties": {
+                "presentedDistractorCount": {
+                  "const": 5
+                },
+                "F": {
+                  "maximum": 5
+                }
+              },
+              "required": [
+                "presentedDistractorCount",
+                "F"
+              ]
+            },
+            {
+              "properties": {
+                "presentedDistractorCount": {
+                  "const": 6
+                },
+                "F": {
+                  "maximum": 6
+                }
+              },
+              "required": [
+                "presentedDistractorCount",
+                "F"
+              ]
+            },
+            {
+              "properties": {
+                "presentedDistractorCount": {
+                  "const": 7
+                },
+                "F": {
+                  "maximum": 7
+                }
+              },
+              "required": [
+                "presentedDistractorCount",
+                "F"
+              ]
+            },
+            {
+              "properties": {
+                "presentedDistractorCount": {
+                  "const": 8
+                },
+                "F": {
+                  "maximum": 8
+                }
+              },
+              "required": [
+                "presentedDistractorCount",
+                "F"
+              ]
+            },
+            {
+              "properties": {
+                "presentedDistractorCount": {
+                  "const": 9
+                },
+                "F": {
+                  "maximum": 9
+                }
+              },
+              "required": [
+                "presentedDistractorCount",
+                "F"
+              ]
+            },
+            {
+              "properties": {
+                "presentedDistractorCount": {
+                  "const": 10
+                },
+                "F": {
+                  "maximum": 10
+                }
+              },
+              "required": [
+                "presentedDistractorCount",
+                "F"
+              ]
+            }
+          ]
+        },
+        {
+          "if": {
+            "properties": {
+              "waveOrdinal": {
+                "const": 0
+              }
+            },
+            "required": [
+              "waveOrdinal"
+            ]
+          },
+          "then": {
+            "properties": {
+              "presentedTargetCount": {
+                "const": 0
+              },
+              "presentedDistractorCount": {
+                "const": 0
+              },
+              "H": {
+                "const": 0
+              },
+              "F": {
+                "const": 0
+              },
+              "waitingDoubleCount": {
+                "const": 0
+              },
+              "completedDoubleCount": {
+                "const": 0
+              },
+              "timedOutTargetCount": {
+                "const": 0
+              }
+            }
+          }
+        }
+      ]
     }
-  },
-  "additionalProperties": false,
-  "maxProperties": 16
+  ]
 }

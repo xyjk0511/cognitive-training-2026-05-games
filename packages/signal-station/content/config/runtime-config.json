@@ -1,0 +1,181 @@
+{
+  "schemaVersion": "A620-SS-CONFIG-1.2.1",
+  "requirementVersion": "1.2.1",
+  "generatorVersion": "signal-station-gen-1.2.1-r2",
+  "scoringRuleVersion": "signal-station-score-1.2.1",
+  "contentVersion": "signal-station-six-slice-1.2.1-r2",
+  "sourceWorkbookSha256": "b16fbcef60fa63214338af8f436e42e0080fe254fe89a9fa42a5256abde81620",
+  "requirementDocumentSha256": "c9823a24ee41d536a1401a0c233d7ed8be81e4fb7076716fafed09df3f6ac898",
+  "publicRulesDocumentSha256": "c1a4f3f2e309cdf92fc15d5f51e6e99bc90025c3ddc4ed8ea99077398a987794",
+  "durationMs": 300000,
+  "plannedBatchCount": 8,
+  "batchDurationMs": 37500,
+  "cueDurationMs": 3000,
+  "operationDurationMs": 30000,
+  "feedbackDurationMs": 2000,
+  "transitionDurationMs": 2500,
+  "waveStartOffsetsMs": [
+    500,
+    4000,
+    7500,
+    11000,
+    14500,
+    18000,
+    21500,
+    25000
+  ],
+  "timingProfiles": {
+    "A": {
+      "id": "A",
+      "enteringMs": 200,
+      "activeMs": 2500,
+      "exitingMs": 200,
+      "lifecycleMs": 2900,
+      "gapMs": 600,
+      "tailBufferMs": 2100,
+      "doubleWindowMs": 1200
+    },
+    "C": {
+      "id": "C",
+      "enteringMs": 180,
+      "activeMs": 2240,
+      "exitingMs": 180,
+      "lifecycleMs": 2600,
+      "gapMs": 900,
+      "tailBufferMs": 2400,
+      "doubleWindowMs": 1100
+    },
+    "H": {
+      "id": "H",
+      "enteringMs": 160,
+      "activeMs": 1980,
+      "exitingMs": 160,
+      "lifecycleMs": 2300,
+      "gapMs": 1200,
+      "tailBufferMs": 2700,
+      "doubleWindowMs": 1000
+    }
+  },
+  "levelConfigs": {
+    "1": {
+      "level": 1,
+      "stageId": "S01",
+      "gridRows": 2,
+      "gridColumns": 2,
+      "timingProfile": "A",
+      "waveTemplate": "P10_D0",
+      "targetClassCount": 1,
+      "targetClassSplit": [
+        10
+      ],
+      "similarityTier": 0,
+      "directionCount": 1,
+      "doubleCount": 0,
+      "doubleWaveOrdinals": [],
+      "maxWaveObjects": 2
+    },
+    "7": {
+      "level": 7,
+      "stageId": "S02",
+      "gridRows": 2,
+      "gridColumns": 2,
+      "timingProfile": "A",
+      "waveTemplate": "P15_D5",
+      "targetClassCount": 1,
+      "targetClassSplit": [
+        15
+      ],
+      "similarityTier": 1,
+      "directionCount": 1,
+      "doubleCount": 0,
+      "doubleWaveOrdinals": [],
+      "maxWaveObjects": 3
+    },
+    "67": {
+      "level": 67,
+      "stageId": "S12",
+      "gridRows": 3,
+      "gridColumns": 4,
+      "timingProfile": "A",
+      "waveTemplate": "P20_D10",
+      "targetClassCount": 2,
+      "targetClassSplit": [
+        10,
+        10
+      ],
+      "similarityTier": 1,
+      "directionCount": 2,
+      "doubleCount": 0,
+      "doubleWaveOrdinals": [],
+      "maxWaveObjects": 5
+    },
+    "79": {
+      "level": 79,
+      "stageId": "S14",
+      "gridRows": 3,
+      "gridColumns": 4,
+      "timingProfile": "A",
+      "waveTemplate": "P20_D10",
+      "targetClassCount": 1,
+      "targetClassSplit": [
+        20
+      ],
+      "similarityTier": 1,
+      "directionCount": 2,
+      "doubleCount": 2,
+      "doubleWaveOrdinals": [
+        3,
+        7
+      ],
+      "maxWaveObjects": 5
+    },
+    "90": {
+      "level": 90,
+      "stageId": "S15",
+      "gridRows": 3,
+      "gridColumns": 4,
+      "timingProfile": "H",
+      "waveTemplate": "P20_D10",
+      "targetClassCount": 2,
+      "targetClassSplit": [
+        10,
+        10
+      ],
+      "similarityTier": 2,
+      "directionCount": 4,
+      "doubleCount": 4,
+      "doubleWaveOrdinals": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "maxWaveObjects": 5
+    },
+    "96": {
+      "level": 96,
+      "stageId": "S16",
+      "gridRows": 3,
+      "gridColumns": 4,
+      "timingProfile": "H",
+      "waveTemplate": "P20_D10",
+      "targetClassCount": 2,
+      "targetClassSplit": [
+        10,
+        10
+      ],
+      "similarityTier": 3,
+      "directionCount": 4,
+      "doubleCount": 5,
+      "doubleWaveOrdinals": [
+        1,
+        2,
+        4,
+        6,
+        8
+      ],
+      "maxWaveObjects": 5
+    }
+  },
+  "fullLevelSetStatus": "HOLD"
+}
