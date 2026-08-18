@@ -1,4 +1,11 @@
-import type { A620TrainingGameModule, PrepareContext } from "../../game-plugin.js";
+import {
+  TrainingPointerEventGate,
+  type A620InteractiveTrainingGameModule,
+  type BatchEvidenceSink,
+  type InputStreamCancellationReason,
+  type PrepareContext,
+  type TrainingPointerEvent,
+} from "../../game-plugin.js";
 import type { GameResultDraft } from "../../contracts.js";
 import { ActiveLogicalClock } from "./logical-clock.js";
 import { parseStrictGameConfig } from "./config.js";
@@ -42,10 +49,11 @@ const IGNORED_INPUT: TouchResult = Object.freeze({
   falseTouchDelta: 0,
 });
 
-export class CatchLightGameModule implements A620TrainingGameModule {
+export class CatchLightGameModule implements A620InteractiveTrainingGameModule {
   readonly gameCode = "CATCH_LIGHT";
-  private readonly onBatchClosed: ((batch: CatchLightEligibleBatch) => void) | undefined;
+  private onBatchClosed: ((batch: CatchLightEligibleBatch) => void) | undefined;
   private readonly previouslyIntroducedLevels: readonly number[];
+  private readonly inputGate = new TrainingPointerEventGate();
   private preparedExecution: PreparedExecution | null = null;
   private session: CatchLightSession | null = null;
   private clock: ActiveLogicalClock | null = null;
@@ -59,6 +67,12 @@ export class CatchLightGameModule implements A620TrainingGameModule {
   }
 
   get moduleState(): CatchLightModuleState { return this.localState; }
+
+  setEvidenceSink(sink: BatchEvidenceSink): void {
+    this.assertNotInBatchClosedHook("setEvidenceSink");
+    if (typeof sink !== "function") throw new Error("evidence sink must be a function");
+    this.onBatchClosed = sink;
+  }
 
   async prepare(context: PrepareContext): Promise<void> {
     this.assertNotInBatchClosedHook("prepare");
@@ -87,6 +101,7 @@ export class CatchLightGameModule implements A620TrainingGameModule {
     this.session = null;
     this.clock = null;
     this.pauseStartedUptimeMs = null;
+    this.inputGate.reset();
     this.localState = "READY";
   }
 
@@ -215,6 +230,22 @@ export class CatchLightGameModule implements A620TrainingGameModule {
     this.requireSession().retryPendingBatchNotifications();
   }
 
+  retryPendingBatchEvidence(): void {
+    this.retryPendingBatchNotifications();
+  }
+
+  onPointerEvent(event: Readonly<TrainingPointerEvent>): void {
+    this.assertNotInBatchClosedHook("pointer event");
+    if (this.inputGate.accept(event) !== "DOWN") return;
+    if (event.hitToken === null) this.touchBlankAtUptime(event.sourceUptimeMs);
+    else this.touchInstanceAtUptime(event.hitToken, event.sourceUptimeMs);
+  }
+
+  onInputStreamsCancelled(reason: InputStreamCancellationReason): void {
+    this.assertNotInBatchClosedHook("input stream cancellation");
+    this.inputGate.cancelAll(reason);
+  }
+
   touchInstanceAtUptime(instanceId: string, uptimeMs: number): TouchResult {
     this.assertNotInBatchClosedHook("touch");
     if (this.localState === "PAUSED" || this.localState === "DEADLINE" || this.localState === "TERMINATED") return IGNORED_INPUT;
@@ -250,6 +281,7 @@ export class CatchLightGameModule implements A620TrainingGameModule {
     this.session = null;
     this.clock = null;
     this.pauseStartedUptimeMs = null;
+    this.inputGate.reset();
     this.localState = "DISPOSED";
   }
 

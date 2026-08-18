@@ -1,6 +1,13 @@
 import { canonicalSha256 } from "../../../canonical.js";
 import type { GameResultDraft } from "../../../contracts.js";
-import type { A620TrainingGameModule, PrepareContext } from "../../../game-plugin.js";
+import {
+  TrainingPointerEventGate,
+  type A620InteractiveTrainingGameModule,
+  type BatchEvidenceSink,
+  type InputStreamCancellationReason,
+  type PrepareContext,
+  type TrainingPointerEvent,
+} from "../../../game-plugin.js";
 import { SESSION_DURATION_MS, SIGNAL_STATION_GAME_CODE } from "../constants.js";
 import {
   isVerticalSliceLevelImplemented, VERTICAL_SLICE_RUNTIME_CONFIG, validateRuntimeConfig,
@@ -16,15 +23,25 @@ function asRuntimeConfig(value: Readonly<Record<string, unknown>>): typeof VERTI
   return value;
 }
 
-/** Game-local implementation of the frozen public SPI; shared game-plugin.ts remains untouched. */
-export class SignalStationTrainingGameModule implements A620TrainingGameModule {
+/** Game-local implementation of the lifecycle SPI and host-only interactive companion SPI. */
+export class SignalStationTrainingGameModule implements A620InteractiveTrainingGameModule {
   readonly gameCode = SIGNAL_STATION_GAME_CODE;
   private context: PrepareContext | null = null;
   private session: SignalStationSession | null = null;
   private clock: DeterministicActiveClock | null = null;
+  private evidenceSink: BatchEvidenceSink | undefined;
+  private readonly inputGate = new TrainingPointerEventGate();
+  private deliveringBatchEvidence = false;
   private terminated = false;
 
+  setEvidenceSink(sink: BatchEvidenceSink): void {
+    this.assertNotDeliveringBatchEvidence("setEvidenceSink");
+    if (typeof sink !== "function") throw new Error("evidence sink must be a function");
+    this.evidenceSink = sink;
+  }
+
   async prepare(context: PrepareContext): Promise<void> {
+    this.assertNotDeliveringBatchEvidence("prepare");
     if (this.context !== null || this.session !== null || this.clock !== null) {
       throw new Error("module is already prepared; dispose it before preparing another execution");
     }
@@ -44,10 +61,12 @@ export class SignalStationTrainingGameModule implements A620TrainingGameModule {
     this.context = context;
     this.session = session;
     this.clock = new DeterministicActiveClock();
+    this.inputGate.reset();
     this.terminated = false;
   }
 
   onStart(effectiveStartUptimeMs: number, cutoffUptimeMs: number): void {
+    this.assertNotDeliveringBatchEvidence("START");
     const clock = this.requireClock();
     const session = this.requireSession();
     clock.startAt(effectiveStartUptimeMs, cutoffUptimeMs);
@@ -55,25 +74,31 @@ export class SignalStationTrainingGameModule implements A620TrainingGameModule {
   }
 
   onPause(effectivePauseUptimeMs: number): void {
+    this.assertNotDeliveringBatchEvidence("PAUSE");
     const clock = this.requireClock();
     this.advanceToUptimeMs(effectivePauseUptimeMs);
+    this.flushPendingBatchEvidence();
     clock.pauseAt(effectivePauseUptimeMs);
   }
 
   onResume(resumeInputEnabledUptimeMs: number, cutoffUptimeMs: number): void {
+    this.assertNotDeliveringBatchEvidence("RESUME");
     const clock = this.requireClock();
     const pausedDuration = clock.resumeAt(resumeInputEnabledUptimeMs, cutoffUptimeMs);
     this.requireSession().recordPause(pausedDuration);
   }
 
   onDeadline(cutoffUptimeMs: number): void {
+    this.assertNotDeliveringBatchEvidence("DEADLINE");
     const clock = this.requireClock();
     this.advanceToUptimeMs(cutoffUptimeMs);
     clock.reachDeadlineAt(cutoffUptimeMs);
     this.requireSession().deadline();
+    this.flushPendingBatchEvidence();
   }
 
   onTerminate(_: string): void {
+    this.assertNotDeliveringBatchEvidence("TERMINATE");
     if (this.terminated) throw new Error("execution is already terminated");
     const session = this.requireSession();
     const clock = this.requireClock();
@@ -83,18 +108,23 @@ export class SignalStationTrainingGameModule implements A620TrainingGameModule {
   }
 
   buildResultDraft(): GameResultDraft {
+    this.assertNotDeliveringBatchEvidence("buildResultDraft");
     if (this.terminated) throw new Error("terminated execution has no GameResultDraft");
+    this.flushPendingBatchEvidence();
     return this.requireSession().buildResultDraft();
   }
 
   async dispose(): Promise<void> {
+    this.assertNotDeliveringBatchEvidence("dispose");
     this.context = null;
     this.session = null;
     this.clock = null;
+    this.inputGate.reset();
     this.terminated = false;
   }
 
   advanceToUptimeMs(sourceUptimeMs: number): void {
+    this.assertNotDeliveringBatchEvidence("advance");
     const clock = this.requireClock();
     const session = this.requireSession();
     const targetActiveMs = clock.advanceTo(sourceUptimeMs);
@@ -126,7 +156,14 @@ export class SignalStationTrainingGameModule implements A620TrainingGameModule {
     }
   }
 
+  advanceToUptime(sourceUptimeMs: number): number {
+    this.advanceToUptimeMs(sourceUptimeMs);
+    this.flushPendingBatchEvidence();
+    return this.requireClock().activeElapsedMs;
+  }
+
   onPointerDown(instanceId: string | null, pointerEventId: string, sourceUptimeMs: number): TouchResult {
+    this.assertNotDeliveringBatchEvidence("pointer input");
     if (typeof pointerEventId !== "string" || pointerEventId.length === 0) {
       throw new Error("pointerEventId must not be empty");
     }
@@ -142,7 +179,24 @@ export class SignalStationTrainingGameModule implements A620TrainingGameModule {
     }
     const activeMs = clock.activeElapsedMs;
     this.advanceToUptimeMs(sourceUptimeMs);
+    this.flushPendingBatchEvidence();
     return this.requireSession().touch(instanceId, activeMs, pointerEventId);
+  }
+
+  onPointerEvent(event: Readonly<TrainingPointerEvent>): void {
+    this.assertNotDeliveringBatchEvidence("pointer event");
+    if (this.inputGate.accept(event) !== "DOWN") return;
+    this.onPointerDown(event.hitToken, event.pointerEventId, event.sourceUptimeMs);
+  }
+
+  onInputStreamsCancelled(reason: InputStreamCancellationReason): void {
+    this.assertNotDeliveringBatchEvidence("input stream cancellation");
+    this.inputGate.cancelAll(reason);
+  }
+
+  retryPendingBatchEvidence(): void {
+    this.assertNotDeliveringBatchEvidence("batch evidence retry");
+    this.flushPendingBatchEvidence();
   }
 
   drainBatchClosedDrafts() {
@@ -159,6 +213,28 @@ export class SignalStationTrainingGameModule implements A620TrainingGameModule {
 
   coverageBlock(): VerticalSliceCoverageBlock | null {
     return this.requireSession().coverageBlock;
+  }
+
+  private flushPendingBatchEvidence(): void {
+    const sink = this.evidenceSink;
+    if (sink === undefined) return;
+    if (this.deliveringBatchEvidence) throw new Error("BATCH_CLOSED sink must not re-enter Signal Station");
+
+    while (true) {
+      const batch = this.requireSession().drainClosedBatchDrafts()[0];
+      if (batch === undefined) return;
+      this.deliveringBatchEvidence = true;
+      try {
+        sink(batch);
+      } finally {
+        this.deliveringBatchEvidence = false;
+      }
+      this.requireSession().acknowledgeClosedBatchDraft(batch.batchPayloadSha256);
+    }
+  }
+
+  private assertNotDeliveringBatchEvidence(operation: string): void {
+    if (this.deliveringBatchEvidence) throw new Error(`${operation} is forbidden during BATCH_CLOSED delivery`);
   }
 
   private requireSession(): SignalStationSession {
