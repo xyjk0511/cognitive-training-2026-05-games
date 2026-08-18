@@ -86,7 +86,7 @@ export class SignalStationSession {
   private pauseCountValue = 0;
   private totalPausedUptimeValue = 0;
   private generatedWaveCountValue = 0;
-  private drainedClosedCount = 0;
+  private acknowledgedClosedCount = 0;
   private coverageBlockValue: VerticalSliceCoverageBlock | null = null;
 
   constructor(options: SignalStationSessionOptions) {
@@ -225,11 +225,24 @@ export class SignalStationSession {
     this.incomplete = [];
   }
 
+  /**
+   * Returns immutable evidence that the host has not durably acknowledged yet.
+   * Reading is intentionally non-destructive so a failed host transaction can
+   * retry the same ordinal/hash without replaying game-domain mutations.
+   */
   drainClosedBatchDrafts(): EligibleBatch[] {
     if (this.terminated) throw new Error("terminated session cannot emit BATCH_CLOSED drafts");
-    const pending = immutableEligibleBatchArray(this.eligible.slice(this.drainedClosedCount));
-    this.drainedClosedCount = this.eligible.length;
-    return pending;
+    return immutableEligibleBatchArray(this.eligible.slice(this.acknowledgedClosedCount));
+  }
+
+  acknowledgeClosedBatchDraft(batchPayloadSha256: string): void {
+    if (this.terminated) throw new Error("terminated session cannot acknowledge BATCH_CLOSED drafts");
+    const pending = this.eligible[this.acknowledgedClosedCount];
+    if (pending === undefined) throw new Error("there is no pending BATCH_CLOSED draft to acknowledge");
+    if (pending.batchPayloadSha256 !== batchPayloadSha256) {
+      throw new Error("BATCH_CLOSED acknowledgement must match the first pending batch hash");
+    }
+    this.acknowledgedClosedCount += 1;
   }
 
   closedPlans(): readonly GeneratedBatchPlan[] {

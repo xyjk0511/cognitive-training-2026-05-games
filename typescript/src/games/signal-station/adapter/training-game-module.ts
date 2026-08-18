@@ -149,6 +149,10 @@ export class SignalStationTrainingGameModule implements A620TrainingGameModule {
     return this.requireSession().drainClosedBatchDrafts();
   }
 
+  acknowledgeBatchClosedDraft(batchPayloadSha256: string): void {
+    this.requireSession().acknowledgeClosedBatchDraft(batchPayloadSha256);
+  }
+
   currentPlan(): GeneratedBatchPlan | null {
     return this.requireSession().currentBatch?.plan ?? null;
   }
