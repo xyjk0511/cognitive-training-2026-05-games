@@ -2,20 +2,21 @@
   "schemaVersion": "1.5.0",
   "gameCode": "CATCH_LIGHT",
   "gameConfigSchemaId": "urn:a620:catch-light:config:1.5",
-  "generatorVersion": "catch-light-gen-1",
+  "generatorVersion": "catch-light-gen-2",
   "scoringRuleVersion": "1.5.0",
   "resultSchemaVersion": "A620-TRR-1.1",
   "durationMs": 300000,
   "plannedBatchCount": 8,
   "designMaxLevel": 120,
   "qaSeed": 20260817,
-  "configSetId": "catch-light-v1.5-w2-vertical-slices",
+  "configSetId": "catch-light-v1.5-w2-vertical-slices-r2",
   "sourceWorkbookName": "捕光行动-120级数值设计-v1.4.xlsx",
   "sourceWorkbookSha256": "592a6313bb3f308aa63d5e1313db98b617dfc735ac8fd61efb7c7f06112d716d",
   "sourceWorkbookRole": "HISTORICAL_NUMERIC_INPUT_ONLY",
   "sourceRequirementSha256": "1ff1d38470aead2270d6b237b3cda2a21a7540174420252a5bda8b242bfb425c",
   "publicRulesSha256": "c1a4f3f2e309cdf92fc15d5f51e6e99bc90025c3ddc4ed8ea99077398a987794",
-  "fruitCatalogVersion": "catch-light-fruit-catalog-1",
+  "fruitCatalogVersion": "catch-light-fruit-catalog-2",
+  "fruitSimilarityCatalogVersion": "catch-light-fruit-similarity-2",
   "layoutCatalogVersion": "catch-light-grid-catalog-1",
   "fruitCatalog": [
     {
@@ -28,8 +29,8 @@
       "targetAllowed": true,
       "distractorAllowed": true,
       "similarityTags": [
-        "SIM_ROUND_APPLE_ORANGE",
-        "SIM_SMOOTH_APPLE_BANANA"
+        "SIM_COLOR_APPLE_STRAWBERRY",
+        "SIM_SHAPE_APPLE_ORANGE"
       ]
     },
     {
@@ -42,8 +43,7 @@
       "targetAllowed": true,
       "distractorAllowed": true,
       "similarityTags": [
-        "SIM_SMOOTH_APPLE_BANANA",
-        "SIM_ELONGATED_BANANA_PEAR"
+        "SIM_COLOR_BANANA_PEAR"
       ]
     },
     {
@@ -56,8 +56,8 @@
       "targetAllowed": true,
       "distractorAllowed": true,
       "similarityTags": [
-        "SIM_ROUND_GRAPE_ORANGE",
-        "SIM_ROUND_APPLE_ORANGE"
+        "SIM_SHAPE_APPLE_ORANGE",
+        "SIM_COLOR_ORANGE_PEAR"
       ]
     },
     {
@@ -70,8 +70,8 @@
       "targetAllowed": true,
       "distractorAllowed": true,
       "similarityTags": [
-        "SIM_ELONGATED_BANANA_PEAR",
-        "SIM_TAPERED_PEAR_STRAWBERRY"
+        "SIM_COLOR_BANANA_PEAR",
+        "SIM_COLOR_ORANGE_PEAR"
       ]
     },
     {
@@ -84,8 +84,8 @@
       "targetAllowed": true,
       "distractorAllowed": true,
       "similarityTags": [
-        "SIM_TAPERED_PEAR_STRAWBERRY",
-        "SIM_SEEDED_STRAWBERRY_GRAPE"
+        "SIM_COLOR_APPLE_STRAWBERRY",
+        "SIM_TEXTURE_STRAWBERRY_GRAPE"
       ]
     },
     {
@@ -98,8 +98,7 @@
       "targetAllowed": true,
       "distractorAllowed": true,
       "similarityTags": [
-        "SIM_SEEDED_STRAWBERRY_GRAPE",
-        "SIM_ROUND_GRAPE_ORANGE"
+        "SIM_TEXTURE_STRAWBERRY_GRAPE"
       ]
     },
     {
@@ -112,8 +111,8 @@
       "targetAllowed": true,
       "distractorAllowed": true,
       "similarityTags": [
-        "SIM_ROUND_WATERMELON_PEACH",
-        "SIM_RIND_LEMON_WATERMELON"
+        "SIM_SHAPE_WATERMELON_PEACH",
+        "SIM_TEXTURE_LEMON_WATERMELON"
       ]
     },
     {
@@ -126,8 +125,8 @@
       "targetAllowed": true,
       "distractorAllowed": true,
       "similarityTags": [
-        "SIM_OVAL_MANGO_PINEAPPLE",
-        "SIM_YELLOW_PINEAPPLE_LEMON"
+        "SIM_SHAPE_MANGO_PINEAPPLE",
+        "SIM_COLOR_PINEAPPLE_LEMON"
       ]
     },
     {
@@ -140,8 +139,8 @@
       "targetAllowed": true,
       "distractorAllowed": true,
       "similarityTags": [
-        "SIM_ROUND_WATERMELON_PEACH",
-        "SIM_SMOOTH_PEACH_CHERRY"
+        "SIM_SHAPE_WATERMELON_PEACH",
+        "SIM_TEXTURE_PEACH_CHERRY"
       ]
     },
     {
@@ -154,8 +153,8 @@
       "targetAllowed": true,
       "distractorAllowed": true,
       "similarityTags": [
-        "SIM_YELLOW_PINEAPPLE_LEMON",
-        "SIM_RIND_LEMON_WATERMELON"
+        "SIM_TEXTURE_LEMON_WATERMELON",
+        "SIM_COLOR_PINEAPPLE_LEMON"
       ]
     },
     {
@@ -168,8 +167,8 @@
       "targetAllowed": true,
       "distractorAllowed": true,
       "similarityTags": [
-        "SIM_SMOOTH_PEACH_CHERRY",
-        "SIM_WARM_CHERRY_MANGO"
+        "SIM_TEXTURE_PEACH_CHERRY",
+        "SIM_COLOR_CHERRY_MANGO"
       ]
     },
     {
@@ -182,11 +181,179 @@
       "targetAllowed": true,
       "distractorAllowed": true,
       "similarityTags": [
-        "SIM_WARM_CHERRY_MANGO",
-        "SIM_OVAL_MANGO_PINEAPPLE"
+        "SIM_SHAPE_MANGO_PINEAPPLE",
+        "SIM_COLOR_CHERRY_MANGO"
       ]
     }
   ],
+  "fruitSimilarityRelations": [
+    {
+      "tag": "SIM_COLOR_APPLE_STRAWBERRY",
+      "fruitA": "APPLE",
+      "fruitB": "STRAWBERRY",
+      "primaryAttribute": "COLOR",
+      "authority": "SOURCE_WORKBOOK_CONFIRMED"
+    },
+    {
+      "tag": "SIM_SHAPE_APPLE_ORANGE",
+      "fruitA": "APPLE",
+      "fruitB": "ORANGE",
+      "primaryAttribute": "SHAPE",
+      "authority": "SOURCE_WORKBOOK_CONFIRMED"
+    },
+    {
+      "tag": "SIM_COLOR_BANANA_PEAR",
+      "fruitA": "BANANA",
+      "fruitB": "PEAR",
+      "primaryAttribute": "COLOR",
+      "authority": "SOURCE_WORKBOOK_CONFIRMED"
+    },
+    {
+      "tag": "SIM_COLOR_ORANGE_PEAR",
+      "fruitA": "ORANGE",
+      "fruitB": "PEAR",
+      "primaryAttribute": "COLOR",
+      "authority": "SOURCE_WORKBOOK_CONFIRMED"
+    },
+    {
+      "tag": "SIM_TEXTURE_STRAWBERRY_GRAPE",
+      "fruitA": "STRAWBERRY",
+      "fruitB": "GRAPE",
+      "primaryAttribute": "TEXTURE",
+      "authority": "SOURCE_WORKBOOK_CONFIRMED"
+    },
+    {
+      "tag": "SIM_SHAPE_WATERMELON_PEACH",
+      "fruitA": "WATERMELON",
+      "fruitB": "PEACH",
+      "primaryAttribute": "SHAPE",
+      "authority": "ENGINEERING_COMPATIBILITY_UNAPPROVED"
+    },
+    {
+      "tag": "SIM_TEXTURE_LEMON_WATERMELON",
+      "fruitA": "LEMON",
+      "fruitB": "WATERMELON",
+      "primaryAttribute": "TEXTURE",
+      "authority": "ENGINEERING_COMPATIBILITY_UNAPPROVED"
+    },
+    {
+      "tag": "SIM_SHAPE_MANGO_PINEAPPLE",
+      "fruitA": "MANGO",
+      "fruitB": "PINEAPPLE",
+      "primaryAttribute": "SHAPE",
+      "authority": "ENGINEERING_COMPATIBILITY_UNAPPROVED"
+    },
+    {
+      "tag": "SIM_COLOR_PINEAPPLE_LEMON",
+      "fruitA": "PINEAPPLE",
+      "fruitB": "LEMON",
+      "primaryAttribute": "COLOR",
+      "authority": "ENGINEERING_COMPATIBILITY_UNAPPROVED"
+    },
+    {
+      "tag": "SIM_TEXTURE_PEACH_CHERRY",
+      "fruitA": "PEACH",
+      "fruitB": "CHERRY",
+      "primaryAttribute": "TEXTURE",
+      "authority": "ENGINEERING_COMPATIBILITY_UNAPPROVED"
+    },
+    {
+      "tag": "SIM_COLOR_CHERRY_MANGO",
+      "fruitA": "CHERRY",
+      "fruitB": "MANGO",
+      "primaryAttribute": "COLOR",
+      "authority": "ENGINEERING_COMPATIBILITY_UNAPPROVED"
+    }
+  ],
+  "fruitContentQualification": {
+    "qualificationVersion": "catch-light-fruit-content-qualification-1",
+    "runtimeUseStatus": "HEADLESS_VERTICAL_SLICE_ONLY",
+    "productionActivationStatus": "BLOCKED_PENDING_FRUIT_SPRITES_AND_CORE_B_RELATION_APPROVAL",
+    "fruitMetadataStatus": "ENGINEERING_PLACEHOLDER_PENDING_ART_QA",
+    "fruitSpriteStatus": "PLACEHOLDER_REFERENCES_ONLY",
+    "coreA": {
+      "relationStatus": "SOURCE_WORKBOOK_CONFIRMED",
+      "source": "捕光行动-120级数值设计-v1.4.xlsx/水果相似关系",
+      "relationUseApproved": true,
+      "productionGate": "NONE",
+      "pairs": [
+        {
+          "tag": "SIM_COLOR_APPLE_STRAWBERRY",
+          "fruitA": "APPLE",
+          "fruitB": "STRAWBERRY",
+          "primaryAttribute": "COLOR"
+        },
+        {
+          "tag": "SIM_SHAPE_APPLE_ORANGE",
+          "fruitA": "APPLE",
+          "fruitB": "ORANGE",
+          "primaryAttribute": "SHAPE"
+        },
+        {
+          "tag": "SIM_COLOR_BANANA_PEAR",
+          "fruitA": "BANANA",
+          "fruitB": "PEAR",
+          "primaryAttribute": "COLOR"
+        },
+        {
+          "tag": "SIM_COLOR_ORANGE_PEAR",
+          "fruitA": "ORANGE",
+          "fruitB": "PEAR",
+          "primaryAttribute": "COLOR"
+        },
+        {
+          "tag": "SIM_TEXTURE_STRAWBERRY_GRAPE",
+          "fruitA": "STRAWBERRY",
+          "fruitB": "GRAPE",
+          "primaryAttribute": "TEXTURE"
+        }
+      ]
+    },
+    "coreB": {
+      "relationStatus": "ENGINEERING_COMPATIBILITY_UNAPPROVED",
+      "source": "NO_EXACT_PAIR_TABLE_IN_V1.5_OR_V1.4_WORKBOOK",
+      "relationUseApproved": false,
+      "productionGate": "BLOCK_UNTIL_PRODUCT_AND_ART_APPROVE_FINAL_SPRITES_AND_PAIR_MATRIX",
+      "pairs": [
+        {
+          "tag": "SIM_SHAPE_WATERMELON_PEACH",
+          "fruitA": "WATERMELON",
+          "fruitB": "PEACH",
+          "primaryAttribute": "SHAPE"
+        },
+        {
+          "tag": "SIM_TEXTURE_LEMON_WATERMELON",
+          "fruitA": "LEMON",
+          "fruitB": "WATERMELON",
+          "primaryAttribute": "TEXTURE"
+        },
+        {
+          "tag": "SIM_SHAPE_MANGO_PINEAPPLE",
+          "fruitA": "MANGO",
+          "fruitB": "PINEAPPLE",
+          "primaryAttribute": "SHAPE"
+        },
+        {
+          "tag": "SIM_COLOR_PINEAPPLE_LEMON",
+          "fruitA": "PINEAPPLE",
+          "fruitB": "LEMON",
+          "primaryAttribute": "COLOR"
+        },
+        {
+          "tag": "SIM_TEXTURE_PEACH_CHERRY",
+          "fruitA": "PEACH",
+          "fruitB": "CHERRY",
+          "primaryAttribute": "TEXTURE"
+        },
+        {
+          "tag": "SIM_COLOR_CHERRY_MANGO",
+          "fruitA": "CHERRY",
+          "fruitB": "MANGO",
+          "primaryAttribute": "COLOR"
+        }
+      ]
+    }
+  },
   "fruitPools": {
     "FP_CORE_A": [
       "APPLE",
@@ -701,6 +868,7 @@
       "doubleTargetCount": 0,
       "doubleWindowMs": 0,
       "doublePatternId": "NONE",
+      "firstTeachingBatchWaveOneDoubleDisabled": false,
       "minTargetHits": 8,
       "upgradeFalseLimit": 0,
       "holdFalseLimit": 0,
@@ -746,6 +914,7 @@
       "doubleTargetCount": 0,
       "doubleWindowMs": 0,
       "doublePatternId": "NONE",
+      "firstTeachingBatchWaveOneDoubleDisabled": false,
       "minTargetHits": 12,
       "upgradeFalseLimit": 1,
       "holdFalseLimit": 2,
@@ -791,6 +960,7 @@
       "doubleTargetCount": 0,
       "doubleWindowMs": 0,
       "doublePatternId": "NONE",
+      "firstTeachingBatchWaveOneDoubleDisabled": false,
       "minTargetHits": 16,
       "upgradeFalseLimit": 2,
       "holdFalseLimit": 3,
@@ -835,7 +1005,8 @@
       "distractorFarEdgeCount": 4,
       "doubleTargetCount": 2,
       "doubleWindowMs": 1500,
-      "doublePatternId": "SEP_NO_W1",
+      "doublePatternId": "MAX2_CONSEC",
+      "firstTeachingBatchWaveOneDoubleDisabled": true,
       "minTargetHits": 20,
       "upgradeFalseLimit": 2,
       "holdFalseLimit": 3,
@@ -881,6 +1052,7 @@
       "doubleTargetCount": 6,
       "doubleWindowMs": 1200,
       "doublePatternId": "MAX3_CONSEC",
+      "firstTeachingBatchWaveOneDoubleDisabled": false,
       "minTargetHits": 20,
       "upgradeFalseLimit": 2,
       "holdFalseLimit": 3,

@@ -22,7 +22,8 @@ FRUITS = {
 }
 EXPECTED_LEVELS = [1, 28, 67, 102, 120]
 CONFIG_SCHEMA_ID = "urn:a620:catch-light:config:1.5"
-CONFIG_SET_ID = "catch-light-v1.5-w2-vertical-slices"
+CONFIG_SET_ID = "catch-light-v1.5-w2-vertical-slices-r2"
+GENERATOR_VERSION = "catch-light-gen-2"
 SOURCE_WORKBOOK_NAME = "捕光行动-120级数值设计-v1.4.xlsx"
 SOURCE_WORKBOOK_SHA256 = "592a6313bb3f308aa63d5e1313db98b617dfc735ac8fd61efb7c7f06112d716d"
 SOURCE_REQUIREMENT_SHA256 = "1ff1d38470aead2270d6b237b3cda2a21a7540174420252a5bda8b242bfb425c"
@@ -31,6 +32,56 @@ TIMING_BY_BAND = {
     "A": (3300, 2900, 350, 650),
     "C": (3200, 2800, 450, 750),
     "H": (3100, 2700, 550, 850),
+}
+
+CORE_A_SIMILARITY_PAIRS = {
+    ("APPLE", "STRAWBERRY"),
+    ("APPLE", "ORANGE"),
+    ("BANANA", "PEAR"),
+    ("ORANGE", "PEAR"),
+    ("GRAPE", "STRAWBERRY"),
+}
+CORE_B_COMPATIBILITY_PAIRS = {
+    ("PEACH", "WATERMELON"),
+    ("LEMON", "WATERMELON"),
+    ("MANGO", "PINEAPPLE"),
+    ("LEMON", "PINEAPPLE"),
+    ("CHERRY", "PEACH"),
+    ("CHERRY", "MANGO"),
+}
+EXPECTED_FRUIT_CONTENT_QUALIFICATION = {
+    "qualificationVersion": "catch-light-fruit-content-qualification-1",
+    "runtimeUseStatus": "HEADLESS_VERTICAL_SLICE_ONLY",
+    "productionActivationStatus": "BLOCKED_PENDING_FRUIT_SPRITES_AND_CORE_B_RELATION_APPROVAL",
+    "fruitMetadataStatus": "ENGINEERING_PLACEHOLDER_PENDING_ART_QA",
+    "fruitSpriteStatus": "PLACEHOLDER_REFERENCES_ONLY",
+    "coreA": {
+        "relationStatus": "SOURCE_WORKBOOK_CONFIRMED",
+        "source": "捕光行动-120级数值设计-v1.4.xlsx/水果相似关系",
+        "relationUseApproved": True,
+        "productionGate": "NONE",
+        "pairs": [
+            {"tag": "SIM_COLOR_APPLE_STRAWBERRY", "fruitA": "APPLE", "fruitB": "STRAWBERRY", "primaryAttribute": "COLOR"},
+            {"tag": "SIM_SHAPE_APPLE_ORANGE", "fruitA": "APPLE", "fruitB": "ORANGE", "primaryAttribute": "SHAPE"},
+            {"tag": "SIM_COLOR_BANANA_PEAR", "fruitA": "BANANA", "fruitB": "PEAR", "primaryAttribute": "COLOR"},
+            {"tag": "SIM_COLOR_ORANGE_PEAR", "fruitA": "ORANGE", "fruitB": "PEAR", "primaryAttribute": "COLOR"},
+            {"tag": "SIM_TEXTURE_STRAWBERRY_GRAPE", "fruitA": "STRAWBERRY", "fruitB": "GRAPE", "primaryAttribute": "TEXTURE"},
+        ],
+    },
+    "coreB": {
+        "relationStatus": "ENGINEERING_COMPATIBILITY_UNAPPROVED",
+        "source": "NO_EXACT_PAIR_TABLE_IN_V1.5_OR_V1.4_WORKBOOK",
+        "relationUseApproved": False,
+        "productionGate": "BLOCK_UNTIL_PRODUCT_AND_ART_APPROVE_FINAL_SPRITES_AND_PAIR_MATRIX",
+        "pairs": [
+            {"tag": "SIM_SHAPE_WATERMELON_PEACH", "fruitA": "WATERMELON", "fruitB": "PEACH", "primaryAttribute": "SHAPE"},
+            {"tag": "SIM_TEXTURE_LEMON_WATERMELON", "fruitA": "LEMON", "fruitB": "WATERMELON", "primaryAttribute": "TEXTURE"},
+            {"tag": "SIM_SHAPE_MANGO_PINEAPPLE", "fruitA": "MANGO", "fruitB": "PINEAPPLE", "primaryAttribute": "SHAPE"},
+            {"tag": "SIM_COLOR_PINEAPPLE_LEMON", "fruitA": "PINEAPPLE", "fruitB": "LEMON", "primaryAttribute": "COLOR"},
+            {"tag": "SIM_TEXTURE_PEACH_CHERRY", "fruitA": "PEACH", "fruitB": "CHERRY", "primaryAttribute": "TEXTURE"},
+            {"tag": "SIM_COLOR_CHERRY_MANGO", "fruitA": "CHERRY", "fruitB": "MANGO", "primaryAttribute": "COLOR"},
+        ],
+    },
 }
 
 
@@ -99,7 +150,7 @@ def validate_config(config: dict[str, Any]) -> dict[int, dict[str, Any]]:
     validate_game_config("CATCH_LIGHT", CONFIG_SCHEMA_ID, config)
     require(config.get("schemaVersion") == "1.5.0", "formal config branch is required")
     require(config["gameConfigSchemaId"] == CONFIG_SCHEMA_ID, "game config schema identity")
-    require(config["generatorVersion"] == "catch-light-gen-1", "generator version mismatch")
+    require(config["generatorVersion"] == GENERATOR_VERSION, "generator version mismatch")
     require(config["scoringRuleVersion"] == "1.5.0" and config["resultSchemaVersion"] == "A620-TRR-1.1", "scoring/result version mismatch")
     require(config["durationMs"] == 300000 and config["plannedBatchCount"] == 8, "session timing mismatch")
     require(config["designMaxLevel"] == 120 and config["qaSeed"] == 20260817 and config["configSetId"] == CONFIG_SET_ID, "config identity mismatch")
@@ -113,6 +164,25 @@ def validate_config(config: dict[str, Any]) -> dict[int, dict[str, Any]]:
     require({fruit["fruitId"] for fruit in fruit_catalog} == FRUITS, "fruit catalog must contain the exact 12 fruits")
     require(len({fruit["assetPath"] for fruit in fruit_catalog}) == 12, "fruit asset paths must be unique")
     fruit_by_id = {fruit["fruitId"]: fruit for fruit in fruit_catalog}
+    similarity_tag_members: dict[str, list[str]] = {}
+    for fruit in fruit_catalog:
+        require(len(fruit["similarityTags"]) == len(set(fruit["similarityTags"])), f"{fruit['fruitId']}: duplicate similarity tag")
+        for tag in fruit["similarityTags"]:
+            similarity_tag_members.setdefault(tag, []).append(fruit["fruitId"])
+    require(all(len(members) == 2 for members in similarity_tag_members.values()), "every similarity tag must connect exactly two fruits")
+    core_a_pairs = {
+        tuple(sorted(members))
+        for members in similarity_tag_members.values()
+        if set(members).issubset({"APPLE", "BANANA", "ORANGE", "PEAR", "STRAWBERRY", "GRAPE"})
+    }
+    require(core_a_pairs == CORE_A_SIMILARITY_PAIRS, "CORE_A similarity graph must match the v1.4 workbook table")
+    core_b_pairs = {
+        tuple(sorted(members))
+        for members in similarity_tag_members.values()
+        if set(members).issubset({"WATERMELON", "PINEAPPLE", "PEACH", "LEMON", "CHERRY", "MANGO"})
+    }
+    require(core_b_pairs == CORE_B_COMPATIBILITY_PAIRS, "CORE_B config graph must match the explicitly provisional compatibility mapping")
+    require(len(core_a_pairs) + len(core_b_pairs) == len(similarity_tag_members), "similarity tags must not create undeclared cross-pool relations")
     pools = config["fruitPools"]
     require(set(pools["FP_CORE_A"]).isdisjoint(pools["FP_CORE_B"]), "CORE_A and CORE_B must be disjoint")
     require(set(pools["FP_CORE_A"]) | set(pools["FP_CORE_B"]) == FRUITS, "core pools must cover all fruits")
@@ -123,7 +193,7 @@ def validate_config(config: dict[str, Any]) -> dict[int, dict[str, Any]]:
             target_tags = set(fruit_by_id[target]["similarityTags"])
             similar = [candidate for candidate in pool if candidate != target and target_tags & set(fruit_by_id[candidate]["similarityTags"])]
             clear = [candidate for candidate in pool if candidate != target and candidate not in similar]
-            require(len(similar) >= 2 and len(clear) >= 2, f"{target}: pool must support both similar and clear distractors")
+            require(len(similar) >= 1 and len(clear) >= 2, f"{target}: pool must support both similar and clear distractors")
 
     grid_by_id = {grid["gridId"]: grid for grid in config["grids"]}
     require(set(grid_by_id) == {"2x2", "2x3", "3x3", "3x4"}, "grid catalog mismatch")
@@ -156,7 +226,12 @@ def validate_config(config: dict[str, Any]) -> dict[int, dict[str, Any]]:
         require(level["waveSpacingMs"] - level["stimulusLifecycleMs"] == level["interWaveBlankMs"], f"L{level['level']}: inter-wave blank")
         require(level["interWaveBlankMs"] >= level["hitFeedbackMs"], f"L{level['level']}: feedback must fit blank")
         require(level["firstWaveMs"] + 7 * level["waveSpacingMs"] + level["stimulusLifecycleMs"] + level["postLastBufferMs"] == 30000, f"L{level['level']}: operation closure")
-        require(level["doubleTargetCount"] == 0 or (level["level"] >= 102 and level["doubleWindowMs"] >= 1200), f"L{level['level']}: double gate")
+        require(isinstance(level["firstTeachingBatchWaveOneDoubleDisabled"], bool), f"L{level['level']}: teaching flag type")
+        if level["doubleTargetCount"] == 0:
+            require((level["doubleWindowMs"], level["doublePatternId"], level["firstTeachingBatchWaveOneDoubleDisabled"]) == (0, "NONE", False), f"L{level['level']}: non-double semantics")
+        else:
+            require(level["level"] >= 102 and 1200 <= level["doubleWindowMs"] <= 1500, f"L{level['level']}: double gate")
+            require(level["doublePatternId"] in {"MAX2_CONSEC", "MAX3_CONSEC"}, f"L{level['level']}: double pattern")
         require(level["similarDistractorCount"] <= level["distractorTotal"], f"L{level['level']}: similar distractor quota")
         require(level["targetFarEdgeCount"] <= level["targetTotal"], f"L{level['level']}: target far-edge quota")
         require(level["distractorFarEdgeCount"] <= level["distractorTotal"], f"L{level['level']}: distractor far-edge quota")
@@ -168,13 +243,14 @@ def validate_config(config: dict[str, Any]) -> dict[int, dict[str, Any]]:
 
     require(level_by_number[1]["targetTotal"] == 10 and level_by_number[1]["distractorTotal"] == 0, "L1 representative facts")
     require(level_by_number[28]["targetTotal"] == 15 and level_by_number[28]["distractorTotal"] == 5, "L28 representative facts")
-    require(level_by_number[102]["doubleTargetCount"] == 2 and level_by_number[102]["doubleWindowMs"] == 1500, "L102 representative facts")
-    require(level_by_number[120]["targetTotal"] == 25 and level_by_number[120]["distractorTotal"] == 10 and level_by_number[120]["sameScreenCap"] == 5 and level_by_number[120]["doubleTargetCount"] == 6, "L120 representative facts")
+    require((level_by_number[102]["doubleTargetCount"], level_by_number[102]["doubleWindowMs"], level_by_number[102]["doublePatternId"], level_by_number[102]["firstTeachingBatchWaveOneDoubleDisabled"]) == (2, 1500, "MAX2_CONSEC", True), "L102 representative facts")
+    require((level_by_number[120]["targetTotal"], level_by_number[120]["distractorTotal"], level_by_number[120]["sameScreenCap"], level_by_number[120]["doubleTargetCount"], level_by_number[120]["doubleWindowMs"], level_by_number[120]["doublePatternId"], level_by_number[120]["firstTeachingBatchWaveOneDoubleDisabled"]) == (25, 10, 5, 6, 1200, "MAX3_CONSEC", False), "L120 representative facts")
     return level_by_number
 
 
 def validate_golden(golden: dict[str, Any], levels: dict[int, dict[str, Any]]) -> None:
-    require(golden["goldenVersion"] == "A620-CATCH-LIGHT-GOLDEN-1", "golden version")
+    require(golden["goldenVersion"] == "A620-CATCH-LIGHT-GOLDEN-2", "golden version")
+    require(golden["generatorVersion"] == GENERATOR_VERSION and golden["configSetId"] == CONFIG_SET_ID, "golden generator/config identity")
     require(golden["qaSeed"] == 20260817, "golden QA seed")
     require([vector["level"] for vector in golden["vectors"]] == EXPECTED_LEVELS, "golden level set")
 
@@ -188,6 +264,7 @@ def validate_golden(golden: dict[str, Any], levels: dict[int, dict[str, Any]]) -
         require(canonical_sha256(schedule_projection) == supplied_schedule_hash, f"L{vector['level']}: schedule hash")
         level = levels[vector["level"]]
         require(schedule["level"] == vector["level"] and schedule["sessionSeed"] == 20260817 and schedule["batchOrdinal"] == 1, "golden schedule identity")
+        require(schedule["generatorVersion"] == GENERATOR_VERSION and schedule["configSetId"] == CONFIG_SET_ID, f"L{vector['level']}: schedule identity")
         expected_batch_material = f"{level['seedKey']}|20260817|1|0"
         require(schedule["batchPlanSeedMaterial"] == expected_batch_material, f"L{vector['level']}: batch seed material")
         require(schedule["batchPlanSeed32"] == fnv1a32(expected_batch_material), f"L{vector['level']}: batch FNV")
@@ -214,8 +291,11 @@ def validate_golden(golden: dict[str, Any], levels: dict[int, dict[str, Any]]) -
             require(len(doubles) <= 1, f"L{vector['level']} W{wave['waveOrdinal']}: more than one double")
             if doubles:
                 double_waves.append(wave["waveOrdinal"])
-        if level["doublePatternId"] == "SEP_NO_W1":
-            require(1 not in double_waves and max_consecutive(double_waves) <= 1, "SEP_NO_W1")
+        require(schedule["firstTeachingBatchWaveOneDoubleSuppressed"] == level["firstTeachingBatchWaveOneDoubleDisabled"], f"L{vector['level']}: first-teaching-batch suppression flag")
+        if level["doublePatternId"] == "MAX2_CONSEC":
+            require(max_consecutive(double_waves) <= 2, "MAX2_CONSEC")
+            if schedule["firstTeachingBatchWaveOneDoubleSuppressed"]:
+                require(1 not in double_waves, "first teaching batch wave one suppression")
         if level["doublePatternId"] == "MAX3_CONSEC":
             require(max_consecutive(double_waves) <= 3, "MAX3_CONSEC")
 
@@ -231,7 +311,7 @@ def validate_package_assets() -> None:
     require(bundle_index["gameCode"] == "CATCH_LIGHT", "bundle game code")
     require(bundle_index["status"] == "W2_HEADLESS_VERTICAL_SLICES", "bundle status")
     require(bundle_index["gameConfigSchemaId"] == CONFIG_SCHEMA_ID, "bundle game config schema")
-    require(bundle_index["generatorVersion"] == "catch-light-gen-1", "bundle generator")
+    require(bundle_index["generatorVersion"] == GENERATOR_VERSION, "bundle generator")
     require(bundle_index["scoringRuleVersion"] == "1.5.0", "bundle scoring rule")
     require(bundle_index["resultSchemaVersion"] == "A620-TRR-1.1", "bundle result schema")
     require(bundle_index["configSetId"] == CONFIG_SET_ID, "bundle config set")
@@ -250,10 +330,12 @@ def validate_package_assets() -> None:
     require(bundle_index["goldenOnlyAdditionalLevel"] == [67], "bundle golden-only level")
     require(bundle_index["cocosSceneStatus"] == "NOT_INCLUDED_IN_W2", "Cocos scope statement")
     require(bundle_index["fruitSpriteStatus"] == "PLACEHOLDER_REFERENCES_ONLY", "fruit sprite scope statement")
+    require(bundle_index["fruitContentQualification"] == EXPECTED_FRUIT_CONTENT_QUALIFICATION, "fruit content qualification and CORE_B production gate")
 
     require(manifest["runtimeContractVersion"] == "A620-TRC-1.1", "manifest wire version")
     require(manifest["coreProtocolVersion"] == "1.5.0", "manifest core protocol")
-    require(manifest["generatorVersion"] == "catch-light-gen-1", "manifest generator")
+    require(manifest["generatorVersion"] == GENERATOR_VERSION, "manifest generator")
+    require(manifest["packageVersion"] == "1.5.0" and manifest["releaseSequence"] == 1, "manifest package identity and anti-rollback sequence")
 
     backgrounds = background_index["backgrounds"]
     require(background_index["sessionLockRule"] == "HIGHEST_UNLOCKED_CHAPTER_SESSION_LOCK", "background session lock")
@@ -269,8 +351,10 @@ def validate_package_assets() -> None:
 
 
 def validate_evidence(evidence: dict[str, Any], levels: dict[int, dict[str, Any]]) -> None:
+    require(evidence["evidenceVersion"] == "A620-W2-CATCH-LIGHT-HEADLESS-2", "headless evidence version")
     expected_counts = {
         "L1-HOLD-8": 8,
+        "L1-FAIL-8": 8,
         "L28-HOLD-8": 8,
         "L102-HOLD-8": 8,
         "L120-UPGRADE-8": 8,
@@ -285,6 +369,9 @@ def validate_evidence(evidence: dict[str, Any], levels: dict[int, dict[str, Any]
         quality = validate_game_payload(payload)
         expected = expected_counts[scenario["name"]]
         require(payload["eligibleBatchCount"] == expected, f"{scenario['name']}: eligible count")
+        require(scenario["payloadSha256"] == canonical_sha256(payload), f"{scenario['name']}: payload SHA-256")
+        require(scenario["emittedBatches"] == payload["eligibleBatches"], f"{scenario['name']}: full BATCH_CLOSED content mismatch")
+        require(scenario["emittedBatchesSha256"] == canonical_sha256(scenario["emittedBatches"]), f"{scenario['name']}: emitted-batch-set SHA-256")
         require(len(scenario["emittedBatchHashes"]) == expected, f"{scenario['name']}: BATCH_CLOSED emissions")
         require(scenario["emittedBatchHashes"] == [batch["batchPayloadSha256"] for batch in payload["eligibleBatches"]], f"{scenario['name']}: emitted evidence mismatch")
         require(payload["sessionRawScore"] == sum(batch["batchScore"] for batch in payload["eligibleBatches"]), f"{scenario['name']}: score sum")
@@ -293,8 +380,8 @@ def validate_evidence(evidence: dict[str, Any], levels: dict[int, dict[str, Any]
         game_metrics = payload["gameMetrics"]
         require(game_metrics["metricsVersion"] == "catch-light-session-metrics-1", f"{scenario['name']}: formal session metrics")
         require(game_metrics["passEngineType"] == "PE-EVENT", f"{scenario['name']}: pass engine")
-        require(game_metrics["configSetId"] == "catch-light-v1.5-w2-vertical-slices", f"{scenario['name']}: config set")
-        require(game_metrics["generatorVersion"] == "catch-light-gen-1", f"{scenario['name']}: generator")
+        require(game_metrics["configSetId"] == CONFIG_SET_ID, f"{scenario['name']}: config set")
+        require(game_metrics["generatorVersion"] == GENERATOR_VERSION, f"{scenario['name']}: generator")
         require(game_metrics["scoringRuleVersion"] == "1.5.0", f"{scenario['name']}: scoring rule")
         require(game_metrics["resultSchemaVersion"] == "A620-TRR-1.1", f"{scenario['name']}: result schema")
         require(game_metrics["pauseCount"] == 0 and game_metrics["totalPausedDurationMs"] == 0, f"{scenario['name']}: headless pause metrics")
@@ -312,8 +399,8 @@ def validate_evidence(evidence: dict[str, Any], levels: dict[int, dict[str, Any]
         for batch in payload["eligibleBatches"]:
             metrics = batch["gameBatchMetrics"]
             level = levels[batch["levelBefore"]]
-            require(metrics["metricsVersion"] == "catch-light-batch-metrics-1", f"{scenario['name']} B{batch['batchOrdinal']}: formal metrics")
-            require(metrics["configSetId"] == "catch-light-v1.5-w2-vertical-slices" and metrics["generatorVersion"] == "catch-light-gen-1", f"{scenario['name']} B{batch['batchOrdinal']}: generator identity")
+            require(metrics["metricsVersion"] == "catch-light-batch-metrics-2", f"{scenario['name']} B{batch['batchOrdinal']}: formal metrics")
+            require(metrics["configSetId"] == CONFIG_SET_ID and metrics["generatorVersion"] == GENERATOR_VERSION, f"{scenario['name']} B{batch['batchOrdinal']}: generator identity")
             require(metrics["difficultyStateId"] == level["difficultyStateId"], f"{scenario['name']} B{batch['batchOrdinal']}: difficulty state")
             require(metrics["timingProfile"] == level["timingBand"], f"{scenario['name']} B{batch['batchOrdinal']}: timing profile")
             require(metrics["contentVariantId"] == level["contentVariantId"], f"{scenario['name']} B{batch['batchOrdinal']}: content variant")
@@ -327,18 +414,29 @@ def validate_evidence(evidence: dict[str, Any], levels: dict[int, dict[str, Any]
             require(metrics["distractorAvoided"] == metrics["D"] - metrics["F"], f"{scenario['name']} B{batch['batchOrdinal']}: distractor avoided count")
             require(metrics["doubleCompleted"] <= metrics["doubleTargets"] and metrics["doubleCompleted"] <= metrics["H"], f"{scenario['name']} B{batch['batchOrdinal']}: double counts")
             require(metrics["backgroundId"] == game_metrics["backgroundId"], f"{scenario['name']} B{batch['batchOrdinal']}: session background lock")
+            batch_projection = copy.deepcopy(batch)
+            supplied_batch_hash = batch_projection.pop("batchPayloadSha256")
+            require(canonical_sha256(batch_projection) == supplied_batch_hash, f"{scenario['name']} B{batch['batchOrdinal']}: batch payload hash")
         for audit in payload["incompleteBatchAudit"]:
             partial = audit["partialMetrics"]
-            require(partial["metricsVersion"] == "catch-light-partial-metrics-1", f"{scenario['name']}: formal partial metrics")
+            require(partial["metricsVersion"] == "catch-light-partial-metrics-2", f"{scenario['name']}: formal partial metrics")
             require(partial["H"] <= partial["presentedTargetCount"], f"{scenario['name']}: partial target count")
             require(partial["F"] <= partial["presentedDistractorCount"], f"{scenario['name']}: partial distractor count")
             require(partial["unresolvedTargetCount"] <= partial["presentedTargetCount"] - partial["H"], f"{scenario['name']}: unresolved only among presented targets")
+            require(partial["duplicateTouches"] <= partial["totalObjectTouches"], f"{scenario['name']}: partial duplicate-touch bound")
         if expected < 8:
             require(len(payload["incompleteBatchAudit"]) == 1, f"{scenario['name']}: expected one incomplete audit")
         else:
             require(payload["incompleteBatchAudit"] == [], f"{scenario['name']}: complete set has no incomplete audit")
     l120 = next(s for s in scenarios if s["name"] == "L120-UPGRADE-8")["payload"]
     require(all(batch["resultZone"] == "UPGRADE" and batch["levelTransition"] == "HOLD_MAX" and batch["levelAfter"] == 120 for batch in l120["eligibleBatches"]), "L120 upper-bound evidence")
+    l1_fail = next(s for s in scenarios if s["name"] == "L1-FAIL-8")["payload"]
+    require([batch["levelTransition"] for batch in l1_fail["eligibleBatches"]] == ["RETRY", "HOLD_MIN"] * 4, "L1 failure streak and lower-bound evidence")
+    require(all(batch["resultZone"] == "FAIL" and batch["levelAfter"] == 1 for batch in l1_fail["eligibleBatches"]), "L1 fail evidence stays at lower bound")
+    l102 = next(s for s in scenarios if s["name"] == "L102-HOLD-8")["payload"]
+    require([batch["gameBatchMetrics"]["firstTeachingBatchWaveOneDoubleSuppressed"] for batch in l102["eligibleBatches"]] == [True] + [False] * 7, "L102 suppression applies only to the first formal teaching batch")
+    cutoff_payloads = [next(s for s in scenarios if s["name"] == name)["payload"] for name in ("L28-HOLD-0", "L28-HOLD-1", "L28-HOLD-7", "L28-HOLD-8")]
+    require(len({canonical_sha256(payload) for payload in cutoff_payloads}) == 4, "0/1/7/8 eligible payloads must be distinct")
 
 
 def main() -> int:

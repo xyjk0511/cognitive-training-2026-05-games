@@ -7,11 +7,11 @@
   "goldenVectorPath": "golden/A620_W2_CATCH_LIGHT_golden_vectors.json",
   "backgroundIndexPath": "assets/backgrounds/index.json",
   "gameConfigSchemaId": "urn:a620:catch-light:config:1.5",
-  "generatorVersion": "catch-light-gen-1",
+  "generatorVersion": "catch-light-gen-2",
   "scoringRuleVersion": "1.5.0",
   "resultSchemaVersion": "A620-TRR-1.1",
-  "configSetId": "catch-light-v1.5-w2-vertical-slices",
-  "compiledConfigCanonicalSha256": "7babe84e79b29abb687cc082e19a282943e5cffb2859951e1a0c0c0aa067a3ed",
+  "configSetId": "catch-light-v1.5-w2-vertical-slices-r2",
+  "compiledConfigCanonicalSha256": "4b944e75ff195bad8fd02f0ab2c1d3b5487a915bbdbb972d2df2ab38beb5f53c",
   "sourceWorkbookName": "捕光行动-120级数值设计-v1.4.xlsx",
   "sourceWorkbookSha256": "592a6313bb3f308aa63d5e1313db98b617dfc735ac8fd61efb7c7f06112d716d",
   "sourceWorkbookRole": "HISTORICAL_NUMERIC_INPUT_ONLY",
@@ -34,5 +34,94 @@
     67
   ],
   "cocosSceneStatus": "NOT_INCLUDED_IN_W2",
-  "fruitSpriteStatus": "PLACEHOLDER_REFERENCES_ONLY"
+  "fruitSpriteStatus": "PLACEHOLDER_REFERENCES_ONLY",
+  "fruitContentQualification": {
+    "qualificationVersion": "catch-light-fruit-content-qualification-1",
+    "runtimeUseStatus": "HEADLESS_VERTICAL_SLICE_ONLY",
+    "productionActivationStatus": "BLOCKED_PENDING_FRUIT_SPRITES_AND_CORE_B_RELATION_APPROVAL",
+    "fruitMetadataStatus": "ENGINEERING_PLACEHOLDER_PENDING_ART_QA",
+    "fruitSpriteStatus": "PLACEHOLDER_REFERENCES_ONLY",
+    "coreA": {
+      "relationStatus": "SOURCE_WORKBOOK_CONFIRMED",
+      "source": "捕光行动-120级数值设计-v1.4.xlsx/水果相似关系",
+      "relationUseApproved": true,
+      "productionGate": "NONE",
+      "pairs": [
+        {
+          "tag": "SIM_COLOR_APPLE_STRAWBERRY",
+          "fruitA": "APPLE",
+          "fruitB": "STRAWBERRY",
+          "primaryAttribute": "COLOR"
+        },
+        {
+          "tag": "SIM_SHAPE_APPLE_ORANGE",
+          "fruitA": "APPLE",
+          "fruitB": "ORANGE",
+          "primaryAttribute": "SHAPE"
+        },
+        {
+          "tag": "SIM_COLOR_BANANA_PEAR",
+          "fruitA": "BANANA",
+          "fruitB": "PEAR",
+          "primaryAttribute": "COLOR"
+        },
+        {
+          "tag": "SIM_COLOR_ORANGE_PEAR",
+          "fruitA": "ORANGE",
+          "fruitB": "PEAR",
+          "primaryAttribute": "COLOR"
+        },
+        {
+          "tag": "SIM_TEXTURE_STRAWBERRY_GRAPE",
+          "fruitA": "STRAWBERRY",
+          "fruitB": "GRAPE",
+          "primaryAttribute": "TEXTURE"
+        }
+      ]
+    },
+    "coreB": {
+      "relationStatus": "ENGINEERING_COMPATIBILITY_UNAPPROVED",
+      "source": "NO_EXACT_PAIR_TABLE_IN_V1.5_OR_V1.4_WORKBOOK",
+      "relationUseApproved": false,
+      "productionGate": "BLOCK_UNTIL_PRODUCT_AND_ART_APPROVE_FINAL_SPRITES_AND_PAIR_MATRIX",
+      "pairs": [
+        {
+          "tag": "SIM_SHAPE_WATERMELON_PEACH",
+          "fruitA": "WATERMELON",
+          "fruitB": "PEACH",
+          "primaryAttribute": "SHAPE"
+        },
+        {
+          "tag": "SIM_TEXTURE_LEMON_WATERMELON",
+          "fruitA": "LEMON",
+          "fruitB": "WATERMELON",
+          "primaryAttribute": "TEXTURE"
+        },
+        {
+          "tag": "SIM_SHAPE_MANGO_PINEAPPLE",
+          "fruitA": "MANGO",
+          "fruitB": "PINEAPPLE",
+          "primaryAttribute": "SHAPE"
+        },
+        {
+          "tag": "SIM_COLOR_PINEAPPLE_LEMON",
+          "fruitA": "PINEAPPLE",
+          "fruitB": "LEMON",
+          "primaryAttribute": "COLOR"
+        },
+        {
+          "tag": "SIM_TEXTURE_PEACH_CHERRY",
+          "fruitA": "PEACH",
+          "fruitB": "CHERRY",
+          "primaryAttribute": "TEXTURE"
+        },
+        {
+          "tag": "SIM_COLOR_CHERRY_MANGO",
+          "fruitA": "CHERRY",
+          "fruitB": "MANGO",
+          "primaryAttribute": "COLOR"
+        }
+      ]
+    }
+  }
 }

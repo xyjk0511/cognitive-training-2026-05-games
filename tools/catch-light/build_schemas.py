@@ -37,7 +37,56 @@ fruit = {
         "textureCue":{"type":"string","pattern":"^[A-Z0-9_]+$"},
         "targetAllowed":{"const":True},
         "distractorAllowed":{"const":True},
-        "similarityTags":{"type":"array","minItems":2,"maxItems":8,"uniqueItems":True,"items":{"type":"string","pattern":"^SIM_[A-Z0-9_]+$"}},
+        "similarityTags":{"type":"array","minItems":1,"maxItems":8,"uniqueItems":True,"items":{"type":"string","pattern":"^SIM_[A-Z0-9_]+$"}},
+    },
+    "additionalProperties":False,
+}
+similarity_pair = {
+    "type":"object",
+    "required":["tag","fruitA","fruitB","primaryAttribute"],
+    "properties":{
+        "tag":{"type":"string","pattern":"^SIM_[A-Z0-9_]+$"},
+        "fruitA":{"enum":FRUITS},
+        "fruitB":{"enum":FRUITS},
+        "primaryAttribute":{"enum":["COLOR","SHAPE","TEXTURE"]},
+    },
+    "additionalProperties":False,
+}
+similarity_relation = {
+    "type":"object",
+    "required":["tag","fruitA","fruitB","primaryAttribute","authority"],
+    "properties":{
+        **similarity_pair["properties"],
+        "authority":{"enum":["SOURCE_WORKBOOK_CONFIRMED","ENGINEERING_COMPATIBILITY_UNAPPROVED"]},
+    },
+    "additionalProperties":False,
+}
+qualification_group = {
+    "type":"object",
+    "required":["relationStatus","source","relationUseApproved","productionGate","pairs"],
+    "properties":{
+        "relationStatus":{"enum":["SOURCE_WORKBOOK_CONFIRMED","ENGINEERING_COMPATIBILITY_UNAPPROVED"]},
+        "source":{"type":"string","minLength":1,"maxLength":256},
+        "relationUseApproved":{"type":"boolean"},
+        "productionGate":{"enum":["NONE","BLOCK_UNTIL_PRODUCT_AND_ART_APPROVE_FINAL_SPRITES_AND_PAIR_MATRIX"]},
+        "pairs":{"type":"array","minItems":1,"maxItems":12,"uniqueItems":True,"items":similarity_pair},
+    },
+    "additionalProperties":False,
+}
+fruit_content_qualification = {
+    "type":"object",
+    "required":[
+        "qualificationVersion","runtimeUseStatus","productionActivationStatus",
+        "fruitMetadataStatus","fruitSpriteStatus","coreA","coreB",
+    ],
+    "properties":{
+        "qualificationVersion":{"const":"catch-light-fruit-content-qualification-1"},
+        "runtimeUseStatus":{"const":"HEADLESS_VERTICAL_SLICE_ONLY"},
+        "productionActivationStatus":{"const":"BLOCKED_PENDING_FRUIT_SPRITES_AND_CORE_B_RELATION_APPROVAL"},
+        "fruitMetadataStatus":{"const":"ENGINEERING_PLACEHOLDER_PENDING_ART_QA"},
+        "fruitSpriteStatus":{"const":"PLACEHOLDER_REFERENCES_ONLY"},
+        "coreA":qualification_group,
+        "coreB":qualification_group,
     },
     "additionalProperties":False,
 }
@@ -81,7 +130,7 @@ level_required = [
     "level","difficultyStateId","stageNo","timingBand","repetitionIndex","repetitionRole","contentVariantId","fruitPoolId","waveRotation","backgroundId","gridId",
     "waveCount","roundActiveMs","firstWaveMs","waveSpacingMs","stimulusLifecycleMs","enterAnimationMs","activeHoldMs","exitAnimationMs","interWaveBlankMs","postLastBufferMs","hitFeedbackMs",
     "targetTotal","distractorTotal","sameScreenCap","waveProfileId","coexistWaveCount","peakWaveCount","similarDistractorCount","targetFarEdgeCount","distractorFarEdgeCount",
-    "doubleTargetCount","doubleWindowMs","doublePatternId","minTargetHits","upgradeFalseLimit","holdFalseLimit","scoringProfileId","layoutPoolId","seedKey","ruleIntroFlag","backgroundLockRule","interactionProfileId",
+    "doubleTargetCount","doubleWindowMs","doublePatternId","firstTeachingBatchWaveOneDoubleDisabled","minTargetHits","upgradeFalseLimit","holdFalseLimit","scoringProfileId","layoutPoolId","seedKey","ruleIntroFlag","backgroundLockRule","interactionProfileId",
 ]
 level = {
     "type":"object",
@@ -120,7 +169,8 @@ level = {
         "distractorFarEdgeCount":{"type":"integer","minimum":0,"maximum":10},
         "doubleTargetCount":{"type":"integer","minimum":0,"maximum":6},
         "doubleWindowMs":{"enum":[0,1200,1300,1400,1500]},
-        "doublePatternId":{"enum":["NONE","SEP_NO_W1","MAX2_CONSEC","MAX3_CONSEC"]},
+        "doublePatternId":{"enum":["NONE","MAX2_CONSEC","MAX3_CONSEC"]},
+        "firstTeachingBatchWaveOneDoubleDisabled":{"type":"boolean"},
         "minTargetHits":{"type":"integer","minimum":1,"maximum":25},
         "upgradeFalseLimit":{"type":"integer","minimum":0,"maximum":2},
         "holdFalseLimit":{"type":"integer","minimum":0,"maximum":3},
@@ -132,6 +182,21 @@ level = {
         "interactionProfileId":{"const":"CL_CHILD_V1"},
     },
     "additionalProperties":False,
+    "allOf":[
+        {
+            "if":{"properties":{"doubleTargetCount":{"const":0}},"required":["doubleTargetCount"]},
+            "then":{"properties":{"doubleWindowMs":{"const":0},"doublePatternId":{"const":"NONE"},"firstTeachingBatchWaveOneDoubleDisabled":{"const":False}}},
+            "else":{"properties":{"level":{"minimum":102},"doublePatternId":{"enum":["MAX2_CONSEC","MAX3_CONSEC"]}}},
+        },
+        {
+            "if":{"properties":{"level":{"const":102}},"required":["level"]},
+            "then":{"properties":{"doubleTargetCount":{"const":2},"doubleWindowMs":{"const":1500},"doublePatternId":{"const":"MAX2_CONSEC"},"firstTeachingBatchWaveOneDoubleDisabled":{"const":True}}},
+        },
+        {
+            "if":{"properties":{"level":{"const":120}},"required":["level"]},
+            "then":{"properties":{"doubleTargetCount":{"const":6},"doubleWindowMs":{"const":1200},"doublePatternId":{"const":"MAX3_CONSEC"},"firstTeachingBatchWaveOneDoubleDisabled":{"const":False}}},
+        },
+    ],
 }
 formal_config = {
     "type":"object",
@@ -139,28 +204,32 @@ formal_config = {
         "schemaVersion","gameCode","gameConfigSchemaId","generatorVersion","scoringRuleVersion","resultSchemaVersion",
         "durationMs","plannedBatchCount","designMaxLevel","qaSeed","configSetId",
         "sourceWorkbookName","sourceWorkbookSha256","sourceWorkbookRole","sourceRequirementSha256","publicRulesSha256",
-        "fruitCatalogVersion","layoutCatalogVersion","fruitCatalog","fruitPools","grids","waveProfiles","levels",
+        "fruitCatalogVersion","fruitSimilarityCatalogVersion","layoutCatalogVersion",
+        "fruitCatalog","fruitSimilarityRelations","fruitContentQualification","fruitPools","grids","waveProfiles","levels",
     ],
     "properties":{
         "schemaVersion":{"const":"1.5.0"},
         "gameCode":{"const":"CATCH_LIGHT"},
         "gameConfigSchemaId":{"const":"urn:a620:catch-light:config:1.5"},
-        "generatorVersion":{"const":"catch-light-gen-1"},
+        "generatorVersion":{"const":"catch-light-gen-2"},
         "scoringRuleVersion":{"const":"1.5.0"},
         "resultSchemaVersion":{"const":"A620-TRR-1.1"},
         "durationMs":{"const":300000},
         "plannedBatchCount":{"const":8},
         "designMaxLevel":{"const":120},
         "qaSeed":{"const":20260817},
-        "configSetId":{"const":"catch-light-v1.5-w2-vertical-slices"},
+        "configSetId":{"const":"catch-light-v1.5-w2-vertical-slices-r2"},
         "sourceWorkbookName":{"const":"捕光行动-120级数值设计-v1.4.xlsx"},
         "sourceWorkbookSha256":{"const":"592a6313bb3f308aa63d5e1313db98b617dfc735ac8fd61efb7c7f06112d716d"},
         "sourceWorkbookRole":{"const":"HISTORICAL_NUMERIC_INPUT_ONLY"},
         "sourceRequirementSha256":{"const":"1ff1d38470aead2270d6b237b3cda2a21a7540174420252a5bda8b242bfb425c"},
         "publicRulesSha256":{"const":"c1a4f3f2e309cdf92fc15d5f51e6e99bc90025c3ddc4ed8ea99077398a987794"},
-        "fruitCatalogVersion":{"const":"catch-light-fruit-catalog-1"},
+        "fruitCatalogVersion":{"const":"catch-light-fruit-catalog-2"},
+        "fruitSimilarityCatalogVersion":{"const":"catch-light-fruit-similarity-2"},
         "layoutCatalogVersion":{"const":"catch-light-grid-catalog-1"},
-        "fruitCatalog":{"type":"array","minItems":12,"maxItems":12,"items":fruit},
+        "fruitCatalog":{"type":"array","minItems":12,"maxItems":12,"uniqueItems":True,"items":fruit},
+        "fruitSimilarityRelations":{"type":"array","minItems":11,"maxItems":11,"uniqueItems":True,"items":similarity_relation},
+        "fruitContentQualification":fruit_content_qualification,
         "fruitPools":{
             "type":"object","required":["FP_CORE_A","FP_CORE_B","FP_TRANSFER"],
             "properties":{
@@ -169,9 +238,9 @@ formal_config = {
                 "FP_TRANSFER":{"type":"array","minItems":12,"maxItems":12,"uniqueItems":True,"items":{"enum":FRUITS}},
             },"additionalProperties":False,
         },
-        "grids":{"type":"array","minItems":4,"maxItems":4,"items":grid},
-        "waveProfiles":{"type":"array","minItems":5,"maxItems":32,"items":wave_profile},
-        "levels":{"type":"array","minItems":1,"maxItems":120,"items":level},
+        "grids":{"type":"array","minItems":4,"maxItems":4,"uniqueItems":True,"items":grid},
+        "waveProfiles":{"type":"array","minItems":5,"maxItems":5,"uniqueItems":True,"items":wave_profile},
+        "levels":{"type":"array","minItems":5,"maxItems":5,"uniqueItems":True,"items":level},
     },
     "additionalProperties":False,
 }
@@ -184,21 +253,22 @@ write("game_config.schema.json", {
 })
 
 batch_props = {
-    "metricsVersion":{"const":"catch-light-batch-metrics-1"},
+    "metricsVersion":{"const":"catch-light-batch-metrics-2"},
     "H":{"type":"integer","minimum":0,"maximum":25},
     "T":{"type":"integer","minimum":1,"maximum":25},
     "F":{"type":"integer","minimum":0,"maximum":10},
     "D":{"enum":[0,5,10]},
     "targetFruitId":{"enum":FRUITS},
     "backgroundId":{"type":"string","pattern":"^BG0[1-8]$"},
-    "configSetId":{"const":"catch-light-v1.5-w2-vertical-slices"},
-    "generatorVersion":{"const":"catch-light-gen-1"},
+    "configSetId":{"const":"catch-light-v1.5-w2-vertical-slices-r2"},
+    "generatorVersion":{"const":"catch-light-gen-2"},
     "difficultyStateId":{"type":"string","pattern":"^DS[0-9]{2}$"},
     "timingProfile":{"enum":["A","C","H"]},
     "contentVariantId":{"type":"string","pattern":"^DS[0-9]{2}-V[0-9]+$"},
     "waveProfileId":{"type":"string","pattern":"^W[0-9A-Z-]+$"},
     "seedKey":{"type":"string","pattern":"^CL-L[0-9]{3}-DS[0-9]{2}-V[0-9]+$"},
     "scheduleSha256":HASH,
+    "firstTeachingBatchWaveOneDoubleSuppressed":{"type":"boolean"},
     "instanceAuditSha256":HASH,
     "targetTimeouts":{"type":"integer","minimum":0,"maximum":25},
     "distractorAvoided":{"type":"integer","minimum":0,"maximum":10},
@@ -217,18 +287,34 @@ legacy_batch = {
     "properties":{k:batch_props[k] for k in ["H","T","F","D"]},
     "maxProperties":4,"additionalProperties":False,
 }
+formal_batch = {
+    "type":"object",
+    "required":formal_batch_required,
+    "properties":batch_props,
+    "additionalProperties":False,
+    "allOf":[
+        {
+            "if":{"properties":{"D":{"const":0}},"required":["D"]},
+            "then":{"properties":{"F":{"const":0},"distractorAvoided":{"const":0}}},
+        },
+        {
+            "if":{"properties":{"D":{"const":5}},"required":["D"]},
+            "then":{"properties":{"F":{"maximum":5},"distractorAvoided":{"maximum":5}}},
+        },
+    ],
+}
 write("game_batch_metrics.schema.json", {
     "$schema":"https://json-schema.org/draft/2020-12/schema",
     "$id":"urn:a620:catch-light:batch-metrics:1.5",
     "title":"CATCH_LIGHT Batch Metrics 1.5",
-    "oneOf":[legacy_batch,{"type":"object","required":formal_batch_required,"properties":batch_props,"additionalProperties":False}],
+    "oneOf":[legacy_batch,formal_batch],
 })
 
 session_props = {
     "metricsVersion":{"const":"catch-light-session-metrics-1"},
     "passEngineType":{"const":"PE-EVENT"},
-    "configSetId":{"const":"catch-light-v1.5-w2-vertical-slices"},
-    "generatorVersion":{"const":"catch-light-gen-1"},
+    "configSetId":{"const":"catch-light-v1.5-w2-vertical-slices-r2"},
+    "generatorVersion":{"const":"catch-light-gen-2"},
     "scoringRuleVersion":{"const":"1.5.0"},
     "resultSchemaVersion":{"const":"A620-TRR-1.1"},
     "sessionSeed":{"type":"integer","minimum":0,"maximum":9007199254740991},
@@ -265,7 +351,7 @@ write("game_metrics.schema.json", {
 })
 
 partial_props = {
-    "metricsVersion":{"const":"catch-light-partial-metrics-1"},
+    "metricsVersion":{"const":"catch-light-partial-metrics-2"},
     "phase":{"enum":["PROMPT","OPERATION","FEEDBACK","TRANSITION"]},
     "waveOrdinal":{"type":"integer","minimum":0,"maximum":8},
     "presentedTargetCount":{"type":"integer","minimum":0,"maximum":25},
@@ -275,7 +361,9 @@ partial_props = {
     "unresolvedTargetCount":{"type":"integer","minimum":0,"maximum":25},
     "totalObjectTouches":NONNEG,
     "blankTouches":NONNEG,
+    "duplicateTouches":NONNEG,
     "scheduleSha256":HASH,
+    "firstTeachingBatchWaveOneDoubleSuppressed":{"type":"boolean"},
     "instanceAuditSha256":HASH,
 }
 write("partial_metrics.schema.json", {

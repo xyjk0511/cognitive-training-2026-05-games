@@ -1,4 +1,5 @@
 export * from "./types.js";
+export * from "./immutability.js";
 export * from "./assets.js";
 export * from "./prng.js";
 export * from "./config.js";

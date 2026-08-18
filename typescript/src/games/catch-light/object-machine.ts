@@ -1,13 +1,38 @@
-import {
-  HIT_FEEDBACK_MS,
-  type FruitInteractionState,
-  type FruitVisualPhase,
-  type GeneratedInstance,
-  type InstanceAudit,
-  type TouchResult,
-} from "./types.js";
+import { HIT_FEEDBACK_MS, type FruitInteractionState, type FruitPresentationSnapshot, type FruitVisualPhase, type GeneratedInstance, type InstanceAudit, type TouchResult } from "./types.js";
+import { immutableSnapshot } from "./immutability.js";
 
 const NO_CHANGE: Omit<TouchResult, "disposition"> = Object.freeze({changedStatistics:false, hitDelta:0, falseTouchDelta:0});
+
+function assertSafeNonNegative(value: number, label: string): void {
+  if (!Number.isSafeInteger(value) || value < 0) throw new Error(`${label} must be a non-negative safe integer`);
+}
+
+function validateInstance(instance: GeneratedInstance): void {
+  assertSafeNonNegative(instance.waveOrdinal, "waveOrdinal");
+  assertSafeNonNegative(instance.ordinalInWave, "ordinalInWave");
+  assertSafeNonNegative(instance.activeStartMs, "activeStartMs");
+  assertSafeNonNegative(instance.enterEndMs, "enterEndMs");
+  assertSafeNonNegative(instance.exitStartMs, "exitStartMs");
+  assertSafeNonNegative(instance.activeDeadlineMs, "activeDeadlineMs");
+  assertSafeNonNegative(instance.doubleWindowMs, "doubleWindowMs");
+  if (instance.waveOrdinal < 1 || instance.ordinalInWave < 1) throw new Error("wave and instance ordinals start at 1");
+  if (!(instance.activeStartMs < instance.enterEndMs && instance.enterEndMs <= instance.exitStartMs && instance.exitStartMs < instance.activeDeadlineMs)) {
+    throw new Error(`${instance.instanceId}: invalid half-open lifecycle ordering`);
+  }
+  if (instance.role === "TARGET") {
+    if (instance.similarityClass !== "TARGET") throw new Error(`${instance.instanceId}: target must use TARGET similarityClass`);
+  } else {
+    if (instance.similarityClass === "TARGET") throw new Error(`${instance.instanceId}: distractor cannot use TARGET similarityClass`);
+    if (instance.isDouble) throw new Error(`${instance.instanceId}: distractor cannot be double`);
+  }
+  if (instance.isDouble) {
+    if (instance.role !== "TARGET" || instance.doubleWindowMs < 1200 || instance.doubleWindowMs > 1500 || instance.doubleWindowMs % 100 !== 0) {
+      throw new Error(`${instance.instanceId}: invalid double-target configuration`);
+    }
+  } else if (instance.doubleWindowMs !== 0) {
+    throw new Error(`${instance.instanceId}: non-double instance must use doubleWindowMs=0`);
+  }
+}
 
 export class FruitObjectRuntime {
   readonly instance: GeneratedInstance;
@@ -17,17 +42,17 @@ export class FruitObjectRuntime {
   private lastTouchActiveMs: number | null = null;
   private secondDeadlineActiveMs: number | null = null;
   private settledAtActiveMs: number | null = null;
+  private latestActiveMs = 0;
 
   constructor(instance: GeneratedInstance) {
-    this.instance = instance;
+    validateInstance(instance);
+    this.instance = immutableSnapshot(instance);
   }
 
   get state(): FruitInteractionState { return this.interactionState; }
-  get firstTouchMs(): number | null { return this.firstTouchActiveMs; }
-  get secondTouchMs(): number | null { return this.secondTouchActiveMs; }
   get secondDeadlineMs(): number | null { return this.secondDeadlineActiveMs; }
 
-  private isSettled(): boolean {
+  private isTerminalResult(): boolean {
     return this.interactionState === "HIT"
       || this.interactionState === "COMPLETED"
       || this.interactionState === "FALSE_TOUCH"
@@ -36,13 +61,14 @@ export class FruitObjectRuntime {
   }
 
   advanceTo(activeMs: number): void {
-    if (!Number.isSafeInteger(activeMs) || activeMs < 0) throw new Error("activeMs must be a non-negative safe integer");
-    if (this.isSettled()) {
+    assertSafeNonNegative(activeMs, "activeMs");
+    if (activeMs < this.latestActiveMs) throw new Error("object active time moved backwards");
+    this.latestActiveMs = activeMs;
+
+    if (this.isTerminalResult()) {
       if (this.interactionState === "TIMEOUT") {
         if (activeMs >= this.instance.activeDeadlineMs) this.interactionState = "GONE";
-        return;
-      }
-      if (this.settledAtActiveMs !== null && activeMs >= this.settledAtActiveMs + HIT_FEEDBACK_MS) {
+      } else if (this.interactionState !== "GONE" && this.settledAtActiveMs !== null && activeMs >= this.settledAtActiveMs + HIT_FEEDBACK_MS) {
         this.interactionState = "GONE";
       }
       return;
@@ -62,37 +88,27 @@ export class FruitObjectRuntime {
       return;
     }
     if (this.interactionState === "WAIT_SECOND") return;
-    if (this.instance.isDouble) {
-      this.interactionState = "ACTIVE_FIRST";
-    } else if (activeMs < this.instance.enterEndMs) {
-      this.interactionState = "ENTERING";
-    } else if (activeMs < this.instance.exitStartMs) {
-      this.interactionState = "ACTIVE";
-    } else {
-      this.interactionState = "EXITING";
-    }
+    if (this.instance.isDouble) this.interactionState = "ACTIVE_FIRST";
+    else if (activeMs < this.instance.enterEndMs) this.interactionState = "ENTERING";
+    else if (activeMs < this.instance.exitStartMs) this.interactionState = "ACTIVE";
+    else this.interactionState = "EXITING";
   }
 
   touch(activeMs: number): TouchResult {
-    if (!Number.isSafeInteger(activeMs) || activeMs < 0) throw new Error("activeMs must be a non-negative safe integer");
-    if (activeMs < this.instance.activeStartMs) {
-      return {disposition:"IGNORED_BEFORE_WINDOW", ...NO_CHANGE};
-    }
-    if (this.lastTouchActiveMs === activeMs) {
-      return {disposition:"IGNORED_SAME_TIMESTAMP", ...NO_CHANGE};
-    }
+    assertSafeNonNegative(activeMs, "activeMs");
     this.advanceTo(activeMs);
-    this.lastTouchActiveMs = activeMs;
+    if (activeMs < this.instance.activeStartMs) return {disposition:"IGNORED_BEFORE_WINDOW", ...NO_CHANGE};
     if (activeMs >= this.instance.activeDeadlineMs || this.interactionState === "TIMEOUT") {
       return {disposition:"IGNORED_AT_OR_AFTER_DEADLINE", ...NO_CHANGE};
     }
+    if (this.lastTouchActiveMs === activeMs) return {disposition:"IGNORED_SAME_TIMESTAMP", ...NO_CHANGE};
+    this.lastTouchActiveMs = activeMs;
     if (this.interactionState === "HIT" || this.interactionState === "COMPLETED" || this.interactionState === "FALSE_TOUCH" || this.interactionState === "GONE") {
       return {disposition:"IGNORED_ALREADY_SETTLED", ...NO_CHANGE};
     }
 
     if (this.interactionState === "WAIT_SECOND") {
       if (this.secondDeadlineActiveMs === null || activeMs >= this.secondDeadlineActiveMs) {
-        this.advanceTo(activeMs);
         return {disposition:"IGNORED_AT_OR_AFTER_DEADLINE", ...NO_CHANGE};
       }
       this.secondTouchActiveMs = activeMs;
@@ -128,13 +144,42 @@ export class FruitObjectRuntime {
       if (activeMs >= this.instance.activeDeadlineMs) return "GONE";
       return activeMs < this.instance.exitStartMs ? "ACTIVE" : "EXITING";
     }
-    if (this.settledAtActiveMs !== null) {
-      return activeMs < this.settledAtActiveMs + HIT_FEEDBACK_MS ? "FEEDBACK" : "GONE";
-    }
+    if (this.settledAtActiveMs !== null) return activeMs < this.settledAtActiveMs + HIT_FEEDBACK_MS ? "FEEDBACK" : "GONE";
     if (activeMs >= this.instance.activeDeadlineMs) return "GONE";
     if (activeMs < this.instance.enterEndMs) return "ENTERING";
     if (activeMs < this.instance.exitStartMs) return "ACTIVE";
     return "EXITING";
+  }
+
+  presentationSnapshotAt(activeMs: number): FruitPresentationSnapshot {
+    const visualPhase = this.visualPhaseAt(activeMs);
+    const clickable = activeMs >= this.instance.activeStartMs
+      && activeMs < this.instance.activeDeadlineMs
+      && this.interactionState !== "HIT"
+      && this.interactionState !== "COMPLETED"
+      && this.interactionState !== "FALSE_TOUCH"
+      && this.interactionState !== "TIMEOUT"
+      && this.interactionState !== "GONE";
+    const doubleProgress: 0 | 1 | 2 = !this.instance.isDouble
+      ? 0
+      : this.secondTouchActiveMs !== null
+        ? 2
+        : this.firstTouchActiveMs !== null
+          ? 1
+          : 0;
+    return immutableSnapshot({
+      instanceId: this.instance.instanceId,
+      waveOrdinal: this.instance.waveOrdinal,
+      role: this.instance.role,
+      fruitId: this.instance.fruitId,
+      slotId: this.instance.slotId,
+      isDouble: this.instance.isDouble,
+      visualPhase,
+      interactionState: this.interactionState,
+      clickable,
+      doubleProgress,
+      secondDeadlineOperationMs: this.secondDeadlineActiveMs,
+    });
   }
 
   auditAt(activeMs: number): InstanceAudit {
@@ -144,14 +189,15 @@ export class FruitObjectRuntime {
       if (this.firstTouchActiveMs !== null) outcome = "FALSE_TOUCH";
       else if (activeMs >= this.instance.activeDeadlineMs || this.interactionState === "TIMEOUT" || this.interactionState === "GONE") outcome = "AVOIDED";
       else outcome = "UNRESOLVED";
-    } else if (this.interactionState === "HIT" || this.interactionState === "COMPLETED" || (this.interactionState === "GONE" && this.firstTouchActiveMs !== null && (!this.instance.isDouble || this.secondTouchActiveMs !== null))) {
+    } else if (this.interactionState === "HIT" || this.interactionState === "COMPLETED"
+      || (this.interactionState === "GONE" && this.firstTouchActiveMs !== null && (!this.instance.isDouble || this.secondTouchActiveMs !== null))) {
       outcome = "HIT";
     } else if (activeMs >= this.instance.activeDeadlineMs || this.interactionState === "TIMEOUT" || this.interactionState === "GONE") {
       outcome = "TIMEOUT";
     } else {
       outcome = "UNRESOLVED";
     }
-    return {
+    return immutableSnapshot({
       instanceId: this.instance.instanceId,
       fruitId: this.instance.fruitId,
       role: this.instance.role,
@@ -160,6 +206,6 @@ export class FruitObjectRuntime {
       firstTouchActiveMs: this.firstTouchActiveMs,
       secondTouchActiveMs: this.secondTouchActiveMs,
       outcome,
-    };
+    });
   }
 }

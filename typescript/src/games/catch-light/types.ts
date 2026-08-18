@@ -2,11 +2,11 @@ import type { EligibleBatch, GameResultDraft, IncompleteBatchAudit } from "../..
 
 export const CATCH_LIGHT_GAME_CODE = "CATCH_LIGHT" as const;
 export const CATCH_LIGHT_CONFIG_VERSION = "1.5.0" as const;
-export const CATCH_LIGHT_GENERATOR_VERSION = "catch-light-gen-1" as const;
+export const CATCH_LIGHT_GENERATOR_VERSION = "catch-light-gen-2" as const;
 export const CATCH_LIGHT_SCORING_RULE_VERSION = "1.5.0" as const;
 export const CATCH_LIGHT_RESULT_SCHEMA_VERSION = "A620-TRR-1.1" as const;
 export const CATCH_LIGHT_CONFIG_SCHEMA_ID = "urn:a620:catch-light:config:1.5" as const;
-export const CATCH_LIGHT_CONFIG_SET_ID = "catch-light-v1.5-w2-vertical-slices" as const;
+export const CATCH_LIGHT_CONFIG_SET_ID = "catch-light-v1.5-w2-vertical-slices-r2" as const;
 export const CATCH_LIGHT_QA_SEED = 20260817 as const;
 export const CATCH_LIGHT_RUNTIME_SLICE_LEVELS = [1, 28, 102, 120] as const;
 export const CATCH_LIGHT_GOLDEN_ANCHOR_LEVELS = [1, 28, 67, 102, 120] as const;
@@ -41,7 +41,7 @@ export type TimingBand = "A" | "C" | "H";
 export type GridId = "2x2" | "2x3" | "3x3" | "3x4";
 export type ObjectRole = "TARGET" | "DISTRACTOR";
 export type SimilarityClass = "TARGET" | "SIMILAR" | "CLEAR";
-export type DoublePatternId = "NONE" | "SEP_NO_W1" | "MAX2_CONSEC" | "MAX3_CONSEC";
+export type DoublePatternId = "NONE" | "MAX2_CONSEC" | "MAX3_CONSEC";
 export type RuleIntroFlag = "FULL_RULE" | "DISTRACTOR_RULE" | "NONE" | "DOUBLE_RULE";
 
 export interface FruitDefinition {
@@ -54,6 +54,45 @@ export interface FruitDefinition {
   targetAllowed: true;
   distractorAllowed: true;
   similarityTags: readonly string[];
+}
+
+export type FruitSimilarityAuthority =
+  | "SOURCE_WORKBOOK_CONFIRMED"
+  | "ENGINEERING_COMPATIBILITY_UNAPPROVED";
+
+export type FruitSimilarityAttribute = "COLOR" | "SHAPE" | "TEXTURE";
+
+export interface FruitSimilarityRelation {
+  tag: string;
+  fruitA: FruitId;
+  fruitB: FruitId;
+  primaryAttribute: FruitSimilarityAttribute;
+  authority: FruitSimilarityAuthority;
+}
+
+export interface QualifiedFruitSimilarityPair {
+  tag: string;
+  fruitA: FruitId;
+  fruitB: FruitId;
+  primaryAttribute: FruitSimilarityAttribute;
+}
+
+export interface FruitSimilarityQualificationGroup {
+  relationStatus: FruitSimilarityAuthority;
+  source: string;
+  relationUseApproved: boolean;
+  productionGate: "NONE" | "BLOCK_UNTIL_PRODUCT_AND_ART_APPROVE_FINAL_SPRITES_AND_PAIR_MATRIX";
+  pairs: readonly QualifiedFruitSimilarityPair[];
+}
+
+export interface FruitContentQualification {
+  qualificationVersion: "catch-light-fruit-content-qualification-1";
+  runtimeUseStatus: "HEADLESS_VERTICAL_SLICE_ONLY";
+  productionActivationStatus: "BLOCKED_PENDING_FRUIT_SPRITES_AND_CORE_B_RELATION_APPROVAL";
+  fruitMetadataStatus: "ENGINEERING_PLACEHOLDER_PENDING_ART_QA";
+  fruitSpriteStatus: "PLACEHOLDER_REFERENCES_ONLY";
+  coreA: FruitSimilarityQualificationGroup;
+  coreB: FruitSimilarityQualificationGroup;
 }
 
 export interface GridSlot {
@@ -115,6 +154,7 @@ export interface CatchLightLevelConfig {
   doubleTargetCount: number;
   doubleWindowMs: number;
   doublePatternId: DoublePatternId;
+  firstTeachingBatchWaveOneDoubleDisabled: boolean;
   minTargetHits: number;
   upgradeFalseLimit: number;
   holdFalseLimit: number;
@@ -143,9 +183,12 @@ export interface CatchLightGameConfig {
   sourceWorkbookRole: typeof CATCH_LIGHT_SOURCE_WORKBOOK_ROLE;
   sourceRequirementSha256: typeof CATCH_LIGHT_REQUIREMENT_SHA256;
   publicRulesSha256: typeof A620_PUBLIC_RULES_SHA256;
-  fruitCatalogVersion: "catch-light-fruit-catalog-1";
+  fruitCatalogVersion: "catch-light-fruit-catalog-2";
+  fruitSimilarityCatalogVersion: "catch-light-fruit-similarity-2";
   layoutCatalogVersion: "catch-light-grid-catalog-1";
   fruitCatalog: readonly FruitDefinition[];
+  fruitSimilarityRelations: readonly FruitSimilarityRelation[];
+  fruitContentQualification: FruitContentQualification;
   fruitPools: Readonly<Record<FruitPoolId, readonly FruitId[]>>;
   grids: readonly GridDefinition[];
   waveProfiles: readonly WaveProfile[];
@@ -194,6 +237,7 @@ export interface GeneratedBatchSchedule {
   targetTotal: number;
   distractorTotal: number;
   sameScreenCap: number;
+  firstTeachingBatchWaveOneDoubleSuppressed: boolean;
   waves: readonly GeneratedWave[];
   scheduleSha256: string;
 }
@@ -212,6 +256,67 @@ export type FruitInteractionState =
   | "GONE";
 
 export type FruitVisualPhase = "HIDDEN" | "ENTERING" | "ACTIVE" | "EXITING" | "FEEDBACK" | "GONE";
+export type CatchLightBatchPhase = "PROMPT" | "OPERATION" | "FEEDBACK" | "TRANSITION" | "CLOSED";
+
+export interface FruitPresentationSnapshot {
+  instanceId: string;
+  waveOrdinal: number;
+  role: ObjectRole;
+  fruitId: FruitId;
+  slotId: string;
+  isDouble: boolean;
+  visualPhase: FruitVisualPhase;
+  interactionState: FruitInteractionState;
+  clickable: boolean;
+  doubleProgress: 0 | 1 | 2;
+  secondDeadlineOperationMs: number | null;
+}
+
+export interface CatchLightBatchSnapshot {
+  batchOrdinal: number;
+  levelBefore: number;
+  batchStartActiveMs: number;
+  phase: CatchLightBatchPhase;
+  operationElapsedMs: number;
+  currentWaveOrdinal: number;
+  targetFruitId: FruitId;
+  backgroundId: string;
+  gridId: GridId;
+  H: number;
+  F: number;
+  visibleObjects: readonly FruitPresentationSnapshot[];
+}
+
+export interface CatchLightSessionSnapshot {
+  activeElapsedMs: number;
+  sessionStartLevel: number;
+  currentLevel: number;
+  backgroundId: string;
+  deadlineReached: boolean;
+  eligibleBatchCount: number;
+  sessionRawScore: number;
+  nextBatchOrdinal: number;
+  consecutiveFail: 0 | 1;
+  pendingBatchNotificationCount: number;
+  pendingBatchNotificationHashes: readonly string[];
+  currentBatch: CatchLightBatchSnapshot | null;
+}
+
+/**
+ * Read-only inspection surface used by the headless harness and rendering
+ * integration. It deliberately excludes the mutable batch runtime so callers
+ * cannot close, seal or advance the session's internal batch out of band.
+ */
+export interface CatchLightCurrentBatchView {
+  batchOrdinal: number;
+  levelBefore: number;
+  batchStartActiveMs: number;
+  operationStartActiveMs: number;
+  operationEndActiveMs: number;
+  closeAtActiveMs: number;
+  levelConfig: CatchLightLevelConfig;
+  schedule: GeneratedBatchSchedule;
+}
 
 export type TouchDisposition =
   | "TARGET_HIT"
@@ -243,7 +348,7 @@ export interface InstanceAudit {
 }
 
 export interface BatchMetrics extends Record<string, unknown> {
-  metricsVersion: "catch-light-batch-metrics-1";
+  metricsVersion: "catch-light-batch-metrics-2";
   H: number;
   T: number;
   F: number;
@@ -258,6 +363,7 @@ export interface BatchMetrics extends Record<string, unknown> {
   waveProfileId: string;
   seedKey: string;
   scheduleSha256: string;
+  firstTeachingBatchWaveOneDoubleSuppressed: boolean;
   instanceAuditSha256: string;
   targetTimeouts: number;
   distractorAvoided: number;
@@ -272,7 +378,7 @@ export interface BatchMetrics extends Record<string, unknown> {
 }
 
 export interface PartialBatchMetrics extends Record<string, unknown> {
-  metricsVersion: "catch-light-partial-metrics-1";
+  metricsVersion: "catch-light-partial-metrics-2";
   phase: "PROMPT" | "OPERATION" | "FEEDBACK" | "TRANSITION";
   waveOrdinal: number;
   presentedTargetCount: number;
@@ -282,7 +388,9 @@ export interface PartialBatchMetrics extends Record<string, unknown> {
   unresolvedTargetCount: number;
   totalObjectTouches: number;
   blankTouches: number;
+  duplicateTouches: number;
   scheduleSha256: string;
+  firstTeachingBatchWaveOneDoubleSuppressed: boolean;
   instanceAuditSha256: string;
 }
 

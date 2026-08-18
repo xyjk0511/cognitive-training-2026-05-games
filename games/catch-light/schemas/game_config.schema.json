@@ -29,8 +29,11 @@
         "sourceRequirementSha256",
         "publicRulesSha256",
         "fruitCatalogVersion",
+        "fruitSimilarityCatalogVersion",
         "layoutCatalogVersion",
         "fruitCatalog",
+        "fruitSimilarityRelations",
+        "fruitContentQualification",
         "fruitPools",
         "grids",
         "waveProfiles",
@@ -47,7 +50,7 @@
           "const": "urn:a620:catch-light:config:1.5"
         },
         "generatorVersion": {
-          "const": "catch-light-gen-1"
+          "const": "catch-light-gen-2"
         },
         "scoringRuleVersion": {
           "const": "1.5.0"
@@ -68,7 +71,7 @@
           "const": 20260817
         },
         "configSetId": {
-          "const": "catch-light-v1.5-w2-vertical-slices"
+          "const": "catch-light-v1.5-w2-vertical-slices-r2"
         },
         "sourceWorkbookName": {
           "const": "捕光行动-120级数值设计-v1.4.xlsx"
@@ -86,7 +89,10 @@
           "const": "c1a4f3f2e309cdf92fc15d5f51e6e99bc90025c3ddc4ed8ea99077398a987794"
         },
         "fruitCatalogVersion": {
-          "const": "catch-light-fruit-catalog-1"
+          "const": "catch-light-fruit-catalog-2"
+        },
+        "fruitSimilarityCatalogVersion": {
+          "const": "catch-light-fruit-similarity-2"
         },
         "layoutCatalogVersion": {
           "const": "catch-light-grid-catalog-1"
@@ -95,6 +101,7 @@
           "type": "array",
           "minItems": 12,
           "maxItems": 12,
+          "uniqueItems": true,
           "items": {
             "type": "object",
             "required": [
@@ -154,7 +161,7 @@
               },
               "similarityTags": {
                 "type": "array",
-                "minItems": 2,
+                "minItems": 1,
                 "maxItems": 8,
                 "uniqueItems": true,
                 "items": {
@@ -165,6 +172,292 @@
             },
             "additionalProperties": false
           }
+        },
+        "fruitSimilarityRelations": {
+          "type": "array",
+          "minItems": 11,
+          "maxItems": 11,
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "required": [
+              "tag",
+              "fruitA",
+              "fruitB",
+              "primaryAttribute",
+              "authority"
+            ],
+            "properties": {
+              "tag": {
+                "type": "string",
+                "pattern": "^SIM_[A-Z0-9_]+$"
+              },
+              "fruitA": {
+                "enum": [
+                  "APPLE",
+                  "BANANA",
+                  "ORANGE",
+                  "PEAR",
+                  "STRAWBERRY",
+                  "GRAPE",
+                  "WATERMELON",
+                  "PINEAPPLE",
+                  "PEACH",
+                  "LEMON",
+                  "CHERRY",
+                  "MANGO"
+                ]
+              },
+              "fruitB": {
+                "enum": [
+                  "APPLE",
+                  "BANANA",
+                  "ORANGE",
+                  "PEAR",
+                  "STRAWBERRY",
+                  "GRAPE",
+                  "WATERMELON",
+                  "PINEAPPLE",
+                  "PEACH",
+                  "LEMON",
+                  "CHERRY",
+                  "MANGO"
+                ]
+              },
+              "primaryAttribute": {
+                "enum": [
+                  "COLOR",
+                  "SHAPE",
+                  "TEXTURE"
+                ]
+              },
+              "authority": {
+                "enum": [
+                  "SOURCE_WORKBOOK_CONFIRMED",
+                  "ENGINEERING_COMPATIBILITY_UNAPPROVED"
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "fruitContentQualification": {
+          "type": "object",
+          "required": [
+            "qualificationVersion",
+            "runtimeUseStatus",
+            "productionActivationStatus",
+            "fruitMetadataStatus",
+            "fruitSpriteStatus",
+            "coreA",
+            "coreB"
+          ],
+          "properties": {
+            "qualificationVersion": {
+              "const": "catch-light-fruit-content-qualification-1"
+            },
+            "runtimeUseStatus": {
+              "const": "HEADLESS_VERTICAL_SLICE_ONLY"
+            },
+            "productionActivationStatus": {
+              "const": "BLOCKED_PENDING_FRUIT_SPRITES_AND_CORE_B_RELATION_APPROVAL"
+            },
+            "fruitMetadataStatus": {
+              "const": "ENGINEERING_PLACEHOLDER_PENDING_ART_QA"
+            },
+            "fruitSpriteStatus": {
+              "const": "PLACEHOLDER_REFERENCES_ONLY"
+            },
+            "coreA": {
+              "type": "object",
+              "required": [
+                "relationStatus",
+                "source",
+                "relationUseApproved",
+                "productionGate",
+                "pairs"
+              ],
+              "properties": {
+                "relationStatus": {
+                  "enum": [
+                    "SOURCE_WORKBOOK_CONFIRMED",
+                    "ENGINEERING_COMPATIBILITY_UNAPPROVED"
+                  ]
+                },
+                "source": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "relationUseApproved": {
+                  "type": "boolean"
+                },
+                "productionGate": {
+                  "enum": [
+                    "NONE",
+                    "BLOCK_UNTIL_PRODUCT_AND_ART_APPROVE_FINAL_SPRITES_AND_PAIR_MATRIX"
+                  ]
+                },
+                "pairs": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 12,
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "tag",
+                      "fruitA",
+                      "fruitB",
+                      "primaryAttribute"
+                    ],
+                    "properties": {
+                      "tag": {
+                        "type": "string",
+                        "pattern": "^SIM_[A-Z0-9_]+$"
+                      },
+                      "fruitA": {
+                        "enum": [
+                          "APPLE",
+                          "BANANA",
+                          "ORANGE",
+                          "PEAR",
+                          "STRAWBERRY",
+                          "GRAPE",
+                          "WATERMELON",
+                          "PINEAPPLE",
+                          "PEACH",
+                          "LEMON",
+                          "CHERRY",
+                          "MANGO"
+                        ]
+                      },
+                      "fruitB": {
+                        "enum": [
+                          "APPLE",
+                          "BANANA",
+                          "ORANGE",
+                          "PEAR",
+                          "STRAWBERRY",
+                          "GRAPE",
+                          "WATERMELON",
+                          "PINEAPPLE",
+                          "PEACH",
+                          "LEMON",
+                          "CHERRY",
+                          "MANGO"
+                        ]
+                      },
+                      "primaryAttribute": {
+                        "enum": [
+                          "COLOR",
+                          "SHAPE",
+                          "TEXTURE"
+                        ]
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "additionalProperties": false
+            },
+            "coreB": {
+              "type": "object",
+              "required": [
+                "relationStatus",
+                "source",
+                "relationUseApproved",
+                "productionGate",
+                "pairs"
+              ],
+              "properties": {
+                "relationStatus": {
+                  "enum": [
+                    "SOURCE_WORKBOOK_CONFIRMED",
+                    "ENGINEERING_COMPATIBILITY_UNAPPROVED"
+                  ]
+                },
+                "source": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "relationUseApproved": {
+                  "type": "boolean"
+                },
+                "productionGate": {
+                  "enum": [
+                    "NONE",
+                    "BLOCK_UNTIL_PRODUCT_AND_ART_APPROVE_FINAL_SPRITES_AND_PAIR_MATRIX"
+                  ]
+                },
+                "pairs": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 12,
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "tag",
+                      "fruitA",
+                      "fruitB",
+                      "primaryAttribute"
+                    ],
+                    "properties": {
+                      "tag": {
+                        "type": "string",
+                        "pattern": "^SIM_[A-Z0-9_]+$"
+                      },
+                      "fruitA": {
+                        "enum": [
+                          "APPLE",
+                          "BANANA",
+                          "ORANGE",
+                          "PEAR",
+                          "STRAWBERRY",
+                          "GRAPE",
+                          "WATERMELON",
+                          "PINEAPPLE",
+                          "PEACH",
+                          "LEMON",
+                          "CHERRY",
+                          "MANGO"
+                        ]
+                      },
+                      "fruitB": {
+                        "enum": [
+                          "APPLE",
+                          "BANANA",
+                          "ORANGE",
+                          "PEAR",
+                          "STRAWBERRY",
+                          "GRAPE",
+                          "WATERMELON",
+                          "PINEAPPLE",
+                          "PEACH",
+                          "LEMON",
+                          "CHERRY",
+                          "MANGO"
+                        ]
+                      },
+                      "primaryAttribute": {
+                        "enum": [
+                          "COLOR",
+                          "SHAPE",
+                          "TEXTURE"
+                        ]
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
         },
         "fruitPools": {
           "type": "object",
@@ -247,6 +540,7 @@
           "type": "array",
           "minItems": 4,
           "maxItems": 4,
+          "uniqueItems": true,
           "items": {
             "type": "object",
             "required": [
@@ -345,7 +639,8 @@
         "waveProfiles": {
           "type": "array",
           "minItems": 5,
-          "maxItems": 32,
+          "maxItems": 5,
+          "uniqueItems": true,
           "items": {
             "type": "object",
             "required": [
@@ -384,8 +679,9 @@
         },
         "levels": {
           "type": "array",
-          "minItems": 1,
-          "maxItems": 120,
+          "minItems": 5,
+          "maxItems": 5,
+          "uniqueItems": true,
           "items": {
             "type": "object",
             "required": [
@@ -423,6 +719,7 @@
               "doubleTargetCount",
               "doubleWindowMs",
               "doublePatternId",
+              "firstTeachingBatchWaveOneDoubleDisabled",
               "minTargetHits",
               "upgradeFalseLimit",
               "holdFalseLimit",
@@ -608,10 +905,12 @@
               "doublePatternId": {
                 "enum": [
                   "NONE",
-                  "SEP_NO_W1",
                   "MAX2_CONSEC",
                   "MAX3_CONSEC"
                 ]
+              },
+              "firstTeachingBatchWaveOneDoubleDisabled": {
+                "type": "boolean"
               },
               "minTargetHits": {
                 "type": "integer",
@@ -657,7 +956,103 @@
                 "const": "CL_CHILD_V1"
               }
             },
-            "additionalProperties": false
+            "additionalProperties": false,
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "doubleTargetCount": {
+                      "const": 0
+                    }
+                  },
+                  "required": [
+                    "doubleTargetCount"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "doubleWindowMs": {
+                      "const": 0
+                    },
+                    "doublePatternId": {
+                      "const": "NONE"
+                    },
+                    "firstTeachingBatchWaveOneDoubleDisabled": {
+                      "const": false
+                    }
+                  }
+                },
+                "else": {
+                  "properties": {
+                    "level": {
+                      "minimum": 102
+                    },
+                    "doublePatternId": {
+                      "enum": [
+                        "MAX2_CONSEC",
+                        "MAX3_CONSEC"
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "level": {
+                      "const": 102
+                    }
+                  },
+                  "required": [
+                    "level"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "doubleTargetCount": {
+                      "const": 2
+                    },
+                    "doubleWindowMs": {
+                      "const": 1500
+                    },
+                    "doublePatternId": {
+                      "const": "MAX2_CONSEC"
+                    },
+                    "firstTeachingBatchWaveOneDoubleDisabled": {
+                      "const": true
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "level": {
+                      "const": 120
+                    }
+                  },
+                  "required": [
+                    "level"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "doubleTargetCount": {
+                      "const": 6
+                    },
+                    "doubleWindowMs": {
+                      "const": 1200
+                    },
+                    "doublePatternId": {
+                      "const": "MAX3_CONSEC"
+                    },
+                    "firstTeachingBatchWaveOneDoubleDisabled": {
+                      "const": false
+                    }
+                  }
+                }
+              }
+            ]
           }
         }
       },

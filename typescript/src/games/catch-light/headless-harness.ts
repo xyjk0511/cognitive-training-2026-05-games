@@ -1,9 +1,11 @@
 import { canonicalSha256 } from "../../canonical.js";
 import { CATCH_LIGHT_VERTICAL_SLICE_CONFIG, levelConfig } from "./config.js";
 import { generateBatchSchedule } from "./generator.js";
+import { immutableSnapshot } from "./immutability.js";
 import { CatchLightSession } from "./session-engine.js";
 import {
   BATCH_DURATION_MS,
+  CATCH_LIGHT_CONFIG_SCHEMA_ID,
   CATCH_LIGHT_CONFIG_SET_ID,
   CATCH_LIGHT_GENERATOR_VERSION,
   CATCH_LIGHT_QA_SEED,
@@ -46,7 +48,7 @@ function desiredCounts(policy: HeadlessPolicy, T: number, D: number): {H:number;
 }
 
 function applyPolicyToCurrentBatch(session: CatchLightSession, policy: HeadlessPolicy): void {
-  const batch = session.currentBatchRuntime;
+  const batch = session.currentBatchView;
   if (batch === null) throw new Error("headless policy requested without an active batch");
   const counts = desiredCounts(policy, batch.levelConfig.targetTotal, batch.levelConfig.distractorTotal);
   const targets = batch.schedule.waves.flatMap(wave => wave.instances).filter(instance => instance.role === "TARGET").sort((a, b) => a.instanceId.localeCompare(b.instanceId));
@@ -91,7 +93,7 @@ export function runHeadlessScenario(options: HeadlessScenarioOptions): HeadlessS
   const batchEvents: CatchLightEligibleBatch[] = [];
   const delays = delaysForEligibleCount(options.eligibleBatchTarget);
   const runtimeConfigHash = canonicalSha256({
-    gameConfigSchemaId: "urn:a620:catch-light:config:1.5",
+    gameConfigSchemaId: CATCH_LIGHT_CONFIG_SCHEMA_ID,
     gameConfig: CATCH_LIGHT_VERTICAL_SLICE_CONFIG,
     sessionStartLevel: options.level,
     sessionSeed: options.sessionSeed ?? CATCH_LIGHT_QA_SEED,
@@ -108,7 +110,7 @@ export function runHeadlessScenario(options: HeadlessScenarioOptions): HeadlessS
   for (const start of plannedStarts(delays)) {
     if (start >= SESSION_DURATION_MS) break;
     session.advanceToActive(start);
-    const batch = session.currentBatchRuntime;
+    const batch = session.currentBatchView;
     if (batch === null || batch.batchStartActiveMs !== start) throw new Error(`expected headless batch at ${start}`);
     applyPolicyToCurrentBatch(session, options.policy);
     if (batch.closeAtActiveMs <= SESSION_DURATION_MS) session.advanceToActive(batch.closeAtActiveMs);
@@ -119,14 +121,17 @@ export function runHeadlessScenario(options: HeadlessScenarioOptions): HeadlessS
   if (payload.eligibleBatchCount !== options.eligibleBatchTarget) {
     throw new Error(`${options.name}: expected ${options.eligibleBatchTarget} eligible batches, got ${payload.eligibleBatchCount}`);
   }
-  return {
+  if (canonicalSha256(batchEvents) !== canonicalSha256(payload.eligibleBatches)) {
+    throw new Error(`${options.name}: BATCH_CLOSED evidence differs from final eligibleBatches`);
+  }
+  return immutableSnapshot({
     name: options.name,
     level: options.level,
     policy: options.policy,
     eligibleBatchTarget: options.eligibleBatchTarget,
     batchEvents,
     payload,
-  };
+  });
 }
 
 export interface CatchLightGoldenVector {
@@ -138,7 +143,7 @@ export interface CatchLightGoldenVector {
 }
 
 export interface CatchLightGoldenVectorFile {
-  goldenVersion: "A620-CATCH-LIGHT-GOLDEN-1";
+  goldenVersion: "A620-CATCH-LIGHT-GOLDEN-2";
   generatorVersion: typeof CATCH_LIGHT_GENERATOR_VERSION;
   configSetId: typeof CATCH_LIGHT_CONFIG_SET_ID;
   qaSeed: typeof CATCH_LIGHT_QA_SEED;
@@ -152,7 +157,7 @@ export function buildGoldenVectors(): CatchLightGoldenVectorFile {
     return {...projection, vectorSha256:canonicalSha256(projection)};
   });
   return {
-    goldenVersion: "A620-CATCH-LIGHT-GOLDEN-1",
+    goldenVersion: "A620-CATCH-LIGHT-GOLDEN-2",
     generatorVersion: CATCH_LIGHT_GENERATOR_VERSION,
     configSetId: CATCH_LIGHT_CONFIG_SET_ID,
     qaSeed: CATCH_LIGHT_QA_SEED,
@@ -163,6 +168,7 @@ export function buildGoldenVectors(): CatchLightGoldenVectorFile {
 export function buildHeadlessEvidence(): HeadlessScenarioResult[] {
   return [
     runHeadlessScenario({name:"L1-HOLD-8",level:1,policy:"HOLD",eligibleBatchTarget:8}),
+    runHeadlessScenario({name:"L1-FAIL-8",level:1,policy:"FAIL",eligibleBatchTarget:8}),
     runHeadlessScenario({name:"L28-HOLD-8",level:28,policy:"HOLD",eligibleBatchTarget:8}),
     runHeadlessScenario({name:"L102-HOLD-8",level:102,policy:"HOLD",eligibleBatchTarget:8}),
     runHeadlessScenario({name:"L120-UPGRADE-8",level:120,policy:"UPGRADE",eligibleBatchTarget:8}),

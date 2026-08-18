@@ -6,6 +6,19 @@
 
 离线配置内记录三类来源指纹：原 v1.4 数值工作簿 SHA-256、v1.5 需求书 SHA-256、公共 v1.3 SHA-256；工作簿角色固定为 `HISTORICAL_NUMERIC_INPUT_ONLY`。包索引记录编译配置的 canonical SHA-256，运行解析器只接受与该编译产物完全一致的对象，避免手工改 JSON 后仍因“Schema 合法”而静默运行。
 
+## 水果相似关系的证据级别
+
+`FP_CORE_A` 的五条单属性相似关系可在 v1.4 工作簿“水果相似关系”表逐项核对，标记为 `SOURCE_WORKBOOK_CONFIRMED`。v1.5 和 v1.4 工作簿没有给出 `FP_CORE_B` 的精确成对矩阵，工作包也没有正式水果 sprite；因此 W2 为 L120 headless 确定性切片保留一组工程兼容映射，但明确标记为 `ENGINEERING_COMPATIBILITY_UNAPPROVED`。
+
+配置和包索引同时冻结：
+
+- `runtimeUseStatus=HEADLESS_VERTICAL_SLICE_ONLY`；
+- `productionActivationStatus=BLOCKED_PENDING_FRUIT_SPRITES_AND_CORE_B_RELATION_APPROVAL`；
+- CORE_B `relationUseApproved=false`；
+- `productionGate=BLOCK_UNTIL_PRODUCT_AND_ART_APPROVE_FINAL_SPRITES_AND_PAIR_MATRIX`。
+
+这使独立验证器和发布检查可以识别未获批准状态，同时 L120 逻辑仍可做确定性 headless 验证。需要明确：该对象是 Catch Light 私有机器契约，不是 A620-TRC-1.1 的平台级自动拦截字段；当前 Android/共享 SPI 不会自行解释它。正式接入和发布流水线必须显式校验该 BLOCKED 状态，正式素材与关系矩阵获批后再升级 catalog/generator 版本并重做 Golden Vector。
+
 ## 同波水果唯一性
 
 v1.5 同时冻结了“本批目标水果固定”、每波目标实例数可大于 1，以及“同一波内同一种水果不得出现两个独立实例”。三者按字面无法同时成立：例如 L120 的单波目标数可为 4，而本批只有一个固定目标水果。
@@ -47,3 +60,23 @@ baseline.8 的公共继承向量仍使用空 `gameConfig` 和最小 H/T/F/D、`t
 ## 代表级而非隐式全量
 
 配置集只包含 L1、L28、L67、L102、L120。会话进入缺失等级时抛出错误，不做最近级、前一级或默认级回退。headless 代表级会话使用 HOLD 保持在 L1/L28/L102，L120 使用 UPGRADE 验证上限保护。
+
+## L102 首教学批与连续波模式
+
+v1.5 的 `MAX2_CONSEC` 表示双光圈最多连续出现 2 波，并不要求双光圈波彼此隔离。第 1 波禁用只适用于首次进入 L102 后的首个正式教学批；该等级后续重试批和后续批不重复禁用。
+
+会话以“本 session 是否已经呈现过该 level”记录该事实，不用 `batchOrdinal===1` 代替“首次进入等级”。日程、批次 metrics 和 partial metrics 均保留是否发生教学抑制的审计位。
+
+## 不可变证据与通知重试
+
+所有被保留、哈希或跨边界发送的 canonical-JSON 对象都先复制并递归冻结。`BATCH_CLOSED` 的领域提交先于外部 sink；sink 失败只留下同一不可变事件的 pending 通知，不回滚或重算 H/T/F/D、积分和迁级。
+
+因此当前本地通知语义是有序 at-least-once，而不是 exactly-once。接入层必须按 `batchPayloadSha256` 幂等去重；回调不得重入会话或适配器生命周期/输入入口。适配器在最外层先检查回入门，确保被拒绝的反向 `DEADLINE/TERMINATE/advance/touch` 不会先污染时钟或模块状态。
+
+## 代表级运行时封装
+
+会话不再暴露可变的 `CatchLightBatchRuntime`。headless 和未来渲染层使用递归冻结的 `currentBatchView` 获取日程与时间信息，所有输入仍只能通过会话/模块方法进入，避免外部提前 close、seal 或推进内部批次。
+
+## 生成器重放校验
+
+`scheduleSha256` 只证明日程内容自洽，不能证明它由冻结 PRNG 链生成。正式校验在约束检查后，从声明的 config、sessionSeed 和 batchOrdinal 完整重放生成器并比较整份 canonical JSON。任何改写后重算哈希的日程仍会被拒绝。

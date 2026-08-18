@@ -55,10 +55,10 @@
           "const": "PE-EVENT"
         },
         "configSetId": {
-          "const": "catch-light-v1.5-w2-vertical-slices"
+          "const": "catch-light-v1.5-w2-vertical-slices-r2"
         },
         "generatorVersion": {
-          "const": "catch-light-gen-1"
+          "const": "catch-light-gen-2"
         },
         "scoringRuleVersion": {
           "const": "1.5.0"

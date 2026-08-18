@@ -28,12 +28,14 @@
         "unresolvedTargetCount",
         "totalObjectTouches",
         "blankTouches",
+        "duplicateTouches",
         "scheduleSha256",
+        "firstTeachingBatchWaveOneDoubleSuppressed",
         "instanceAuditSha256"
       ],
       "properties": {
         "metricsVersion": {
-          "const": "catch-light-partial-metrics-1"
+          "const": "catch-light-partial-metrics-2"
         },
         "phase": {
           "enum": [
@@ -83,9 +85,17 @@
           "minimum": 0,
           "maximum": 1000000
         },
+        "duplicateTouches": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
         "scheduleSha256": {
           "type": "string",
           "pattern": "^[0-9a-f]{64}$"
+        },
+        "firstTeachingBatchWaveOneDoubleSuppressed": {
+          "type": "boolean"
         },
         "instanceAuditSha256": {
           "type": "string",

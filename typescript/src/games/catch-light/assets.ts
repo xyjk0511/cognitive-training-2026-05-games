@@ -1,25 +1,88 @@
-import type { FruitDefinition, FruitId, FruitPoolId, GridDefinition, GridId, GridSlot } from "./types.js";
+import { immutableSnapshot } from "./immutability.js";
+import type {
+  FruitContentQualification,
+  FruitDefinition,
+  FruitId,
+  FruitPoolId,
+  FruitSimilarityRelation,
+  GridDefinition,
+  GridId,
+  GridSlot,
+} from "./types.js";
 
-export const FRUIT_CATALOG: readonly FruitDefinition[] = Object.freeze([
-  {fruitId:"APPLE",displayNameZh:"苹果",assetPath:"assets/fruits/apple.png",mainColorHex:"#D94141",outlineShape:"ROUND_STEM",textureCue:"SMOOTH_LEAF",targetAllowed:true,distractorAllowed:true,similarityTags:["SIM_ROUND_APPLE_ORANGE","SIM_SMOOTH_APPLE_BANANA"]},
-  {fruitId:"BANANA",displayNameZh:"香蕉",assetPath:"assets/fruits/banana.png",mainColorHex:"#F2CF45",outlineShape:"CURVED_CRESCENT",textureCue:"RIDGED_TIPS",targetAllowed:true,distractorAllowed:true,similarityTags:["SIM_SMOOTH_APPLE_BANANA","SIM_ELONGATED_BANANA_PEAR"]},
-  {fruitId:"ORANGE",displayNameZh:"橙子",assetPath:"assets/fruits/orange.png",mainColorHex:"#F28B2D",outlineShape:"ROUND_LEAF",textureCue:"DIMPLED_PEEL",targetAllowed:true,distractorAllowed:true,similarityTags:["SIM_ROUND_GRAPE_ORANGE","SIM_ROUND_APPLE_ORANGE"]},
-  {fruitId:"PEAR",displayNameZh:"梨",assetPath:"assets/fruits/pear.png",mainColorHex:"#A8C957",outlineShape:"BELL_STEM",textureCue:"SPECKLED_SMOOTH",targetAllowed:true,distractorAllowed:true,similarityTags:["SIM_ELONGATED_BANANA_PEAR","SIM_TAPERED_PEAR_STRAWBERRY"]},
-  {fruitId:"STRAWBERRY",displayNameZh:"草莓",assetPath:"assets/fruits/strawberry.png",mainColorHex:"#E84655",outlineShape:"HEART_LEAF_CROWN",textureCue:"SEEDED",targetAllowed:true,distractorAllowed:true,similarityTags:["SIM_TAPERED_PEAR_STRAWBERRY","SIM_SEEDED_STRAWBERRY_GRAPE"]},
-  {fruitId:"GRAPE",displayNameZh:"葡萄",assetPath:"assets/fruits/grape.png",mainColorHex:"#7550A6",outlineShape:"CLUSTER",textureCue:"ROUND_SEEDED_CLUSTER",targetAllowed:true,distractorAllowed:true,similarityTags:["SIM_SEEDED_STRAWBERRY_GRAPE","SIM_ROUND_GRAPE_ORANGE"]},
-  {fruitId:"WATERMELON",displayNameZh:"西瓜",assetPath:"assets/fruits/watermelon.png",mainColorHex:"#4DAD66",outlineShape:"ROUND_STRIPED",textureCue:"STRIPED_RIND",targetAllowed:true,distractorAllowed:true,similarityTags:["SIM_ROUND_WATERMELON_PEACH","SIM_RIND_LEMON_WATERMELON"]},
-  {fruitId:"PINEAPPLE",displayNameZh:"菠萝",assetPath:"assets/fruits/pineapple.png",mainColorHex:"#E8B83D",outlineShape:"OVAL_CROWN",textureCue:"DIAMOND_TEXTURE",targetAllowed:true,distractorAllowed:true,similarityTags:["SIM_OVAL_MANGO_PINEAPPLE","SIM_YELLOW_PINEAPPLE_LEMON"]},
-  {fruitId:"PEACH",displayNameZh:"桃",assetPath:"assets/fruits/peach.png",mainColorHex:"#F19B75",outlineShape:"ROUND_CLEFT_LEAF",textureCue:"SOFT_SMOOTH",targetAllowed:true,distractorAllowed:true,similarityTags:["SIM_ROUND_WATERMELON_PEACH","SIM_SMOOTH_PEACH_CHERRY"]},
-  {fruitId:"LEMON",displayNameZh:"柠檬",assetPath:"assets/fruits/lemon.png",mainColorHex:"#EAD94C",outlineShape:"OVAL_POINTED",textureCue:"DIMPLED_PEEL",targetAllowed:true,distractorAllowed:true,similarityTags:["SIM_YELLOW_PINEAPPLE_LEMON","SIM_RIND_LEMON_WATERMELON"]},
-  {fruitId:"CHERRY",displayNameZh:"樱桃",assetPath:"assets/fruits/cherry.png",mainColorHex:"#B92D3A",outlineShape:"TWIN_ROUND_STEMS",textureCue:"GLOSSY_SMOOTH",targetAllowed:true,distractorAllowed:true,similarityTags:["SIM_SMOOTH_PEACH_CHERRY","SIM_WARM_CHERRY_MANGO"]},
-  {fruitId:"MANGO",displayNameZh:"芒果",assetPath:"assets/fruits/mango.png",mainColorHex:"#E99A35",outlineShape:"ASYMMETRIC_OVAL",textureCue:"SMOOTH_GRADIENT",targetAllowed:true,distractorAllowed:true,similarityTags:["SIM_WARM_CHERRY_MANGO","SIM_OVAL_MANGO_PINEAPPLE"]},
-]);
+/**
+ * CORE_A is copied from the v1.4 workbook's exact single-attribute relation
+ * table. The source package does not contain an exact CORE_B relation matrix
+ * or final sprites. CORE_B relations below are therefore an explicitly
+ * unapproved W2 compatibility mapping used only to keep the required L120
+ * headless slice deterministic; they are not production product truth.
+ */
+export const FRUIT_SIMILARITY_RELATIONS: readonly FruitSimilarityRelation[] = immutableSnapshot([
+  {tag:"SIM_COLOR_APPLE_STRAWBERRY",fruitA:"APPLE",fruitB:"STRAWBERRY",primaryAttribute:"COLOR",authority:"SOURCE_WORKBOOK_CONFIRMED"},
+  {tag:"SIM_SHAPE_APPLE_ORANGE",fruitA:"APPLE",fruitB:"ORANGE",primaryAttribute:"SHAPE",authority:"SOURCE_WORKBOOK_CONFIRMED"},
+  {tag:"SIM_COLOR_BANANA_PEAR",fruitA:"BANANA",fruitB:"PEAR",primaryAttribute:"COLOR",authority:"SOURCE_WORKBOOK_CONFIRMED"},
+  {tag:"SIM_COLOR_ORANGE_PEAR",fruitA:"ORANGE",fruitB:"PEAR",primaryAttribute:"COLOR",authority:"SOURCE_WORKBOOK_CONFIRMED"},
+  {tag:"SIM_TEXTURE_STRAWBERRY_GRAPE",fruitA:"STRAWBERRY",fruitB:"GRAPE",primaryAttribute:"TEXTURE",authority:"SOURCE_WORKBOOK_CONFIRMED"},
+  {tag:"SIM_SHAPE_WATERMELON_PEACH",fruitA:"WATERMELON",fruitB:"PEACH",primaryAttribute:"SHAPE",authority:"ENGINEERING_COMPATIBILITY_UNAPPROVED"},
+  {tag:"SIM_TEXTURE_LEMON_WATERMELON",fruitA:"LEMON",fruitB:"WATERMELON",primaryAttribute:"TEXTURE",authority:"ENGINEERING_COMPATIBILITY_UNAPPROVED"},
+  {tag:"SIM_SHAPE_MANGO_PINEAPPLE",fruitA:"MANGO",fruitB:"PINEAPPLE",primaryAttribute:"SHAPE",authority:"ENGINEERING_COMPATIBILITY_UNAPPROVED"},
+  {tag:"SIM_COLOR_PINEAPPLE_LEMON",fruitA:"PINEAPPLE",fruitB:"LEMON",primaryAttribute:"COLOR",authority:"ENGINEERING_COMPATIBILITY_UNAPPROVED"},
+  {tag:"SIM_TEXTURE_PEACH_CHERRY",fruitA:"PEACH",fruitB:"CHERRY",primaryAttribute:"TEXTURE",authority:"ENGINEERING_COMPATIBILITY_UNAPPROVED"},
+  {tag:"SIM_COLOR_CHERRY_MANGO",fruitA:"CHERRY",fruitB:"MANGO",primaryAttribute:"COLOR",authority:"ENGINEERING_COMPATIBILITY_UNAPPROVED"},
+] satisfies FruitSimilarityRelation[]);
 
-export const FRUIT_POOLS: Readonly<Record<FruitPoolId, readonly FruitId[]>> = Object.freeze({
-  FP_CORE_A: Object.freeze(["APPLE", "BANANA", "ORANGE", "PEAR", "STRAWBERRY", "GRAPE"] as const),
-  FP_CORE_B: Object.freeze(["WATERMELON", "PINEAPPLE", "PEACH", "LEMON", "CHERRY", "MANGO"] as const),
-  FP_TRANSFER: Object.freeze(["APPLE", "BANANA", "ORANGE", "PEAR", "STRAWBERRY", "GRAPE", "WATERMELON", "PINEAPPLE", "PEACH", "LEMON", "CHERRY", "MANGO"] as const),
-});
+export const FRUIT_CONTENT_QUALIFICATION: FruitContentQualification = immutableSnapshot({
+  qualificationVersion: "catch-light-fruit-content-qualification-1",
+  runtimeUseStatus: "HEADLESS_VERTICAL_SLICE_ONLY",
+  productionActivationStatus: "BLOCKED_PENDING_FRUIT_SPRITES_AND_CORE_B_RELATION_APPROVAL",
+  fruitMetadataStatus: "ENGINEERING_PLACEHOLDER_PENDING_ART_QA",
+  fruitSpriteStatus: "PLACEHOLDER_REFERENCES_ONLY",
+  coreA: {
+    relationStatus: "SOURCE_WORKBOOK_CONFIRMED",
+    source: "捕光行动-120级数值设计-v1.4.xlsx/水果相似关系",
+    relationUseApproved: true,
+    productionGate: "NONE",
+    pairs: FRUIT_SIMILARITY_RELATIONS
+      .filter(relation => relation.authority === "SOURCE_WORKBOOK_CONFIRMED")
+      .map(relation => ({tag:relation.tag,fruitA:relation.fruitA,fruitB:relation.fruitB,primaryAttribute:relation.primaryAttribute})),
+  },
+  coreB: {
+    relationStatus: "ENGINEERING_COMPATIBILITY_UNAPPROVED",
+    source: "NO_EXACT_PAIR_TABLE_IN_V1.5_OR_V1.4_WORKBOOK",
+    relationUseApproved: false,
+    productionGate: "BLOCK_UNTIL_PRODUCT_AND_ART_APPROVE_FINAL_SPRITES_AND_PAIR_MATRIX",
+    pairs: FRUIT_SIMILARITY_RELATIONS
+      .filter(relation => relation.authority === "ENGINEERING_COMPATIBILITY_UNAPPROVED")
+      .map(relation => ({tag:relation.tag,fruitA:relation.fruitA,fruitB:relation.fruitB,primaryAttribute:relation.primaryAttribute})),
+  },
+} satisfies FruitContentQualification);
+
+function tagsForFruit(fruitId: FruitId): string[] {
+  return FRUIT_SIMILARITY_RELATIONS
+    .filter(relation => relation.fruitA === fruitId || relation.fruitB === fruitId)
+    .map(relation => relation.tag);
+}
+
+export const FRUIT_CATALOG: readonly FruitDefinition[] = immutableSnapshot([
+  {fruitId:"APPLE",displayNameZh:"苹果",assetPath:"assets/fruits/apple.png",mainColorHex:"#D94141",outlineShape:"ROUND_STEM",textureCue:"SMOOTH_LEAF",targetAllowed:true,distractorAllowed:true,similarityTags:tagsForFruit("APPLE")},
+  {fruitId:"BANANA",displayNameZh:"香蕉",assetPath:"assets/fruits/banana.png",mainColorHex:"#F2CF45",outlineShape:"CURVED_CRESCENT",textureCue:"RIDGED_TIPS",targetAllowed:true,distractorAllowed:true,similarityTags:tagsForFruit("BANANA")},
+  {fruitId:"ORANGE",displayNameZh:"橙子",assetPath:"assets/fruits/orange.png",mainColorHex:"#F28B2D",outlineShape:"ROUND_LEAF",textureCue:"DIMPLED_PEEL",targetAllowed:true,distractorAllowed:true,similarityTags:tagsForFruit("ORANGE")},
+  {fruitId:"PEAR",displayNameZh:"梨",assetPath:"assets/fruits/pear.png",mainColorHex:"#A8C957",outlineShape:"BELL_STEM",textureCue:"SPECKLED_SMOOTH",targetAllowed:true,distractorAllowed:true,similarityTags:tagsForFruit("PEAR")},
+  {fruitId:"STRAWBERRY",displayNameZh:"草莓",assetPath:"assets/fruits/strawberry.png",mainColorHex:"#E84655",outlineShape:"HEART_LEAF_CROWN",textureCue:"SEEDED",targetAllowed:true,distractorAllowed:true,similarityTags:tagsForFruit("STRAWBERRY")},
+  {fruitId:"GRAPE",displayNameZh:"葡萄",assetPath:"assets/fruits/grape.png",mainColorHex:"#7550A6",outlineShape:"CLUSTER",textureCue:"ROUND_SEEDED_CLUSTER",targetAllowed:true,distractorAllowed:true,similarityTags:tagsForFruit("GRAPE")},
+  {fruitId:"WATERMELON",displayNameZh:"西瓜",assetPath:"assets/fruits/watermelon.png",mainColorHex:"#4DAD66",outlineShape:"ROUND_STRIPED",textureCue:"STRIPED_RIND",targetAllowed:true,distractorAllowed:true,similarityTags:tagsForFruit("WATERMELON")},
+  {fruitId:"PINEAPPLE",displayNameZh:"菠萝",assetPath:"assets/fruits/pineapple.png",mainColorHex:"#E8B83D",outlineShape:"OVAL_CROWN",textureCue:"DIAMOND_TEXTURE",targetAllowed:true,distractorAllowed:true,similarityTags:tagsForFruit("PINEAPPLE")},
+  {fruitId:"PEACH",displayNameZh:"桃",assetPath:"assets/fruits/peach.png",mainColorHex:"#F19B75",outlineShape:"ROUND_CLEFT_LEAF",textureCue:"SOFT_SMOOTH",targetAllowed:true,distractorAllowed:true,similarityTags:tagsForFruit("PEACH")},
+  {fruitId:"LEMON",displayNameZh:"柠檬",assetPath:"assets/fruits/lemon.png",mainColorHex:"#EAD94C",outlineShape:"OVAL_POINTED",textureCue:"DIMPLED_PEEL",targetAllowed:true,distractorAllowed:true,similarityTags:tagsForFruit("LEMON")},
+  {fruitId:"CHERRY",displayNameZh:"樱桃",assetPath:"assets/fruits/cherry.png",mainColorHex:"#B92D3A",outlineShape:"TWIN_ROUND_STEMS",textureCue:"GLOSSY_SMOOTH",targetAllowed:true,distractorAllowed:true,similarityTags:tagsForFruit("CHERRY")},
+  {fruitId:"MANGO",displayNameZh:"芒果",assetPath:"assets/fruits/mango.png",mainColorHex:"#E99A35",outlineShape:"ASYMMETRIC_OVAL",textureCue:"SMOOTH_GRADIENT",targetAllowed:true,distractorAllowed:true,similarityTags:tagsForFruit("MANGO")},
+] satisfies FruitDefinition[]);
+
+export const FRUIT_POOLS: Readonly<Record<FruitPoolId, readonly FruitId[]>> = immutableSnapshot({
+  FP_CORE_A: ["APPLE", "BANANA", "ORANGE", "PEAR", "STRAWBERRY", "GRAPE"],
+  FP_CORE_B: ["WATERMELON", "PINEAPPLE", "PEACH", "LEMON", "CHERRY", "MANGO"],
+  FP_TRANSFER: ["APPLE", "BANANA", "ORANGE", "PEAR", "STRAWBERRY", "GRAPE", "WATERMELON", "PINEAPPLE", "PEACH", "LEMON", "CHERRY", "MANGO"],
+} satisfies Record<FruitPoolId, FruitId[]>);
 
 const FRUIT_BY_ID = new Map(FRUIT_CATALOG.map(fruit => [fruit.fruitId, fruit]));
 
@@ -31,8 +94,10 @@ export function fruitDefinition(fruitId: FruitId): FruitDefinition {
 
 export function fruitsAreSimilar(a: FruitId, b: FruitId): boolean {
   if (a === b) return false;
-  const bTags = new Set(fruitDefinition(b).similarityTags);
-  return fruitDefinition(a).similarityTags.some(tag => bTags.has(tag));
+  return FRUIT_SIMILARITY_RELATIONS.some(relation =>
+    (relation.fruitA === a && relation.fruitB === b)
+      || (relation.fruitA === b && relation.fruitB === a),
+  );
 }
 
 function buildGrid(gridId: GridId, rows: number, cols: number): GridDefinition {
@@ -51,10 +116,10 @@ function buildGrid(gridId: GridId, rows: number, cols: number): GridDefinition {
       });
     }
   }
-  return {gridId, rows, cols, slots: Object.freeze(slots)};
+  return immutableSnapshot({gridId, rows, cols, slots});
 }
 
-export const GRID_CATALOG: readonly GridDefinition[] = Object.freeze([
+export const GRID_CATALOG: readonly GridDefinition[] = immutableSnapshot([
   buildGrid("2x2", 2, 2),
   buildGrid("2x3", 2, 3),
   buildGrid("3x3", 3, 3),

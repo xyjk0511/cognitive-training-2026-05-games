@@ -1,12 +1,18 @@
 import { DESIGN_MAX_LEVEL, type LevelDecision } from "./types.js";
 
+export type ResultZone = "UPGRADE" | "HOLD" | "FAIL";
+
 function assertBatchCounts(H: number, T: number, F: number, D: number): void {
   for (const [label, value] of [["H", H], ["T", T], ["F", F], ["D", D]] as const) {
-    if (!Number.isInteger(value) || value < 0) throw new Error(`${label} must be a non-negative integer`);
+    if (!Number.isSafeInteger(value) || value < 0) throw new Error(`${label} must be a non-negative safe integer`);
   }
-  if (T <= 0 || H > T) throw new Error("require 0 <= H <= T and T > 0");
+  if (T <= 0 || T > 25 || H > T) throw new Error("require 0 <= H <= T <= 25 and T > 0");
   if (D !== 0 && D !== 5 && D !== 10) throw new Error("D must be exactly 0, 5, or 10");
   if (F > D) throw new Error("F cannot exceed D");
+}
+
+function assertResultZone(zone: string): asserts zone is ResultZone {
+  if (zone !== "UPGRADE" && zone !== "HOLD" && zone !== "FAIL") throw new Error(`invalid result zone: ${zone}`);
 }
 
 export function roundHalfUpFraction(numerator: number, denominator: number): number {
@@ -14,10 +20,10 @@ export function roundHalfUpFraction(numerator: number, denominator: number): num
   if (!Number.isSafeInteger(denominator) || denominator <= 0) throw new Error("denominator must be a positive safe integer");
   const quotient = Math.floor(numerator / denominator);
   const remainder = numerator % denominator;
-  return quotient + (remainder * 2 >= denominator ? 1 : 0);
+  return quotient + (remainder >= Math.ceil(denominator / 2) ? 1 : 0);
 }
 
-export function resultZone(H: number, T: number, F: number, D: number): "UPGRADE" | "HOLD" | "FAIL" {
+export function resultZone(H: number, T: number, F: number, D: number): ResultZone {
   assertBatchCounts(H, T, F, D);
   const upgradeFalseLimit = D === 0 ? 0 : D === 5 ? 1 : 2;
   const holdFalseLimit = D === 0 ? 0 : D === 5 ? 2 : 3;
@@ -26,15 +32,25 @@ export function resultZone(H: number, T: number, F: number, D: number): "UPGRADE
   return "FAIL";
 }
 
-export function batchScore(H: number, T: number, F: number, D: number, zone: "UPGRADE" | "HOLD" | "FAIL" = resultZone(H, T, F, D)): number {
+export function batchScore(
+  H: number,
+  T: number,
+  F: number,
+  D: number,
+  zone: ResultZone = resultZone(H, T, F, D),
+): number {
   assertBatchCounts(H, T, F, D);
+  assertResultZone(zone);
+  const computedZone = resultZone(H, T, F, D);
+  if (zone !== computedZone) throw new Error(`supplied result zone ${zone} is inconsistent with ${computedZone}`);
   const bonus = zone === "UPGRADE" ? 10 : 0;
   if (D === 0) return roundHalfUpFraction(90 * H, T) + bonus;
   return roundHalfUpFraction(70 * H, T) + roundHalfUpFraction(20 * (D - F), D) + bonus;
 }
 
-export function applyLevelDecision(levelBefore: number, zone: "UPGRADE" | "HOLD" | "FAIL", consecutiveFailBefore: 0 | 1): LevelDecision {
-  if (!Number.isInteger(levelBefore) || levelBefore < 1 || levelBefore > DESIGN_MAX_LEVEL) throw new Error("levelBefore outside 1..120");
+export function applyLevelDecision(levelBefore: number, zone: ResultZone, consecutiveFailBefore: 0 | 1): LevelDecision {
+  if (!Number.isSafeInteger(levelBefore) || levelBefore < 1 || levelBefore > DESIGN_MAX_LEVEL) throw new Error("levelBefore outside 1..120");
+  assertResultZone(zone);
   if (consecutiveFailBefore !== 0 && consecutiveFailBefore !== 1) throw new Error("consecutiveFailBefore must be 0 or 1");
   if (zone === "UPGRADE") {
     return levelBefore === DESIGN_MAX_LEVEL

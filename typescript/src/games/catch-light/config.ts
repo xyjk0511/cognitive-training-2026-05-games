@@ -1,5 +1,12 @@
-import { FRUIT_CATALOG, FRUIT_POOLS, GRID_CATALOG } from "./assets.js";
+import {
+  FRUIT_CATALOG,
+  FRUIT_CONTENT_QUALIFICATION,
+  FRUIT_POOLS,
+  FRUIT_SIMILARITY_RELATIONS,
+  GRID_CATALOG,
+} from "./assets.js";
 import { canonicalSha256 } from "../../canonical.js";
+import { deepFreezeInPlace, immutableSnapshot } from "./immutability.js";
 import {
   A620_PUBLIC_RULES_SHA256,
   BATCH_DURATION_MS,
@@ -33,7 +40,7 @@ import {
   type WaveProfile,
 } from "./types.js";
 
-export const WAVE_PROFILES: readonly WaveProfile[] = Object.freeze([
+export const WAVE_PROFILES: readonly WaveProfile[] = deepFreezeInPlace([
   {waveProfileId:"W10N", targetsByWave:[1,1,2,1,1,2,1,1], distractorsByWave:[0,0,0,0,0,0,0,0]},
   {waveProfileId:"W15D4", targetsByWave:[1,2,2,2,1,2,2,3], distractorsByWave:[1,0,1,0,2,0,1,0]},
   {waveProfileId:"W20D10-C6", targetsByWave:[3,2,3,2,3,2,3,2], distractorsByWave:[0,2,1,2,0,2,1,2]},
@@ -73,6 +80,7 @@ interface LevelInput {
   doubleTargetCount: number;
   doubleWindowMs: number;
   doublePatternId: CatchLightLevelConfig["doublePatternId"];
+  firstTeachingBatchWaveOneDoubleDisabled: boolean;
   minTargetHits: number;
   upgradeFalseLimit: number;
   holdFalseLimit: number;
@@ -83,7 +91,7 @@ interface LevelInput {
 
 function level(input: LevelInput): CatchLightLevelConfig {
   const timing = lifecycleFor(input.timingBand);
-  return Object.freeze({
+  return deepFreezeInPlace({
     ...input,
     waveCount: WAVE_COUNT,
     roundActiveMs: OPERATION_DURATION_MS,
@@ -99,13 +107,13 @@ function level(input: LevelInput): CatchLightLevelConfig {
   });
 }
 
-export const VERTICAL_SLICE_LEVELS: readonly CatchLightLevelConfig[] = Object.freeze([
+export const VERTICAL_SLICE_LEVELS: readonly CatchLightLevelConfig[] = deepFreezeInPlace([
   level({
     level:1,difficultyStateId:"DS01",stageNo:1,timingBand:"A",repetitionIndex:1,repetitionRole:"新授",
     contentVariantId:"DS01-V1",fruitPoolId:"FP_CORE_A",waveRotation:0,backgroundId:"BG01",gridId:"2x2",
     targetTotal:10,distractorTotal:0,sameScreenCap:2,waveProfileId:"W10N",coexistWaveCount:0,peakWaveCount:2,
     similarDistractorCount:0,targetFarEdgeCount:0,distractorFarEdgeCount:0,doubleTargetCount:0,doubleWindowMs:0,
-    doublePatternId:"NONE",minTargetHits:8,upgradeFalseLimit:0,holdFalseLimit:0,layoutPoolId:"LP_S01_A_V1",
+    doublePatternId:"NONE",firstTeachingBatchWaveOneDoubleDisabled:false,minTargetHits:8,upgradeFalseLimit:0,holdFalseLimit:0,layoutPoolId:"LP_S01_A_V1",
     seedKey:"CL-L001-DS01-V1",ruleIntroFlag:"FULL_RULE",
   }),
   level({
@@ -113,7 +121,7 @@ export const VERTICAL_SLICE_LEVELS: readonly CatchLightLevelConfig[] = Object.fr
     contentVariantId:"DS10-V1",fruitPoolId:"FP_CORE_A",waveRotation:0,backgroundId:"BG02",gridId:"2x3",
     targetTotal:15,distractorTotal:5,sameScreenCap:3,waveProfileId:"W15D4",coexistWaveCount:4,peakWaveCount:4,
     similarDistractorCount:0,targetFarEdgeCount:0,distractorFarEdgeCount:0,doubleTargetCount:0,doubleWindowMs:0,
-    doublePatternId:"NONE",minTargetHits:12,upgradeFalseLimit:1,holdFalseLimit:2,layoutPoolId:"LP_S04_A_V1",
+    doublePatternId:"NONE",firstTeachingBatchWaveOneDoubleDisabled:false,minTargetHits:12,upgradeFalseLimit:1,holdFalseLimit:2,layoutPoolId:"LP_S04_A_V1",
     seedKey:"CL-L028-DS10-V1",ruleIntroFlag:"DISTRACTOR_RULE",
   }),
   level({
@@ -121,7 +129,7 @@ export const VERTICAL_SLICE_LEVELS: readonly CatchLightLevelConfig[] = Object.fr
     contentVariantId:"DS23-V1",fruitPoolId:"FP_CORE_A",waveRotation:0,backgroundId:"BG05",gridId:"3x3",
     targetTotal:20,distractorTotal:10,sameScreenCap:4,waveProfileId:"W20D10-C6",coexistWaveCount:6,peakWaveCount:6,
     similarDistractorCount:2,targetFarEdgeCount:0,distractorFarEdgeCount:0,doubleTargetCount:0,doubleWindowMs:0,
-    doublePatternId:"NONE",minTargetHits:16,upgradeFalseLimit:2,holdFalseLimit:3,layoutPoolId:"LP_S09_A_V1",
+    doublePatternId:"NONE",firstTeachingBatchWaveOneDoubleDisabled:false,minTargetHits:16,upgradeFalseLimit:2,holdFalseLimit:3,layoutPoolId:"LP_S09_A_V1",
     seedKey:"CL-L067-DS23-V1",ruleIntroFlag:"NONE",
   }),
   level({
@@ -129,7 +137,7 @@ export const VERTICAL_SLICE_LEVELS: readonly CatchLightLevelConfig[] = Object.fr
     contentVariantId:"DS38-V1",fruitPoolId:"FP_CORE_A",waveRotation:0,backgroundId:"BG07",gridId:"3x4",
     targetTotal:25,distractorTotal:10,sameScreenCap:5,waveProfileId:"W25D10-C6",coexistWaveCount:6,peakWaveCount:4,
     similarDistractorCount:2,targetFarEdgeCount:10,distractorFarEdgeCount:4,doubleTargetCount:2,doubleWindowMs:1500,
-    doublePatternId:"SEP_NO_W1",minTargetHits:20,upgradeFalseLimit:2,holdFalseLimit:3,layoutPoolId:"LP_S14_A_V1",
+    doublePatternId:"MAX2_CONSEC",firstTeachingBatchWaveOneDoubleDisabled:true,minTargetHits:20,upgradeFalseLimit:2,holdFalseLimit:3,layoutPoolId:"LP_S14_A_V1",
     seedKey:"CL-L102-DS38-V1",ruleIntroFlag:"DOUBLE_RULE",
   }),
   level({
@@ -137,7 +145,7 @@ export const VERTICAL_SLICE_LEVELS: readonly CatchLightLevelConfig[] = Object.fr
     contentVariantId:"DS46-V2",fruitPoolId:"FP_CORE_B",waveRotation:1,backgroundId:"BG08",gridId:"3x4",
     targetTotal:25,distractorTotal:10,sameScreenCap:5,waveProfileId:"W25D10-C8",coexistWaveCount:8,peakWaveCount:4,
     similarDistractorCount:6,targetFarEdgeCount:15,distractorFarEdgeCount:6,doubleTargetCount:6,doubleWindowMs:1200,
-    doublePatternId:"MAX3_CONSEC",minTargetHits:20,upgradeFalseLimit:2,holdFalseLimit:3,layoutPoolId:"LP_S16_H_V2",
+    doublePatternId:"MAX3_CONSEC",firstTeachingBatchWaveOneDoubleDisabled:false,minTargetHits:20,upgradeFalseLimit:2,holdFalseLimit:3,layoutPoolId:"LP_S16_H_V2",
     seedKey:"CL-L120-DS46-V2",ruleIntroFlag:"NONE",
   }),
 ]);
@@ -145,7 +153,7 @@ export const VERTICAL_SLICE_LEVELS: readonly CatchLightLevelConfig[] = Object.fr
 const LEVEL_BY_NUMBER = new Map(VERTICAL_SLICE_LEVELS.map(config => [config.level, config]));
 const WAVE_PROFILE_BY_ID = new Map(WAVE_PROFILES.map(profile => [profile.waveProfileId, profile]));
 
-export const CATCH_LIGHT_VERTICAL_SLICE_CONFIG: CatchLightGameConfig = Object.freeze({
+export const CATCH_LIGHT_VERTICAL_SLICE_CONFIG: CatchLightGameConfig = deepFreezeInPlace({
   schemaVersion: CATCH_LIGHT_CONFIG_VERSION,
   gameCode: CATCH_LIGHT_GAME_CODE,
   gameConfigSchemaId: CATCH_LIGHT_CONFIG_SCHEMA_ID,
@@ -162,9 +170,12 @@ export const CATCH_LIGHT_VERTICAL_SLICE_CONFIG: CatchLightGameConfig = Object.fr
   sourceWorkbookRole: CATCH_LIGHT_SOURCE_WORKBOOK_ROLE,
   sourceRequirementSha256: CATCH_LIGHT_REQUIREMENT_SHA256,
   publicRulesSha256: A620_PUBLIC_RULES_SHA256,
-  fruitCatalogVersion: "catch-light-fruit-catalog-1",
+  fruitCatalogVersion: "catch-light-fruit-catalog-2",
+  fruitSimilarityCatalogVersion: "catch-light-fruit-similarity-2",
   layoutCatalogVersion: "catch-light-grid-catalog-1",
   fruitCatalog: FRUIT_CATALOG,
+  fruitSimilarityRelations: FRUIT_SIMILARITY_RELATIONS,
+  fruitContentQualification: FRUIT_CONTENT_QUALIFICATION,
   fruitPools: FRUIT_POOLS,
   grids: GRID_CATALOG,
   waveProfiles: WAVE_PROFILES,
@@ -186,7 +197,7 @@ export function waveProfile(profileId: string): WaveProfile {
 }
 
 function assertInteger(value: number, label: string, minimum: number): void {
-  if (!Number.isInteger(value) || value < minimum) throw new Error(`${label} must be an integer >= ${minimum}`);
+  if (!Number.isSafeInteger(value) || value < minimum) throw new Error(`${label} must be an integer >= ${minimum}`);
 }
 
 export function validateLevelConfig(config: CatchLightLevelConfig, suppliedProfile?: WaveProfile): void {
@@ -221,6 +232,9 @@ export function validateLevelConfig(config: CatchLightLevelConfig, suppliedProfi
   }
   if (actualCoexistWaveCount !== config.coexistWaveCount) throw new Error(`${config.seedKey}: coexistWaveCount mismatch`);
   if (actualPeakWaveCount !== config.peakWaveCount) throw new Error(`${config.seedKey}: peakWaveCount mismatch`);
+  if (config.similarDistractorCount > actualCoexistWaveCount) {
+    throw new Error(`${config.seedKey}: similar distractor quota exceeds the number of coexistence waves`);
+  }
 
   if (config.waveCount !== WAVE_COUNT || config.roundActiveMs !== OPERATION_DURATION_MS ||
       config.firstWaveMs !== FIRST_WAVE_MS || config.waveSpacingMs !== WAVE_ONSET_INTERVAL_MS ||
@@ -254,10 +268,22 @@ export function validateLevelConfig(config: CatchLightLevelConfig, suppliedProfi
   if (config.distractorFarEdgeCount > config.distractorTotal) throw new Error("distractor far-edge quota exceeds D");
   if (config.doubleTargetCount > config.targetTotal) throw new Error("double target quota exceeds T");
   if (config.doubleTargetCount > WAVE_COUNT) throw new Error("double target quota exceeds one-per-wave limit");
+  if (typeof config.firstTeachingBatchWaveOneDoubleDisabled !== "boolean") {
+    throw new Error(`${config.seedKey}: teaching-batch wave-one flag must be boolean`);
+  }
   if (config.doubleTargetCount === 0) {
-    if (config.doubleWindowMs !== 0 || config.doublePatternId !== "NONE") throw new Error("non-double level has double configuration");
-  } else if (config.level < 102 || config.doubleWindowMs < 1200 || config.doubleWindowMs > 1500 || config.doubleWindowMs % 100 !== 0) {
-    throw new Error("double targets are only legal from L102 with a 1200-1500ms window in 100ms steps");
+    if (config.doubleWindowMs !== 0 || config.doublePatternId !== "NONE" || config.firstTeachingBatchWaveOneDoubleDisabled) {
+      throw new Error("non-double level has double configuration");
+    }
+  } else {
+    if (config.level < 102 || config.doubleWindowMs < 1200 || config.doubleWindowMs > 1500 || config.doubleWindowMs % 100 !== 0) {
+      throw new Error("double targets are only legal from L102 with a 1200-1500ms window in 100ms steps");
+    }
+    if (config.doublePatternId === "NONE") throw new Error(`${config.seedKey}: double levels require MAX2_CONSEC or MAX3_CONSEC`);
+    if (config.firstTeachingBatchWaveOneDoubleDisabled &&
+        (config.level !== 102 || config.ruleIntroFlag !== "DOUBLE_RULE" || config.doublePatternId !== "MAX2_CONSEC")) {
+      throw new Error(`${config.seedKey}: first-batch wave-one suppression is reserved for the L102 MAX2 teaching slice`);
+    }
   }
 
   const expectedScoring = config.distractorTotal === 0
@@ -274,6 +300,14 @@ export function validateLevelConfig(config: CatchLightLevelConfig, suppliedProfi
   }
   const expectedBackgroundId = `BG${String(Math.ceil(config.level / 15)).padStart(2, "0")}`;
   if (config.backgroundId !== expectedBackgroundId) throw new Error(`${config.seedKey}: background chapter mapping mismatch`);
+  if (config.level === 102 &&
+      (config.doublePatternId !== "MAX2_CONSEC" || !config.firstTeachingBatchWaveOneDoubleDisabled || config.doubleTargetCount !== 2 || config.doubleWindowMs !== 1500)) {
+    throw new Error("L102 must implement MAX2_CONSEC with first-formal-batch wave-one suppression and a 1500ms window");
+  }
+  if (config.level === 120 &&
+      (config.doublePatternId !== "MAX3_CONSEC" || config.firstTeachingBatchWaveOneDoubleDisabled || config.doubleTargetCount !== 6 || config.doubleWindowMs !== 1200)) {
+    throw new Error("L120 must implement six MAX3_CONSEC double targets with a 1200ms window");
+  }
 }
 
 export function validateVerticalSliceConfig(config: CatchLightGameConfig): void {
@@ -297,7 +331,9 @@ export function validateVerticalSliceConfig(config: CatchLightGameConfig): void 
       config.designMaxLevel !== DESIGN_MAX_LEVEL || config.qaSeed !== CATCH_LIGHT_QA_SEED) {
     throw new Error("session identity or timing mismatch");
   }
-  if (config.fruitCatalogVersion !== "catch-light-fruit-catalog-1" || config.layoutCatalogVersion !== "catch-light-grid-catalog-1") {
+  if (config.fruitCatalogVersion !== "catch-light-fruit-catalog-2" ||
+      config.fruitSimilarityCatalogVersion !== "catch-light-fruit-similarity-2" ||
+      config.layoutCatalogVersion !== "catch-light-grid-catalog-1") {
     throw new Error("catalog version mismatch");
   }
   if (config.fruitCatalog.length !== FRUIT_CATALOG.length ||
@@ -305,8 +341,52 @@ export function validateVerticalSliceConfig(config: CatchLightGameConfig): void 
     throw new Error("fruit catalog differs from the frozen W2 catalog");
   }
   if (canonicalSha256(config.fruitPools) !== canonicalSha256(FRUIT_POOLS)) throw new Error("fruit pools differ from the frozen W2 pools");
+  if (canonicalSha256(config.fruitSimilarityRelations) !== canonicalSha256(FRUIT_SIMILARITY_RELATIONS)) {
+    throw new Error("fruit similarity relations differ from the frozen W2 relation table");
+  }
+  if (canonicalSha256(config.fruitContentQualification) !== canonicalSha256(FRUIT_CONTENT_QUALIFICATION)) {
+    throw new Error("fruit content qualification differs from the frozen W2 status");
+  }
   if (canonicalSha256(config.grids) !== canonicalSha256(GRID_CATALOG)) throw new Error("grid catalog differs from the frozen W2 catalog");
   if (canonicalSha256(config.waveProfiles) !== canonicalSha256(WAVE_PROFILES)) throw new Error("wave profiles differ from the frozen W2 profiles");
+
+  const fruitIds = config.fruitCatalog.map(fruit => fruit.fruitId);
+  if (new Set(fruitIds).size !== fruitIds.length) throw new Error("duplicate fruitId in catalog");
+  const similarityTagMembers = new Map<string, string[]>();
+  for (const fruit of config.fruitCatalog) {
+    if (!/^#[0-9A-F]{6}$/.test(fruit.mainColorHex)) throw new Error(`${fruit.fruitId}: invalid mainColorHex`);
+    if (!/^assets\/fruits\/[a-z-]+\.png$/.test(fruit.assetPath)) throw new Error(`${fruit.fruitId}: invalid assetPath`);
+    if (new Set(fruit.similarityTags).size !== fruit.similarityTags.length) throw new Error(`${fruit.fruitId}: duplicate similarity tag`);
+    for (const tag of fruit.similarityTags) {
+      const members = similarityTagMembers.get(tag) ?? [];
+      members.push(fruit.fruitId);
+      similarityTagMembers.set(tag, members);
+    }
+  }
+  const relationTags = new Set<string>();
+  for (const relation of config.fruitSimilarityRelations) {
+    if (relationTags.has(relation.tag)) throw new Error(`${relation.tag}: duplicate similarity relation tag`);
+    relationTags.add(relation.tag);
+    if (relation.fruitA === relation.fruitB) throw new Error(`${relation.tag}: a similarity relation must connect two different fruits`);
+    const members = similarityTagMembers.get(relation.tag) ?? [];
+    if (members.length !== 2 || !members.includes(relation.fruitA) || !members.includes(relation.fruitB)) {
+      throw new Error(`${relation.tag}: fruit tags do not match the declared relation endpoints`);
+    }
+  }
+  for (const [tag, members] of similarityTagMembers) {
+    if (members.length !== 2) throw new Error(`${tag}: similarity relation must connect exactly two fruits`);
+    if (!relationTags.has(tag)) throw new Error(`${tag}: fruit catalog references an undeclared similarity relation`);
+  }
+  if (config.fruitContentQualification.runtimeUseStatus !== "HEADLESS_VERTICAL_SLICE_ONLY" ||
+      config.fruitContentQualification.productionActivationStatus !== "BLOCKED_PENDING_FRUIT_SPRITES_AND_CORE_B_RELATION_APPROVAL" ||
+      config.fruitContentQualification.coreA.relationStatus !== "SOURCE_WORKBOOK_CONFIRMED" ||
+      !config.fruitContentQualification.coreA.relationUseApproved ||
+      config.fruitContentQualification.coreA.productionGate !== "NONE" ||
+      config.fruitContentQualification.coreB.relationStatus !== "ENGINEERING_COMPATIBILITY_UNAPPROVED" ||
+      config.fruitContentQualification.coreB.relationUseApproved ||
+      config.fruitContentQualification.coreB.productionGate !== "BLOCK_UNTIL_PRODUCT_AND_ART_APPROVE_FINAL_SPRITES_AND_PAIR_MATRIX") {
+    throw new Error("fruit content qualification does not preserve the W2 headless-only production gate");
+  }
 
   const profilesById = new Map<string, WaveProfile>();
   for (const profile of config.waveProfiles) {
@@ -330,9 +410,27 @@ export function validateVerticalSliceConfig(config: CatchLightGameConfig): void 
   if (actualLevels.length !== requiredLevels.length || actualLevels.some((value, index) => value !== requiredLevels[index])) {
     throw new Error("W2 config must contain exactly L1/L28/L67/L102/L120");
   }
+  const seenGridIds = new Set<string>();
   for (const grid of config.grids) {
+    if (seenGridIds.has(grid.gridId)) throw new Error(`duplicate gridId ${grid.gridId}`);
+    seenGridIds.add(grid.gridId);
     if (grid.slots.length !== grid.rows * grid.cols) throw new Error(`${grid.gridId}: grid slot count mismatch`);
+    const seenSlotIds = new Set<string>();
+    const seenCoordinates = new Set<string>();
     for (const slot of grid.slots) {
+      if (seenSlotIds.has(slot.slotId)) throw new Error(`${grid.gridId}: duplicate slotId ${slot.slotId}`);
+      seenSlotIds.add(slot.slotId);
+      const coordinate = `${slot.row}:${slot.col}`;
+      if (seenCoordinates.has(coordinate)) throw new Error(`${grid.gridId}: duplicate row/column ${coordinate}`);
+      seenCoordinates.add(coordinate);
+      if (slot.row < 1 || slot.row > grid.rows || slot.col < 1 || slot.col > grid.cols || slot.slotId !== `R${slot.row}C${slot.col}`) {
+        throw new Error(`${grid.gridId}/${slot.slotId}: invalid row/column identity`);
+      }
+      if (slot.xBasisPoints <= 0 || slot.xBasisPoints >= 10000 || slot.yBasisPoints <= 0 || slot.yBasisPoints >= 10000) {
+        throw new Error(`${grid.gridId}/${slot.slotId}: basis-point coordinate outside training area`);
+      }
+      const expectedEdge = slot.col === 1 || slot.col === grid.cols;
+      if (slot.edgeSlot !== expectedEdge) throw new Error(`${grid.gridId}/${slot.slotId}: edgeSlot mismatch`);
       if (slot.minHitWidthDp < 56 || slot.minHitHeightDp < 56) {
         throw new Error(`${grid.gridId}/${slot.slotId}: hit area is below the frozen 56dp minimum`);
       }
@@ -351,7 +449,9 @@ export function parseStrictGameConfig(value: Readonly<Record<string, unknown>>):
   if (!isRecord(value) || Object.keys(value).length === 0) {
     throw new Error("the Gate 0 empty gameConfig is legacy-vector-only and is rejected by the W2 runtime");
   }
-  const parsed = value as unknown as CatchLightGameConfig;
+  // Detach before retaining or hashing so later caller mutations cannot change
+  // the accepted runtime configuration or its evidence identity.
+  const parsed = immutableSnapshot(value) as unknown as CatchLightGameConfig;
   validateVerticalSliceConfig(parsed);
   if (canonicalSha256(parsed) !== CATCH_LIGHT_VERTICAL_SLICE_CONFIG_SHA256) {
     throw new Error("runtime gameConfig differs from the frozen W2 compiled artifact");

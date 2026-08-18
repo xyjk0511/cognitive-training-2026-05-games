@@ -33,7 +33,7 @@ interface A620InteractiveTrainingGameModule extends A620TrainingGameModule {
 ## W2 临时兼容方式
 
 - `CatchLightGameModule` 暴露本地 `advanceToUptime`、`touchInstanceAtUptime`、`touchBlankAtUptime`。
-- 构造函数接收 `onBatchClosed` hook，headless harness 验证该证据与最终结果哈希一致。
+- 构造函数接收 `onBatchClosed` hook，headless harness 验证该证据与最终结果哈希一致；本地适配器在所有可变入口前拒绝 hook 同步回入。
 - Cocos 接入层后续可做一次类型守卫并适配上述方法；共享文件保持不变。
 
 ## 另一个低优先级请求
@@ -41,3 +41,14 @@ interface A620InteractiveTrainingGameModule extends A620TrainingGameModule {
 `PrepareContext.gameConfig` 当前仅为 `Readonly<Record<string, unknown>>`。建议未来以 gameCode 为判别键提供泛型注册表，但不应把 Catch Light 私有类型写入共享 wire 或 `contracts/**`。
 
 此外，现有 `PrepareContext` 只给游戏 `runtimeConfigHash` 的结果值，没有“平台已经按公共 canonical 投影验证过”的显式证明位，也没有完整 PREPARE 投影供游戏自行重算。W2 不因此改 wire：平台 flow validator 继续作为权威，游戏校验 64 位小写十六进制格式并在结果中原样回传。后续若要收紧主机 SPI，可在本地调用上下文增加只读 `runtimeConfigHashVerified: true`，但不得把该主机内部证明位写入 A620-TRC-1.1 消息。
+
+## BATCH_CLOSED sink 的交付语义建议
+
+W2 本地适配采用“批次领域状态先提交，外部通知失败可重试”的有序 at-least-once 语义。公共 companion interface 若增加 evidence sink，应同时冻结以下约束：
+
+- sink 每次接收递归不可变的完整 `EligibleBatch`；
+- sink 失败不得要求游戏回滚或重新关闭批次；
+- 重试必须保留相同 `batchPayloadSha256` 和完整内容；
+- 主机按 `batchPayloadSha256` 幂等去重；
+- sink 回调不得同步重入游戏生命周期或输入方法；
+- 如果主机需要 exactly-once 可见效果，应在主机持久层实现 ACK/去重，不应修改 A620-TRC-1.1 wire 或让游戏伪造确认状态。
