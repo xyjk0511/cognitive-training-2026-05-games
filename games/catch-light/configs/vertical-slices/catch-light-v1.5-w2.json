@@ -1,0 +1,906 @@
+{
+  "schemaVersion": "1.5.0",
+  "gameCode": "CATCH_LIGHT",
+  "gameConfigSchemaId": "urn:a620:catch-light:config:1.5",
+  "generatorVersion": "catch-light-gen-1",
+  "scoringRuleVersion": "1.5.0",
+  "resultSchemaVersion": "A620-TRR-1.1",
+  "durationMs": 300000,
+  "plannedBatchCount": 8,
+  "designMaxLevel": 120,
+  "qaSeed": 20260817,
+  "configSetId": "catch-light-v1.5-w2-vertical-slices",
+  "sourceWorkbookName": "捕光行动-120级数值设计-v1.4.xlsx",
+  "sourceWorkbookSha256": "592a6313bb3f308aa63d5e1313db98b617dfc735ac8fd61efb7c7f06112d716d",
+  "sourceWorkbookRole": "HISTORICAL_NUMERIC_INPUT_ONLY",
+  "sourceRequirementSha256": "1ff1d38470aead2270d6b237b3cda2a21a7540174420252a5bda8b242bfb425c",
+  "publicRulesSha256": "c1a4f3f2e309cdf92fc15d5f51e6e99bc90025c3ddc4ed8ea99077398a987794",
+  "fruitCatalogVersion": "catch-light-fruit-catalog-1",
+  "layoutCatalogVersion": "catch-light-grid-catalog-1",
+  "fruitCatalog": [
+    {
+      "fruitId": "APPLE",
+      "displayNameZh": "苹果",
+      "assetPath": "assets/fruits/apple.png",
+      "mainColorHex": "#D94141",
+      "outlineShape": "ROUND_STEM",
+      "textureCue": "SMOOTH_LEAF",
+      "targetAllowed": true,
+      "distractorAllowed": true,
+      "similarityTags": [
+        "SIM_ROUND_APPLE_ORANGE",
+        "SIM_SMOOTH_APPLE_BANANA"
+      ]
+    },
+    {
+      "fruitId": "BANANA",
+      "displayNameZh": "香蕉",
+      "assetPath": "assets/fruits/banana.png",
+      "mainColorHex": "#F2CF45",
+      "outlineShape": "CURVED_CRESCENT",
+      "textureCue": "RIDGED_TIPS",
+      "targetAllowed": true,
+      "distractorAllowed": true,
+      "similarityTags": [
+        "SIM_SMOOTH_APPLE_BANANA",
+        "SIM_ELONGATED_BANANA_PEAR"
+      ]
+    },
+    {
+      "fruitId": "ORANGE",
+      "displayNameZh": "橙子",
+      "assetPath": "assets/fruits/orange.png",
+      "mainColorHex": "#F28B2D",
+      "outlineShape": "ROUND_LEAF",
+      "textureCue": "DIMPLED_PEEL",
+      "targetAllowed": true,
+      "distractorAllowed": true,
+      "similarityTags": [
+        "SIM_ROUND_GRAPE_ORANGE",
+        "SIM_ROUND_APPLE_ORANGE"
+      ]
+    },
+    {
+      "fruitId": "PEAR",
+      "displayNameZh": "梨",
+      "assetPath": "assets/fruits/pear.png",
+      "mainColorHex": "#A8C957",
+      "outlineShape": "BELL_STEM",
+      "textureCue": "SPECKLED_SMOOTH",
+      "targetAllowed": true,
+      "distractorAllowed": true,
+      "similarityTags": [
+        "SIM_ELONGATED_BANANA_PEAR",
+        "SIM_TAPERED_PEAR_STRAWBERRY"
+      ]
+    },
+    {
+      "fruitId": "STRAWBERRY",
+      "displayNameZh": "草莓",
+      "assetPath": "assets/fruits/strawberry.png",
+      "mainColorHex": "#E84655",
+      "outlineShape": "HEART_LEAF_CROWN",
+      "textureCue": "SEEDED",
+      "targetAllowed": true,
+      "distractorAllowed": true,
+      "similarityTags": [
+        "SIM_TAPERED_PEAR_STRAWBERRY",
+        "SIM_SEEDED_STRAWBERRY_GRAPE"
+      ]
+    },
+    {
+      "fruitId": "GRAPE",
+      "displayNameZh": "葡萄",
+      "assetPath": "assets/fruits/grape.png",
+      "mainColorHex": "#7550A6",
+      "outlineShape": "CLUSTER",
+      "textureCue": "ROUND_SEEDED_CLUSTER",
+      "targetAllowed": true,
+      "distractorAllowed": true,
+      "similarityTags": [
+        "SIM_SEEDED_STRAWBERRY_GRAPE",
+        "SIM_ROUND_GRAPE_ORANGE"
+      ]
+    },
+    {
+      "fruitId": "WATERMELON",
+      "displayNameZh": "西瓜",
+      "assetPath": "assets/fruits/watermelon.png",
+      "mainColorHex": "#4DAD66",
+      "outlineShape": "ROUND_STRIPED",
+      "textureCue": "STRIPED_RIND",
+      "targetAllowed": true,
+      "distractorAllowed": true,
+      "similarityTags": [
+        "SIM_ROUND_WATERMELON_PEACH",
+        "SIM_RIND_LEMON_WATERMELON"
+      ]
+    },
+    {
+      "fruitId": "PINEAPPLE",
+      "displayNameZh": "菠萝",
+      "assetPath": "assets/fruits/pineapple.png",
+      "mainColorHex": "#E8B83D",
+      "outlineShape": "OVAL_CROWN",
+      "textureCue": "DIAMOND_TEXTURE",
+      "targetAllowed": true,
+      "distractorAllowed": true,
+      "similarityTags": [
+        "SIM_OVAL_MANGO_PINEAPPLE",
+        "SIM_YELLOW_PINEAPPLE_LEMON"
+      ]
+    },
+    {
+      "fruitId": "PEACH",
+      "displayNameZh": "桃",
+      "assetPath": "assets/fruits/peach.png",
+      "mainColorHex": "#F19B75",
+      "outlineShape": "ROUND_CLEFT_LEAF",
+      "textureCue": "SOFT_SMOOTH",
+      "targetAllowed": true,
+      "distractorAllowed": true,
+      "similarityTags": [
+        "SIM_ROUND_WATERMELON_PEACH",
+        "SIM_SMOOTH_PEACH_CHERRY"
+      ]
+    },
+    {
+      "fruitId": "LEMON",
+      "displayNameZh": "柠檬",
+      "assetPath": "assets/fruits/lemon.png",
+      "mainColorHex": "#EAD94C",
+      "outlineShape": "OVAL_POINTED",
+      "textureCue": "DIMPLED_PEEL",
+      "targetAllowed": true,
+      "distractorAllowed": true,
+      "similarityTags": [
+        "SIM_YELLOW_PINEAPPLE_LEMON",
+        "SIM_RIND_LEMON_WATERMELON"
+      ]
+    },
+    {
+      "fruitId": "CHERRY",
+      "displayNameZh": "樱桃",
+      "assetPath": "assets/fruits/cherry.png",
+      "mainColorHex": "#B92D3A",
+      "outlineShape": "TWIN_ROUND_STEMS",
+      "textureCue": "GLOSSY_SMOOTH",
+      "targetAllowed": true,
+      "distractorAllowed": true,
+      "similarityTags": [
+        "SIM_SMOOTH_PEACH_CHERRY",
+        "SIM_WARM_CHERRY_MANGO"
+      ]
+    },
+    {
+      "fruitId": "MANGO",
+      "displayNameZh": "芒果",
+      "assetPath": "assets/fruits/mango.png",
+      "mainColorHex": "#E99A35",
+      "outlineShape": "ASYMMETRIC_OVAL",
+      "textureCue": "SMOOTH_GRADIENT",
+      "targetAllowed": true,
+      "distractorAllowed": true,
+      "similarityTags": [
+        "SIM_WARM_CHERRY_MANGO",
+        "SIM_OVAL_MANGO_PINEAPPLE"
+      ]
+    }
+  ],
+  "fruitPools": {
+    "FP_CORE_A": [
+      "APPLE",
+      "BANANA",
+      "ORANGE",
+      "PEAR",
+      "STRAWBERRY",
+      "GRAPE"
+    ],
+    "FP_CORE_B": [
+      "WATERMELON",
+      "PINEAPPLE",
+      "PEACH",
+      "LEMON",
+      "CHERRY",
+      "MANGO"
+    ],
+    "FP_TRANSFER": [
+      "APPLE",
+      "BANANA",
+      "ORANGE",
+      "PEAR",
+      "STRAWBERRY",
+      "GRAPE",
+      "WATERMELON",
+      "PINEAPPLE",
+      "PEACH",
+      "LEMON",
+      "CHERRY",
+      "MANGO"
+    ]
+  },
+  "grids": [
+    {
+      "gridId": "2x2",
+      "rows": 2,
+      "cols": 2,
+      "slots": [
+        {
+          "slotId": "R1C1",
+          "row": 1,
+          "col": 1,
+          "xBasisPoints": 3333,
+          "yBasisPoints": 3333,
+          "edgeSlot": true,
+          "minHitWidthDp": 120,
+          "minHitHeightDp": 120
+        },
+        {
+          "slotId": "R1C2",
+          "row": 1,
+          "col": 2,
+          "xBasisPoints": 6667,
+          "yBasisPoints": 3333,
+          "edgeSlot": true,
+          "minHitWidthDp": 120,
+          "minHitHeightDp": 120
+        },
+        {
+          "slotId": "R2C1",
+          "row": 2,
+          "col": 1,
+          "xBasisPoints": 3333,
+          "yBasisPoints": 6667,
+          "edgeSlot": true,
+          "minHitWidthDp": 120,
+          "minHitHeightDp": 120
+        },
+        {
+          "slotId": "R2C2",
+          "row": 2,
+          "col": 2,
+          "xBasisPoints": 6667,
+          "yBasisPoints": 6667,
+          "edgeSlot": true,
+          "minHitWidthDp": 120,
+          "minHitHeightDp": 120
+        }
+      ]
+    },
+    {
+      "gridId": "2x3",
+      "rows": 2,
+      "cols": 3,
+      "slots": [
+        {
+          "slotId": "R1C1",
+          "row": 1,
+          "col": 1,
+          "xBasisPoints": 2500,
+          "yBasisPoints": 3333,
+          "edgeSlot": true,
+          "minHitWidthDp": 120,
+          "minHitHeightDp": 120
+        },
+        {
+          "slotId": "R1C2",
+          "row": 1,
+          "col": 2,
+          "xBasisPoints": 5000,
+          "yBasisPoints": 3333,
+          "edgeSlot": false,
+          "minHitWidthDp": 120,
+          "minHitHeightDp": 120
+        },
+        {
+          "slotId": "R1C3",
+          "row": 1,
+          "col": 3,
+          "xBasisPoints": 7500,
+          "yBasisPoints": 3333,
+          "edgeSlot": true,
+          "minHitWidthDp": 120,
+          "minHitHeightDp": 120
+        },
+        {
+          "slotId": "R2C1",
+          "row": 2,
+          "col": 1,
+          "xBasisPoints": 2500,
+          "yBasisPoints": 6667,
+          "edgeSlot": true,
+          "minHitWidthDp": 120,
+          "minHitHeightDp": 120
+        },
+        {
+          "slotId": "R2C2",
+          "row": 2,
+          "col": 2,
+          "xBasisPoints": 5000,
+          "yBasisPoints": 6667,
+          "edgeSlot": false,
+          "minHitWidthDp": 120,
+          "minHitHeightDp": 120
+        },
+        {
+          "slotId": "R2C3",
+          "row": 2,
+          "col": 3,
+          "xBasisPoints": 7500,
+          "yBasisPoints": 6667,
+          "edgeSlot": true,
+          "minHitWidthDp": 120,
+          "minHitHeightDp": 120
+        }
+      ]
+    },
+    {
+      "gridId": "3x3",
+      "rows": 3,
+      "cols": 3,
+      "slots": [
+        {
+          "slotId": "R1C1",
+          "row": 1,
+          "col": 1,
+          "xBasisPoints": 2500,
+          "yBasisPoints": 2500,
+          "edgeSlot": true,
+          "minHitWidthDp": 120,
+          "minHitHeightDp": 120
+        },
+        {
+          "slotId": "R1C2",
+          "row": 1,
+          "col": 2,
+          "xBasisPoints": 5000,
+          "yBasisPoints": 2500,
+          "edgeSlot": false,
+          "minHitWidthDp": 120,
+          "minHitHeightDp": 120
+        },
+        {
+          "slotId": "R1C3",
+          "row": 1,
+          "col": 3,
+          "xBasisPoints": 7500,
+          "yBasisPoints": 2500,
+          "edgeSlot": true,
+          "minHitWidthDp": 120,
+          "minHitHeightDp": 120
+        },
+        {
+          "slotId": "R2C1",
+          "row": 2,
+          "col": 1,
+          "xBasisPoints": 2500,
+          "yBasisPoints": 5000,
+          "edgeSlot": true,
+          "minHitWidthDp": 120,
+          "minHitHeightDp": 120
+        },
+        {
+          "slotId": "R2C2",
+          "row": 2,
+          "col": 2,
+          "xBasisPoints": 5000,
+          "yBasisPoints": 5000,
+          "edgeSlot": false,
+          "minHitWidthDp": 120,
+          "minHitHeightDp": 120
+        },
+        {
+          "slotId": "R2C3",
+          "row": 2,
+          "col": 3,
+          "xBasisPoints": 7500,
+          "yBasisPoints": 5000,
+          "edgeSlot": true,
+          "minHitWidthDp": 120,
+          "minHitHeightDp": 120
+        },
+        {
+          "slotId": "R3C1",
+          "row": 3,
+          "col": 1,
+          "xBasisPoints": 2500,
+          "yBasisPoints": 7500,
+          "edgeSlot": true,
+          "minHitWidthDp": 120,
+          "minHitHeightDp": 120
+        },
+        {
+          "slotId": "R3C2",
+          "row": 3,
+          "col": 2,
+          "xBasisPoints": 5000,
+          "yBasisPoints": 7500,
+          "edgeSlot": false,
+          "minHitWidthDp": 120,
+          "minHitHeightDp": 120
+        },
+        {
+          "slotId": "R3C3",
+          "row": 3,
+          "col": 3,
+          "xBasisPoints": 7500,
+          "yBasisPoints": 7500,
+          "edgeSlot": true,
+          "minHitWidthDp": 120,
+          "minHitHeightDp": 120
+        }
+      ]
+    },
+    {
+      "gridId": "3x4",
+      "rows": 3,
+      "cols": 4,
+      "slots": [
+        {
+          "slotId": "R1C1",
+          "row": 1,
+          "col": 1,
+          "xBasisPoints": 2000,
+          "yBasisPoints": 2500,
+          "edgeSlot": true,
+          "minHitWidthDp": 120,
+          "minHitHeightDp": 120
+        },
+        {
+          "slotId": "R1C2",
+          "row": 1,
+          "col": 2,
+          "xBasisPoints": 4000,
+          "yBasisPoints": 2500,
+          "edgeSlot": false,
+          "minHitWidthDp": 120,
+          "minHitHeightDp": 120
+        },
+        {
+          "slotId": "R1C3",
+          "row": 1,
+          "col": 3,
+          "xBasisPoints": 6000,
+          "yBasisPoints": 2500,
+          "edgeSlot": false,
+          "minHitWidthDp": 120,
+          "minHitHeightDp": 120
+        },
+        {
+          "slotId": "R1C4",
+          "row": 1,
+          "col": 4,
+          "xBasisPoints": 8000,
+          "yBasisPoints": 2500,
+          "edgeSlot": true,
+          "minHitWidthDp": 120,
+          "minHitHeightDp": 120
+        },
+        {
+          "slotId": "R2C1",
+          "row": 2,
+          "col": 1,
+          "xBasisPoints": 2000,
+          "yBasisPoints": 5000,
+          "edgeSlot": true,
+          "minHitWidthDp": 120,
+          "minHitHeightDp": 120
+        },
+        {
+          "slotId": "R2C2",
+          "row": 2,
+          "col": 2,
+          "xBasisPoints": 4000,
+          "yBasisPoints": 5000,
+          "edgeSlot": false,
+          "minHitWidthDp": 120,
+          "minHitHeightDp": 120
+        },
+        {
+          "slotId": "R2C3",
+          "row": 2,
+          "col": 3,
+          "xBasisPoints": 6000,
+          "yBasisPoints": 5000,
+          "edgeSlot": false,
+          "minHitWidthDp": 120,
+          "minHitHeightDp": 120
+        },
+        {
+          "slotId": "R2C4",
+          "row": 2,
+          "col": 4,
+          "xBasisPoints": 8000,
+          "yBasisPoints": 5000,
+          "edgeSlot": true,
+          "minHitWidthDp": 120,
+          "minHitHeightDp": 120
+        },
+        {
+          "slotId": "R3C1",
+          "row": 3,
+          "col": 1,
+          "xBasisPoints": 2000,
+          "yBasisPoints": 7500,
+          "edgeSlot": true,
+          "minHitWidthDp": 120,
+          "minHitHeightDp": 120
+        },
+        {
+          "slotId": "R3C2",
+          "row": 3,
+          "col": 2,
+          "xBasisPoints": 4000,
+          "yBasisPoints": 7500,
+          "edgeSlot": false,
+          "minHitWidthDp": 120,
+          "minHitHeightDp": 120
+        },
+        {
+          "slotId": "R3C3",
+          "row": 3,
+          "col": 3,
+          "xBasisPoints": 6000,
+          "yBasisPoints": 7500,
+          "edgeSlot": false,
+          "minHitWidthDp": 120,
+          "minHitHeightDp": 120
+        },
+        {
+          "slotId": "R3C4",
+          "row": 3,
+          "col": 4,
+          "xBasisPoints": 8000,
+          "yBasisPoints": 7500,
+          "edgeSlot": true,
+          "minHitWidthDp": 120,
+          "minHitHeightDp": 120
+        }
+      ]
+    }
+  ],
+  "waveProfiles": [
+    {
+      "waveProfileId": "W10N",
+      "targetsByWave": [
+        1,
+        1,
+        2,
+        1,
+        1,
+        2,
+        1,
+        1
+      ],
+      "distractorsByWave": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "waveProfileId": "W15D4",
+      "targetsByWave": [
+        1,
+        2,
+        2,
+        2,
+        1,
+        2,
+        2,
+        3
+      ],
+      "distractorsByWave": [
+        1,
+        0,
+        1,
+        0,
+        2,
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "waveProfileId": "W20D10-C6",
+      "targetsByWave": [
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2
+      ],
+      "distractorsByWave": [
+        0,
+        2,
+        1,
+        2,
+        0,
+        2,
+        1,
+        2
+      ]
+    },
+    {
+      "waveProfileId": "W25D10-C6",
+      "targetsByWave": [
+        3,
+        3,
+        3,
+        3,
+        4,
+        3,
+        3,
+        3
+      ],
+      "distractorsByWave": [
+        0,
+        2,
+        1,
+        2,
+        0,
+        2,
+        1,
+        2
+      ]
+    },
+    {
+      "waveProfileId": "W25D10-C8",
+      "targetsByWave": [
+        2,
+        3,
+        3,
+        4,
+        3,
+        3,
+        4,
+        3
+      ],
+      "distractorsByWave": [
+        1,
+        1,
+        2,
+        1,
+        1,
+        2,
+        1,
+        1
+      ]
+    }
+  ],
+  "levels": [
+    {
+      "level": 1,
+      "difficultyStateId": "DS01",
+      "stageNo": 1,
+      "timingBand": "A",
+      "repetitionIndex": 1,
+      "repetitionRole": "新授",
+      "contentVariantId": "DS01-V1",
+      "fruitPoolId": "FP_CORE_A",
+      "waveRotation": 0,
+      "backgroundId": "BG01",
+      "gridId": "2x2",
+      "targetTotal": 10,
+      "distractorTotal": 0,
+      "sameScreenCap": 2,
+      "waveProfileId": "W10N",
+      "coexistWaveCount": 0,
+      "peakWaveCount": 2,
+      "similarDistractorCount": 0,
+      "targetFarEdgeCount": 0,
+      "distractorFarEdgeCount": 0,
+      "doubleTargetCount": 0,
+      "doubleWindowMs": 0,
+      "doublePatternId": "NONE",
+      "minTargetHits": 8,
+      "upgradeFalseLimit": 0,
+      "holdFalseLimit": 0,
+      "layoutPoolId": "LP_S01_A_V1",
+      "seedKey": "CL-L001-DS01-V1",
+      "ruleIntroFlag": "FULL_RULE",
+      "waveCount": 8,
+      "roundActiveMs": 30000,
+      "firstWaveMs": 500,
+      "waveSpacingMs": 3650,
+      "stimulusLifecycleMs": 3300,
+      "activeHoldMs": 2900,
+      "interWaveBlankMs": 350,
+      "postLastBufferMs": 650,
+      "enterAnimationMs": 200,
+      "exitAnimationMs": 200,
+      "hitFeedbackMs": 300,
+      "scoringProfileId": "SC_NO_DISTRACTOR",
+      "backgroundLockRule": "HIGHEST_UNLOCKED_CHAPTER_SESSION_LOCK",
+      "interactionProfileId": "CL_CHILD_V1"
+    },
+    {
+      "level": 28,
+      "difficultyStateId": "DS10",
+      "stageNo": 4,
+      "timingBand": "A",
+      "repetitionIndex": 1,
+      "repetitionRole": "新授",
+      "contentVariantId": "DS10-V1",
+      "fruitPoolId": "FP_CORE_A",
+      "waveRotation": 0,
+      "backgroundId": "BG02",
+      "gridId": "2x3",
+      "targetTotal": 15,
+      "distractorTotal": 5,
+      "sameScreenCap": 3,
+      "waveProfileId": "W15D4",
+      "coexistWaveCount": 4,
+      "peakWaveCount": 4,
+      "similarDistractorCount": 0,
+      "targetFarEdgeCount": 0,
+      "distractorFarEdgeCount": 0,
+      "doubleTargetCount": 0,
+      "doubleWindowMs": 0,
+      "doublePatternId": "NONE",
+      "minTargetHits": 12,
+      "upgradeFalseLimit": 1,
+      "holdFalseLimit": 2,
+      "layoutPoolId": "LP_S04_A_V1",
+      "seedKey": "CL-L028-DS10-V1",
+      "ruleIntroFlag": "DISTRACTOR_RULE",
+      "waveCount": 8,
+      "roundActiveMs": 30000,
+      "firstWaveMs": 500,
+      "waveSpacingMs": 3650,
+      "stimulusLifecycleMs": 3300,
+      "activeHoldMs": 2900,
+      "interWaveBlankMs": 350,
+      "postLastBufferMs": 650,
+      "enterAnimationMs": 200,
+      "exitAnimationMs": 200,
+      "hitFeedbackMs": 300,
+      "scoringProfileId": "SC_WITH_DISTRACTOR",
+      "backgroundLockRule": "HIGHEST_UNLOCKED_CHAPTER_SESSION_LOCK",
+      "interactionProfileId": "CL_CHILD_V1"
+    },
+    {
+      "level": 67,
+      "difficultyStateId": "DS23",
+      "stageNo": 9,
+      "timingBand": "A",
+      "repetitionIndex": 1,
+      "repetitionRole": "新授",
+      "contentVariantId": "DS23-V1",
+      "fruitPoolId": "FP_CORE_A",
+      "waveRotation": 0,
+      "backgroundId": "BG05",
+      "gridId": "3x3",
+      "targetTotal": 20,
+      "distractorTotal": 10,
+      "sameScreenCap": 4,
+      "waveProfileId": "W20D10-C6",
+      "coexistWaveCount": 6,
+      "peakWaveCount": 6,
+      "similarDistractorCount": 2,
+      "targetFarEdgeCount": 0,
+      "distractorFarEdgeCount": 0,
+      "doubleTargetCount": 0,
+      "doubleWindowMs": 0,
+      "doublePatternId": "NONE",
+      "minTargetHits": 16,
+      "upgradeFalseLimit": 2,
+      "holdFalseLimit": 3,
+      "layoutPoolId": "LP_S09_A_V1",
+      "seedKey": "CL-L067-DS23-V1",
+      "ruleIntroFlag": "NONE",
+      "waveCount": 8,
+      "roundActiveMs": 30000,
+      "firstWaveMs": 500,
+      "waveSpacingMs": 3650,
+      "stimulusLifecycleMs": 3300,
+      "activeHoldMs": 2900,
+      "interWaveBlankMs": 350,
+      "postLastBufferMs": 650,
+      "enterAnimationMs": 200,
+      "exitAnimationMs": 200,
+      "hitFeedbackMs": 300,
+      "scoringProfileId": "SC_WITH_DISTRACTOR",
+      "backgroundLockRule": "HIGHEST_UNLOCKED_CHAPTER_SESSION_LOCK",
+      "interactionProfileId": "CL_CHILD_V1"
+    },
+    {
+      "level": 102,
+      "difficultyStateId": "DS38",
+      "stageNo": 14,
+      "timingBand": "A",
+      "repetitionIndex": 1,
+      "repetitionRole": "新授",
+      "contentVariantId": "DS38-V1",
+      "fruitPoolId": "FP_CORE_A",
+      "waveRotation": 0,
+      "backgroundId": "BG07",
+      "gridId": "3x4",
+      "targetTotal": 25,
+      "distractorTotal": 10,
+      "sameScreenCap": 5,
+      "waveProfileId": "W25D10-C6",
+      "coexistWaveCount": 6,
+      "peakWaveCount": 4,
+      "similarDistractorCount": 2,
+      "targetFarEdgeCount": 10,
+      "distractorFarEdgeCount": 4,
+      "doubleTargetCount": 2,
+      "doubleWindowMs": 1500,
+      "doublePatternId": "SEP_NO_W1",
+      "minTargetHits": 20,
+      "upgradeFalseLimit": 2,
+      "holdFalseLimit": 3,
+      "layoutPoolId": "LP_S14_A_V1",
+      "seedKey": "CL-L102-DS38-V1",
+      "ruleIntroFlag": "DOUBLE_RULE",
+      "waveCount": 8,
+      "roundActiveMs": 30000,
+      "firstWaveMs": 500,
+      "waveSpacingMs": 3650,
+      "stimulusLifecycleMs": 3300,
+      "activeHoldMs": 2900,
+      "interWaveBlankMs": 350,
+      "postLastBufferMs": 650,
+      "enterAnimationMs": 200,
+      "exitAnimationMs": 200,
+      "hitFeedbackMs": 300,
+      "scoringProfileId": "SC_WITH_DISTRACTOR",
+      "backgroundLockRule": "HIGHEST_UNLOCKED_CHAPTER_SESSION_LOCK",
+      "interactionProfileId": "CL_CHILD_V1"
+    },
+    {
+      "level": 120,
+      "difficultyStateId": "DS46",
+      "stageNo": 16,
+      "timingBand": "H",
+      "repetitionIndex": 2,
+      "repetitionRole": "巩固",
+      "contentVariantId": "DS46-V2",
+      "fruitPoolId": "FP_CORE_B",
+      "waveRotation": 1,
+      "backgroundId": "BG08",
+      "gridId": "3x4",
+      "targetTotal": 25,
+      "distractorTotal": 10,
+      "sameScreenCap": 5,
+      "waveProfileId": "W25D10-C8",
+      "coexistWaveCount": 8,
+      "peakWaveCount": 4,
+      "similarDistractorCount": 6,
+      "targetFarEdgeCount": 15,
+      "distractorFarEdgeCount": 6,
+      "doubleTargetCount": 6,
+      "doubleWindowMs": 1200,
+      "doublePatternId": "MAX3_CONSEC",
+      "minTargetHits": 20,
+      "upgradeFalseLimit": 2,
+      "holdFalseLimit": 3,
+      "layoutPoolId": "LP_S16_H_V2",
+      "seedKey": "CL-L120-DS46-V2",
+      "ruleIntroFlag": "NONE",
+      "waveCount": 8,
+      "roundActiveMs": 30000,
+      "firstWaveMs": 500,
+      "waveSpacingMs": 3650,
+      "stimulusLifecycleMs": 3100,
+      "activeHoldMs": 2700,
+      "interWaveBlankMs": 550,
+      "postLastBufferMs": 850,
+      "enterAnimationMs": 200,
+      "exitAnimationMs": 200,
+      "hitFeedbackMs": 300,
+      "scoringProfileId": "SC_WITH_DISTRACTOR",
+      "backgroundLockRule": "HIGHEST_UNLOCKED_CHAPTER_SESSION_LOCK",
+      "interactionProfileId": "CL_CHILD_V1"
+    }
+  ]
+}

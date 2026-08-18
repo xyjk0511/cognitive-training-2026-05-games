@@ -1,0 +1,78 @@
+{
+  "assetIndexVersion": "catch-light-backgrounds-1",
+  "sessionLockRule": "HIGHEST_UNLOCKED_CHAPTER_SESSION_LOCK",
+  "backgrounds": [
+    {
+      "backgroundId": "BG01",
+      "path": "assets/backgrounds/BG01.png",
+      "sourceFilename": "BG01-L001-L015-晨雾云村.png",
+      "widthPx": 1600,
+      "heightPx": 1000,
+      "sha256": "7d705c90865cb67bcb50723db10d170b6d4d24602b7db24bfb8d6a0eada951ee",
+      "status": "SUPPLIED_REFERENCE_ASSET"
+    },
+    {
+      "backgroundId": "BG02",
+      "path": "assets/backgrounds/BG02.png",
+      "sourceFilename": "BG02-L016-L030-晴空风车原.png",
+      "widthPx": 1600,
+      "heightPx": 1000,
+      "sha256": "16d8a9d74baa98ac770e050371bc2bcffc0ad8a7c1f08e6c80023d733195c4cf",
+      "status": "SUPPLIED_REFERENCE_ASSET"
+    },
+    {
+      "backgroundId": "BG03",
+      "path": "assets/backgrounds/BG03.png",
+      "sourceFilename": "BG03-L031-L045-正午云港城.png",
+      "widthPx": 1600,
+      "heightPx": 1000,
+      "sha256": "019bf40140ec14fcdefea6fdc964a436f37557db8b753d6a91c1b0f21b2d8f18",
+      "status": "SUPPLIED_REFERENCE_ASSET"
+    },
+    {
+      "backgroundId": "BG04",
+      "path": "assets/backgrounds/BG04.png",
+      "sourceFilename": "BG04-L046-L060-云影玻璃园.png",
+      "widthPx": 1600,
+      "heightPx": 1000,
+      "sha256": "2eaa195af8b09d80b56ccdbeaa460613b8121d859ac73c5334f28e3f37ddc2d8",
+      "status": "SUPPLIED_REFERENCE_ASSET"
+    },
+    {
+      "backgroundId": "BG05",
+      "path": "assets/backgrounds/BG05.png",
+      "sourceFilename": "BG05-L061-L075-雨霁水桥湾.png",
+      "widthPx": 1600,
+      "heightPx": 1000,
+      "sha256": "2bf2d6e51200d2a29153c55afb8f30073d27eb1de1d4b47e3afb6023abc602e2",
+      "status": "SUPPLIED_REFERENCE_ASSET"
+    },
+    {
+      "backgroundId": "BG06",
+      "path": "assets/backgrounds/BG06.png",
+      "sourceFilename": "BG06-L076-L090-落日灯塔港.png",
+      "widthPx": 1600,
+      "heightPx": 1000,
+      "sha256": "f804ae4a8f87ded76a0abd3c94e9f40e3ad4348ca063c5df08011bc382af0a31",
+      "status": "SUPPLIED_REFERENCE_ASSET"
+    },
+    {
+      "backgroundId": "BG07",
+      "path": "assets/backgrounds/BG07.png",
+      "sourceFilename": "BG07-L091-L105-暮蓝观星城.png",
+      "widthPx": 1600,
+      "heightPx": 1000,
+      "sha256": "6e99069b79472993d828fbf3c3086459fffbee782f3e49a5a4e78533c349bd7d",
+      "status": "SUPPLIED_REFERENCE_ASSET"
+    },
+    {
+      "backgroundId": "BG08",
+      "path": "assets/backgrounds/BG08.png",
+      "sourceFilename": "BG08-L106-L120-极光镜湖.png",
+      "widthPx": 1600,
+      "heightPx": 1000,
+      "sha256": "2625353454f20a47a053bd27c6fcf8cb5b0fabc78b803da6b3c941644380d65d",
+      "status": "SUPPLIED_REFERENCE_ASSET"
+    }
+  ]
+}

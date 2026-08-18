@@ -1,15 +1,98 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:a620:catch-light:partial-metrics:gate0",
-  "title": "CATCH_LIGHT Gate0 Partial Batch Metrics",
-  "type": "object",
-  "properties": {
-    "waveOrdinal": {
-      "type": "integer",
-      "minimum": 1,
-      "maximum": 8
+  "$id": "urn:a620:catch-light:partial-metrics:1.5",
+  "title": "CATCH_LIGHT Partial Batch Metrics 1.5",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "waveOrdinal": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8
+        }
+      },
+      "maxProperties": 1,
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "metricsVersion",
+        "phase",
+        "waveOrdinal",
+        "presentedTargetCount",
+        "presentedDistractorCount",
+        "H",
+        "F",
+        "unresolvedTargetCount",
+        "totalObjectTouches",
+        "blankTouches",
+        "scheduleSha256",
+        "instanceAuditSha256"
+      ],
+      "properties": {
+        "metricsVersion": {
+          "const": "catch-light-partial-metrics-1"
+        },
+        "phase": {
+          "enum": [
+            "PROMPT",
+            "OPERATION",
+            "FEEDBACK",
+            "TRANSITION"
+          ]
+        },
+        "waveOrdinal": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8
+        },
+        "presentedTargetCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 25
+        },
+        "presentedDistractorCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "H": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 25
+        },
+        "F": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "unresolvedTargetCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 25
+        },
+        "totalObjectTouches": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "blankTouches": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "scheduleSha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "instanceAuditSha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "additionalProperties": false
     }
-  },
-  "additionalProperties": false,
-  "maxProperties": 16
+  ]
 }

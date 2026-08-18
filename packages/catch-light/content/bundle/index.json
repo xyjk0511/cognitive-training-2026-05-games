@@ -1,5 +1,38 @@
 {
   "gameCode": "CATCH_LIGHT",
   "entryScene": "CatchLightEntry",
-  "status": "EMPTY_PLUGIN_GATE0"
+  "status": "W2_HEADLESS_VERTICAL_SLICES",
+  "domainEntry": "typescript/src/games/catch-light/index.ts",
+  "configPath": "config/catch-light-v1.5-w2.json",
+  "goldenVectorPath": "golden/A620_W2_CATCH_LIGHT_golden_vectors.json",
+  "backgroundIndexPath": "assets/backgrounds/index.json",
+  "gameConfigSchemaId": "urn:a620:catch-light:config:1.5",
+  "generatorVersion": "catch-light-gen-1",
+  "scoringRuleVersion": "1.5.0",
+  "resultSchemaVersion": "A620-TRR-1.1",
+  "configSetId": "catch-light-v1.5-w2-vertical-slices",
+  "compiledConfigCanonicalSha256": "7babe84e79b29abb687cc082e19a282943e5cffb2859951e1a0c0c0aa067a3ed",
+  "sourceWorkbookName": "捕光行动-120级数值设计-v1.4.xlsx",
+  "sourceWorkbookSha256": "592a6313bb3f308aa63d5e1313db98b617dfc735ac8fd61efb7c7f06112d716d",
+  "sourceWorkbookRole": "HISTORICAL_NUMERIC_INPUT_ONLY",
+  "sourceRequirementSha256": "1ff1d38470aead2270d6b237b3cda2a21a7540174420252a5bda8b242bfb425c",
+  "publicRulesSha256": "c1a4f3f2e309cdf92fc15d5f51e6e99bc90025c3ddc4ed8ea99077398a987794",
+  "runtimeConfigHashDeclaration": {
+    "mode": "SESSION_SCOPED_ANDROID_PREPARE",
+    "algorithm": "SHA-256",
+    "canonicalization": "A620_CANONICAL_JSON",
+    "projection": "PREPARE_PAYLOAD_EXCLUDING_RUNTIME_CONFIG_HASH",
+    "staticValueApplicable": false
+  },
+  "implementedLevels": [
+    1,
+    28,
+    102,
+    120
+  ],
+  "goldenOnlyAdditionalLevel": [
+    67
+  ],
+  "cocosSceneStatus": "NOT_INCLUDED_IN_W2",
+  "fruitSpriteStatus": "PLACEHOLDER_REFERENCES_ONLY"
 }
