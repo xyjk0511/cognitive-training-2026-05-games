@@ -72,6 +72,7 @@ export class TrainingPointerEventGate {
     this.processedEventIds.add(event.pointerEventId);
 
     if (event.phase === "DOWN") {
+      if (this.activePointerIds.has(event.pointerId)) return "IGNORE";
       this.activePointerIds.add(event.pointerId);
       return "DOWN";
     }
@@ -84,6 +85,11 @@ export class TrainingPointerEventGate {
       throw new Error(`unsupported input cancellation reason ${String(reason)}`);
     }
     this.activePointerIds.clear();
+  }
+
+  rollbackDown(event: Readonly<TrainingPointerEvent>): void {
+    this.processedEventIds.delete(event.pointerEventId);
+    this.activePointerIds.delete(event.pointerId);
   }
 
   reset(): void {

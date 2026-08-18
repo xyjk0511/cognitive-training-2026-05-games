@@ -144,6 +144,15 @@ export class CatchLightSession {
   get activeElapsedMs(): number { return this.latestActiveMs; }
   get isDeadlineReached(): boolean { return this.deadlineReached; }
   get pendingBatchNotificationCount(): number { return this.pendingBatchNotifications.length; }
+  get isCurrentAdvanceSettled(): boolean {
+    if (this.pendingBatchNotifications.length !== 0) return false;
+    if (this.currentBatch !== null) {
+      return this.latestActiveMs < this.currentBatch.closeAtActiveMs || this.currentBatch.closeAtActiveMs > SESSION_DURATION_MS;
+    }
+    return this.nextBatchOrdinal > PLANNED_BATCH_COUNT ||
+      this.nextBatchStartActiveMs >= SESSION_DURATION_MS ||
+      this.latestActiveMs < this.nextBatchStartActiveMs;
+  }
 
   retryPendingBatchNotifications(): void {
     this.assertNotInBatchNotification();

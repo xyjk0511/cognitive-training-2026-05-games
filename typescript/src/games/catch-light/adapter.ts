@@ -174,20 +174,25 @@ export class CatchLightGameModule implements A620InteractiveTrainingGameModule {
   onDeadline(cutoffUptimeMs: number): void {
     this.assertNotInBatchClosedHook("DEADLINE");
     if (this.localState === "TERMINATED") return;
+    const session = this.requireSession();
+    if (this.onBatchClosed !== undefined &&
+        (session.activeElapsedMs !== SESSION_DURATION_MS ||
+         session.pendingBatchNotificationCount !== 0 ||
+         !session.isCurrentAdvanceSettled)) {
+      throw new Error("interactive host must advance and persist BATCH_CLOSED before DEADLINE");
+    }
     if (this.localState === "DEADLINE") {
-      // Idempotent confirmation. This also retries an ordered BATCH_CLOSED
-      // delivery that may have failed after the clock was already sealed.
-      this.requireSession().retryPendingBatchNotifications();
-      this.requireSession().deadline();
+      if (this.onBatchClosed === undefined) session.retryPendingBatchNotifications();
+      session.deadline();
       return;
     }
     this.requireState("DEADLINE", "RUNNING");
     const active = this.requireClock().deadline(cutoffUptimeMs);
-    this.localState = "DEADLINE"; // input remains locked even if evidence delivery throws
+    this.localState = "DEADLINE";
     if (active !== SESSION_DURATION_MS) {
       throw new Error(`controller deadline produced ${active} active ms instead of 300000`);
     }
-    this.requireSession().deadline();
+    session.deadline();
   }
 
   onTerminate(_: string): void {
@@ -240,8 +245,13 @@ export class CatchLightGameModule implements A620InteractiveTrainingGameModule {
   onPointerEvent(event: Readonly<TrainingPointerEvent>): void {
     this.assertNotInBatchClosedHook("pointer event");
     if (this.inputGate.accept(event) !== "DOWN") return;
-    if (event.hitToken === null) this.touchBlankAtUptime(event.sourceUptimeMs);
-    else this.touchInstanceAtUptime(event.hitToken, event.sourceUptimeMs);
+    try {
+      if (event.hitToken === null) this.touchBlankAtUptime(event.sourceUptimeMs);
+      else this.touchInstanceAtUptime(event.hitToken, event.sourceUptimeMs);
+    } catch (error) {
+      this.inputGate.rollbackDown(event);
+      throw error;
+    }
   }
 
   onInputStreamsCancelled(reason: InputStreamCancellationReason): void {
@@ -269,11 +279,10 @@ export class CatchLightGameModule implements A620InteractiveTrainingGameModule {
     this.assertNotInBatchClosedHook("buildResultDraft");
     this.requireState("buildResultDraft", "DEADLINE");
     const session = this.requireSession();
-    // A DEADLINE callback may have sealed the clock and then failed while
-    // delivering BATCH_CLOSED evidence. RESULT_READY construction is allowed
-    // to resume that idempotent domain finalization after the sink is repaired;
-    // it never recomputes an already committed batch.
-    session.retryPendingBatchNotifications();
+    if (this.onBatchClosed === undefined) session.retryPendingBatchNotifications();
+    else if (session.pendingBatchNotificationCount !== 0) {
+      throw new Error("interactive host must persist BATCH_CLOSED before RESULT_READY");
+    }
     session.deadline();
     return session.buildResultDraft();
   }

@@ -24,6 +24,8 @@ On sink failure:
 4. a sink callback may not re-enter lifecycle, input or evidence-delivery methods;
 5. host-visible exactly-once behavior is provided by persistent deduplication, not by changing the public wire.
 
+At the active-time cutoff, the host must call `advanceToUptime(cutoffUptimeMs)` and durably accept every resulting `BATCH_CLOSED` while the public runtime state is still `RUNNING`. Only then may it apply the internal duration transition to `FINALIZING` and call `onDeadline`. Both game adapters reject interactive `onDeadline` or result construction while batch evidence remains unpersisted; neither emits `BATCH_CLOSED` from `FINALIZING`.
+
 Catch Light uses its existing pending notification queue. Signal Station uses a non-destructive pending read plus ordered hash acknowledgement; W0 replaced its previous destructive drain behavior.
 
 ## Pointer contract
@@ -37,7 +39,7 @@ Catch Light uses its existing pending notification queue. Signal Station uses a 
 - integer `xPx` / `yPx` coordinates;
 - nullable `hitToken` resolved by the renderer.
 
-Only `DOWN` enters current game scoring. Repeated `pointerEventId` values are ignored. PAUSE, DEADLINE and TERMINATE cancellation clears active host pointer streams without synthesizing a hit.
+Only `DOWN` enters current game scoring. Repeated `pointerEventId` values and a second DOWN on the same active `pointerId` are ignored. If dispatch fails before the touch is applied, the gate rolls back that DOWN so the same stable event can be retried. PAUSE, DEADLINE and TERMINATE cancellation clears active host pointer streams without synthesizing a hit.
 
 ## Verification
 

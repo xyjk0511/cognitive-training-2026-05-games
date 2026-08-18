@@ -91,10 +91,14 @@ export class SignalStationTrainingGameModule implements A620InteractiveTrainingG
   onDeadline(cutoffUptimeMs: number): void {
     this.assertNotDeliveringBatchEvidence("DEADLINE");
     const clock = this.requireClock();
+    const session = this.requireSession();
+    if (this.evidenceSink !== undefined &&
+        (session.currentActiveMs !== SESSION_DURATION_MS || session.drainClosedBatchDrafts().length !== 0)) {
+      throw new Error("interactive host must advance and persist BATCH_CLOSED before DEADLINE");
+    }
     this.advanceToUptimeMs(cutoffUptimeMs);
     clock.reachDeadlineAt(cutoffUptimeMs);
-    this.requireSession().deadline();
-    this.flushPendingBatchEvidence();
+    session.deadline();
   }
 
   onTerminate(_: string): void {
@@ -110,8 +114,11 @@ export class SignalStationTrainingGameModule implements A620InteractiveTrainingG
   buildResultDraft(): GameResultDraft {
     this.assertNotDeliveringBatchEvidence("buildResultDraft");
     if (this.terminated) throw new Error("terminated execution has no GameResultDraft");
-    this.flushPendingBatchEvidence();
-    return this.requireSession().buildResultDraft();
+    const session = this.requireSession();
+    if (this.evidenceSink !== undefined && session.drainClosedBatchDrafts().length !== 0) {
+      throw new Error("interactive host must persist BATCH_CLOSED before RESULT_READY");
+    }
+    return session.buildResultDraft();
   }
 
   async dispose(): Promise<void> {
@@ -186,7 +193,12 @@ export class SignalStationTrainingGameModule implements A620InteractiveTrainingG
   onPointerEvent(event: Readonly<TrainingPointerEvent>): void {
     this.assertNotDeliveringBatchEvidence("pointer event");
     if (this.inputGate.accept(event) !== "DOWN") return;
-    this.onPointerDown(event.hitToken, event.pointerEventId, event.sourceUptimeMs);
+    try {
+      this.onPointerDown(event.hitToken, event.pointerEventId, event.sourceUptimeMs);
+    } catch (error) {
+      this.inputGate.rollbackDown(event);
+      throw error;
+    }
   }
 
   onInputStreamsCancelled(reason: InputStreamCancellationReason): void {
@@ -200,10 +212,12 @@ export class SignalStationTrainingGameModule implements A620InteractiveTrainingG
   }
 
   drainBatchClosedDrafts() {
+    this.assertNotDeliveringBatchEvidence("batch evidence read");
     return this.requireSession().drainClosedBatchDrafts();
   }
 
   acknowledgeBatchClosedDraft(batchPayloadSha256: string): void {
+    this.assertNotDeliveringBatchEvidence("batch evidence acknowledgement");
     this.requireSession().acknowledgeClosedBatchDraft(batchPayloadSha256);
   }
 
