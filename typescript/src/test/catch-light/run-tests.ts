@@ -659,7 +659,7 @@ const committedGolden = JSON.parse(readFileSync(resolve(process.cwd(), "../games
 assertEqual(canonicalSha256(committedGolden), canonicalSha256(buildGoldenVectors()), "committed golden vectors are current");
 
 // Local public-SPI adapter: strict config, atomic start, pause exclusion, late
-// frames, and retry after a BATCH_CLOSED sink fails at authoritative deadline.
+// frames, and retry after a BATCH_CLOSED sink fails at the RUNNING-state cutoff advance.
 const module = new CatchLightGameModule();
 await assertRejectedAsync(() => module.prepare({
   gameCode:"CATCH_LIGHT",sessionSeed:CATCH_LIGHT_QA_SEED,sessionStartLevel:1,durationMs:300000,
@@ -737,6 +737,7 @@ assert(adapterReentryError !== null, "adapter rejects lifecycle re-entry from BA
 assertEqual(adapterReentryState, "RUNNING", "rejected callback re-entry cannot mutate adapter state");
 assertEqual(adapterReentryModule.moduleState, "RUNNING", "adapter remains RUNNING after callback re-entry rejection");
 assertEqual(adapterReentryModule.snapshotAtUptime(37500).eligibleBatchCount, 1, "outer batch close remains committed exactly once");
+adapterReentryModule.advanceToUptime(300000);
 adapterReentryModule.onDeadline(300000);
 assertEqual(adapterReentryModule.buildResultDraft().eligibleBatchCount, 8, "normal deadline remains available after rejected callback re-entry");
 await adapterReentryModule.dispose();
@@ -847,6 +848,7 @@ pauseRetryModule.retryPendingBatchNotifications();
 pauseRetryModule.onPause(37500);
 assertEqual(pauseRetryModule.moduleState, "PAUSED", "same pause boundary succeeds after evidence retry");
 pauseRetryModule.onResume(38500, 301000);
+pauseRetryModule.advanceToUptime(301000);
 pauseRetryModule.onDeadline(301000);
 assertEqual(pauseRetryModule.buildResultDraft().eligibleBatchCount, 8, "pause-boundary retry does not duplicate or skip a batch");
 assertEqual(pauseHookCalls, 9, "pause-boundary retry produces one failed attempt and eight successful batch deliveries");
@@ -871,7 +873,13 @@ await resilientModule.prepare({
   gameConfig:CATCH_LIGHT_VERTICAL_SLICE_CONFIG as unknown as Readonly<Record<string, unknown>>,
 });
 resilientModule.onStart(0, 300000);
-assertRejected(() => resilientModule.onDeadline(300000), "deadline callback failure is surfaced");
+assertRejected(() => resilientModule.advanceToUptime(300000), "cutoff evidence failure is surfaced while public state is RUNNING");
+resilientModule.retryPendingBatchNotifications();
+assertRejected(
+  () => resilientModule.onDeadline(300000),
+  "deadline is rejected until cutoff progression resumes after evidence retry",
+);
+resilientModule.advanceToUptime(300000);
 resilientModule.onDeadline(300000);
 const resilientDraft = resilientModule.buildResultDraft();
 assertEqual(resilientDraft.eligibleBatchCount, 8, "deadline retry completes all eight batches");
