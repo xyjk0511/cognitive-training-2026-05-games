@@ -29,8 +29,11 @@ class CanonicalIngressCoordinator(
     private val expectedSenderRole: String,
     private val actor: TrainingRuntimeActor,
     private val sink: RuntimeMessageSink,
+    private val bulkReadTimeoutMs: Long = RuntimePolicy.BULK_READ_TIMEOUT_MS,
     private val isLiveChannel: (Long, String) -> Boolean,
 ) {
+    init { require(bulkReadTimeoutMs > 0) }
+
     private data class ChannelFence(val generation: Long, val token: String)
 
     private sealed interface PreparedIngress {
@@ -153,7 +156,7 @@ class CanonicalIngressCoordinator(
                     operation,
                     invalidOrStale(declaredMessageId, "BULK_PAYLOAD_LEASE_EXPIRED", fence),
                 )
-            }, RuntimePolicy.BULK_READ_TIMEOUT_MS, TimeUnit.MILLISECONDS)
+            }, bulkReadTimeoutMs, TimeUnit.MILLISECONDS)
         } catch (error: Throwable) {
             finishBulk(token, operation, null)
             throw error
@@ -189,6 +192,19 @@ class CanonicalIngressCoordinator(
             )
             throw error
         }
+    }
+
+    internal fun resourceSnapshotForTest(): IngressResourceSnapshot {
+        val budget = bulkBudget.snapshot()
+        val ordered = orderedIngress.snapshot()
+        return IngressResourceSnapshot(
+            closed = closed.get(),
+            inFlightBulkMessages = inFlightBulk.size,
+            reservedBulkMessages = budget.first,
+            reservedBulkBytes = budget.second,
+            orderedPendingMessages = ordered.first,
+            orderedPendingBytes = ordered.second,
+        )
     }
 
     fun close() {
@@ -335,3 +351,13 @@ class CanonicalIngressCoordinator(
     private fun sha256Hex(bytes: ByteArray): String =
         MessageDigest.getInstance("SHA-256").digest(bytes).joinToString("") { "%02x".format(it) }
 }
+
+
+data class IngressResourceSnapshot(
+    val closed: Boolean,
+    val inFlightBulkMessages: Int,
+    val reservedBulkMessages: Int,
+    val reservedBulkBytes: Int,
+    val orderedPendingMessages: Int,
+    val orderedPendingBytes: Int,
+)

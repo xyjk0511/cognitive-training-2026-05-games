@@ -7,10 +7,14 @@ import android.os.IBinder
 import android.os.ParcelFileDescriptor
 import a620.RuntimeIngressPriority
 import java.security.MessageDigest
+import java.util.concurrent.CountDownLatch
 import java.util.concurrent.RejectedExecutionException
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
 
 class TrainingRuntimeService : Service() {
-    private val sink = StrictRuntimeMessageSink()
+    private val sink = SwitchableRuntimeMessageSink()
     private val actor = TrainingRuntimeActor { error ->
         sink.onFatalInfrastructureFailure("RUNTIME_ACTOR_FAILURE: ${error.message ?: error::class.java.simpleName}")
     }
@@ -45,46 +49,110 @@ class TrainingRuntimeService : Service() {
             require(generation > 0) { "channel generation must be positive" }
             val newDigest = ChannelAuthenticator.digest(channelToken)
             val newBinder = newCallback.asBinder()
-            synchronized(callbackLock) {
-                val oldDigest = channelTokenDigest
-                val sameTokenEpoch = oldDigest != null && MessageDigest.isEqual(newDigest, oldDigest)
-                if (sameTokenEpoch) {
-                    require(generation > channelGeneration) { "generation must increase within one token epoch" }
-                }
+            val cancelled = AtomicBoolean(false)
+            val completed = CountDownLatch(1)
+            val failure = AtomicReference<Throwable?>(null)
+            val installedRecipient = AtomicReference<IBinder.DeathRecipient?>(null)
+            val nextSink = DeviceShellMockRuntime(
+                eventSender = DeviceRuntimeEventSender { envelope, bytes ->
+                    eventTransport.send(envelope, bytes)
+                },
+                interruptionSender = { identity, reason, observedAtUptimeMs ->
+                    val channel = currentCallbackChannel()
+                    if (identity != null && channel != null) {
+                        channel.callback.onRuntimeInterrupted(
+                            identity.runtimeSessionId,
+                            identity.executionAttempt,
+                            reason,
+                            observedAtUptimeMs,
+                            channel.token,
+                            channel.generation,
+                        )
+                    }
+                },
+            )
 
-                val recipient = IBinder.DeathRecipient {
+            try {
+                actor.submitUrgent {
                     try {
-                        actor.submitUrgent {
-                            synchronized(callbackLock) {
-                                // Delayed death from an old callback/token cannot close a newer channel.
-                                if (channelGeneration == generation &&
-                                    callbackBinder === newBinder &&
-                                    MessageDigest.isEqual(channelTokenDigest, newDigest)
-                                ) {
-                                    clearCallbackLocked()
-                                    sink.onControllerChannelClosed("CONTROLLER_BINDER_DIED")
+                        synchronized(callbackLock) {
+                            if (cancelled.get()) return@synchronized
+                            val oldDigest = channelTokenDigest
+                            val sameTokenEpoch = oldDigest != null && MessageDigest.isEqual(newDigest, oldDigest)
+                            if (sameTokenEpoch) {
+                                require(generation > channelGeneration) {
+                                    "generation must increase within one token epoch"
                                 }
                             }
+
+                            val recipient = IBinder.DeathRecipient {
+                                try {
+                                    actor.submitUrgent {
+                                        synchronized(callbackLock) {
+                                            // Delayed death from an old callback/token cannot close a newer channel.
+                                            if (channelGeneration == generation &&
+                                                callbackBinder === newBinder &&
+                                                MessageDigest.isEqual(channelTokenDigest, newDigest)
+                                            ) {
+                                                clearCallbackLocked()
+                                                sink.onControllerChannelClosed("CONTROLLER_BINDER_DIED")
+                                            }
+                                        }
+                                    }
+                                } catch (_: RejectedExecutionException) {
+                                    sink.onFatalInfrastructureFailure("URGENT_LANE_UNAVAILABLE_ON_BINDER_DEATH")
+                                }
+                            }
+                            newBinder.linkToDeath(recipient, 0)
+                            installedRecipient.set(recipient)
+                            if (cancelled.get()) {
+                                newBinder.unlinkToDeath(recipient, 0)
+                                installedRecipient.set(null)
+                                return@synchronized
+                            }
+
+                            // Reducer replacement and old-channel terminalization are
+                            // serialized on the actor, never executed on the Binder thread.
+                            val previous = sink.replace(nextSink)
+                            if (previous is DeviceShellMockRuntime) {
+                                runCatching {
+                                    previous.onControllerChannelClosed("CHANNEL_REPLACED_BY_NEW_BINDING")
+                                }
+                            }
+                            callbackDeathRecipient?.let { oldRecipient ->
+                                callbackBinder?.unlinkToDeath(oldRecipient, 0)
+                            }
+                            callback = newCallback
+                            callbackBinder = newBinder
+                            callbackDeathRecipient = recipient
+                            channelTokenForCallback = channelToken
+                            channelTokenDigest?.fill(0)
+                            channelTokenDigest = newDigest
+                            channelGeneration = generation
                         }
-                    } catch (_: RejectedExecutionException) {
-                        sink.onFatalInfrastructureFailure("URGENT_LANE_UNAVAILABLE_ON_BINDER_DEATH")
+                    } catch (error: Throwable) {
+                        installedRecipient.getAndSet(null)?.let { newBinder.unlinkToDeath(it, 0) }
+                        failure.set(error)
+                    } finally {
+                        completed.countDown()
                     }
                 }
-
-                // Link before replacing the old callback. A failed link leaves the
-                // previously live channel intact.
-                newBinder.linkToDeath(recipient, 0)
-                callbackDeathRecipient?.let { oldRecipient ->
-                    callbackBinder?.unlinkToDeath(oldRecipient, 0)
-                }
-                callback = newCallback
-                callbackBinder = newBinder
-                callbackDeathRecipient = recipient
-                channelTokenForCallback = channelToken
-                channelTokenDigest?.fill(0)
-                channelTokenDigest = newDigest
-                channelGeneration = generation
+            } catch (error: RejectedExecutionException) {
+                throw IllegalStateException("callback registration actor is unavailable", error)
             }
+
+            if (!completed.await(RuntimePolicy.CALLBACK_REGISTRATION_TIMEOUT_MS, TimeUnit.MILLISECONDS)) {
+                cancelled.set(true)
+                synchronized(callbackLock) {
+                    if (callbackBinder === newBinder && channelGeneration == generation &&
+                        MessageDigest.isEqual(channelTokenDigest, newDigest)
+                    ) {
+                        clearCallbackLocked()
+                    }
+                }
+                throw IllegalStateException("callback registration actor timed out")
+            }
+            failure.get()?.let { throw it }
         }
 
         override fun submitInline(
@@ -145,8 +213,11 @@ class TrainingRuntimeService : Service() {
                     return@submit
                 }
                 synchronized(callbackLock) {
-                    sink.onControllerChannelClosed(reason)
-                    clearCallbackLocked()
+                    try {
+                        sink.onControllerChannelClosed(reason)
+                    } finally {
+                        clearCallbackLocked()
+                    }
                 }
             }
         }

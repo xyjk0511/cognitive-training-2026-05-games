@@ -35,7 +35,7 @@ class ControllerRuntimeClient(
     private val outcomeWriter: ExecutionOutcomeWriter,
     private val eventSink: RuntimeMessageSink = StrictRuntimeMessageSink(),
     private val onChannelAvailable: () -> Unit = {},
-) : ServiceConnection {
+) : ServiceConnection, ControllerCommandChannel {
     private val generationCounter = AtomicLong(0)
     private val terminal = AtomicBoolean(false)
     private val connectionLock = Any()
@@ -208,7 +208,7 @@ class ControllerRuntimeClient(
     override fun onNullBinding(name: ComponentName) =
         handleRuntimeDeath(currentGeneration, currentBinder, "TRAINING_NULL_BINDING")
 
-    fun submitInline(
+    override fun submitInline(
         messageType: String,
         messageId: String,
         senderSeq: Long,
@@ -228,7 +228,7 @@ class ControllerRuntimeClient(
     }
 
     /** The caller retains ownership of [payloadFd]. */
-    fun submitBulk(
+    override fun submitBulk(
         messageType: String,
         messageId: String,
         senderSeq: Long,
@@ -251,19 +251,25 @@ class ControllerRuntimeClient(
 
     fun close(reason: String) {
         require(reason.isNotBlank())
+        val becameTerminal: Boolean
         val channel = synchronized(connectionLock) {
-            if (!terminal.compareAndSet(false, true)) null else currentChannelOrNull()
+            becameTerminal = terminal.compareAndSet(false, true)
+            if (becameTerminal) currentChannelOrNull() else null
         }
         if (channel != null) {
             try {
                 channel.runtime.closeChannel(channel.token, channel.generation, reason)
             } catch (_: Throwable) {
-                // Local terminalization is authoritative for this controller.
+                // The durable local outcome remains authoritative.
             }
         }
         synchronized(connectionLock) { clearConnectionLocked() }
-        eventIngress.close()
-        eventActor.shutdownNow()
+        if (becameTerminal) {
+            recordInterruptionAndClose(reason.take(256), SystemClock.uptimeMillis())
+        } else {
+            eventIngress.close()
+            eventActor.shutdownNow()
+        }
         if (bound) {
             context.unbindService(this)
             bound = false

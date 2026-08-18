@@ -364,9 +364,15 @@ def test_outbox_claim_is_scoped_to_one_runtime_session() -> None:
     assert "runtimeSessionId = prepareEnvelope.runtimeSessionId" in factory
 
 
-def test_unknown_upgrade_and_downgrade_fail_closed_in_source() -> None:
+def test_only_approved_v1_to_v4_upgrade_and_all_other_versions_fail_closed_in_source() -> None:
     source = (SHELL / "android/app/src/main/java/com/a620/tablet/training/AndroidControllerStore.kt").read_text()
-    assert "no deployed migration is approved" in source
+    migration = (SHELL / "android/app/src/main/java/com/a620/tablet/training/RuntimeStoreMigration.kt").read_text()
+    generated = (SHELL / "android/app/src/main/java/com/a620/tablet/training/GeneratedRuntimeStoreMigration.kt").read_text()
+    assert "RuntimeStoreMigration.migrate" in source
+    assert "no deployed migration is approved" in migration
+    assert "oldVersion != GeneratedRuntimeStoreMigration.FROM_VERSION" in migration
+    assert "const val FROM_VERSION = 1" in generated
+    assert "const val TO_VERSION = 4" in generated
     assert "database downgrade is forbidden" in source
 
 

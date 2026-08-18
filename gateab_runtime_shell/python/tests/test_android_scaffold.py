@@ -210,8 +210,11 @@ def test_receiver_closes_aidl_delivered_bulk_fd_after_coordinator_dup() -> None:
 def test_placeholder_sink_is_no_longer_wired_into_runtime_or_controller() -> None:
     service = (ANDROID / "app/src/main/java/com/a620/tablet/training/TrainingRuntimeService.kt").read_text()
     client = (ANDROID / "app/src/main/java/com/a620/tablet/training/ControllerRuntimeClient.kt").read_text()
+    mock = (ANDROID / "app/src/main/java/com/a620/tablet/training/DeviceShellMockGame.kt").read_text()
     sink = (ANDROID / "app/src/main/java/com/a620/tablet/training/RuntimeMessageSink.kt").read_text()
-    assert "StrictRuntimeMessageSink" in service
+    assert "SwitchableRuntimeMessageSink" in service
+    assert "DeviceShellMockRuntime" in service
+    assert "StrictRuntimeMessageSink" in mock
     assert "StrictRuntimeMessageSink" in client
     assert "RejectingPlaceholderSink" not in service
     assert "RejectingPlaceholderSink" not in client

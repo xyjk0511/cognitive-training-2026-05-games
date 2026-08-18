@@ -2,7 +2,6 @@ package com.a620.tablet.training
 
 import android.content.Context
 import a620.RuntimeWireEnvelope
-import java.security.MessageDigest
 
 /** Fully wired controller-side runtime handle for one execution attempt. */
 class ControllerRuntimeSession(
@@ -10,11 +9,14 @@ class ControllerRuntimeSession(
     val store: AndroidControllerStore,
     val eventSink: DurableControllerEventSink,
     val outboxDispatcher: ControllerOutboxDispatcher,
+    private val commandTransport: ControllerCommandTransport,
+    private val closeStoreOnClose: Boolean = false,
 ) : AutoCloseable {
     override fun close() {
         client.close("CONTROLLER_RUNTIME_SESSION_CLOSED")
         outboxDispatcher.close()
-        store.close()
+        commandTransport.close()
+        if (closeStoreOnClose) store.close()
     }
 }
 
@@ -39,18 +41,11 @@ class ControllerRuntimeFactory(
             executionAttempt = prepareEnvelope.executionAttempt,
         )
         lateinit var client: ControllerRuntimeClient
+        lateinit var commandTransport: ControllerCommandTransport
         val outboxDispatcher = ControllerOutboxDispatcher(
             runtimeSessionId = prepareEnvelope.runtimeSessionId,
             store = store,
-            sender = CanonicalControllerSender { envelope, bytes ->
-                client.submitInline(
-                    messageType = envelope.messageType,
-                    messageId = envelope.messageId,
-                    senderSeq = envelope.senderSeq,
-                    canonicalJson = bytes,
-                    canonicalSha256 = sha256Hex(bytes),
-                )
-            },
+            sender = CanonicalControllerSender { envelope, bytes -> commandTransport.send(envelope, bytes) },
             onFatalFailure = sink::onFatalInfrastructureFailure,
         )
         client = ControllerRuntimeClient(
@@ -61,14 +56,15 @@ class ControllerRuntimeFactory(
             eventSink = sink,
             onChannelAvailable = outboxDispatcher::scheduleDrain,
         )
+        commandTransport = ControllerCommandTransport(
+            channel = client,
+            onFatalFailure = sink::onFatalInfrastructureFailure,
+        )
         val coordinator = ControllerResultCommitCoordinator(
             store = store,
             outboxDispatcher = outboxDispatcher,
         )
         sink.attachResultCoordinator(coordinator)
-        return ControllerRuntimeSession(client, store, sink, outboxDispatcher)
+        return ControllerRuntimeSession(client, store, sink, outboxDispatcher, commandTransport)
     }
-
-    private fun sha256Hex(bytes: ByteArray): String =
-        MessageDigest.getInstance("SHA-256").digest(bytes).joinToString("") { "%02x".format(it) }
 }
