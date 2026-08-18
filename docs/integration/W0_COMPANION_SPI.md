@@ -14,7 +14,7 @@ The host-only SPI supplies:
 
 ## Evidence sink contract
 
-`setEvidenceSink()` installs a synchronous durable-acceptance callback. Returning normally means that the host has durably accepted the immutable batch evidence. Throwing means the transaction did not commit.
+`setEvidenceSink()` installs a synchronous durable-acceptance callback. The initial sink must be installed before START; after a failed delivery it may be replaced before retry. Returning normally means that the host has durably accepted the immutable batch evidence. Throwing means the transaction did not commit.
 
 On sink failure:
 

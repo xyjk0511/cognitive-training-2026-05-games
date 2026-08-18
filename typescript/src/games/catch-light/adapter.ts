@@ -71,6 +71,9 @@ export class CatchLightGameModule implements A620InteractiveTrainingGameModule {
   setEvidenceSink(sink: BatchEvidenceSink): void {
     this.assertNotInBatchClosedHook("setEvidenceSink");
     if (typeof sink !== "function") throw new Error("evidence sink must be a function");
+    if (this.onBatchClosed === undefined && this.localState !== "UNPREPARED" && this.localState !== "READY" && this.localState !== "DISPOSED") {
+      throw new Error("the initial evidence sink must be installed before START");
+    }
     this.onBatchClosed = sink;
   }
 
