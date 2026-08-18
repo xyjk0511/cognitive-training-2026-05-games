@@ -5,7 +5,7 @@
   "runtimeContractVersion": "A620-TRC-1.1",
   "coreProtocolVersion": "1.5.0",
   "resultSchemaVersion": "A620-TRR-1.1",
-  "generatorVersion": "catch-light-gen-0.1",
+  "generatorVersion": "catch-light-gen-2",
   "entryBundle": "catch-light",
   "entryScene": "CatchLightEntry",
   "minApkVersionInclusive": "0.1.0",

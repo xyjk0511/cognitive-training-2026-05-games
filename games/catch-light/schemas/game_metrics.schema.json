@@ -1,15 +1,195 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:a620:catch-light:game-metrics:gate0",
-  "title": "CATCH_LIGHT Gate0 Session Metrics",
-  "type": "object",
-  "properties": {
-    "totalTouches": {
-      "type": "integer",
-      "minimum": 0,
-      "maximum": 1000000
+  "$id": "urn:a620:catch-light:game-metrics:1.5",
+  "title": "CATCH_LIGHT Session Metrics 1.5",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "totalTouches": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        }
+      },
+      "maxProperties": 1,
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "metricsVersion",
+        "passEngineType",
+        "configSetId",
+        "generatorVersion",
+        "scoringRuleVersion",
+        "resultSchemaVersion",
+        "sessionSeed",
+        "backgroundId",
+        "pauseCount",
+        "totalPausedDurationMs",
+        "eligibleBatchCount",
+        "incompleteBatchCount",
+        "H",
+        "T",
+        "F",
+        "D",
+        "eligibleTargetInstances",
+        "eligibleTargetHits",
+        "eligibleDistractorInstances",
+        "eligibleDistractorFalseTouches",
+        "eligibleDoubleTargets",
+        "eligibleDoubleCompleted",
+        "totalObjectTouches",
+        "blankTouches",
+        "duplicateTouches",
+        "hitRateBasisPoints",
+        "distractorAvoidanceBasisPoints",
+        "scheduleAuditSha256"
+      ],
+      "properties": {
+        "metricsVersion": {
+          "const": "catch-light-session-metrics-1"
+        },
+        "passEngineType": {
+          "const": "PE-EVENT"
+        },
+        "configSetId": {
+          "const": "catch-light-v1.5-w2-vertical-slices-r2"
+        },
+        "generatorVersion": {
+          "const": "catch-light-gen-2"
+        },
+        "scoringRuleVersion": {
+          "const": "1.5.0"
+        },
+        "resultSchemaVersion": {
+          "const": "A620-TRR-1.1"
+        },
+        "sessionSeed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "backgroundId": {
+          "type": "string",
+          "pattern": "^BG0[1-8]$"
+        },
+        "pauseCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "totalPausedDurationMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "eligibleBatchCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8
+        },
+        "incompleteBatchCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "H": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 200
+        },
+        "T": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 200
+        },
+        "F": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 80
+        },
+        "D": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 80
+        },
+        "eligibleTargetInstances": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 200
+        },
+        "eligibleTargetHits": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 200
+        },
+        "eligibleDistractorInstances": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 80
+        },
+        "eligibleDistractorFalseTouches": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 80
+        },
+        "eligibleDoubleTargets": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 48
+        },
+        "eligibleDoubleCompleted": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 48
+        },
+        "totalObjectTouches": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "blankTouches": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "duplicateTouches": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "hitRateBasisPoints": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "distractorAvoidanceBasisPoints": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "scheduleAuditSha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "additionalProperties": false
     }
-  },
-  "additionalProperties": false,
-  "maxProperties": 64
+  ]
 }
