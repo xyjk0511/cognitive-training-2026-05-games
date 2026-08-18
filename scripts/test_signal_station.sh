@@ -49,7 +49,7 @@ mkdir -p "$ROOT/build/packages"
 echo 'SIGNAL_STATION_TPKG_BUILD_AND_VALIDATE_PASS'
 
 printf '%s\n' '[signal-station] forbidden nondeterministic APIs'
-if grep -R -n -E 'Math\.random|Date\.now|setTimeout|setInterval' \
+if grep -R -n -E 'Math\.random|Date\.now|new Date\(|performance\.now|crypto\.getRandomValues|crypto\.randomBytes|randomUUID|process\.(hrtime|uptime)|setTimeout|setInterval|requestAnimationFrame' \
   "$ROOT/games/signal-station" "$ROOT/typescript/src/games/signal-station"; then
   echo 'forbidden nondeterministic API found' >&2
   exit 1

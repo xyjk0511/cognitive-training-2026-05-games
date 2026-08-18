@@ -16,7 +16,7 @@ export interface ClosedBatchResult {
 }
 
 function batchMetricsRecord(metrics: BatchMetrics): Record<string, unknown> {
-  return {
+  return Object.freeze({
     H: metrics.H,
     T: metrics.T,
     F: metrics.F,
@@ -35,11 +35,11 @@ function batchMetricsRecord(metrics: BatchMetrics): Record<string, unknown> {
     reactionTimeMaxMs: metrics.reactionTimeMaxMs,
     doubleIntervalCount: metrics.doubleIntervalCount,
     doubleIntervalTotalMs: metrics.doubleIntervalTotalMs,
-  };
+  });
 }
 
 function partialMetricsRecord(metrics: PartialMetrics): Record<string, unknown> {
-  return {
+  return Object.freeze({
     waveOrdinal: metrics.waveOrdinal,
     presentedTargetCount: metrics.presentedTargetCount,
     presentedDistractorCount: metrics.presentedDistractorCount,
@@ -49,7 +49,7 @@ function partialMetricsRecord(metrics: PartialMetrics): Record<string, unknown> 
     completedDoubleCount: metrics.completedDoubleCount,
     timedOutTargetCount: metrics.timedOutTargetCount,
     activeElapsedInBatchMs: metrics.activeElapsedInBatchMs,
-  };
+  });
 }
 
 export class SignalStationBatchRuntime {
@@ -66,10 +66,12 @@ export class SignalStationBatchRuntime {
 
   constructor(config: LevelConfig, sessionSeed: number, batchOrdinal: number, batchStartActiveMs: number) {
     if (!Number.isSafeInteger(batchStartActiveMs) || batchStartActiveMs < 0) throw new Error("batchStartActiveMs must be non-negative");
+    if (!Number.isSafeInteger(batchOrdinal) || batchOrdinal < 1 || batchOrdinal > 8) throw new Error("batchOrdinal must be in [1,8]");
     this.config = config;
     this.batchOrdinal = batchOrdinal;
     this.batchStartActiveMs = batchStartActiveMs;
     this.batchEndActiveMs = batchStartActiveMs + BATCH_DURATION_MS;
+    if (!Number.isSafeInteger(this.batchEndActiveMs)) throw new Error("batch end exceeded the safe-integer range");
     this.latestActiveMs = batchStartActiveMs;
     this.plan = generateBatchPlan(config, sessionSeed, batchOrdinal);
     const profile = TIMING_PROFILES[config.timingProfile];
@@ -92,7 +94,7 @@ export class SignalStationBatchRuntime {
 
   touch(instanceId: string | null, activeMs: number, eventId: string): TouchResult {
     if (this.closed) throw new Error("closed batch cannot receive input");
-    if (eventId.length === 0) throw new Error("eventId must not be empty");
+    if (typeof eventId !== "string" || eventId.length === 0) throw new Error("eventId must not be empty");
     if (this.processedEventIds.has(eventId)) {
       return Object.freeze({
         disposition: "IGNORED_DUPLICATE_EVENT",
@@ -150,6 +152,8 @@ export class SignalStationBatchRuntime {
 
   closeAt(activeMs: number, consecutiveFailCountBefore: 0 | 1): ClosedBatchResult {
     if (this.closed) throw new Error("batch already closed");
+    if (!Number.isSafeInteger(activeMs)) throw new Error("close active time must be a safe integer");
+    if (consecutiveFailCountBefore !== 0 && consecutiveFailCountBefore !== 1) throw new Error("consecutiveFailCountBefore must be 0 or 1");
     if (activeMs < this.batchEndActiveMs) throw new Error("batch cannot close before its 37500ms boundary");
     if (this.latestActiveMs < this.batchEndActiveMs) this.advanceTo(this.batchEndActiveMs);
     const metrics = this.metrics();
@@ -182,6 +186,10 @@ export class SignalStationBatchRuntime {
 
   partialAudit(cutoffAtActiveMs: 300000): IncompleteBatchAudit {
     if (this.closed) throw new Error("closed batch has no partial audit");
+    if (cutoffAtActiveMs !== 300000) throw new Error("partial audit cutoff must be 300000ms");
+    if (this.batchStartActiveMs >= cutoffAtActiveMs || this.batchEndActiveMs <= cutoffAtActiveMs) {
+      throw new Error("partial audit requires a batch that crosses the deadline");
+    }
     this.advanceTo(cutoffAtActiveMs);
     const presented = this.instances.filter(instance => instance.isPresentedBefore(cutoffAtActiveMs));
     const waveOrdinal = presented.reduce((maximum, instance) => Math.max(maximum, instance.definition.waveOrdinal), 0);
@@ -194,7 +202,7 @@ export class SignalStationBatchRuntime {
       waitingDoubleCount: presented.filter(instance => instance.definition.requiresDouble && instance.outcome === "PENDING" && instance.firstTouchActiveMs !== null).length,
       completedDoubleCount: presented.filter(instance => instance.definition.requiresDouble && instance.outcome === "HIT").length,
       timedOutTargetCount: presented.filter(instance => instance.definition.role === "TARGET" && instance.outcome === "MISS").length,
-      activeElapsedInBatchMs: Math.max(0, cutoffAtActiveMs - this.batchStartActiveMs),
+      activeElapsedInBatchMs: Math.min(BATCH_DURATION_MS, Math.max(0, cutoffAtActiveMs - this.batchStartActiveMs)),
     });
     return Object.freeze({
       batchOrdinal: this.batchOrdinal,

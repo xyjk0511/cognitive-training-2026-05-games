@@ -73,7 +73,9 @@ export function createGeneratorRng(key: GeneratorKey): DeterministicRng {
   assertKeyInteger(key.level, "level", 1);
   assertKeyInteger(key.batchOrdinal, "batchOrdinal", 1);
   assertKeyInteger(key.waveOrdinal, "waveOrdinal", 0);
+  if (typeof key.scope !== "string" || key.scope.length === 0) throw new Error("scope must not be empty");
   const version = key.generatorVersion ?? SIGNAL_STATION_GENERATOR_VERSION;
+  if (typeof version !== "string" || version.length === 0) throw new Error("generatorVersion must not be empty");
   const material = `${version}|${key.sessionSeed}|${key.level}|${key.batchOrdinal}|${key.waveOrdinal}|${key.scope}`;
   return new DeterministicRng(fnv1a32(material));
 }

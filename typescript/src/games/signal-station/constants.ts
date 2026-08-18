@@ -3,9 +3,9 @@ import type { TimingProfile, TimingProfileId, WaveTemplate, WaveTemplateId } fro
 export const SIGNAL_STATION_GAME_CODE = "SIGNAL_STATION" as const;
 export const SIGNAL_STATION_REQUIREMENT_VERSION = "1.2.1" as const;
 export const SIGNAL_STATION_CONFIG_VERSION = "A620-SS-CONFIG-1.2.1" as const;
-export const SIGNAL_STATION_GENERATOR_VERSION = "signal-station-gen-1.2.1" as const;
+export const SIGNAL_STATION_GENERATOR_VERSION = "signal-station-gen-1.2.1-r2" as const;
 export const SIGNAL_STATION_SCORING_RULE_VERSION = "signal-station-score-1.2.1" as const;
-export const SIGNAL_STATION_CONTENT_VERSION = "signal-station-six-slice-1.2.1" as const;
+export const SIGNAL_STATION_CONTENT_VERSION = "signal-station-six-slice-1.2.1-r2" as const;
 
 export const SESSION_DURATION_MS = 300_000 as const;
 export const PLANNED_BATCH_COUNT = 8 as const;

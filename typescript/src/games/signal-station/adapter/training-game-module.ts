@@ -1,17 +1,19 @@
 import { canonicalSha256 } from "../../../canonical.js";
 import type { GameResultDraft } from "../../../contracts.js";
 import type { A620TrainingGameModule, PrepareContext } from "../../../game-plugin.js";
-import { BATCH_DURATION_MS, SESSION_DURATION_MS, SIGNAL_STATION_GAME_CODE } from "../constants.js";
-import { VERTICAL_SLICE_RUNTIME_CONFIG, validateRuntimeConfig } from "../config/vertical-slices.js";
+import { SESSION_DURATION_MS, SIGNAL_STATION_GAME_CODE } from "../constants.js";
+import {
+  isVerticalSliceLevelImplemented, VERTICAL_SLICE_RUNTIME_CONFIG, validateRuntimeConfig,
+} from "../config/vertical-slices.js";
 import { DeterministicActiveClock } from "../domain/logical-clock.js";
 import { SignalStationSession } from "../domain/session.js";
-import type { GeneratedBatchPlan, TouchResult } from "../types.js";
+import type {
+  GeneratedBatchPlan, TouchResult, VerticalSliceCoverageBlock,
+} from "../types.js";
 
 function asRuntimeConfig(value: Readonly<Record<string, unknown>>): typeof VERTICAL_SLICE_RUNTIME_CONFIG {
-  if (value === null || Array.isArray(value)) throw new Error("gameConfig must be an object");
-  const candidate = value as unknown as typeof VERTICAL_SLICE_RUNTIME_CONFIG;
-  validateRuntimeConfig(candidate);
-  return candidate;
+  validateRuntimeConfig(value);
+  return value;
 }
 
 /** Game-local implementation of the frozen public SPI; shared game-plugin.ts remains untouched. */
@@ -23,6 +25,9 @@ export class SignalStationTrainingGameModule implements A620TrainingGameModule {
   private terminated = false;
 
   async prepare(context: PrepareContext): Promise<void> {
+    if (this.context !== null || this.session !== null || this.clock !== null) {
+      throw new Error("module is already prepared; dispose it before preparing another execution");
+    }
     if (context.gameCode !== SIGNAL_STATION_GAME_CODE) throw new Error("PREPARE gameCode mismatch");
     if (context.durationMs !== SESSION_DURATION_MS) throw new Error("Signal Station duration must be 300000ms");
     const config = asRuntimeConfig(context.gameConfig);
@@ -30,12 +35,14 @@ export class SignalStationTrainingGameModule implements A620TrainingGameModule {
     if (context.runtimeConfigHash !== calculatedHash) throw new Error("runtimeConfigHash does not match canonical gameConfig");
     const frozenVerticalSliceHash = canonicalSha256(VERTICAL_SLICE_RUNTIME_CONFIG);
     if (calculatedHash !== frozenVerticalSliceHash) throw new Error("gameConfig is not the frozen six-slice runtime config");
-    this.context = context;
-    this.session = new SignalStationSession({
+
+    const session = new SignalStationSession({
       sessionSeed: context.sessionSeed,
       sessionStartLevel: context.sessionStartLevel,
       runtimeConfigHash: context.runtimeConfigHash,
     });
+    this.context = context;
+    this.session = session;
     this.clock = new DeterministicActiveClock();
     this.terminated = false;
   }
@@ -67,9 +74,12 @@ export class SignalStationTrainingGameModule implements A620TrainingGameModule {
   }
 
   onTerminate(_: string): void {
+    if (this.terminated) throw new Error("execution is already terminated");
+    const session = this.requireSession();
+    const clock = this.requireClock();
+    session.terminate();
+    clock.terminate();
     this.terminated = true;
-    this.requireSession().terminate();
-    this.requireClock().terminate();
   }
 
   buildResultDraft(): GameResultDraft {
@@ -87,21 +97,48 @@ export class SignalStationTrainingGameModule implements A620TrainingGameModule {
   advanceToUptimeMs(sourceUptimeMs: number): void {
     const clock = this.requireClock();
     const session = this.requireSession();
-    const activeMs = clock.advanceTo(sourceUptimeMs);
+    const targetActiveMs = clock.advanceTo(sourceUptimeMs);
+
     while (true) {
-      const closed = session.advanceTo(activeMs);
-      if (closed === null) break;
-      if (session.eligibleBatchCount >= 8) break;
-      const nextStart = session.eligibleBatchCount * BATCH_DURATION_MS;
-      if (nextStart >= SESSION_DURATION_MS || nextStart > activeMs) break;
-      session.startBatch(nextStart);
+      const batch = session.currentBatch;
+      if (batch === null || targetActiveMs < batch.batchEndActiveMs) {
+        session.advanceTo(targetActiveMs);
+        return;
+      }
+
+      // A source-time jump can cross several fixed batch boundaries. Close each
+      // batch at its own boundary before opening the next one; never advance the
+      // session to the final target and then try to create a batch in its past.
+      const closed = session.advanceTo(batch.batchEndActiveMs);
+      if (closed === null) throw new Error("batch boundary was reached without closing the active batch");
+
+      if (!isVerticalSliceLevelImplemented(session.currentLevel)) {
+        session.markVerticalSliceCoverageBlocked();
+        if (session.currentActiveMs < targetActiveMs) session.advanceTo(targetActiveMs);
+        return;
+      }
+      if (session.eligibleBatchCount >= 8 || closed.closedAtActiveMs >= SESSION_DURATION_MS) {
+        if (session.currentActiveMs < targetActiveMs) session.advanceTo(targetActiveMs);
+        return;
+      }
+
+      session.startBatch(closed.closedAtActiveMs);
     }
   }
 
   onPointerDown(instanceId: string | null, pointerEventId: string, sourceUptimeMs: number): TouchResult {
+    if (typeof pointerEventId !== "string" || pointerEventId.length === 0) {
+      throw new Error("pointerEventId must not be empty");
+    }
     const clock = this.requireClock();
     if (!clock.canAcceptInputAt(sourceUptimeMs)) {
-      return Object.freeze({disposition: "IGNORED_OUTSIDE_WINDOW", instanceId, stateAfter: null, hitDelta: 0, falseTouchDelta: 0});
+      return Object.freeze({
+        disposition: "IGNORED_OUTSIDE_WINDOW",
+        instanceId,
+        stateAfter: null,
+        hitDelta: 0,
+        falseTouchDelta: 0,
+      });
     }
     const activeMs = clock.activeElapsedMs;
     this.advanceToUptimeMs(sourceUptimeMs);
@@ -114,6 +151,10 @@ export class SignalStationTrainingGameModule implements A620TrainingGameModule {
 
   currentPlan(): GeneratedBatchPlan | null {
     return this.requireSession().currentBatch?.plan ?? null;
+  }
+
+  coverageBlock(): VerticalSliceCoverageBlock | null {
+    return this.requireSession().coverageBlock;
   }
 
   private requireSession(): SignalStationSession {

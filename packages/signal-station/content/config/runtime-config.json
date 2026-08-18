@@ -1,9 +1,9 @@
 {
   "schemaVersion": "A620-SS-CONFIG-1.2.1",
   "requirementVersion": "1.2.1",
-  "generatorVersion": "signal-station-gen-1.2.1",
+  "generatorVersion": "signal-station-gen-1.2.1-r2",
   "scoringRuleVersion": "signal-station-score-1.2.1",
-  "contentVersion": "signal-station-six-slice-1.2.1",
+  "contentVersion": "signal-station-six-slice-1.2.1-r2",
   "sourceWorkbookSha256": "b16fbcef60fa63214338af8f436e42e0080fe254fe89a9fa42a5256abde81620",
   "requirementDocumentSha256": "c9823a24ee41d536a1401a0c233d7ed8be81e4fb7076716fafed09df3f6ac898",
   "publicRulesDocumentSha256": "c1a4f3f2e309cdf92fc15d5f51e6e99bc90025c3ddc4ed8ea99077398a987794",

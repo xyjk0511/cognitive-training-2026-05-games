@@ -76,6 +76,15 @@ function balanceCounts(targetSlotsByWave: readonly (readonly Slot[])[]): {left:n
   return counts;
 }
 
+function quadrantSpread(targetSlotsByWave: readonly (readonly Slot[])[]): number {
+  const counts: Record<Quadrant, number> = {
+    TOP_LEFT: 0, TOP_RIGHT: 0, BOTTOM_LEFT: 0, BOTTOM_RIGHT: 0,
+  };
+  for (const wave of targetSlotsByWave) for (const slot of wave) counts[slot.quadrant] += 1;
+  const values = Object.values(counts);
+  return Math.max(...values) - Math.min(...values);
+}
+
 function hasTripleTargetCellRepeat(targetSlotsByWave: readonly (readonly Slot[])[]): boolean {
   for (let waveIndex = 2; waveIndex < targetSlotsByWave.length; waveIndex += 1) {
     const current = new Set(targetSlotsByWave[waveIndex]!.map(slot => slot.slotIndex));
@@ -138,6 +147,7 @@ function chooseTargetSlots(
     if (!failed) {
       const balance = balanceCounts(targetSlotsByWave);
       if (Math.abs(balance.left - balance.right) <= 2 && Math.abs(balance.top - balance.bottom) <= 2
+        && quadrantSpread(targetSlotsByWave) <= 2
         && !hasTripleTargetCellRepeat(targetSlotsByWave)) {
         return targetSlotsByWave.map(wave => Object.freeze([...wave]));
       }
@@ -160,6 +170,7 @@ function chooseDistractorReference(config: LevelConfig, distractorIndex: number,
 }
 
 export function validateGeneratedBatchPlan(plan: GeneratedBatchPlan, config: LevelConfig): void {
+  validateLevelConfig(config);
   if (plan.generatorVersion !== SIGNAL_STATION_GENERATOR_VERSION) throw new Error("generated plan version mismatch");
   if (plan.level !== config.level) throw new Error("generated plan level mismatch");
   if (!Number.isSafeInteger(plan.sessionSeed) || plan.sessionSeed < 0) throw new Error("generated plan sessionSeed is invalid");
@@ -239,7 +250,9 @@ export function validateGeneratedBatchPlan(plan: GeneratedBatchPlan, config: Lev
         const reference = plan.targetCards[instance.similarityReferenceTargetCategoryId];
         if (reference === null) throw new Error("generated distractor reference target is absent");
         if (targetCards.some(target => symbolsEqual(instance.symbol, target))) throw new Error("generated distractor duplicates a target card");
-        if (!hasNonColorDifference(instance.symbol, reference)) throw new Error("color is the sole distractor difference");
+        if (targetCards.some(target => !hasNonColorDifference(instance.symbol, target))) {
+          throw new Error("color is the sole distractor difference from at least one target card");
+        }
         const shared = sharedAttributeCount(instance.symbol, reference);
         if (config.similarityTier === 1) {
           if (instance.symbol.contour === reference.contour || instance.symbol.innerMark === reference.innerMark
@@ -268,7 +281,8 @@ export function validateGeneratedBatchPlan(plan: GeneratedBatchPlan, config: Lev
   if (targetCategoryTotals.A !== config.targetClassSplit[0]
     || targetCategoryTotals.B !== (config.targetClassSplit[1] ?? 0)) throw new Error("generated target-class split mismatch");
   const balance = balanceCounts(targetSlotsByWave);
-  if (Math.abs(balance.left - balance.right) > 2 || Math.abs(balance.top - balance.bottom) > 2) throw new Error("generated target layout is unbalanced");
+  if (Math.abs(balance.left - balance.right) > 2 || Math.abs(balance.top - balance.bottom) > 2
+    || quadrantSpread(targetSlotsByWave) > 2) throw new Error("generated target layout is unbalanced");
   if (hasTripleTargetCellRepeat(targetSlotsByWave)) throw new Error("generated target slot repeats for three consecutive waves");
 }
 

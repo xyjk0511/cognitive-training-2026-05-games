@@ -104,9 +104,9 @@ export function generateDistractorSymbol(
     const candidate = similarityTier === 1
       ? buildTierOne(reference, directionCount, rng)
       : buildExactSharedCount(reference, similarityTier === 2 ? 1 : 2, directionCount, rng);
-    if (allTargets.every(target => !symbolsEqual(candidate, target)) && hasNonColorDifference(reference, candidate)) {
+    if (allTargets.every(target => !symbolsEqual(candidate, target) && hasNonColorDifference(candidate, target))) {
       return candidate;
     }
   }
-  throw new Error("unable to generate a non-target distractor under the requested similarity constraints");
+  throw new Error("unable to generate a globally distinguishable distractor under the requested similarity constraints");
 }

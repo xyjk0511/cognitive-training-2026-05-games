@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:a620:signal-station:batch-metrics:1.2.1",
-  "title": "SIGNAL_STATION Eligible Batch Metrics 1.2.1",
+  "title": "SIGNAL_STATION Eligible Batch Metrics 1.2.1 r2",
   "type": "object",
   "required": [
     "H",
@@ -99,7 +99,7 @@
     "reactionTimeTotalMs": {
       "type": "integer",
       "minimum": 0,
-      "maximum": 600000
+      "maximum": 57980
     },
     "reactionTimeMinMs": {
       "type": [
@@ -107,7 +107,7 @@
         "null"
       ],
       "minimum": 0,
-      "maximum": 300000
+      "maximum": 2899
     },
     "reactionTimeMaxMs": {
       "type": [
@@ -115,7 +115,7 @@
         "null"
       ],
       "minimum": 0,
-      "maximum": 300000
+      "maximum": 2899
     },
     "doubleIntervalCount": {
       "type": "integer",
@@ -125,7 +125,7 @@
     "doubleIntervalTotalMs": {
       "type": "integer",
       "minimum": 0,
-      "maximum": 6000
+      "maximum": 5995
     }
   },
   "additionalProperties": false,
@@ -173,6 +173,1132 @@
           },
           "doubleIntervalTotalMs": {
             "const": 0
+          }
+        }
+      }
+    },
+    {
+      "oneOf": [
+        {
+          "properties": {
+            "T": {
+              "const": 10
+            },
+            "D": {
+              "const": 0
+            },
+            "timingProfile": {
+              "const": "A"
+            },
+            "targetClassCount": {
+              "const": 1
+            },
+            "similarityTier": {
+              "const": 0
+            },
+            "directionCount": {
+              "const": 1
+            },
+            "doubleCount": {
+              "const": 0
+            }
+          },
+          "required": [
+            "T",
+            "D",
+            "timingProfile",
+            "targetClassCount",
+            "similarityTier",
+            "directionCount",
+            "doubleCount"
+          ]
+        },
+        {
+          "properties": {
+            "T": {
+              "const": 15
+            },
+            "D": {
+              "const": 5
+            },
+            "timingProfile": {
+              "const": "A"
+            },
+            "targetClassCount": {
+              "const": 1
+            },
+            "similarityTier": {
+              "const": 1
+            },
+            "directionCount": {
+              "const": 1
+            },
+            "doubleCount": {
+              "const": 0
+            }
+          },
+          "required": [
+            "T",
+            "D",
+            "timingProfile",
+            "targetClassCount",
+            "similarityTier",
+            "directionCount",
+            "doubleCount"
+          ]
+        },
+        {
+          "properties": {
+            "T": {
+              "const": 20
+            },
+            "D": {
+              "const": 10
+            },
+            "timingProfile": {
+              "const": "A"
+            },
+            "targetClassCount": {
+              "const": 2
+            },
+            "similarityTier": {
+              "const": 1
+            },
+            "directionCount": {
+              "const": 2
+            },
+            "doubleCount": {
+              "const": 0
+            }
+          },
+          "required": [
+            "T",
+            "D",
+            "timingProfile",
+            "targetClassCount",
+            "similarityTier",
+            "directionCount",
+            "doubleCount"
+          ]
+        },
+        {
+          "properties": {
+            "T": {
+              "const": 20
+            },
+            "D": {
+              "const": 10
+            },
+            "timingProfile": {
+              "const": "A"
+            },
+            "targetClassCount": {
+              "const": 1
+            },
+            "similarityTier": {
+              "const": 1
+            },
+            "directionCount": {
+              "const": 2
+            },
+            "doubleCount": {
+              "const": 2
+            }
+          },
+          "required": [
+            "T",
+            "D",
+            "timingProfile",
+            "targetClassCount",
+            "similarityTier",
+            "directionCount",
+            "doubleCount"
+          ]
+        },
+        {
+          "properties": {
+            "T": {
+              "const": 20
+            },
+            "D": {
+              "const": 10
+            },
+            "timingProfile": {
+              "const": "H"
+            },
+            "targetClassCount": {
+              "const": 2
+            },
+            "similarityTier": {
+              "const": 2
+            },
+            "directionCount": {
+              "const": 4
+            },
+            "doubleCount": {
+              "const": 4
+            }
+          },
+          "required": [
+            "T",
+            "D",
+            "timingProfile",
+            "targetClassCount",
+            "similarityTier",
+            "directionCount",
+            "doubleCount"
+          ]
+        },
+        {
+          "properties": {
+            "T": {
+              "const": 20
+            },
+            "D": {
+              "const": 10
+            },
+            "timingProfile": {
+              "const": "H"
+            },
+            "targetClassCount": {
+              "const": 2
+            },
+            "similarityTier": {
+              "const": 3
+            },
+            "directionCount": {
+              "const": 4
+            },
+            "doubleCount": {
+              "const": 5
+            }
+          },
+          "required": [
+            "T",
+            "D",
+            "timingProfile",
+            "targetClassCount",
+            "similarityTier",
+            "directionCount",
+            "doubleCount"
+          ]
+        }
+      ]
+    },
+    {
+      "if": {
+        "properties": {
+          "T": {
+            "const": 10
+          }
+        },
+        "required": [
+          "T"
+        ]
+      },
+      "then": {
+        "properties": {
+          "H": {
+            "maximum": 10
+          },
+          "reactionTimeCount": {
+            "maximum": 10
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "T": {
+            "const": 15
+          }
+        },
+        "required": [
+          "T"
+        ]
+      },
+      "then": {
+        "properties": {
+          "H": {
+            "maximum": 15
+          },
+          "reactionTimeCount": {
+            "maximum": 15
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "D": {
+            "const": 5
+          }
+        },
+        "required": [
+          "D"
+        ]
+      },
+      "then": {
+        "properties": {
+          "F": {
+            "maximum": 5
+          }
+        }
+      }
+    },
+    {
+      "oneOf": [
+        {
+          "properties": {
+            "doubleCount": {
+              "const": 0
+            },
+            "completedDoubleCount": {
+              "const": 0
+            },
+            "timedOutDoubleCount": {
+              "const": 0
+            },
+            "doubleIntervalCount": {
+              "const": 0
+            }
+          },
+          "required": [
+            "doubleCount",
+            "completedDoubleCount",
+            "timedOutDoubleCount",
+            "doubleIntervalCount"
+          ]
+        },
+        {
+          "properties": {
+            "doubleCount": {
+              "const": 2
+            },
+            "completedDoubleCount": {
+              "const": 0
+            },
+            "timedOutDoubleCount": {
+              "const": 2
+            },
+            "doubleIntervalCount": {
+              "const": 0
+            }
+          },
+          "required": [
+            "doubleCount",
+            "completedDoubleCount",
+            "timedOutDoubleCount",
+            "doubleIntervalCount"
+          ]
+        },
+        {
+          "properties": {
+            "doubleCount": {
+              "const": 2
+            },
+            "completedDoubleCount": {
+              "const": 1
+            },
+            "timedOutDoubleCount": {
+              "const": 1
+            },
+            "doubleIntervalCount": {
+              "const": 1
+            }
+          },
+          "required": [
+            "doubleCount",
+            "completedDoubleCount",
+            "timedOutDoubleCount",
+            "doubleIntervalCount"
+          ]
+        },
+        {
+          "properties": {
+            "doubleCount": {
+              "const": 2
+            },
+            "completedDoubleCount": {
+              "const": 2
+            },
+            "timedOutDoubleCount": {
+              "const": 0
+            },
+            "doubleIntervalCount": {
+              "const": 2
+            }
+          },
+          "required": [
+            "doubleCount",
+            "completedDoubleCount",
+            "timedOutDoubleCount",
+            "doubleIntervalCount"
+          ]
+        },
+        {
+          "properties": {
+            "doubleCount": {
+              "const": 4
+            },
+            "completedDoubleCount": {
+              "const": 0
+            },
+            "timedOutDoubleCount": {
+              "const": 4
+            },
+            "doubleIntervalCount": {
+              "const": 0
+            }
+          },
+          "required": [
+            "doubleCount",
+            "completedDoubleCount",
+            "timedOutDoubleCount",
+            "doubleIntervalCount"
+          ]
+        },
+        {
+          "properties": {
+            "doubleCount": {
+              "const": 4
+            },
+            "completedDoubleCount": {
+              "const": 1
+            },
+            "timedOutDoubleCount": {
+              "const": 3
+            },
+            "doubleIntervalCount": {
+              "const": 1
+            }
+          },
+          "required": [
+            "doubleCount",
+            "completedDoubleCount",
+            "timedOutDoubleCount",
+            "doubleIntervalCount"
+          ]
+        },
+        {
+          "properties": {
+            "doubleCount": {
+              "const": 4
+            },
+            "completedDoubleCount": {
+              "const": 2
+            },
+            "timedOutDoubleCount": {
+              "const": 2
+            },
+            "doubleIntervalCount": {
+              "const": 2
+            }
+          },
+          "required": [
+            "doubleCount",
+            "completedDoubleCount",
+            "timedOutDoubleCount",
+            "doubleIntervalCount"
+          ]
+        },
+        {
+          "properties": {
+            "doubleCount": {
+              "const": 4
+            },
+            "completedDoubleCount": {
+              "const": 3
+            },
+            "timedOutDoubleCount": {
+              "const": 1
+            },
+            "doubleIntervalCount": {
+              "const": 3
+            }
+          },
+          "required": [
+            "doubleCount",
+            "completedDoubleCount",
+            "timedOutDoubleCount",
+            "doubleIntervalCount"
+          ]
+        },
+        {
+          "properties": {
+            "doubleCount": {
+              "const": 4
+            },
+            "completedDoubleCount": {
+              "const": 4
+            },
+            "timedOutDoubleCount": {
+              "const": 0
+            },
+            "doubleIntervalCount": {
+              "const": 4
+            }
+          },
+          "required": [
+            "doubleCount",
+            "completedDoubleCount",
+            "timedOutDoubleCount",
+            "doubleIntervalCount"
+          ]
+        },
+        {
+          "properties": {
+            "doubleCount": {
+              "const": 5
+            },
+            "completedDoubleCount": {
+              "const": 0
+            },
+            "timedOutDoubleCount": {
+              "const": 5
+            },
+            "doubleIntervalCount": {
+              "const": 0
+            }
+          },
+          "required": [
+            "doubleCount",
+            "completedDoubleCount",
+            "timedOutDoubleCount",
+            "doubleIntervalCount"
+          ]
+        },
+        {
+          "properties": {
+            "doubleCount": {
+              "const": 5
+            },
+            "completedDoubleCount": {
+              "const": 1
+            },
+            "timedOutDoubleCount": {
+              "const": 4
+            },
+            "doubleIntervalCount": {
+              "const": 1
+            }
+          },
+          "required": [
+            "doubleCount",
+            "completedDoubleCount",
+            "timedOutDoubleCount",
+            "doubleIntervalCount"
+          ]
+        },
+        {
+          "properties": {
+            "doubleCount": {
+              "const": 5
+            },
+            "completedDoubleCount": {
+              "const": 2
+            },
+            "timedOutDoubleCount": {
+              "const": 3
+            },
+            "doubleIntervalCount": {
+              "const": 2
+            }
+          },
+          "required": [
+            "doubleCount",
+            "completedDoubleCount",
+            "timedOutDoubleCount",
+            "doubleIntervalCount"
+          ]
+        },
+        {
+          "properties": {
+            "doubleCount": {
+              "const": 5
+            },
+            "completedDoubleCount": {
+              "const": 3
+            },
+            "timedOutDoubleCount": {
+              "const": 2
+            },
+            "doubleIntervalCount": {
+              "const": 3
+            }
+          },
+          "required": [
+            "doubleCount",
+            "completedDoubleCount",
+            "timedOutDoubleCount",
+            "doubleIntervalCount"
+          ]
+        },
+        {
+          "properties": {
+            "doubleCount": {
+              "const": 5
+            },
+            "completedDoubleCount": {
+              "const": 4
+            },
+            "timedOutDoubleCount": {
+              "const": 1
+            },
+            "doubleIntervalCount": {
+              "const": 4
+            }
+          },
+          "required": [
+            "doubleCount",
+            "completedDoubleCount",
+            "timedOutDoubleCount",
+            "doubleIntervalCount"
+          ]
+        },
+        {
+          "properties": {
+            "doubleCount": {
+              "const": 5
+            },
+            "completedDoubleCount": {
+              "const": 5
+            },
+            "timedOutDoubleCount": {
+              "const": 0
+            },
+            "doubleIntervalCount": {
+              "const": 5
+            }
+          },
+          "required": [
+            "doubleCount",
+            "completedDoubleCount",
+            "timedOutDoubleCount",
+            "doubleIntervalCount"
+          ]
+        }
+      ]
+    },
+    {
+      "if": {
+        "properties": {
+          "reactionTimeCount": {
+            "const": 0
+          }
+        },
+        "required": [
+          "reactionTimeCount"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reactionTimeTotalMs": {
+            "const": 0
+          },
+          "reactionTimeMinMs": {
+            "type": "null"
+          },
+          "reactionTimeMaxMs": {
+            "type": "null"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "reactionTimeCount": {
+            "minimum": 1
+          },
+          "reactionTimeMinMs": {
+            "type": "integer"
+          },
+          "reactionTimeMaxMs": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "H": {
+            "minimum": 1
+          }
+        },
+        "required": [
+          "H"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reactionTimeCount": {
+            "minimum": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "timingProfile": {
+            "const": "A"
+          }
+        },
+        "required": [
+          "timingProfile"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reactionTimeTotalMs": {
+            "maximum": 57980
+          },
+          "reactionTimeMinMs": {
+            "maximum": 2899
+          },
+          "reactionTimeMaxMs": {
+            "maximum": 2899
+          },
+          "doubleIntervalTotalMs": {
+            "maximum": 5995
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "timingProfile": {
+            "const": "C"
+          }
+        },
+        "required": [
+          "timingProfile"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reactionTimeTotalMs": {
+            "maximum": 51980
+          },
+          "reactionTimeMinMs": {
+            "maximum": 2599
+          },
+          "reactionTimeMaxMs": {
+            "maximum": 2599
+          },
+          "doubleIntervalTotalMs": {
+            "maximum": 5495
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "timingProfile": {
+            "const": "H"
+          }
+        },
+        "required": [
+          "timingProfile"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reactionTimeTotalMs": {
+            "maximum": 45980
+          },
+          "reactionTimeMinMs": {
+            "maximum": 2299
+          },
+          "reactionTimeMaxMs": {
+            "maximum": 2299
+          },
+          "doubleIntervalTotalMs": {
+            "maximum": 4995
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "H": {
+            "const": 1
+          }
+        },
+        "required": [
+          "H"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reactionTimeCount": {
+            "minimum": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "H": {
+            "const": 2
+          }
+        },
+        "required": [
+          "H"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reactionTimeCount": {
+            "minimum": 2
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "H": {
+            "const": 3
+          }
+        },
+        "required": [
+          "H"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reactionTimeCount": {
+            "minimum": 3
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "H": {
+            "const": 4
+          }
+        },
+        "required": [
+          "H"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reactionTimeCount": {
+            "minimum": 4
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "H": {
+            "const": 5
+          }
+        },
+        "required": [
+          "H"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reactionTimeCount": {
+            "minimum": 5
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "H": {
+            "const": 6
+          }
+        },
+        "required": [
+          "H"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reactionTimeCount": {
+            "minimum": 6
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "H": {
+            "const": 7
+          }
+        },
+        "required": [
+          "H"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reactionTimeCount": {
+            "minimum": 7
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "H": {
+            "const": 8
+          }
+        },
+        "required": [
+          "H"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reactionTimeCount": {
+            "minimum": 8
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "H": {
+            "const": 9
+          }
+        },
+        "required": [
+          "H"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reactionTimeCount": {
+            "minimum": 9
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "H": {
+            "const": 10
+          }
+        },
+        "required": [
+          "H"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reactionTimeCount": {
+            "minimum": 10
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "H": {
+            "const": 11
+          }
+        },
+        "required": [
+          "H"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reactionTimeCount": {
+            "minimum": 11
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "H": {
+            "const": 12
+          }
+        },
+        "required": [
+          "H"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reactionTimeCount": {
+            "minimum": 12
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "H": {
+            "const": 13
+          }
+        },
+        "required": [
+          "H"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reactionTimeCount": {
+            "minimum": 13
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "H": {
+            "const": 14
+          }
+        },
+        "required": [
+          "H"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reactionTimeCount": {
+            "minimum": 14
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "H": {
+            "const": 15
+          }
+        },
+        "required": [
+          "H"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reactionTimeCount": {
+            "minimum": 15
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "H": {
+            "const": 16
+          }
+        },
+        "required": [
+          "H"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reactionTimeCount": {
+            "minimum": 16
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "H": {
+            "const": 17
+          }
+        },
+        "required": [
+          "H"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reactionTimeCount": {
+            "minimum": 17
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "H": {
+            "const": 18
+          }
+        },
+        "required": [
+          "H"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reactionTimeCount": {
+            "minimum": 18
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "H": {
+            "const": 19
+          }
+        },
+        "required": [
+          "H"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reactionTimeCount": {
+            "minimum": 19
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "H": {
+            "const": 20
+          }
+        },
+        "required": [
+          "H"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reactionTimeCount": {
+            "minimum": 20
           }
         }
       }

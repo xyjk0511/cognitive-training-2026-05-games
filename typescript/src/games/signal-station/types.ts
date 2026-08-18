@@ -65,12 +65,18 @@ export interface LevelConfig {
   readonly maxWaveObjects: number;
 }
 
+export interface VerticalSliceCoverageBlock {
+  readonly reason: "LEVEL_NOT_IMPLEMENTED";
+  readonly blockedLevel: number;
+  readonly afterBatchOrdinal: number;
+}
+
 export interface SignalStationRuntimeConfig {
   readonly schemaVersion: "A620-SS-CONFIG-1.2.1";
   readonly requirementVersion: "1.2.1";
-  readonly generatorVersion: "signal-station-gen-1.2.1";
+  readonly generatorVersion: "signal-station-gen-1.2.1-r2";
   readonly scoringRuleVersion: "signal-station-score-1.2.1";
-  readonly contentVersion: "signal-station-six-slice-1.2.1";
+  readonly contentVersion: "signal-station-six-slice-1.2.1-r2";
   readonly sourceWorkbookSha256: string;
   readonly requirementDocumentSha256: string;
   readonly publicRulesDocumentSha256: string;

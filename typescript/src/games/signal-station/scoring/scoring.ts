@@ -11,7 +11,9 @@ export function roundHalfUpRatio(numerator: number, denominator: number): number
   if (!Number.isSafeInteger(denominator) || denominator <= 0) throw new Error("denominator must be a positive safe integer");
   const quotient = Math.floor(numerator / denominator);
   const remainder = numerator % denominator;
-  return quotient + (remainder * 2 >= denominator ? 1 : 0);
+  // Comparing against ceil(denominator / 2) is equivalent to 2r >= d but
+  // does not multiply a potentially near-MAX_SAFE_INTEGER remainder.
+  return quotient + (remainder >= Math.ceil(denominator / 2) ? 1 : 0);
 }
 
 export function decideResultZone(template: WaveTemplateId, H: number, T: number, F: number, D: number): ResultZone {
@@ -21,7 +23,9 @@ export function decideResultZone(template: WaveTemplateId, H: number, T: number,
   const expected: Readonly<Record<WaveTemplateId, readonly [number, number]>> = {
     P10_D0: [10, 0], P15_D5: [15, 5], P20_D5: [20, 5], P20_D10: [20, 10],
   };
-  if (T !== expected[template][0] || D !== expected[template][1]) throw new Error(`${template} requires T/D=${expected[template].join("/")}`);
+  const expectedCounts = expected[template];
+  if (expectedCounts === undefined) throw new Error(`unsupported wave template ${String(template)}`);
+  if (T !== expectedCounts[0] || D !== expectedCounts[1]) throw new Error(`${template} requires T/D=${expectedCounts.join("/")}`);
 
   switch (template) {
     case "P10_D0":
@@ -55,6 +59,8 @@ export function scoreBatch(template: WaveTemplateId, H: number, T: number, F: nu
 
 export function decideLevelTransition(levelBefore: number, resultZone: ResultZone, consecutiveFailCountBefore: 0 | 1): LevelDecision {
   if (!Number.isSafeInteger(levelBefore) || levelBefore < 1 || levelBefore > 96) throw new Error("levelBefore must be in [1,96]");
+  if (resultZone !== "UPGRADE" && resultZone !== "HOLD" && resultZone !== "FAIL") throw new Error("unsupported resultZone");
+  if (consecutiveFailCountBefore !== 0 && consecutiveFailCountBefore !== 1) throw new Error("consecutiveFailCountBefore must be 0 or 1");
   let levelTransition: LevelTransition;
   let levelAfter = levelBefore;
   let consecutiveFailCountAfter: 0 | 1 = 0;

@@ -10,14 +10,62 @@ import {
   SIGNAL_STATION_REQUIREMENT_VERSION,
   SIGNAL_STATION_SCORING_RULE_VERSION,
 } from "../constants.js";
-import { getVerticalSliceLevelConfig } from "../config/vertical-slices.js";
-import type { GeneratedBatchPlan, TouchResult } from "../types.js";
+import {
+  getVerticalSliceLevelConfig, isVerticalSliceLevelImplemented,
+} from "../config/vertical-slices.js";
+import type {
+  GeneratedBatchPlan, TouchResult, VerticalSliceCoverageBlock,
+} from "../types.js";
 import { SignalStationBatchRuntime, type ClosedBatchResult } from "./batch-runtime.js";
 
 export interface SignalStationSessionOptions {
   readonly sessionSeed: number;
   readonly sessionStartLevel: number;
   readonly runtimeConfigHash: string;
+}
+
+function requireActiveMs(value: number, name: string): void {
+  if (!Number.isSafeInteger(value) || value < 0 || value > SESSION_DURATION_MS) {
+    throw new Error(`${name} must be a safe integer in [0,300000]`);
+  }
+}
+
+function checkedAdd(left: number, right: number, name: string): number {
+  const result = left + right;
+  if (!Number.isSafeInteger(result) || result < 0) throw new Error(`${name} exceeded the safe-integer range`);
+  return result;
+}
+
+function ignoredOutside(instanceId: string | null): TouchResult {
+  return Object.freeze({
+    disposition: "IGNORED_OUTSIDE_WINDOW",
+    instanceId,
+    stateAfter: null,
+    hitDelta: 0,
+    falseTouchDelta: 0,
+  });
+}
+
+function immutableEligibleBatch(batch: EligibleBatch): EligibleBatch {
+  return Object.freeze({
+    ...batch,
+    gameBatchMetrics: Object.freeze({...batch.gameBatchMetrics}),
+  });
+}
+
+function immutableIncompleteAudit(audit: IncompleteBatchAudit): IncompleteBatchAudit {
+  return Object.freeze({
+    ...audit,
+    partialMetrics: Object.freeze({...audit.partialMetrics}),
+  });
+}
+
+function immutableEligibleBatchArray(batches: readonly EligibleBatch[]): EligibleBatch[] {
+  return Object.freeze(batches.map(immutableEligibleBatch)) as unknown as EligibleBatch[];
+}
+
+function immutableIncompleteAuditArray(audits: readonly IncompleteBatchAudit[]): IncompleteBatchAudit[] {
+  return Object.freeze(audits.map(immutableIncompleteAudit)) as unknown as IncompleteBatchAudit[];
 }
 
 export class SignalStationSession {
@@ -29,6 +77,7 @@ export class SignalStationSession {
   private currentBatchValue: SignalStationBatchRuntime | null = null;
   private readonly eligible: EligibleBatch[] = [];
   private readonly closedResults: ClosedBatchResult[] = [];
+  private readonly processedEventIds = new Set<string>();
   private incomplete: IncompleteBatchAudit[] = [];
   private latestActiveMs = 0;
   private highestPresentedValue: number;
@@ -38,9 +87,12 @@ export class SignalStationSession {
   private totalPausedUptimeValue = 0;
   private generatedWaveCountValue = 0;
   private drainedClosedCount = 0;
+  private coverageBlockValue: VerticalSliceCoverageBlock | null = null;
 
   constructor(options: SignalStationSessionOptions) {
-    if (!Number.isSafeInteger(options.sessionSeed) || options.sessionSeed < 0) throw new Error("sessionSeed must be a non-negative safe integer");
+    if (!Number.isSafeInteger(options.sessionSeed) || options.sessionSeed < 0) {
+      throw new Error("sessionSeed must be a non-negative safe integer");
+    }
     getVerticalSliceLevelConfig(options.sessionStartLevel);
     if (!/^[0-9a-f]{64}$/.test(options.runtimeConfigHash)) throw new Error("runtimeConfigHash must be lowercase SHA-256");
     this.sessionSeed = options.sessionSeed;
@@ -55,38 +107,84 @@ export class SignalStationSession {
   get eligibleBatchCount(): number { return this.eligible.length; }
   get isFinalized(): boolean { return this.finalized; }
   get currentActiveMs(): number { return this.latestActiveMs; }
+  get coverageBlock(): VerticalSliceCoverageBlock | null { return this.coverageBlockValue; }
 
   startBatch(startedAtActiveMs: number): GeneratedBatchPlan {
     if (this.finalized || this.terminated) throw new Error("session is no longer accepting batches");
+    if (this.coverageBlockValue !== null) {
+      throw new Error(`vertical slice is blocked at unimplemented level ${this.coverageBlockValue.blockedLevel}`);
+    }
     if (this.currentBatchValue !== null) throw new Error("a batch is already active");
     if (this.eligible.length >= PLANNED_BATCH_COUNT) throw new Error("planned batch count already reached");
+    requireActiveMs(startedAtActiveMs, "startedAtActiveMs");
     const previousClose = this.eligible[this.eligible.length - 1]?.closedAtActiveMs ?? 0;
-    if (!Number.isSafeInteger(startedAtActiveMs) || startedAtActiveMs < previousClose || startedAtActiveMs >= SESSION_DURATION_MS) {
-      throw new Error("invalid batch start active time");
+    if (startedAtActiveMs < previousClose || startedAtActiveMs < this.latestActiveMs || startedAtActiveMs >= SESSION_DURATION_MS) {
+      throw new Error("batch start cannot precede the prior close/current active time or reach the deadline");
     }
     const ordinal = this.eligible.length + 1;
     const config = getVerticalSliceLevelConfig(this.currentLevelValue);
     this.currentBatchValue = new SignalStationBatchRuntime(config, this.sessionSeed, ordinal, startedAtActiveMs);
-    this.latestActiveMs = Math.max(this.latestActiveMs, startedAtActiveMs);
+    this.latestActiveMs = startedAtActiveMs;
     this.highestPresentedValue = Math.max(this.highestPresentedValue, this.currentLevelValue);
-    this.generatedWaveCountValue += 8;
+    this.generatedWaveCountValue = checkedAdd(this.generatedWaveCountValue, 8, "generatedWaveCount");
     return this.currentBatchValue.plan;
   }
 
-  touch(instanceId: string | null, activeMs: number, eventId: string): TouchResult {
-    if (this.finalized || this.terminated || activeMs >= SESSION_DURATION_MS) {
-      return Object.freeze({disposition: "IGNORED_OUTSIDE_WINDOW", instanceId, stateAfter: null, hitDelta: 0, falseTouchDelta: 0});
+  markVerticalSliceCoverageBlocked(): VerticalSliceCoverageBlock {
+    if (this.finalized || this.terminated) throw new Error("cannot mark coverage after session closure");
+    if (this.currentBatchValue !== null) throw new Error("coverage can be blocked only between batches");
+    if (isVerticalSliceLevelImplemented(this.currentLevelValue)) {
+      throw new Error(`level ${this.currentLevelValue} is implemented and must not be marked blocked`);
     }
+    const last = this.eligible[this.eligible.length - 1];
+    if (last === undefined || last.levelAfter !== this.currentLevelValue) {
+      throw new Error("coverage block must follow the batch transition that selected the unimplemented level");
+    }
+    if (this.coverageBlockValue !== null) {
+      if (this.coverageBlockValue.blockedLevel !== this.currentLevelValue
+        || this.coverageBlockValue.afterBatchOrdinal !== last.batchOrdinal) {
+        throw new Error("conflicting vertical-slice coverage block");
+      }
+      return this.coverageBlockValue;
+    }
+    this.coverageBlockValue = Object.freeze({
+      reason: "LEVEL_NOT_IMPLEMENTED",
+      blockedLevel: this.currentLevelValue,
+      afterBatchOrdinal: last.batchOrdinal,
+    });
+    return this.coverageBlockValue;
+  }
+
+  touch(instanceId: string | null, activeMs: number, eventId: string): TouchResult {
+    requireActiveMs(activeMs, "activeMs");
+    if (typeof eventId !== "string" || eventId.length === 0) throw new Error("eventId must not be empty");
+    if (this.processedEventIds.has(eventId)) {
+      return Object.freeze({
+        disposition: "IGNORED_DUPLICATE_EVENT",
+        instanceId,
+        stateAfter: null,
+        hitDelta: 0,
+        falseTouchDelta: 0,
+      });
+    }
+    if (activeMs < this.latestActiveMs) throw new Error("session active time cannot move backwards");
+    if (this.finalized || this.terminated || activeMs >= SESSION_DURATION_MS) return ignoredOutside(instanceId);
+    this.processedEventIds.add(eventId);
+    this.latestActiveMs = activeMs;
     const batch = this.currentBatchValue;
-    if (batch === null) return Object.freeze({disposition: "IGNORED_BLANK", instanceId: null, stateAfter: null, hitDelta: 0, falseTouchDelta: 0});
-    const result = batch.touch(instanceId, activeMs, eventId);
-    this.latestActiveMs = Math.max(this.latestActiveMs, activeMs);
-    return result;
+    if (batch === null) {
+      return Object.freeze({disposition: "IGNORED_BLANK", instanceId: null, stateAfter: null, hitDelta: 0, falseTouchDelta: 0});
+    }
+    return batch.touch(instanceId, activeMs, eventId);
   }
 
   advanceTo(activeMs: number): EligibleBatch | null {
-    if (!Number.isSafeInteger(activeMs) || activeMs < this.latestActiveMs || activeMs > SESSION_DURATION_MS) {
-      throw new Error("session active time cannot move backwards or exceed 300000ms");
+    requireActiveMs(activeMs, "activeMs");
+    if (activeMs < this.latestActiveMs) throw new Error("session active time cannot move backwards");
+    if (this.terminated) throw new Error("terminated session cannot advance");
+    if (this.finalized) {
+      if (activeMs !== this.latestActiveMs) throw new Error("finalized session cannot advance");
+      return null;
     }
     this.latestActiveMs = activeMs;
     const batch = this.currentBatchValue;
@@ -103,9 +201,10 @@ export class SignalStationSession {
   }
 
   recordPause(pausedUptimeMs: number): void {
+    if (this.finalized || this.terminated) throw new Error("closed session cannot record a pause");
     if (!Number.isSafeInteger(pausedUptimeMs) || pausedUptimeMs < 0) throw new Error("pausedUptimeMs must be non-negative");
-    this.pauseCountValue += 1;
-    this.totalPausedUptimeValue += pausedUptimeMs;
+    this.pauseCountValue = checkedAdd(this.pauseCountValue, 1, "pauseCount");
+    this.totalPausedUptimeValue = checkedAdd(this.totalPausedUptimeValue, pausedUptimeMs, "totalPausedUptimeMs");
   }
 
   deadline(): void {
@@ -120,14 +219,15 @@ export class SignalStationSession {
   }
 
   terminate(): void {
-    if (this.finalized) throw new Error("finalized session cannot be terminated");
+    if (this.terminated) throw new Error("session is already terminated");
     this.terminated = true;
     this.currentBatchValue = null;
     this.incomplete = [];
   }
 
   drainClosedBatchDrafts(): EligibleBatch[] {
-    const pending = this.eligible.slice(this.drainedClosedCount).map(batch => ({...batch}));
+    if (this.terminated) throw new Error("terminated session cannot emit BATCH_CLOSED drafts");
+    const pending = immutableEligibleBatchArray(this.eligible.slice(this.drainedClosedCount));
     this.drainedClosedCount = this.eligible.length;
     return pending;
   }
@@ -144,7 +244,7 @@ export class SignalStationSession {
     const batchMetrics = this.eligible.map(batch => batch.gameBatchMetrics);
     const reactionMins = batchMetrics.map(metrics => metrics["reactionTimeMinMs"]).filter((value): value is number => typeof value === "number");
     const reactionMaxes = batchMetrics.map(metrics => metrics["reactionTimeMaxMs"]).filter((value): value is number => typeof value === "number");
-    const gameMetrics: Record<string, unknown> = {
+    const gameMetrics: Record<string, unknown> = Object.freeze({
       totalH: batchMetrics.reduce((sum, metrics) => sum + Number(metrics["H"]), 0),
       totalT: batchMetrics.reduce((sum, metrics) => sum + Number(metrics["T"]), 0),
       totalF: batchMetrics.reduce((sum, metrics) => sum + Number(metrics["F"]), 0),
@@ -161,14 +261,20 @@ export class SignalStationSession {
       generatedWaveCount: this.generatedWaveCountValue,
       eligibleBatchCount: this.eligible.length,
       incompleteBatchCount: this.incomplete.length,
+      verticalSliceCoverageBlocked: this.coverageBlockValue !== null,
+      verticalSliceCoverageBlockReason: this.coverageBlockValue?.reason ?? null,
+      verticalSliceBlockedLevel: this.coverageBlockValue?.blockedLevel ?? null,
+      verticalSliceBlockedAfterBatchOrdinal: this.coverageBlockValue?.afterBatchOrdinal ?? null,
       generatorVersion: SIGNAL_STATION_GENERATOR_VERSION,
       configVersion: SIGNAL_STATION_CONFIG_VERSION,
       scoringRuleVersion: SIGNAL_STATION_SCORING_RULE_VERSION,
       requirementVersion: SIGNAL_STATION_REQUIREMENT_VERSION,
       contentVersion: SIGNAL_STATION_CONTENT_VERSION,
       fullLevelSetStatus: "HOLD",
-      implementedLevels: [...IMPLEMENTED_VERTICAL_SLICE_LEVELS],
-    };
+      implementedLevels: Object.freeze([...IMPLEMENTED_VERTICAL_SLICE_LEVELS]),
+    });
+    const eligibleBatches = immutableEligibleBatchArray(this.eligible);
+    const incompleteBatchAudit = immutableIncompleteAuditArray(this.incomplete);
     return Object.freeze({
       gameCode: SIGNAL_STATION_GAME_CODE,
       gamePayloadVersion: "A620-GP-1.1",
@@ -176,8 +282,8 @@ export class SignalStationSession {
       designMaxLevel: 96,
       plannedBatchCount: PLANNED_BATCH_COUNT,
       eligibleBatchCount: this.eligible.length,
-      eligibleBatches: this.eligible.map(batch => ({...batch})),
-      incompleteBatchAudit: this.incomplete.map(audit => ({...audit})),
+      eligibleBatches,
+      incompleteBatchAudit,
       sessionStartLevel: this.sessionStartLevel,
       sessionEndLevel,
       sessionHighestPresentedLevel: this.highestPresentedValue,

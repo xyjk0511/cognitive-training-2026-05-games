@@ -1,17 +1,17 @@
 {
   "manifestVersion": "A620-TPM-1.1",
   "gameCode": "SIGNAL_STATION",
-  "packageVersion": "1.2.1",
+  "packageVersion": "1.2.1-r2",
   "runtimeContractVersion": "A620-TRC-1.1",
   "coreProtocolVersion": "1.2.1",
   "resultSchemaVersion": "A620-TRR-1.1",
-  "generatorVersion": "signal-station-gen-1.2.1",
+  "generatorVersion": "signal-station-gen-1.2.1-r2",
   "entryBundle": "signal-station",
   "entryScene": "SignalStationEntry",
   "minApkVersionInclusive": "0.1.0",
   "maxApkVersionExclusive": "0.2.0",
   "cocosVersion": "3.8.0",
-  "releaseSequence": 2,
+  "releaseSequence": 3,
   "signatureProfile": "A620-ED25519-1",
   "signingKeyId": "TEST-RFC8032-1"
 }

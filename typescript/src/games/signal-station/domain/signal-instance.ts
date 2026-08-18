@@ -20,6 +20,16 @@ function ignored(disposition: TouchDisposition, instanceId: string, stateAfter: 
   return Object.freeze({disposition, instanceId, stateAfter, hitDelta: 0, falseTouchDelta: 0});
 }
 
+function requireSafeInteger(value: number, name: string, minimum = 0): void {
+  if (!Number.isSafeInteger(value) || value < minimum) throw new Error(`${name} must be a safe integer >= ${minimum}`);
+}
+
+function checkedAdd(left: number, right: number, name: string): number {
+  const result = left + right;
+  if (!Number.isSafeInteger(result)) throw new Error(`${name} exceeded the safe-integer range`);
+  return result;
+}
+
 export class SignalInstanceRuntime {
   readonly definition: GeneratedSignalInstance;
   readonly enterStartActiveMs: number;
@@ -42,11 +52,19 @@ export class SignalInstanceRuntime {
     activeMs: number,
     doubleWindowMs: number,
   ) {
+    if (!Number.isSafeInteger(batchStartActiveMs)) throw new Error("batchStartActiveMs must be a safe integer");
+    requireSafeInteger(definition.enterStartInBatchMs, "enterStartInBatchMs");
+    requireSafeInteger(definition.naturalExitEndInBatchMs, "naturalExitEndInBatchMs");
+    requireSafeInteger(enteringMs, "enteringMs");
+    requireSafeInteger(activeMs, "activeMs", 1);
+    requireSafeInteger(doubleWindowMs, "doubleWindowMs", 1);
+    if (definition.naturalExitEndInBatchMs <= definition.enterStartInBatchMs) throw new Error("instance lifecycle must be positive");
     this.definition = definition;
-    this.enterStartActiveMs = batchStartActiveMs + definition.enterStartInBatchMs;
-    this.naturalExitEndActiveMs = batchStartActiveMs + definition.naturalExitEndInBatchMs;
-    this.enteringEndActiveMs = this.enterStartActiveMs + enteringMs;
-    this.activeEndActiveMs = this.enteringEndActiveMs + activeMs;
+    this.enterStartActiveMs = checkedAdd(batchStartActiveMs, definition.enterStartInBatchMs, "enterStartActiveMs");
+    this.naturalExitEndActiveMs = checkedAdd(batchStartActiveMs, definition.naturalExitEndInBatchMs, "naturalExitEndActiveMs");
+    this.enteringEndActiveMs = checkedAdd(this.enterStartActiveMs, enteringMs, "enteringEndActiveMs");
+    this.activeEndActiveMs = checkedAdd(this.enteringEndActiveMs, activeMs, "activeEndActiveMs");
+    if (this.activeEndActiveMs > this.naturalExitEndActiveMs) throw new Error("entering+active exceeds the natural lifecycle");
     this.doubleWindowMs = doubleWindowMs;
     this.latestActiveMs = batchStartActiveMs;
   }
@@ -85,7 +103,7 @@ export class SignalInstanceRuntime {
   }
 
   touch(activeMs: number, eventId: string): TouchResult {
-    if (eventId.length === 0) throw new Error("eventId must not be empty");
+    if (typeof eventId !== "string" || eventId.length === 0) throw new Error("eventId must not be empty");
     if (this.processedEventIds.has(eventId)) {
       return ignored("IGNORED_DUPLICATE_EVENT", this.definition.instanceId, this.stateAt(Math.max(activeMs, this.latestActiveMs)));
     }
@@ -191,9 +209,10 @@ export class SignalInstanceRuntime {
 export function summarizeIntegerDurations(values: readonly number[]): ReactionSummary {
   if (values.length === 0) return Object.freeze({count: 0, totalMs: 0, minMs: null, maxMs: null});
   for (const value of values) if (!Number.isSafeInteger(value) || value < 0) throw new Error("duration summary contains an invalid value");
+  const totalMs = values.reduce((sum, value) => checkedAdd(sum, value, "duration total"), 0);
   return Object.freeze({
     count: values.length,
-    totalMs: values.reduce((sum, value) => sum + value, 0),
+    totalMs,
     minMs: Math.min(...values),
     maxMs: Math.max(...values),
   });

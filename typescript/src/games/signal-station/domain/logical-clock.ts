@@ -6,6 +6,12 @@ function requireUptime(value: number, name: string): void {
   if (!Number.isSafeInteger(value) || value < 0) throw new Error(`${name} must be a non-negative safe integer`);
 }
 
+function checkedAdd(left: number, right: number, name: string): number {
+  const result = left + right;
+  if (!Number.isSafeInteger(result) || result < 0) throw new Error(`${name} exceeded the safe-integer range`);
+  return result;
+}
+
 /**
  * Pure externally-driven active-time clock. It never reads a system clock and
  * can therefore be advanced instantly by tests or driven by Android uptime.
@@ -41,10 +47,14 @@ export class DeterministicActiveClock {
 
   advanceTo(sourceUptimeMs: number): number {
     requireUptime(sourceUptimeMs, "sourceUptimeMs");
-    if (sourceUptimeMs < this.sourceUptimeValue) throw new Error("source uptime cannot move backwards");
+    if (sourceUptimeMs < this.sourceUptimeValue) {
+      const isEffectiveDeadlineReplay = this.stateValue === "DEADLINE_REACHED"
+        && this.cutoffUptimeValue === sourceUptimeMs;
+      if (!isEffectiveDeadlineReplay) throw new Error("source uptime cannot move backwards");
+    }
     if (this.stateValue === "IDLE") throw new Error("clock has not started");
     if (this.stateValue === "TERMINATED" || this.stateValue === "DEADLINE_REACHED") {
-      this.sourceUptimeValue = sourceUptimeMs;
+      this.sourceUptimeValue = Math.max(this.sourceUptimeValue, sourceUptimeMs);
       return this.activeElapsedValue;
     }
     if (this.stateValue === "PAUSED") {
@@ -87,7 +97,7 @@ export class DeterministicActiveClock {
     this.sourceUptimeValue = resumeInputEnabledUptimeMs;
     this.cutoffUptimeValue = cutoffUptimeMs;
     this.pauseStartedUptimeValue = null;
-    this.totalPausedUptimeValue += pausedDuration;
+    this.totalPausedUptimeValue = checkedAdd(this.totalPausedUptimeValue, pausedDuration, "totalPausedUptimeMs");
     this.stateValue = "RUNNING";
     return pausedDuration;
   }
@@ -102,6 +112,8 @@ export class DeterministicActiveClock {
   }
 
   canAcceptInputAt(sourceUptimeMs: number): boolean {
+    requireUptime(sourceUptimeMs, "sourceUptimeMs");
+    if (sourceUptimeMs < this.sourceUptimeValue) throw new Error("source uptime cannot move backwards");
     if (this.stateValue !== "RUNNING") return false;
     const cutoff = this.cutoffUptimeValue;
     if (cutoff === null || sourceUptimeMs >= cutoff) {
@@ -113,7 +125,8 @@ export class DeterministicActiveClock {
   }
 
   terminate(): void {
-    if (this.stateValue === "IDLE") throw new Error("cannot terminate an unstarted clock");
+    if (this.stateValue === "TERMINATED") throw new Error("clock is already terminated");
     this.stateValue = "TERMINATED";
+    this.pauseStartedUptimeValue = null;
   }
 }
