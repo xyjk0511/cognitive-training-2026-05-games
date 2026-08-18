@@ -1,8 +1,1186 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:a620:signal-station:config:1.2.1",
-  "title": "SIGNAL_STATION Gate0 Empty Plugin Config",
-  "type": "object",
-  "maxProperties": 0,
-  "additionalProperties": false
+  "title": "SIGNAL_STATION Runtime Config 1.2.1",
+  "description": "The first branch preserves baseline.8 empty-vector validation only; the second branch is the formal six-slice runtime contract.",
+  "oneOf": [
+    {
+      "type": "object",
+      "maxProperties": 0,
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "schemaVersion",
+        "requirementVersion",
+        "generatorVersion",
+        "scoringRuleVersion",
+        "contentVersion",
+        "sourceWorkbookSha256",
+        "requirementDocumentSha256",
+        "publicRulesDocumentSha256",
+        "durationMs",
+        "plannedBatchCount",
+        "batchDurationMs",
+        "cueDurationMs",
+        "operationDurationMs",
+        "feedbackDurationMs",
+        "transitionDurationMs",
+        "waveStartOffsetsMs",
+        "timingProfiles",
+        "levelConfigs",
+        "fullLevelSetStatus"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": "A620-SS-CONFIG-1.2.1"
+        },
+        "requirementVersion": {
+          "const": "1.2.1"
+        },
+        "generatorVersion": {
+          "const": "signal-station-gen-1.2.1"
+        },
+        "scoringRuleVersion": {
+          "const": "signal-station-score-1.2.1"
+        },
+        "contentVersion": {
+          "const": "signal-station-six-slice-1.2.1"
+        },
+        "sourceWorkbookSha256": {
+          "const": "b16fbcef60fa63214338af8f436e42e0080fe254fe89a9fa42a5256abde81620"
+        },
+        "requirementDocumentSha256": {
+          "const": "c9823a24ee41d536a1401a0c233d7ed8be81e4fb7076716fafed09df3f6ac898"
+        },
+        "publicRulesDocumentSha256": {
+          "const": "c1a4f3f2e309cdf92fc15d5f51e6e99bc90025c3ddc4ed8ea99077398a987794"
+        },
+        "durationMs": {
+          "const": 300000
+        },
+        "plannedBatchCount": {
+          "const": 8
+        },
+        "batchDurationMs": {
+          "const": 37500
+        },
+        "cueDurationMs": {
+          "const": 3000
+        },
+        "operationDurationMs": {
+          "const": 30000
+        },
+        "feedbackDurationMs": {
+          "const": 2000
+        },
+        "transitionDurationMs": {
+          "const": 2500
+        },
+        "waveStartOffsetsMs": {
+          "const": [
+            500,
+            4000,
+            7500,
+            11000,
+            14500,
+            18000,
+            21500,
+            25000
+          ]
+        },
+        "timingProfiles": {
+          "type": "object",
+          "required": [
+            "A",
+            "C",
+            "H"
+          ],
+          "properties": {
+            "A": {
+              "allOf": [
+                {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "enteringMs",
+                    "activeMs",
+                    "exitingMs",
+                    "lifecycleMs",
+                    "gapMs",
+                    "tailBufferMs",
+                    "doubleWindowMs"
+                  ],
+                  "properties": {
+                    "id": {
+                      "enum": [
+                        "A",
+                        "C",
+                        "H"
+                      ]
+                    },
+                    "enteringMs": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 10000
+                    },
+                    "activeMs": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 10000
+                    },
+                    "exitingMs": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 10000
+                    },
+                    "lifecycleMs": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 30000
+                    },
+                    "gapMs": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 30000
+                    },
+                    "tailBufferMs": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 30000
+                    },
+                    "doubleWindowMs": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 5000
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                {
+                  "const": {
+                    "id": "A",
+                    "enteringMs": 200,
+                    "activeMs": 2500,
+                    "exitingMs": 200,
+                    "lifecycleMs": 2900,
+                    "gapMs": 600,
+                    "tailBufferMs": 2100,
+                    "doubleWindowMs": 1200
+                  }
+                }
+              ]
+            },
+            "C": {
+              "allOf": [
+                {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "enteringMs",
+                    "activeMs",
+                    "exitingMs",
+                    "lifecycleMs",
+                    "gapMs",
+                    "tailBufferMs",
+                    "doubleWindowMs"
+                  ],
+                  "properties": {
+                    "id": {
+                      "enum": [
+                        "A",
+                        "C",
+                        "H"
+                      ]
+                    },
+                    "enteringMs": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 10000
+                    },
+                    "activeMs": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 10000
+                    },
+                    "exitingMs": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 10000
+                    },
+                    "lifecycleMs": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 30000
+                    },
+                    "gapMs": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 30000
+                    },
+                    "tailBufferMs": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 30000
+                    },
+                    "doubleWindowMs": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 5000
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                {
+                  "const": {
+                    "id": "C",
+                    "enteringMs": 180,
+                    "activeMs": 2240,
+                    "exitingMs": 180,
+                    "lifecycleMs": 2600,
+                    "gapMs": 900,
+                    "tailBufferMs": 2400,
+                    "doubleWindowMs": 1100
+                  }
+                }
+              ]
+            },
+            "H": {
+              "allOf": [
+                {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "enteringMs",
+                    "activeMs",
+                    "exitingMs",
+                    "lifecycleMs",
+                    "gapMs",
+                    "tailBufferMs",
+                    "doubleWindowMs"
+                  ],
+                  "properties": {
+                    "id": {
+                      "enum": [
+                        "A",
+                        "C",
+                        "H"
+                      ]
+                    },
+                    "enteringMs": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 10000
+                    },
+                    "activeMs": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 10000
+                    },
+                    "exitingMs": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 10000
+                    },
+                    "lifecycleMs": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 30000
+                    },
+                    "gapMs": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 30000
+                    },
+                    "tailBufferMs": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 30000
+                    },
+                    "doubleWindowMs": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 5000
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                {
+                  "const": {
+                    "id": "H",
+                    "enteringMs": 160,
+                    "activeMs": 1980,
+                    "exitingMs": 160,
+                    "lifecycleMs": 2300,
+                    "gapMs": 1200,
+                    "tailBufferMs": 2700,
+                    "doubleWindowMs": 1000
+                  }
+                }
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        "levelConfigs": {
+          "type": "object",
+          "required": [
+            "1",
+            "7",
+            "67",
+            "79",
+            "90",
+            "96"
+          ],
+          "properties": {
+            "1": {
+              "allOf": [
+                {
+                  "type": "object",
+                  "required": [
+                    "level",
+                    "stageId",
+                    "gridRows",
+                    "gridColumns",
+                    "timingProfile",
+                    "waveTemplate",
+                    "targetClassCount",
+                    "targetClassSplit",
+                    "similarityTier",
+                    "directionCount",
+                    "doubleCount",
+                    "doubleWaveOrdinals",
+                    "maxWaveObjects"
+                  ],
+                  "properties": {
+                    "level": {
+                      "enum": [
+                        1,
+                        7,
+                        67,
+                        79,
+                        90,
+                        96
+                      ]
+                    },
+                    "stageId": {
+                      "enum": [
+                        "S01",
+                        "S02",
+                        "S12",
+                        "S14",
+                        "S15",
+                        "S16"
+                      ]
+                    },
+                    "gridRows": {
+                      "enum": [
+                        2,
+                        3
+                      ]
+                    },
+                    "gridColumns": {
+                      "enum": [
+                        2,
+                        4
+                      ]
+                    },
+                    "timingProfile": {
+                      "enum": [
+                        "A",
+                        "H"
+                      ]
+                    },
+                    "waveTemplate": {
+                      "enum": [
+                        "P10_D0",
+                        "P15_D5",
+                        "P20_D10"
+                      ]
+                    },
+                    "targetClassCount": {
+                      "enum": [
+                        1,
+                        2
+                      ]
+                    },
+                    "targetClassSplit": {
+                      "type": "array",
+                      "minItems": 1,
+                      "maxItems": 2,
+                      "items": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 20
+                      }
+                    },
+                    "similarityTier": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 3
+                    },
+                    "directionCount": {
+                      "enum": [
+                        1,
+                        2,
+                        4
+                      ]
+                    },
+                    "doubleCount": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 5
+                    },
+                    "doubleWaveOrdinals": {
+                      "type": "array",
+                      "maxItems": 5,
+                      "uniqueItems": true,
+                      "items": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 8
+                      }
+                    },
+                    "maxWaveObjects": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 5
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                {
+                  "const": {
+                    "level": 1,
+                    "stageId": "S01",
+                    "gridRows": 2,
+                    "gridColumns": 2,
+                    "timingProfile": "A",
+                    "waveTemplate": "P10_D0",
+                    "targetClassCount": 1,
+                    "targetClassSplit": [
+                      10
+                    ],
+                    "similarityTier": 0,
+                    "directionCount": 1,
+                    "doubleCount": 0,
+                    "doubleWaveOrdinals": [],
+                    "maxWaveObjects": 2
+                  }
+                }
+              ]
+            },
+            "7": {
+              "allOf": [
+                {
+                  "type": "object",
+                  "required": [
+                    "level",
+                    "stageId",
+                    "gridRows",
+                    "gridColumns",
+                    "timingProfile",
+                    "waveTemplate",
+                    "targetClassCount",
+                    "targetClassSplit",
+                    "similarityTier",
+                    "directionCount",
+                    "doubleCount",
+                    "doubleWaveOrdinals",
+                    "maxWaveObjects"
+                  ],
+                  "properties": {
+                    "level": {
+                      "enum": [
+                        1,
+                        7,
+                        67,
+                        79,
+                        90,
+                        96
+                      ]
+                    },
+                    "stageId": {
+                      "enum": [
+                        "S01",
+                        "S02",
+                        "S12",
+                        "S14",
+                        "S15",
+                        "S16"
+                      ]
+                    },
+                    "gridRows": {
+                      "enum": [
+                        2,
+                        3
+                      ]
+                    },
+                    "gridColumns": {
+                      "enum": [
+                        2,
+                        4
+                      ]
+                    },
+                    "timingProfile": {
+                      "enum": [
+                        "A",
+                        "H"
+                      ]
+                    },
+                    "waveTemplate": {
+                      "enum": [
+                        "P10_D0",
+                        "P15_D5",
+                        "P20_D10"
+                      ]
+                    },
+                    "targetClassCount": {
+                      "enum": [
+                        1,
+                        2
+                      ]
+                    },
+                    "targetClassSplit": {
+                      "type": "array",
+                      "minItems": 1,
+                      "maxItems": 2,
+                      "items": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 20
+                      }
+                    },
+                    "similarityTier": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 3
+                    },
+                    "directionCount": {
+                      "enum": [
+                        1,
+                        2,
+                        4
+                      ]
+                    },
+                    "doubleCount": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 5
+                    },
+                    "doubleWaveOrdinals": {
+                      "type": "array",
+                      "maxItems": 5,
+                      "uniqueItems": true,
+                      "items": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 8
+                      }
+                    },
+                    "maxWaveObjects": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 5
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                {
+                  "const": {
+                    "level": 7,
+                    "stageId": "S02",
+                    "gridRows": 2,
+                    "gridColumns": 2,
+                    "timingProfile": "A",
+                    "waveTemplate": "P15_D5",
+                    "targetClassCount": 1,
+                    "targetClassSplit": [
+                      15
+                    ],
+                    "similarityTier": 1,
+                    "directionCount": 1,
+                    "doubleCount": 0,
+                    "doubleWaveOrdinals": [],
+                    "maxWaveObjects": 3
+                  }
+                }
+              ]
+            },
+            "67": {
+              "allOf": [
+                {
+                  "type": "object",
+                  "required": [
+                    "level",
+                    "stageId",
+                    "gridRows",
+                    "gridColumns",
+                    "timingProfile",
+                    "waveTemplate",
+                    "targetClassCount",
+                    "targetClassSplit",
+                    "similarityTier",
+                    "directionCount",
+                    "doubleCount",
+                    "doubleWaveOrdinals",
+                    "maxWaveObjects"
+                  ],
+                  "properties": {
+                    "level": {
+                      "enum": [
+                        1,
+                        7,
+                        67,
+                        79,
+                        90,
+                        96
+                      ]
+                    },
+                    "stageId": {
+                      "enum": [
+                        "S01",
+                        "S02",
+                        "S12",
+                        "S14",
+                        "S15",
+                        "S16"
+                      ]
+                    },
+                    "gridRows": {
+                      "enum": [
+                        2,
+                        3
+                      ]
+                    },
+                    "gridColumns": {
+                      "enum": [
+                        2,
+                        4
+                      ]
+                    },
+                    "timingProfile": {
+                      "enum": [
+                        "A",
+                        "H"
+                      ]
+                    },
+                    "waveTemplate": {
+                      "enum": [
+                        "P10_D0",
+                        "P15_D5",
+                        "P20_D10"
+                      ]
+                    },
+                    "targetClassCount": {
+                      "enum": [
+                        1,
+                        2
+                      ]
+                    },
+                    "targetClassSplit": {
+                      "type": "array",
+                      "minItems": 1,
+                      "maxItems": 2,
+                      "items": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 20
+                      }
+                    },
+                    "similarityTier": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 3
+                    },
+                    "directionCount": {
+                      "enum": [
+                        1,
+                        2,
+                        4
+                      ]
+                    },
+                    "doubleCount": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 5
+                    },
+                    "doubleWaveOrdinals": {
+                      "type": "array",
+                      "maxItems": 5,
+                      "uniqueItems": true,
+                      "items": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 8
+                      }
+                    },
+                    "maxWaveObjects": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 5
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                {
+                  "const": {
+                    "level": 67,
+                    "stageId": "S12",
+                    "gridRows": 3,
+                    "gridColumns": 4,
+                    "timingProfile": "A",
+                    "waveTemplate": "P20_D10",
+                    "targetClassCount": 2,
+                    "targetClassSplit": [
+                      10,
+                      10
+                    ],
+                    "similarityTier": 1,
+                    "directionCount": 2,
+                    "doubleCount": 0,
+                    "doubleWaveOrdinals": [],
+                    "maxWaveObjects": 5
+                  }
+                }
+              ]
+            },
+            "79": {
+              "allOf": [
+                {
+                  "type": "object",
+                  "required": [
+                    "level",
+                    "stageId",
+                    "gridRows",
+                    "gridColumns",
+                    "timingProfile",
+                    "waveTemplate",
+                    "targetClassCount",
+                    "targetClassSplit",
+                    "similarityTier",
+                    "directionCount",
+                    "doubleCount",
+                    "doubleWaveOrdinals",
+                    "maxWaveObjects"
+                  ],
+                  "properties": {
+                    "level": {
+                      "enum": [
+                        1,
+                        7,
+                        67,
+                        79,
+                        90,
+                        96
+                      ]
+                    },
+                    "stageId": {
+                      "enum": [
+                        "S01",
+                        "S02",
+                        "S12",
+                        "S14",
+                        "S15",
+                        "S16"
+                      ]
+                    },
+                    "gridRows": {
+                      "enum": [
+                        2,
+                        3
+                      ]
+                    },
+                    "gridColumns": {
+                      "enum": [
+                        2,
+                        4
+                      ]
+                    },
+                    "timingProfile": {
+                      "enum": [
+                        "A",
+                        "H"
+                      ]
+                    },
+                    "waveTemplate": {
+                      "enum": [
+                        "P10_D0",
+                        "P15_D5",
+                        "P20_D10"
+                      ]
+                    },
+                    "targetClassCount": {
+                      "enum": [
+                        1,
+                        2
+                      ]
+                    },
+                    "targetClassSplit": {
+                      "type": "array",
+                      "minItems": 1,
+                      "maxItems": 2,
+                      "items": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 20
+                      }
+                    },
+                    "similarityTier": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 3
+                    },
+                    "directionCount": {
+                      "enum": [
+                        1,
+                        2,
+                        4
+                      ]
+                    },
+                    "doubleCount": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 5
+                    },
+                    "doubleWaveOrdinals": {
+                      "type": "array",
+                      "maxItems": 5,
+                      "uniqueItems": true,
+                      "items": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 8
+                      }
+                    },
+                    "maxWaveObjects": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 5
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                {
+                  "const": {
+                    "level": 79,
+                    "stageId": "S14",
+                    "gridRows": 3,
+                    "gridColumns": 4,
+                    "timingProfile": "A",
+                    "waveTemplate": "P20_D10",
+                    "targetClassCount": 1,
+                    "targetClassSplit": [
+                      20
+                    ],
+                    "similarityTier": 1,
+                    "directionCount": 2,
+                    "doubleCount": 2,
+                    "doubleWaveOrdinals": [
+                      3,
+                      7
+                    ],
+                    "maxWaveObjects": 5
+                  }
+                }
+              ]
+            },
+            "90": {
+              "allOf": [
+                {
+                  "type": "object",
+                  "required": [
+                    "level",
+                    "stageId",
+                    "gridRows",
+                    "gridColumns",
+                    "timingProfile",
+                    "waveTemplate",
+                    "targetClassCount",
+                    "targetClassSplit",
+                    "similarityTier",
+                    "directionCount",
+                    "doubleCount",
+                    "doubleWaveOrdinals",
+                    "maxWaveObjects"
+                  ],
+                  "properties": {
+                    "level": {
+                      "enum": [
+                        1,
+                        7,
+                        67,
+                        79,
+                        90,
+                        96
+                      ]
+                    },
+                    "stageId": {
+                      "enum": [
+                        "S01",
+                        "S02",
+                        "S12",
+                        "S14",
+                        "S15",
+                        "S16"
+                      ]
+                    },
+                    "gridRows": {
+                      "enum": [
+                        2,
+                        3
+                      ]
+                    },
+                    "gridColumns": {
+                      "enum": [
+                        2,
+                        4
+                      ]
+                    },
+                    "timingProfile": {
+                      "enum": [
+                        "A",
+                        "H"
+                      ]
+                    },
+                    "waveTemplate": {
+                      "enum": [
+                        "P10_D0",
+                        "P15_D5",
+                        "P20_D10"
+                      ]
+                    },
+                    "targetClassCount": {
+                      "enum": [
+                        1,
+                        2
+                      ]
+                    },
+                    "targetClassSplit": {
+                      "type": "array",
+                      "minItems": 1,
+                      "maxItems": 2,
+                      "items": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 20
+                      }
+                    },
+                    "similarityTier": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 3
+                    },
+                    "directionCount": {
+                      "enum": [
+                        1,
+                        2,
+                        4
+                      ]
+                    },
+                    "doubleCount": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 5
+                    },
+                    "doubleWaveOrdinals": {
+                      "type": "array",
+                      "maxItems": 5,
+                      "uniqueItems": true,
+                      "items": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 8
+                      }
+                    },
+                    "maxWaveObjects": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 5
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                {
+                  "const": {
+                    "level": 90,
+                    "stageId": "S15",
+                    "gridRows": 3,
+                    "gridColumns": 4,
+                    "timingProfile": "H",
+                    "waveTemplate": "P20_D10",
+                    "targetClassCount": 2,
+                    "targetClassSplit": [
+                      10,
+                      10
+                    ],
+                    "similarityTier": 2,
+                    "directionCount": 4,
+                    "doubleCount": 4,
+                    "doubleWaveOrdinals": [
+                      2,
+                      4,
+                      6,
+                      8
+                    ],
+                    "maxWaveObjects": 5
+                  }
+                }
+              ]
+            },
+            "96": {
+              "allOf": [
+                {
+                  "type": "object",
+                  "required": [
+                    "level",
+                    "stageId",
+                    "gridRows",
+                    "gridColumns",
+                    "timingProfile",
+                    "waveTemplate",
+                    "targetClassCount",
+                    "targetClassSplit",
+                    "similarityTier",
+                    "directionCount",
+                    "doubleCount",
+                    "doubleWaveOrdinals",
+                    "maxWaveObjects"
+                  ],
+                  "properties": {
+                    "level": {
+                      "enum": [
+                        1,
+                        7,
+                        67,
+                        79,
+                        90,
+                        96
+                      ]
+                    },
+                    "stageId": {
+                      "enum": [
+                        "S01",
+                        "S02",
+                        "S12",
+                        "S14",
+                        "S15",
+                        "S16"
+                      ]
+                    },
+                    "gridRows": {
+                      "enum": [
+                        2,
+                        3
+                      ]
+                    },
+                    "gridColumns": {
+                      "enum": [
+                        2,
+                        4
+                      ]
+                    },
+                    "timingProfile": {
+                      "enum": [
+                        "A",
+                        "H"
+                      ]
+                    },
+                    "waveTemplate": {
+                      "enum": [
+                        "P10_D0",
+                        "P15_D5",
+                        "P20_D10"
+                      ]
+                    },
+                    "targetClassCount": {
+                      "enum": [
+                        1,
+                        2
+                      ]
+                    },
+                    "targetClassSplit": {
+                      "type": "array",
+                      "minItems": 1,
+                      "maxItems": 2,
+                      "items": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 20
+                      }
+                    },
+                    "similarityTier": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 3
+                    },
+                    "directionCount": {
+                      "enum": [
+                        1,
+                        2,
+                        4
+                      ]
+                    },
+                    "doubleCount": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 5
+                    },
+                    "doubleWaveOrdinals": {
+                      "type": "array",
+                      "maxItems": 5,
+                      "uniqueItems": true,
+                      "items": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 8
+                      }
+                    },
+                    "maxWaveObjects": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 5
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                {
+                  "const": {
+                    "level": 96,
+                    "stageId": "S16",
+                    "gridRows": 3,
+                    "gridColumns": 4,
+                    "timingProfile": "H",
+                    "waveTemplate": "P20_D10",
+                    "targetClassCount": 2,
+                    "targetClassSplit": [
+                      10,
+                      10
+                    ],
+                    "similarityTier": 3,
+                    "directionCount": 4,
+                    "doubleCount": 5,
+                    "doubleWaveOrdinals": [
+                      1,
+                      2,
+                      4,
+                      6,
+                      8
+                    ],
+                    "maxWaveObjects": 5
+                  }
+                }
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        "fullLevelSetStatus": {
+          "const": "HOLD"
+        }
+      },
+      "additionalProperties": false
+    }
+  ]
 }

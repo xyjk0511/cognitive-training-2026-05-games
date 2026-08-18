@@ -1,0 +1,4426 @@
+{
+  "vectorVersion": "A620-SS-GOLDEN-1.2.1",
+  "generatorVersion": "signal-station-gen-1.2.1",
+  "scoringRuleVersion": "signal-station-score-1.2.1",
+  "runtimeConfigHash": "92e33a4ca7656d90ac185a227906464169e21db003f9ac550b8370dfb15e5659",
+  "vectors": [
+    {
+      "id": "SIGNAL_STATION_L1_SEED_6201001",
+      "level": 1,
+      "sessionSeed": 6201001,
+      "levelConfig": {
+        "level": 1,
+        "stageId": "S01",
+        "gridRows": 2,
+        "gridColumns": 2,
+        "timingProfile": "A",
+        "waveTemplate": "P10_D0",
+        "targetClassCount": 1,
+        "targetClassSplit": [
+          10
+        ],
+        "similarityTier": 0,
+        "directionCount": 1,
+        "doubleCount": 0,
+        "doubleWaveOrdinals": [],
+        "maxWaveObjects": 2
+      },
+      "planSha256": "0c55a83736cf1e3c9e64f9cd8f776a137bcc6de2709d18a42f1f4efbde2e1fac",
+      "plan": {
+        "generatorVersion": "signal-station-gen-1.2.1",
+        "sessionSeed": 6201001,
+        "level": 1,
+        "batchOrdinal": 1,
+        "targetCards": {
+          "A": {
+            "contour": "CIRCLE",
+            "innerMark": "ARC",
+            "directionDeg": 0,
+            "colorFamily": "TEAL"
+          },
+          "B": null
+        },
+        "waves": [
+          {
+            "waveOrdinal": 1,
+            "startOffsetInOperationMs": 500,
+            "instances": [
+              {
+                "instanceId": "b1-w1-s0",
+                "batchOrdinal": 1,
+                "waveOrdinal": 1,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 0,
+                "row": 0,
+                "column": 0,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "CIRCLE",
+                  "innerMark": "ARC",
+                  "directionDeg": 0,
+                  "colorFamily": "TEAL"
+                },
+                "enterStartInBatchMs": 3500,
+                "naturalExitEndInBatchMs": 6400
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 2,
+            "startOffsetInOperationMs": 4000,
+            "instances": [
+              {
+                "instanceId": "b1-w2-s2",
+                "batchOrdinal": 1,
+                "waveOrdinal": 2,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 2,
+                "row": 1,
+                "column": 0,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "CIRCLE",
+                  "innerMark": "ARC",
+                  "directionDeg": 0,
+                  "colorFamily": "TEAL"
+                },
+                "enterStartInBatchMs": 7000,
+                "naturalExitEndInBatchMs": 9900
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 3,
+            "startOffsetInOperationMs": 7500,
+            "instances": [
+              {
+                "instanceId": "b1-w3-s3",
+                "batchOrdinal": 1,
+                "waveOrdinal": 3,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 3,
+                "row": 1,
+                "column": 1,
+                "quadrant": "BOTTOM_RIGHT",
+                "symbol": {
+                  "contour": "CIRCLE",
+                  "innerMark": "ARC",
+                  "directionDeg": 0,
+                  "colorFamily": "TEAL"
+                },
+                "enterStartInBatchMs": 10500,
+                "naturalExitEndInBatchMs": 13400
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 4,
+            "startOffsetInOperationMs": 11000,
+            "instances": [
+              {
+                "instanceId": "b1-w4-s1",
+                "batchOrdinal": 1,
+                "waveOrdinal": 4,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 1,
+                "row": 0,
+                "column": 1,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "CIRCLE",
+                  "innerMark": "ARC",
+                  "directionDeg": 0,
+                  "colorFamily": "TEAL"
+                },
+                "enterStartInBatchMs": 14000,
+                "naturalExitEndInBatchMs": 16900
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 5,
+            "startOffsetInOperationMs": 14500,
+            "instances": [
+              {
+                "instanceId": "b1-w5-s3",
+                "batchOrdinal": 1,
+                "waveOrdinal": 5,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 3,
+                "row": 1,
+                "column": 1,
+                "quadrant": "BOTTOM_RIGHT",
+                "symbol": {
+                  "contour": "CIRCLE",
+                  "innerMark": "ARC",
+                  "directionDeg": 0,
+                  "colorFamily": "TEAL"
+                },
+                "enterStartInBatchMs": 17500,
+                "naturalExitEndInBatchMs": 20400
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 6,
+            "startOffsetInOperationMs": 18000,
+            "instances": [
+              {
+                "instanceId": "b1-w6-s1",
+                "batchOrdinal": 1,
+                "waveOrdinal": 6,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 1,
+                "row": 0,
+                "column": 1,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "CIRCLE",
+                  "innerMark": "ARC",
+                  "directionDeg": 0,
+                  "colorFamily": "TEAL"
+                },
+                "enterStartInBatchMs": 21000,
+                "naturalExitEndInBatchMs": 23900
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 7,
+            "startOffsetInOperationMs": 21500,
+            "instances": [
+              {
+                "instanceId": "b1-w7-s0",
+                "batchOrdinal": 1,
+                "waveOrdinal": 7,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 0,
+                "row": 0,
+                "column": 0,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "CIRCLE",
+                  "innerMark": "ARC",
+                  "directionDeg": 0,
+                  "colorFamily": "TEAL"
+                },
+                "enterStartInBatchMs": 24500,
+                "naturalExitEndInBatchMs": 27400
+              },
+              {
+                "instanceId": "b1-w7-s2",
+                "batchOrdinal": 1,
+                "waveOrdinal": 7,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 2,
+                "row": 1,
+                "column": 0,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "CIRCLE",
+                  "innerMark": "ARC",
+                  "directionDeg": 0,
+                  "colorFamily": "TEAL"
+                },
+                "enterStartInBatchMs": 24500,
+                "naturalExitEndInBatchMs": 27400
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 8,
+            "startOffsetInOperationMs": 25000,
+            "instances": [
+              {
+                "instanceId": "b1-w8-s0",
+                "batchOrdinal": 1,
+                "waveOrdinal": 8,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 0,
+                "row": 0,
+                "column": 0,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "CIRCLE",
+                  "innerMark": "ARC",
+                  "directionDeg": 0,
+                  "colorFamily": "TEAL"
+                },
+                "enterStartInBatchMs": 28000,
+                "naturalExitEndInBatchMs": 30900
+              },
+              {
+                "instanceId": "b1-w8-s1",
+                "batchOrdinal": 1,
+                "waveOrdinal": 8,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 1,
+                "row": 0,
+                "column": 1,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "CIRCLE",
+                  "innerMark": "ARC",
+                  "directionDeg": 0,
+                  "colorFamily": "TEAL"
+                },
+                "enterStartInBatchMs": 28000,
+                "naturalExitEndInBatchMs": 30900
+              }
+            ]
+          }
+        ],
+        "targetTotal": 10,
+        "distractorTotal": 0,
+        "doubleTotal": 0
+      },
+      "expectedBatch": {
+        "batchOrdinal": 1,
+        "closed": true,
+        "decisionEligible": true,
+        "levelBefore": 1,
+        "resultZone": "HOLD",
+        "levelTransition": "HOLD",
+        "levelAfter": 1,
+        "batchScore": 63,
+        "closedAtActiveMs": 37500,
+        "gameBatchMetrics": {
+          "H": 7,
+          "T": 10,
+          "F": 0,
+          "D": 0,
+          "timingProfile": "A",
+          "targetClassCount": 1,
+          "similarityTier": 0,
+          "directionCount": 1,
+          "doubleCount": 0,
+          "completedDoubleCount": 0,
+          "timedOutDoubleCount": 0,
+          "presentedWaveCount": 8,
+          "reactionTimeCount": 7,
+          "reactionTimeTotalMs": 35,
+          "reactionTimeMinMs": 5,
+          "reactionTimeMaxMs": 5,
+          "doubleIntervalCount": 0,
+          "doubleIntervalTotalMs": 0
+        },
+        "batchPayloadSha256": "d5be03bdd66614a3a65c433ea794b91d3ced2913fd04968e0be2dfc051e766c0"
+      },
+      "resultDraft": {
+        "gameCode": "SIGNAL_STATION",
+        "gamePayloadVersion": "A620-GP-1.1",
+        "runtimeConfigHash": "92e33a4ca7656d90ac185a227906464169e21db003f9ac550b8370dfb15e5659",
+        "designMaxLevel": 96,
+        "plannedBatchCount": 8,
+        "eligibleBatchCount": 1,
+        "eligibleBatches": [
+          {
+            "batchOrdinal": 1,
+            "closed": true,
+            "decisionEligible": true,
+            "levelBefore": 1,
+            "resultZone": "HOLD",
+            "levelTransition": "HOLD",
+            "levelAfter": 1,
+            "batchScore": 63,
+            "closedAtActiveMs": 37500,
+            "gameBatchMetrics": {
+              "H": 7,
+              "T": 10,
+              "F": 0,
+              "D": 0,
+              "timingProfile": "A",
+              "targetClassCount": 1,
+              "similarityTier": 0,
+              "directionCount": 1,
+              "doubleCount": 0,
+              "completedDoubleCount": 0,
+              "timedOutDoubleCount": 0,
+              "presentedWaveCount": 8,
+              "reactionTimeCount": 7,
+              "reactionTimeTotalMs": 35,
+              "reactionTimeMinMs": 5,
+              "reactionTimeMaxMs": 5,
+              "doubleIntervalCount": 0,
+              "doubleIntervalTotalMs": 0
+            },
+            "batchPayloadSha256": "d5be03bdd66614a3a65c433ea794b91d3ced2913fd04968e0be2dfc051e766c0"
+          }
+        ],
+        "incompleteBatchAudit": [],
+        "sessionStartLevel": 1,
+        "sessionEndLevel": 1,
+        "sessionHighestPresentedLevel": 1,
+        "sessionHighestPassedLevel": null,
+        "nextStartLevel": 1,
+        "sessionRawScore": 63,
+        "sessionRawScoreMax": 800,
+        "actualTrainingMs": 300000,
+        "gameMetrics": {
+          "totalH": 7,
+          "totalT": 10,
+          "totalF": 0,
+          "totalD": 0,
+          "reactionTimeCount": 7,
+          "reactionTimeTotalMs": 35,
+          "reactionTimeMinMs": 5,
+          "reactionTimeMaxMs": 5,
+          "doubleIntervalCount": 0,
+          "doubleIntervalTotalMs": 0,
+          "pauseCount": 0,
+          "totalPausedUptimeMs": 0,
+          "generatedBatchCount": 1,
+          "generatedWaveCount": 8,
+          "eligibleBatchCount": 1,
+          "incompleteBatchCount": 0,
+          "generatorVersion": "signal-station-gen-1.2.1",
+          "configVersion": "A620-SS-CONFIG-1.2.1",
+          "scoringRuleVersion": "signal-station-score-1.2.1",
+          "requirementVersion": "1.2.1",
+          "contentVersion": "signal-station-six-slice-1.2.1",
+          "fullLevelSetStatus": "HOLD",
+          "implementedLevels": [
+            1,
+            7,
+            67,
+            79,
+            90,
+            96
+          ]
+        }
+      }
+    },
+    {
+      "id": "SIGNAL_STATION_L7_SEED_6201007",
+      "level": 7,
+      "sessionSeed": 6201007,
+      "levelConfig": {
+        "level": 7,
+        "stageId": "S02",
+        "gridRows": 2,
+        "gridColumns": 2,
+        "timingProfile": "A",
+        "waveTemplate": "P15_D5",
+        "targetClassCount": 1,
+        "targetClassSplit": [
+          15
+        ],
+        "similarityTier": 1,
+        "directionCount": 1,
+        "doubleCount": 0,
+        "doubleWaveOrdinals": [],
+        "maxWaveObjects": 3
+      },
+      "planSha256": "f61a3401a7ecac8e3639b211e27920f5ab0b8f31edd687d832baa5b51904d1e1",
+      "plan": {
+        "generatorVersion": "signal-station-gen-1.2.1",
+        "sessionSeed": 6201007,
+        "level": 7,
+        "batchOrdinal": 1,
+        "targetCards": {
+          "A": {
+            "contour": "ROUNDED_SQUARE",
+            "innerMark": "CHEVRON",
+            "directionDeg": 0,
+            "colorFamily": "VIOLET"
+          },
+          "B": null
+        },
+        "waves": [
+          {
+            "waveOrdinal": 1,
+            "startOffsetInOperationMs": 500,
+            "instances": [
+              {
+                "instanceId": "b1-w1-s0",
+                "batchOrdinal": 1,
+                "waveOrdinal": 1,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 0,
+                "row": 0,
+                "column": 0,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "ROUNDED_SQUARE",
+                  "innerMark": "CHEVRON",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 3500,
+                "naturalExitEndInBatchMs": 6400
+              },
+              {
+                "instanceId": "b1-w1-s2",
+                "batchOrdinal": 1,
+                "waveOrdinal": 1,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 2,
+                "row": 1,
+                "column": 0,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "ROUNDED_SQUARE",
+                  "innerMark": "CHEVRON",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 3500,
+                "naturalExitEndInBatchMs": 6400
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 2,
+            "startOffsetInOperationMs": 4000,
+            "instances": [
+              {
+                "instanceId": "b1-w2-s0",
+                "batchOrdinal": 1,
+                "waveOrdinal": 2,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "A",
+                "requiresDouble": false,
+                "slotIndex": 0,
+                "row": 0,
+                "column": 0,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "CIRCLE",
+                  "innerMark": "CROSS",
+                  "directionDeg": 0,
+                  "colorFamily": "TEAL"
+                },
+                "enterStartInBatchMs": 7000,
+                "naturalExitEndInBatchMs": 9900
+              },
+              {
+                "instanceId": "b1-w2-s1",
+                "batchOrdinal": 1,
+                "waveOrdinal": 2,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 1,
+                "row": 0,
+                "column": 1,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "ROUNDED_SQUARE",
+                  "innerMark": "CHEVRON",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 7000,
+                "naturalExitEndInBatchMs": 9900
+              },
+              {
+                "instanceId": "b1-w2-s3",
+                "batchOrdinal": 1,
+                "waveOrdinal": 2,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 3,
+                "row": 1,
+                "column": 1,
+                "quadrant": "BOTTOM_RIGHT",
+                "symbol": {
+                  "contour": "ROUNDED_SQUARE",
+                  "innerMark": "CHEVRON",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 7000,
+                "naturalExitEndInBatchMs": 9900
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 3,
+            "startOffsetInOperationMs": 7500,
+            "instances": [
+              {
+                "instanceId": "b1-w3-s1",
+                "batchOrdinal": 1,
+                "waveOrdinal": 3,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 1,
+                "row": 0,
+                "column": 1,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "ROUNDED_SQUARE",
+                  "innerMark": "CHEVRON",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 10500,
+                "naturalExitEndInBatchMs": 13400
+              },
+              {
+                "instanceId": "b1-w3-s2",
+                "batchOrdinal": 1,
+                "waveOrdinal": 3,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 2,
+                "row": 1,
+                "column": 0,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "ROUNDED_SQUARE",
+                  "innerMark": "CHEVRON",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 10500,
+                "naturalExitEndInBatchMs": 13400
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 4,
+            "startOffsetInOperationMs": 11000,
+            "instances": [
+              {
+                "instanceId": "b1-w4-s0",
+                "batchOrdinal": 1,
+                "waveOrdinal": 4,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 0,
+                "row": 0,
+                "column": 0,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "ROUNDED_SQUARE",
+                  "innerMark": "CHEVRON",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 14000,
+                "naturalExitEndInBatchMs": 16900
+              },
+              {
+                "instanceId": "b1-w4-s2",
+                "batchOrdinal": 1,
+                "waveOrdinal": 4,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "A",
+                "requiresDouble": false,
+                "slotIndex": 2,
+                "row": 1,
+                "column": 0,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "DOT",
+                  "directionDeg": 0,
+                  "colorFamily": "BLUE"
+                },
+                "enterStartInBatchMs": 14000,
+                "naturalExitEndInBatchMs": 16900
+              },
+              {
+                "instanceId": "b1-w4-s3",
+                "batchOrdinal": 1,
+                "waveOrdinal": 4,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 3,
+                "row": 1,
+                "column": 1,
+                "quadrant": "BOTTOM_RIGHT",
+                "symbol": {
+                  "contour": "ROUNDED_SQUARE",
+                  "innerMark": "CHEVRON",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 14000,
+                "naturalExitEndInBatchMs": 16900
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 5,
+            "startOffsetInOperationMs": 14500,
+            "instances": [
+              {
+                "instanceId": "b1-w5-s1",
+                "batchOrdinal": 1,
+                "waveOrdinal": 5,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 1,
+                "row": 0,
+                "column": 1,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "ROUNDED_SQUARE",
+                  "innerMark": "CHEVRON",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 17500,
+                "naturalExitEndInBatchMs": 20400
+              },
+              {
+                "instanceId": "b1-w5-s2",
+                "batchOrdinal": 1,
+                "waveOrdinal": 5,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 2,
+                "row": 1,
+                "column": 0,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "ROUNDED_SQUARE",
+                  "innerMark": "CHEVRON",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 17500,
+                "naturalExitEndInBatchMs": 20400
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 6,
+            "startOffsetInOperationMs": 18000,
+            "instances": [
+              {
+                "instanceId": "b1-w6-s0",
+                "batchOrdinal": 1,
+                "waveOrdinal": 6,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 0,
+                "row": 0,
+                "column": 0,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "ROUNDED_SQUARE",
+                  "innerMark": "CHEVRON",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 21000,
+                "naturalExitEndInBatchMs": 23900
+              },
+              {
+                "instanceId": "b1-w6-s1",
+                "batchOrdinal": 1,
+                "waveOrdinal": 6,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "A",
+                "requiresDouble": false,
+                "slotIndex": 1,
+                "row": 0,
+                "column": 1,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "DIAMOND",
+                  "innerMark": "BAR",
+                  "directionDeg": 0,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 21000,
+                "naturalExitEndInBatchMs": 23900
+              },
+              {
+                "instanceId": "b1-w6-s3",
+                "batchOrdinal": 1,
+                "waveOrdinal": 6,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 3,
+                "row": 1,
+                "column": 1,
+                "quadrant": "BOTTOM_RIGHT",
+                "symbol": {
+                  "contour": "ROUNDED_SQUARE",
+                  "innerMark": "CHEVRON",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 21000,
+                "naturalExitEndInBatchMs": 23900
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 7,
+            "startOffsetInOperationMs": 21500,
+            "instances": [
+              {
+                "instanceId": "b1-w7-s0",
+                "batchOrdinal": 1,
+                "waveOrdinal": 7,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 0,
+                "row": 0,
+                "column": 0,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "ROUNDED_SQUARE",
+                  "innerMark": "CHEVRON",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 24500,
+                "naturalExitEndInBatchMs": 27400
+              },
+              {
+                "instanceId": "b1-w7-s1",
+                "batchOrdinal": 1,
+                "waveOrdinal": 7,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "A",
+                "requiresDouble": false,
+                "slotIndex": 1,
+                "row": 0,
+                "column": 1,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "TRIANGLE",
+                  "innerMark": "BAR",
+                  "directionDeg": 0,
+                  "colorFamily": "BLUE"
+                },
+                "enterStartInBatchMs": 24500,
+                "naturalExitEndInBatchMs": 27400
+              },
+              {
+                "instanceId": "b1-w7-s2",
+                "batchOrdinal": 1,
+                "waveOrdinal": 7,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 2,
+                "row": 1,
+                "column": 0,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "ROUNDED_SQUARE",
+                  "innerMark": "CHEVRON",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 24500,
+                "naturalExitEndInBatchMs": 27400
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 8,
+            "startOffsetInOperationMs": 25000,
+            "instances": [
+              {
+                "instanceId": "b1-w8-s1",
+                "batchOrdinal": 1,
+                "waveOrdinal": 8,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "A",
+                "requiresDouble": false,
+                "slotIndex": 1,
+                "row": 0,
+                "column": 1,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "SHIELD",
+                  "innerMark": "BAR",
+                  "directionDeg": 0,
+                  "colorFamily": "BLUE"
+                },
+                "enterStartInBatchMs": 28000,
+                "naturalExitEndInBatchMs": 30900
+              },
+              {
+                "instanceId": "b1-w8-s3",
+                "batchOrdinal": 1,
+                "waveOrdinal": 8,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 3,
+                "row": 1,
+                "column": 1,
+                "quadrant": "BOTTOM_RIGHT",
+                "symbol": {
+                  "contour": "ROUNDED_SQUARE",
+                  "innerMark": "CHEVRON",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 28000,
+                "naturalExitEndInBatchMs": 30900
+              }
+            ]
+          }
+        ],
+        "targetTotal": 15,
+        "distractorTotal": 5,
+        "doubleTotal": 0
+      },
+      "expectedBatch": {
+        "batchOrdinal": 1,
+        "closed": true,
+        "decisionEligible": true,
+        "levelBefore": 7,
+        "resultZone": "HOLD",
+        "levelTransition": "HOLD",
+        "levelAfter": 7,
+        "batchScore": 67,
+        "closedAtActiveMs": 37500,
+        "gameBatchMetrics": {
+          "H": 11,
+          "T": 15,
+          "F": 1,
+          "D": 5,
+          "timingProfile": "A",
+          "targetClassCount": 1,
+          "similarityTier": 1,
+          "directionCount": 1,
+          "doubleCount": 0,
+          "completedDoubleCount": 0,
+          "timedOutDoubleCount": 0,
+          "presentedWaveCount": 8,
+          "reactionTimeCount": 11,
+          "reactionTimeTotalMs": 55,
+          "reactionTimeMinMs": 5,
+          "reactionTimeMaxMs": 5,
+          "doubleIntervalCount": 0,
+          "doubleIntervalTotalMs": 0
+        },
+        "batchPayloadSha256": "11f65a7a3ac5b536d2152be0c8ee942438f3871f99f1362f4ce66a3a12c68d18"
+      },
+      "resultDraft": {
+        "gameCode": "SIGNAL_STATION",
+        "gamePayloadVersion": "A620-GP-1.1",
+        "runtimeConfigHash": "92e33a4ca7656d90ac185a227906464169e21db003f9ac550b8370dfb15e5659",
+        "designMaxLevel": 96,
+        "plannedBatchCount": 8,
+        "eligibleBatchCount": 1,
+        "eligibleBatches": [
+          {
+            "batchOrdinal": 1,
+            "closed": true,
+            "decisionEligible": true,
+            "levelBefore": 7,
+            "resultZone": "HOLD",
+            "levelTransition": "HOLD",
+            "levelAfter": 7,
+            "batchScore": 67,
+            "closedAtActiveMs": 37500,
+            "gameBatchMetrics": {
+              "H": 11,
+              "T": 15,
+              "F": 1,
+              "D": 5,
+              "timingProfile": "A",
+              "targetClassCount": 1,
+              "similarityTier": 1,
+              "directionCount": 1,
+              "doubleCount": 0,
+              "completedDoubleCount": 0,
+              "timedOutDoubleCount": 0,
+              "presentedWaveCount": 8,
+              "reactionTimeCount": 11,
+              "reactionTimeTotalMs": 55,
+              "reactionTimeMinMs": 5,
+              "reactionTimeMaxMs": 5,
+              "doubleIntervalCount": 0,
+              "doubleIntervalTotalMs": 0
+            },
+            "batchPayloadSha256": "11f65a7a3ac5b536d2152be0c8ee942438f3871f99f1362f4ce66a3a12c68d18"
+          }
+        ],
+        "incompleteBatchAudit": [],
+        "sessionStartLevel": 7,
+        "sessionEndLevel": 7,
+        "sessionHighestPresentedLevel": 7,
+        "sessionHighestPassedLevel": null,
+        "nextStartLevel": 7,
+        "sessionRawScore": 67,
+        "sessionRawScoreMax": 800,
+        "actualTrainingMs": 300000,
+        "gameMetrics": {
+          "totalH": 11,
+          "totalT": 15,
+          "totalF": 1,
+          "totalD": 5,
+          "reactionTimeCount": 11,
+          "reactionTimeTotalMs": 55,
+          "reactionTimeMinMs": 5,
+          "reactionTimeMaxMs": 5,
+          "doubleIntervalCount": 0,
+          "doubleIntervalTotalMs": 0,
+          "pauseCount": 0,
+          "totalPausedUptimeMs": 0,
+          "generatedBatchCount": 1,
+          "generatedWaveCount": 8,
+          "eligibleBatchCount": 1,
+          "incompleteBatchCount": 0,
+          "generatorVersion": "signal-station-gen-1.2.1",
+          "configVersion": "A620-SS-CONFIG-1.2.1",
+          "scoringRuleVersion": "signal-station-score-1.2.1",
+          "requirementVersion": "1.2.1",
+          "contentVersion": "signal-station-six-slice-1.2.1",
+          "fullLevelSetStatus": "HOLD",
+          "implementedLevels": [
+            1,
+            7,
+            67,
+            79,
+            90,
+            96
+          ]
+        }
+      }
+    },
+    {
+      "id": "SIGNAL_STATION_L67_SEED_6201067",
+      "level": 67,
+      "sessionSeed": 6201067,
+      "levelConfig": {
+        "level": 67,
+        "stageId": "S12",
+        "gridRows": 3,
+        "gridColumns": 4,
+        "timingProfile": "A",
+        "waveTemplate": "P20_D10",
+        "targetClassCount": 2,
+        "targetClassSplit": [
+          10,
+          10
+        ],
+        "similarityTier": 1,
+        "directionCount": 2,
+        "doubleCount": 0,
+        "doubleWaveOrdinals": [],
+        "maxWaveObjects": 5
+      },
+      "planSha256": "9539c1e149b93f36f779684e7053a6e304c701bc643891111a334612f6460d5d",
+      "plan": {
+        "generatorVersion": "signal-station-gen-1.2.1",
+        "sessionSeed": 6201067,
+        "level": 67,
+        "batchOrdinal": 1,
+        "targetCards": {
+          "A": {
+            "contour": "SHIELD",
+            "innerMark": "BAR",
+            "directionDeg": 90,
+            "colorFamily": "AMBER"
+          },
+          "B": {
+            "contour": "DIAMOND",
+            "innerMark": "ARC",
+            "directionDeg": 0,
+            "colorFamily": "BLUE"
+          }
+        },
+        "waves": [
+          {
+            "waveOrdinal": 1,
+            "startOffsetInOperationMs": 500,
+            "instances": [
+              {
+                "instanceId": "b1-w1-s4",
+                "batchOrdinal": 1,
+                "waveOrdinal": 1,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "B",
+                "requiresDouble": false,
+                "slotIndex": 4,
+                "row": 1,
+                "column": 0,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "SHIELD",
+                  "innerMark": "BAR",
+                  "directionDeg": 90,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 3500,
+                "naturalExitEndInBatchMs": 6400
+              },
+              {
+                "instanceId": "b1-w1-s6",
+                "batchOrdinal": 1,
+                "waveOrdinal": 1,
+                "role": "TARGET",
+                "targetCategoryId": "B",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 6,
+                "row": 1,
+                "column": 2,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "DIAMOND",
+                  "innerMark": "ARC",
+                  "directionDeg": 0,
+                  "colorFamily": "BLUE"
+                },
+                "enterStartInBatchMs": 3500,
+                "naturalExitEndInBatchMs": 6400
+              },
+              {
+                "instanceId": "b1-w1-s10",
+                "batchOrdinal": 1,
+                "waveOrdinal": 1,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 10,
+                "row": 2,
+                "column": 2,
+                "quadrant": "BOTTOM_RIGHT",
+                "symbol": {
+                  "contour": "SHIELD",
+                  "innerMark": "BAR",
+                  "directionDeg": 90,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 3500,
+                "naturalExitEndInBatchMs": 6400
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 2,
+            "startOffsetInOperationMs": 4000,
+            "instances": [
+              {
+                "instanceId": "b1-w2-s0",
+                "batchOrdinal": 1,
+                "waveOrdinal": 2,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "B",
+                "requiresDouble": false,
+                "slotIndex": 0,
+                "row": 0,
+                "column": 0,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "ROUNDED_SQUARE",
+                  "innerMark": "BAR",
+                  "directionDeg": 90,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 7000,
+                "naturalExitEndInBatchMs": 9900
+              },
+              {
+                "instanceId": "b1-w2-s1",
+                "batchOrdinal": 1,
+                "waveOrdinal": 2,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 1,
+                "row": 0,
+                "column": 1,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "SHIELD",
+                  "innerMark": "BAR",
+                  "directionDeg": 90,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 7000,
+                "naturalExitEndInBatchMs": 9900
+              },
+              {
+                "instanceId": "b1-w2-s8",
+                "batchOrdinal": 1,
+                "waveOrdinal": 2,
+                "role": "TARGET",
+                "targetCategoryId": "B",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 8,
+                "row": 2,
+                "column": 0,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "DIAMOND",
+                  "innerMark": "ARC",
+                  "directionDeg": 0,
+                  "colorFamily": "BLUE"
+                },
+                "enterStartInBatchMs": 7000,
+                "naturalExitEndInBatchMs": 9900
+              },
+              {
+                "instanceId": "b1-w2-s11",
+                "batchOrdinal": 1,
+                "waveOrdinal": 2,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 11,
+                "row": 2,
+                "column": 3,
+                "quadrant": "BOTTOM_RIGHT",
+                "symbol": {
+                  "contour": "SHIELD",
+                  "innerMark": "BAR",
+                  "directionDeg": 90,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 7000,
+                "naturalExitEndInBatchMs": 9900
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 3,
+            "startOffsetInOperationMs": 7500,
+            "instances": [
+              {
+                "instanceId": "b1-w3-s3",
+                "batchOrdinal": 1,
+                "waveOrdinal": 3,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 3,
+                "row": 0,
+                "column": 3,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "SHIELD",
+                  "innerMark": "BAR",
+                  "directionDeg": 90,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 10500,
+                "naturalExitEndInBatchMs": 13400
+              },
+              {
+                "instanceId": "b1-w3-s4",
+                "batchOrdinal": 1,
+                "waveOrdinal": 3,
+                "role": "TARGET",
+                "targetCategoryId": "B",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 4,
+                "row": 1,
+                "column": 0,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "DIAMOND",
+                  "innerMark": "ARC",
+                  "directionDeg": 0,
+                  "colorFamily": "BLUE"
+                },
+                "enterStartInBatchMs": 10500,
+                "naturalExitEndInBatchMs": 13400
+              },
+              {
+                "instanceId": "b1-w3-s9",
+                "batchOrdinal": 1,
+                "waveOrdinal": 3,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "A",
+                "requiresDouble": false,
+                "slotIndex": 9,
+                "row": 2,
+                "column": 1,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "ARC",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 10500,
+                "naturalExitEndInBatchMs": 13400
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 4,
+            "startOffsetInOperationMs": 11000,
+            "instances": [
+              {
+                "instanceId": "b1-w4-s0",
+                "batchOrdinal": 1,
+                "waveOrdinal": 4,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "B",
+                "requiresDouble": false,
+                "slotIndex": 0,
+                "row": 0,
+                "column": 0,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "CROSS",
+                  "directionDeg": 90,
+                  "colorFamily": "TEAL"
+                },
+                "enterStartInBatchMs": 14000,
+                "naturalExitEndInBatchMs": 16900
+              },
+              {
+                "instanceId": "b1-w4-s2",
+                "batchOrdinal": 1,
+                "waveOrdinal": 4,
+                "role": "TARGET",
+                "targetCategoryId": "B",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 2,
+                "row": 0,
+                "column": 2,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "DIAMOND",
+                  "innerMark": "ARC",
+                  "directionDeg": 0,
+                  "colorFamily": "BLUE"
+                },
+                "enterStartInBatchMs": 14000,
+                "naturalExitEndInBatchMs": 16900
+              },
+              {
+                "instanceId": "b1-w4-s7",
+                "batchOrdinal": 1,
+                "waveOrdinal": 4,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 7,
+                "row": 1,
+                "column": 3,
+                "quadrant": "BOTTOM_RIGHT",
+                "symbol": {
+                  "contour": "SHIELD",
+                  "innerMark": "BAR",
+                  "directionDeg": 90,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 14000,
+                "naturalExitEndInBatchMs": 16900
+              },
+              {
+                "instanceId": "b1-w4-s9",
+                "batchOrdinal": 1,
+                "waveOrdinal": 4,
+                "role": "TARGET",
+                "targetCategoryId": "B",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 9,
+                "row": 2,
+                "column": 1,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "DIAMOND",
+                  "innerMark": "ARC",
+                  "directionDeg": 0,
+                  "colorFamily": "BLUE"
+                },
+                "enterStartInBatchMs": 14000,
+                "naturalExitEndInBatchMs": 16900
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 5,
+            "startOffsetInOperationMs": 14500,
+            "instances": [
+              {
+                "instanceId": "b1-w5-s0",
+                "batchOrdinal": 1,
+                "waveOrdinal": 5,
+                "role": "TARGET",
+                "targetCategoryId": "B",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 0,
+                "row": 0,
+                "column": 0,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "DIAMOND",
+                  "innerMark": "ARC",
+                  "directionDeg": 0,
+                  "colorFamily": "BLUE"
+                },
+                "enterStartInBatchMs": 17500,
+                "naturalExitEndInBatchMs": 20400
+              },
+              {
+                "instanceId": "b1-w5-s1",
+                "batchOrdinal": 1,
+                "waveOrdinal": 5,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "A",
+                "requiresDouble": false,
+                "slotIndex": 1,
+                "row": 0,
+                "column": 1,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "DIAMOND",
+                  "innerMark": "DOT",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 17500,
+                "naturalExitEndInBatchMs": 20400
+              },
+              {
+                "instanceId": "b1-w5-s5",
+                "batchOrdinal": 1,
+                "waveOrdinal": 5,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 5,
+                "row": 1,
+                "column": 1,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "SHIELD",
+                  "innerMark": "BAR",
+                  "directionDeg": 90,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 17500,
+                "naturalExitEndInBatchMs": 20400
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 6,
+            "startOffsetInOperationMs": 18000,
+            "instances": [
+              {
+                "instanceId": "b1-w6-s0",
+                "batchOrdinal": 1,
+                "waveOrdinal": 6,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "B",
+                "requiresDouble": false,
+                "slotIndex": 0,
+                "row": 0,
+                "column": 0,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "CIRCLE",
+                  "innerMark": "BAR",
+                  "directionDeg": 90,
+                  "colorFamily": "TEAL"
+                },
+                "enterStartInBatchMs": 21000,
+                "naturalExitEndInBatchMs": 23900
+              },
+              {
+                "instanceId": "b1-w6-s1",
+                "batchOrdinal": 1,
+                "waveOrdinal": 6,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 1,
+                "row": 0,
+                "column": 1,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "SHIELD",
+                  "innerMark": "BAR",
+                  "directionDeg": 90,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 21000,
+                "naturalExitEndInBatchMs": 23900
+              },
+              {
+                "instanceId": "b1-w6-s2",
+                "batchOrdinal": 1,
+                "waveOrdinal": 6,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 2,
+                "row": 0,
+                "column": 2,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "SHIELD",
+                  "innerMark": "BAR",
+                  "directionDeg": 90,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 21000,
+                "naturalExitEndInBatchMs": 23900
+              },
+              {
+                "instanceId": "b1-w6-s7",
+                "batchOrdinal": 1,
+                "waveOrdinal": 6,
+                "role": "TARGET",
+                "targetCategoryId": "B",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 7,
+                "row": 1,
+                "column": 3,
+                "quadrant": "BOTTOM_RIGHT",
+                "symbol": {
+                  "contour": "DIAMOND",
+                  "innerMark": "ARC",
+                  "directionDeg": 0,
+                  "colorFamily": "BLUE"
+                },
+                "enterStartInBatchMs": 21000,
+                "naturalExitEndInBatchMs": 23900
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 7,
+            "startOffsetInOperationMs": 21500,
+            "instances": [
+              {
+                "instanceId": "b1-w7-s0",
+                "batchOrdinal": 1,
+                "waveOrdinal": 7,
+                "role": "TARGET",
+                "targetCategoryId": "B",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 0,
+                "row": 0,
+                "column": 0,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "DIAMOND",
+                  "innerMark": "ARC",
+                  "directionDeg": 0,
+                  "colorFamily": "BLUE"
+                },
+                "enterStartInBatchMs": 24500,
+                "naturalExitEndInBatchMs": 27400
+              },
+              {
+                "instanceId": "b1-w7-s6",
+                "batchOrdinal": 1,
+                "waveOrdinal": 7,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "A",
+                "requiresDouble": false,
+                "slotIndex": 6,
+                "row": 1,
+                "column": 2,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "CROSS",
+                  "directionDeg": 0,
+                  "colorFamily": "TEAL"
+                },
+                "enterStartInBatchMs": 24500,
+                "naturalExitEndInBatchMs": 27400
+              },
+              {
+                "instanceId": "b1-w7-s8",
+                "batchOrdinal": 1,
+                "waveOrdinal": 7,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 8,
+                "row": 2,
+                "column": 0,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "SHIELD",
+                  "innerMark": "BAR",
+                  "directionDeg": 90,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 24500,
+                "naturalExitEndInBatchMs": 27400
+              },
+              {
+                "instanceId": "b1-w7-s9",
+                "batchOrdinal": 1,
+                "waveOrdinal": 7,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "A",
+                "requiresDouble": false,
+                "slotIndex": 9,
+                "row": 2,
+                "column": 1,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "CIRCLE",
+                  "innerMark": "DOT",
+                  "directionDeg": 0,
+                  "colorFamily": "BLUE"
+                },
+                "enterStartInBatchMs": 24500,
+                "naturalExitEndInBatchMs": 27400
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 8,
+            "startOffsetInOperationMs": 25000,
+            "instances": [
+              {
+                "instanceId": "b1-w8-s2",
+                "batchOrdinal": 1,
+                "waveOrdinal": 8,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "A",
+                "requiresDouble": false,
+                "slotIndex": 2,
+                "row": 0,
+                "column": 2,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "DIAMOND",
+                  "innerMark": "DOT",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 28000,
+                "naturalExitEndInBatchMs": 30900
+              },
+              {
+                "instanceId": "b1-w8-s5",
+                "batchOrdinal": 1,
+                "waveOrdinal": 8,
+                "role": "TARGET",
+                "targetCategoryId": "B",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 5,
+                "row": 1,
+                "column": 1,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "DIAMOND",
+                  "innerMark": "ARC",
+                  "directionDeg": 0,
+                  "colorFamily": "BLUE"
+                },
+                "enterStartInBatchMs": 28000,
+                "naturalExitEndInBatchMs": 30900
+              },
+              {
+                "instanceId": "b1-w8-s6",
+                "batchOrdinal": 1,
+                "waveOrdinal": 8,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 6,
+                "row": 1,
+                "column": 2,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "SHIELD",
+                  "innerMark": "BAR",
+                  "directionDeg": 90,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 28000,
+                "naturalExitEndInBatchMs": 30900
+              },
+              {
+                "instanceId": "b1-w8-s9",
+                "batchOrdinal": 1,
+                "waveOrdinal": 8,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "B",
+                "requiresDouble": false,
+                "slotIndex": 9,
+                "row": 2,
+                "column": 1,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "TRIANGLE",
+                  "innerMark": "BAR",
+                  "directionDeg": 90,
+                  "colorFamily": "TEAL"
+                },
+                "enterStartInBatchMs": 28000,
+                "naturalExitEndInBatchMs": 30900
+              },
+              {
+                "instanceId": "b1-w8-s10",
+                "batchOrdinal": 1,
+                "waveOrdinal": 8,
+                "role": "TARGET",
+                "targetCategoryId": "B",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 10,
+                "row": 2,
+                "column": 2,
+                "quadrant": "BOTTOM_RIGHT",
+                "symbol": {
+                  "contour": "DIAMOND",
+                  "innerMark": "ARC",
+                  "directionDeg": 0,
+                  "colorFamily": "BLUE"
+                },
+                "enterStartInBatchMs": 28000,
+                "naturalExitEndInBatchMs": 30900
+              }
+            ]
+          }
+        ],
+        "targetTotal": 20,
+        "distractorTotal": 10,
+        "doubleTotal": 0
+      },
+      "expectedBatch": {
+        "batchOrdinal": 1,
+        "closed": true,
+        "decisionEligible": true,
+        "levelBefore": 67,
+        "resultZone": "HOLD",
+        "levelTransition": "HOLD",
+        "levelAfter": 67,
+        "batchScore": 63,
+        "closedAtActiveMs": 37500,
+        "gameBatchMetrics": {
+          "H": 14,
+          "T": 20,
+          "F": 3,
+          "D": 10,
+          "timingProfile": "A",
+          "targetClassCount": 2,
+          "similarityTier": 1,
+          "directionCount": 2,
+          "doubleCount": 0,
+          "completedDoubleCount": 0,
+          "timedOutDoubleCount": 0,
+          "presentedWaveCount": 8,
+          "reactionTimeCount": 14,
+          "reactionTimeTotalMs": 70,
+          "reactionTimeMinMs": 5,
+          "reactionTimeMaxMs": 5,
+          "doubleIntervalCount": 0,
+          "doubleIntervalTotalMs": 0
+        },
+        "batchPayloadSha256": "53058e28d4618552ab5402bef4f30ad3af55ea7c8223b0ebb243877ccf912c43"
+      },
+      "resultDraft": {
+        "gameCode": "SIGNAL_STATION",
+        "gamePayloadVersion": "A620-GP-1.1",
+        "runtimeConfigHash": "92e33a4ca7656d90ac185a227906464169e21db003f9ac550b8370dfb15e5659",
+        "designMaxLevel": 96,
+        "plannedBatchCount": 8,
+        "eligibleBatchCount": 1,
+        "eligibleBatches": [
+          {
+            "batchOrdinal": 1,
+            "closed": true,
+            "decisionEligible": true,
+            "levelBefore": 67,
+            "resultZone": "HOLD",
+            "levelTransition": "HOLD",
+            "levelAfter": 67,
+            "batchScore": 63,
+            "closedAtActiveMs": 37500,
+            "gameBatchMetrics": {
+              "H": 14,
+              "T": 20,
+              "F": 3,
+              "D": 10,
+              "timingProfile": "A",
+              "targetClassCount": 2,
+              "similarityTier": 1,
+              "directionCount": 2,
+              "doubleCount": 0,
+              "completedDoubleCount": 0,
+              "timedOutDoubleCount": 0,
+              "presentedWaveCount": 8,
+              "reactionTimeCount": 14,
+              "reactionTimeTotalMs": 70,
+              "reactionTimeMinMs": 5,
+              "reactionTimeMaxMs": 5,
+              "doubleIntervalCount": 0,
+              "doubleIntervalTotalMs": 0
+            },
+            "batchPayloadSha256": "53058e28d4618552ab5402bef4f30ad3af55ea7c8223b0ebb243877ccf912c43"
+          }
+        ],
+        "incompleteBatchAudit": [],
+        "sessionStartLevel": 67,
+        "sessionEndLevel": 67,
+        "sessionHighestPresentedLevel": 67,
+        "sessionHighestPassedLevel": null,
+        "nextStartLevel": 67,
+        "sessionRawScore": 63,
+        "sessionRawScoreMax": 800,
+        "actualTrainingMs": 300000,
+        "gameMetrics": {
+          "totalH": 14,
+          "totalT": 20,
+          "totalF": 3,
+          "totalD": 10,
+          "reactionTimeCount": 14,
+          "reactionTimeTotalMs": 70,
+          "reactionTimeMinMs": 5,
+          "reactionTimeMaxMs": 5,
+          "doubleIntervalCount": 0,
+          "doubleIntervalTotalMs": 0,
+          "pauseCount": 0,
+          "totalPausedUptimeMs": 0,
+          "generatedBatchCount": 1,
+          "generatedWaveCount": 8,
+          "eligibleBatchCount": 1,
+          "incompleteBatchCount": 0,
+          "generatorVersion": "signal-station-gen-1.2.1",
+          "configVersion": "A620-SS-CONFIG-1.2.1",
+          "scoringRuleVersion": "signal-station-score-1.2.1",
+          "requirementVersion": "1.2.1",
+          "contentVersion": "signal-station-six-slice-1.2.1",
+          "fullLevelSetStatus": "HOLD",
+          "implementedLevels": [
+            1,
+            7,
+            67,
+            79,
+            90,
+            96
+          ]
+        }
+      }
+    },
+    {
+      "id": "SIGNAL_STATION_L79_SEED_6201079",
+      "level": 79,
+      "sessionSeed": 6201079,
+      "levelConfig": {
+        "level": 79,
+        "stageId": "S14",
+        "gridRows": 3,
+        "gridColumns": 4,
+        "timingProfile": "A",
+        "waveTemplate": "P20_D10",
+        "targetClassCount": 1,
+        "targetClassSplit": [
+          20
+        ],
+        "similarityTier": 1,
+        "directionCount": 2,
+        "doubleCount": 2,
+        "doubleWaveOrdinals": [
+          3,
+          7
+        ],
+        "maxWaveObjects": 5
+      },
+      "planSha256": "c5dbd13484b01aa62c54b5bf0842d243ac4253536c15a932048d1ed4bca71c0c",
+      "plan": {
+        "generatorVersion": "signal-station-gen-1.2.1",
+        "sessionSeed": 6201079,
+        "level": 79,
+        "batchOrdinal": 1,
+        "targetCards": {
+          "A": {
+            "contour": "HEXAGON",
+            "innerMark": "CROSS",
+            "directionDeg": 0,
+            "colorFamily": "BLUE"
+          },
+          "B": null
+        },
+        "waves": [
+          {
+            "waveOrdinal": 1,
+            "startOffsetInOperationMs": 500,
+            "instances": [
+              {
+                "instanceId": "b1-w1-s5",
+                "batchOrdinal": 1,
+                "waveOrdinal": 1,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 5,
+                "row": 1,
+                "column": 1,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "CROSS",
+                  "directionDeg": 0,
+                  "colorFamily": "BLUE"
+                },
+                "enterStartInBatchMs": 3500,
+                "naturalExitEndInBatchMs": 6400
+              },
+              {
+                "instanceId": "b1-w1-s10",
+                "batchOrdinal": 1,
+                "waveOrdinal": 1,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 10,
+                "row": 2,
+                "column": 2,
+                "quadrant": "BOTTOM_RIGHT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "CROSS",
+                  "directionDeg": 0,
+                  "colorFamily": "BLUE"
+                },
+                "enterStartInBatchMs": 3500,
+                "naturalExitEndInBatchMs": 6400
+              },
+              {
+                "instanceId": "b1-w1-s11",
+                "batchOrdinal": 1,
+                "waveOrdinal": 1,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "A",
+                "requiresDouble": false,
+                "slotIndex": 11,
+                "row": 2,
+                "column": 3,
+                "quadrant": "BOTTOM_RIGHT",
+                "symbol": {
+                  "contour": "TRIANGLE",
+                  "innerMark": "ARC",
+                  "directionDeg": 90,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 3500,
+                "naturalExitEndInBatchMs": 6400
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 2,
+            "startOffsetInOperationMs": 4000,
+            "instances": [
+              {
+                "instanceId": "b1-w2-s4",
+                "batchOrdinal": 1,
+                "waveOrdinal": 2,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 4,
+                "row": 1,
+                "column": 0,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "CROSS",
+                  "directionDeg": 0,
+                  "colorFamily": "BLUE"
+                },
+                "enterStartInBatchMs": 7000,
+                "naturalExitEndInBatchMs": 9900
+              },
+              {
+                "instanceId": "b1-w2-s6",
+                "batchOrdinal": 1,
+                "waveOrdinal": 2,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 6,
+                "row": 1,
+                "column": 2,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "CROSS",
+                  "directionDeg": 0,
+                  "colorFamily": "BLUE"
+                },
+                "enterStartInBatchMs": 7000,
+                "naturalExitEndInBatchMs": 9900
+              },
+              {
+                "instanceId": "b1-w2-s8",
+                "batchOrdinal": 1,
+                "waveOrdinal": 2,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 8,
+                "row": 2,
+                "column": 0,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "CROSS",
+                  "directionDeg": 0,
+                  "colorFamily": "BLUE"
+                },
+                "enterStartInBatchMs": 7000,
+                "naturalExitEndInBatchMs": 9900
+              },
+              {
+                "instanceId": "b1-w2-s9",
+                "batchOrdinal": 1,
+                "waveOrdinal": 2,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "A",
+                "requiresDouble": false,
+                "slotIndex": 9,
+                "row": 2,
+                "column": 1,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "ROUNDED_SQUARE",
+                  "innerMark": "DOT",
+                  "directionDeg": 90,
+                  "colorFamily": "TEAL"
+                },
+                "enterStartInBatchMs": 7000,
+                "naturalExitEndInBatchMs": 9900
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 3,
+            "startOffsetInOperationMs": 7500,
+            "instances": [
+              {
+                "instanceId": "b1-w3-s1",
+                "batchOrdinal": 1,
+                "waveOrdinal": 3,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 1,
+                "row": 0,
+                "column": 1,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "CROSS",
+                  "directionDeg": 0,
+                  "colorFamily": "BLUE"
+                },
+                "enterStartInBatchMs": 10500,
+                "naturalExitEndInBatchMs": 13400
+              },
+              {
+                "instanceId": "b1-w3-s3",
+                "batchOrdinal": 1,
+                "waveOrdinal": 3,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": true,
+                "slotIndex": 3,
+                "row": 0,
+                "column": 3,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "CROSS",
+                  "directionDeg": 0,
+                  "colorFamily": "BLUE"
+                },
+                "enterStartInBatchMs": 10500,
+                "naturalExitEndInBatchMs": 13400
+              },
+              {
+                "instanceId": "b1-w3-s9",
+                "batchOrdinal": 1,
+                "waveOrdinal": 3,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "A",
+                "requiresDouble": false,
+                "slotIndex": 9,
+                "row": 2,
+                "column": 1,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "SHIELD",
+                  "innerMark": "DOT",
+                  "directionDeg": 90,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 10500,
+                "naturalExitEndInBatchMs": 13400
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 4,
+            "startOffsetInOperationMs": 11000,
+            "instances": [
+              {
+                "instanceId": "b1-w4-s1",
+                "batchOrdinal": 1,
+                "waveOrdinal": 4,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "A",
+                "requiresDouble": false,
+                "slotIndex": 1,
+                "row": 0,
+                "column": 1,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "CIRCLE",
+                  "innerMark": "CHEVRON",
+                  "directionDeg": 90,
+                  "colorFamily": "TEAL"
+                },
+                "enterStartInBatchMs": 14000,
+                "naturalExitEndInBatchMs": 16900
+              },
+              {
+                "instanceId": "b1-w4-s2",
+                "batchOrdinal": 1,
+                "waveOrdinal": 4,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 2,
+                "row": 0,
+                "column": 2,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "CROSS",
+                  "directionDeg": 0,
+                  "colorFamily": "BLUE"
+                },
+                "enterStartInBatchMs": 14000,
+                "naturalExitEndInBatchMs": 16900
+              },
+              {
+                "instanceId": "b1-w4-s7",
+                "batchOrdinal": 1,
+                "waveOrdinal": 4,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 7,
+                "row": 1,
+                "column": 3,
+                "quadrant": "BOTTOM_RIGHT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "CROSS",
+                  "directionDeg": 0,
+                  "colorFamily": "BLUE"
+                },
+                "enterStartInBatchMs": 14000,
+                "naturalExitEndInBatchMs": 16900
+              },
+              {
+                "instanceId": "b1-w4-s9",
+                "batchOrdinal": 1,
+                "waveOrdinal": 4,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 9,
+                "row": 2,
+                "column": 1,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "CROSS",
+                  "directionDeg": 0,
+                  "colorFamily": "BLUE"
+                },
+                "enterStartInBatchMs": 14000,
+                "naturalExitEndInBatchMs": 16900
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 5,
+            "startOffsetInOperationMs": 14500,
+            "instances": [
+              {
+                "instanceId": "b1-w5-s0",
+                "batchOrdinal": 1,
+                "waveOrdinal": 5,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 0,
+                "row": 0,
+                "column": 0,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "CROSS",
+                  "directionDeg": 0,
+                  "colorFamily": "BLUE"
+                },
+                "enterStartInBatchMs": 17500,
+                "naturalExitEndInBatchMs": 20400
+              },
+              {
+                "instanceId": "b1-w5-s8",
+                "batchOrdinal": 1,
+                "waveOrdinal": 5,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "A",
+                "requiresDouble": false,
+                "slotIndex": 8,
+                "row": 2,
+                "column": 0,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "CIRCLE",
+                  "innerMark": "BAR",
+                  "directionDeg": 90,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 17500,
+                "naturalExitEndInBatchMs": 20400
+              },
+              {
+                "instanceId": "b1-w5-s11",
+                "batchOrdinal": 1,
+                "waveOrdinal": 5,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 11,
+                "row": 2,
+                "column": 3,
+                "quadrant": "BOTTOM_RIGHT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "CROSS",
+                  "directionDeg": 0,
+                  "colorFamily": "BLUE"
+                },
+                "enterStartInBatchMs": 17500,
+                "naturalExitEndInBatchMs": 20400
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 6,
+            "startOffsetInOperationMs": 18000,
+            "instances": [
+              {
+                "instanceId": "b1-w6-s1",
+                "batchOrdinal": 1,
+                "waveOrdinal": 6,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 1,
+                "row": 0,
+                "column": 1,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "CROSS",
+                  "directionDeg": 0,
+                  "colorFamily": "BLUE"
+                },
+                "enterStartInBatchMs": 21000,
+                "naturalExitEndInBatchMs": 23900
+              },
+              {
+                "instanceId": "b1-w6-s3",
+                "batchOrdinal": 1,
+                "waveOrdinal": 6,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 3,
+                "row": 0,
+                "column": 3,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "CROSS",
+                  "directionDeg": 0,
+                  "colorFamily": "BLUE"
+                },
+                "enterStartInBatchMs": 21000,
+                "naturalExitEndInBatchMs": 23900
+              },
+              {
+                "instanceId": "b1-w6-s4",
+                "batchOrdinal": 1,
+                "waveOrdinal": 6,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "A",
+                "requiresDouble": false,
+                "slotIndex": 4,
+                "row": 1,
+                "column": 0,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "DIAMOND",
+                  "innerMark": "ARC",
+                  "directionDeg": 90,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 21000,
+                "naturalExitEndInBatchMs": 23900
+              },
+              {
+                "instanceId": "b1-w6-s5",
+                "batchOrdinal": 1,
+                "waveOrdinal": 6,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 5,
+                "row": 1,
+                "column": 1,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "CROSS",
+                  "directionDeg": 0,
+                  "colorFamily": "BLUE"
+                },
+                "enterStartInBatchMs": 21000,
+                "naturalExitEndInBatchMs": 23900
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 7,
+            "startOffsetInOperationMs": 21500,
+            "instances": [
+              {
+                "instanceId": "b1-w7-s0",
+                "batchOrdinal": 1,
+                "waveOrdinal": 7,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 0,
+                "row": 0,
+                "column": 0,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "CROSS",
+                  "directionDeg": 0,
+                  "colorFamily": "BLUE"
+                },
+                "enterStartInBatchMs": 24500,
+                "naturalExitEndInBatchMs": 27400
+              },
+              {
+                "instanceId": "b1-w7-s4",
+                "batchOrdinal": 1,
+                "waveOrdinal": 7,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "A",
+                "requiresDouble": false,
+                "slotIndex": 4,
+                "row": 1,
+                "column": 0,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "TRIANGLE",
+                  "innerMark": "ARC",
+                  "directionDeg": 90,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 24500,
+                "naturalExitEndInBatchMs": 27400
+              },
+              {
+                "instanceId": "b1-w7-s9",
+                "batchOrdinal": 1,
+                "waveOrdinal": 7,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "A",
+                "requiresDouble": false,
+                "slotIndex": 9,
+                "row": 2,
+                "column": 1,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "DIAMOND",
+                  "innerMark": "BAR",
+                  "directionDeg": 90,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 24500,
+                "naturalExitEndInBatchMs": 27400
+              },
+              {
+                "instanceId": "b1-w7-s11",
+                "batchOrdinal": 1,
+                "waveOrdinal": 7,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": true,
+                "slotIndex": 11,
+                "row": 2,
+                "column": 3,
+                "quadrant": "BOTTOM_RIGHT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "CROSS",
+                  "directionDeg": 0,
+                  "colorFamily": "BLUE"
+                },
+                "enterStartInBatchMs": 24500,
+                "naturalExitEndInBatchMs": 27400
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 8,
+            "startOffsetInOperationMs": 25000,
+            "instances": [
+              {
+                "instanceId": "b1-w8-s1",
+                "batchOrdinal": 1,
+                "waveOrdinal": 8,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "A",
+                "requiresDouble": false,
+                "slotIndex": 1,
+                "row": 0,
+                "column": 1,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "CIRCLE",
+                  "innerMark": "BAR",
+                  "directionDeg": 90,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 28000,
+                "naturalExitEndInBatchMs": 30900
+              },
+              {
+                "instanceId": "b1-w8-s2",
+                "batchOrdinal": 1,
+                "waveOrdinal": 8,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 2,
+                "row": 0,
+                "column": 2,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "CROSS",
+                  "directionDeg": 0,
+                  "colorFamily": "BLUE"
+                },
+                "enterStartInBatchMs": 28000,
+                "naturalExitEndInBatchMs": 30900
+              },
+              {
+                "instanceId": "b1-w8-s7",
+                "batchOrdinal": 1,
+                "waveOrdinal": 8,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 7,
+                "row": 1,
+                "column": 3,
+                "quadrant": "BOTTOM_RIGHT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "CROSS",
+                  "directionDeg": 0,
+                  "colorFamily": "BLUE"
+                },
+                "enterStartInBatchMs": 28000,
+                "naturalExitEndInBatchMs": 30900
+              },
+              {
+                "instanceId": "b1-w8-s8",
+                "batchOrdinal": 1,
+                "waveOrdinal": 8,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "A",
+                "requiresDouble": false,
+                "slotIndex": 8,
+                "row": 2,
+                "column": 0,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "SHIELD",
+                  "innerMark": "CHEVRON",
+                  "directionDeg": 90,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 28000,
+                "naturalExitEndInBatchMs": 30900
+              },
+              {
+                "instanceId": "b1-w8-s9",
+                "batchOrdinal": 1,
+                "waveOrdinal": 8,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 9,
+                "row": 2,
+                "column": 1,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "CROSS",
+                  "directionDeg": 0,
+                  "colorFamily": "BLUE"
+                },
+                "enterStartInBatchMs": 28000,
+                "naturalExitEndInBatchMs": 30900
+              }
+            ]
+          }
+        ],
+        "targetTotal": 20,
+        "distractorTotal": 10,
+        "doubleTotal": 2
+      },
+      "expectedBatch": {
+        "batchOrdinal": 1,
+        "closed": true,
+        "decisionEligible": true,
+        "levelBefore": 79,
+        "resultZone": "HOLD",
+        "levelTransition": "HOLD",
+        "levelAfter": 79,
+        "batchScore": 63,
+        "closedAtActiveMs": 37500,
+        "gameBatchMetrics": {
+          "H": 14,
+          "T": 20,
+          "F": 3,
+          "D": 10,
+          "timingProfile": "A",
+          "targetClassCount": 1,
+          "similarityTier": 1,
+          "directionCount": 2,
+          "doubleCount": 2,
+          "completedDoubleCount": 1,
+          "timedOutDoubleCount": 1,
+          "presentedWaveCount": 8,
+          "reactionTimeCount": 14,
+          "reactionTimeTotalMs": 70,
+          "reactionTimeMinMs": 5,
+          "reactionTimeMaxMs": 5,
+          "doubleIntervalCount": 1,
+          "doubleIntervalTotalMs": 1
+        },
+        "batchPayloadSha256": "81b715957db4f98e51b62035e1a250d3f6dd73ea0e1c6beb85d6c6da529cb8c3"
+      },
+      "resultDraft": {
+        "gameCode": "SIGNAL_STATION",
+        "gamePayloadVersion": "A620-GP-1.1",
+        "runtimeConfigHash": "92e33a4ca7656d90ac185a227906464169e21db003f9ac550b8370dfb15e5659",
+        "designMaxLevel": 96,
+        "plannedBatchCount": 8,
+        "eligibleBatchCount": 1,
+        "eligibleBatches": [
+          {
+            "batchOrdinal": 1,
+            "closed": true,
+            "decisionEligible": true,
+            "levelBefore": 79,
+            "resultZone": "HOLD",
+            "levelTransition": "HOLD",
+            "levelAfter": 79,
+            "batchScore": 63,
+            "closedAtActiveMs": 37500,
+            "gameBatchMetrics": {
+              "H": 14,
+              "T": 20,
+              "F": 3,
+              "D": 10,
+              "timingProfile": "A",
+              "targetClassCount": 1,
+              "similarityTier": 1,
+              "directionCount": 2,
+              "doubleCount": 2,
+              "completedDoubleCount": 1,
+              "timedOutDoubleCount": 1,
+              "presentedWaveCount": 8,
+              "reactionTimeCount": 14,
+              "reactionTimeTotalMs": 70,
+              "reactionTimeMinMs": 5,
+              "reactionTimeMaxMs": 5,
+              "doubleIntervalCount": 1,
+              "doubleIntervalTotalMs": 1
+            },
+            "batchPayloadSha256": "81b715957db4f98e51b62035e1a250d3f6dd73ea0e1c6beb85d6c6da529cb8c3"
+          }
+        ],
+        "incompleteBatchAudit": [],
+        "sessionStartLevel": 79,
+        "sessionEndLevel": 79,
+        "sessionHighestPresentedLevel": 79,
+        "sessionHighestPassedLevel": null,
+        "nextStartLevel": 79,
+        "sessionRawScore": 63,
+        "sessionRawScoreMax": 800,
+        "actualTrainingMs": 300000,
+        "gameMetrics": {
+          "totalH": 14,
+          "totalT": 20,
+          "totalF": 3,
+          "totalD": 10,
+          "reactionTimeCount": 14,
+          "reactionTimeTotalMs": 70,
+          "reactionTimeMinMs": 5,
+          "reactionTimeMaxMs": 5,
+          "doubleIntervalCount": 1,
+          "doubleIntervalTotalMs": 1,
+          "pauseCount": 0,
+          "totalPausedUptimeMs": 0,
+          "generatedBatchCount": 1,
+          "generatedWaveCount": 8,
+          "eligibleBatchCount": 1,
+          "incompleteBatchCount": 0,
+          "generatorVersion": "signal-station-gen-1.2.1",
+          "configVersion": "A620-SS-CONFIG-1.2.1",
+          "scoringRuleVersion": "signal-station-score-1.2.1",
+          "requirementVersion": "1.2.1",
+          "contentVersion": "signal-station-six-slice-1.2.1",
+          "fullLevelSetStatus": "HOLD",
+          "implementedLevels": [
+            1,
+            7,
+            67,
+            79,
+            90,
+            96
+          ]
+        }
+      }
+    },
+    {
+      "id": "SIGNAL_STATION_L90_SEED_6201090",
+      "level": 90,
+      "sessionSeed": 6201090,
+      "levelConfig": {
+        "level": 90,
+        "stageId": "S15",
+        "gridRows": 3,
+        "gridColumns": 4,
+        "timingProfile": "H",
+        "waveTemplate": "P20_D10",
+        "targetClassCount": 2,
+        "targetClassSplit": [
+          10,
+          10
+        ],
+        "similarityTier": 2,
+        "directionCount": 4,
+        "doubleCount": 4,
+        "doubleWaveOrdinals": [
+          2,
+          4,
+          6,
+          8
+        ],
+        "maxWaveObjects": 5
+      },
+      "planSha256": "57f37481e0f0f3b0ecc228bac29d455a8d98575c48f188e4a1aae0bab55ae439",
+      "plan": {
+        "generatorVersion": "signal-station-gen-1.2.1",
+        "sessionSeed": 6201090,
+        "level": 90,
+        "batchOrdinal": 1,
+        "targetCards": {
+          "A": {
+            "contour": "HEXAGON",
+            "innerMark": "DOT",
+            "directionDeg": 0,
+            "colorFamily": "AMBER"
+          },
+          "B": {
+            "contour": "SHIELD",
+            "innerMark": "DOT",
+            "directionDeg": 0,
+            "colorFamily": "VIOLET"
+          }
+        },
+        "waves": [
+          {
+            "waveOrdinal": 1,
+            "startOffsetInOperationMs": 500,
+            "instances": [
+              {
+                "instanceId": "b1-w1-s3",
+                "batchOrdinal": 1,
+                "waveOrdinal": 1,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "B",
+                "requiresDouble": false,
+                "slotIndex": 3,
+                "row": 0,
+                "column": 3,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "CIRCLE",
+                  "innerMark": "DOUBLE_BAR",
+                  "directionDeg": 270,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 3500,
+                "naturalExitEndInBatchMs": 5800
+              },
+              {
+                "instanceId": "b1-w1-s7",
+                "batchOrdinal": 1,
+                "waveOrdinal": 1,
+                "role": "TARGET",
+                "targetCategoryId": "B",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 7,
+                "row": 1,
+                "column": 3,
+                "quadrant": "BOTTOM_RIGHT",
+                "symbol": {
+                  "contour": "SHIELD",
+                  "innerMark": "DOT",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 3500,
+                "naturalExitEndInBatchMs": 5800
+              },
+              {
+                "instanceId": "b1-w1-s8",
+                "batchOrdinal": 1,
+                "waveOrdinal": 1,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 8,
+                "row": 2,
+                "column": 0,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "DOT",
+                  "directionDeg": 0,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 3500,
+                "naturalExitEndInBatchMs": 5800
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 2,
+            "startOffsetInOperationMs": 4000,
+            "instances": [
+              {
+                "instanceId": "b1-w2-s1",
+                "batchOrdinal": 1,
+                "waveOrdinal": 2,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "B",
+                "requiresDouble": false,
+                "slotIndex": 1,
+                "row": 0,
+                "column": 1,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "ROUNDED_SQUARE",
+                  "innerMark": "BAR",
+                  "directionDeg": 90,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 7000,
+                "naturalExitEndInBatchMs": 9300
+              },
+              {
+                "instanceId": "b1-w2-s2",
+                "batchOrdinal": 1,
+                "waveOrdinal": 2,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 2,
+                "row": 0,
+                "column": 2,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "DOT",
+                  "directionDeg": 0,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 7000,
+                "naturalExitEndInBatchMs": 9300
+              },
+              {
+                "instanceId": "b1-w2-s4",
+                "batchOrdinal": 1,
+                "waveOrdinal": 2,
+                "role": "TARGET",
+                "targetCategoryId": "B",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": true,
+                "slotIndex": 4,
+                "row": 1,
+                "column": 0,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "SHIELD",
+                  "innerMark": "DOT",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 7000,
+                "naturalExitEndInBatchMs": 9300
+              },
+              {
+                "instanceId": "b1-w2-s10",
+                "batchOrdinal": 1,
+                "waveOrdinal": 2,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 10,
+                "row": 2,
+                "column": 2,
+                "quadrant": "BOTTOM_RIGHT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "DOT",
+                  "directionDeg": 0,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 7000,
+                "naturalExitEndInBatchMs": 9300
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 3,
+            "startOffsetInOperationMs": 7500,
+            "instances": [
+              {
+                "instanceId": "b1-w3-s0",
+                "batchOrdinal": 1,
+                "waveOrdinal": 3,
+                "role": "TARGET",
+                "targetCategoryId": "B",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 0,
+                "row": 0,
+                "column": 0,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "SHIELD",
+                  "innerMark": "DOT",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 10500,
+                "naturalExitEndInBatchMs": 12800
+              },
+              {
+                "instanceId": "b1-w3-s4",
+                "batchOrdinal": 1,
+                "waveOrdinal": 3,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "A",
+                "requiresDouble": false,
+                "slotIndex": 4,
+                "row": 1,
+                "column": 0,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "DIAMOND",
+                  "innerMark": "ARC",
+                  "directionDeg": 270,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 10500,
+                "naturalExitEndInBatchMs": 12800
+              },
+              {
+                "instanceId": "b1-w3-s6",
+                "batchOrdinal": 1,
+                "waveOrdinal": 3,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 6,
+                "row": 1,
+                "column": 2,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "DOT",
+                  "directionDeg": 0,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 10500,
+                "naturalExitEndInBatchMs": 12800
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 4,
+            "startOffsetInOperationMs": 11000,
+            "instances": [
+              {
+                "instanceId": "b1-w4-s3",
+                "batchOrdinal": 1,
+                "waveOrdinal": 4,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 3,
+                "row": 0,
+                "column": 3,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "DOT",
+                  "directionDeg": 0,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 14000,
+                "naturalExitEndInBatchMs": 16300
+              },
+              {
+                "instanceId": "b1-w4-s5",
+                "batchOrdinal": 1,
+                "waveOrdinal": 4,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "B",
+                "requiresDouble": false,
+                "slotIndex": 5,
+                "row": 1,
+                "column": 1,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "CIRCLE",
+                  "innerMark": "BAR",
+                  "directionDeg": 180,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 14000,
+                "naturalExitEndInBatchMs": 16300
+              },
+              {
+                "instanceId": "b1-w4-s9",
+                "batchOrdinal": 1,
+                "waveOrdinal": 4,
+                "role": "TARGET",
+                "targetCategoryId": "B",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 9,
+                "row": 2,
+                "column": 1,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "SHIELD",
+                  "innerMark": "DOT",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 14000,
+                "naturalExitEndInBatchMs": 16300
+              },
+              {
+                "instanceId": "b1-w4-s11",
+                "batchOrdinal": 1,
+                "waveOrdinal": 4,
+                "role": "TARGET",
+                "targetCategoryId": "B",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": true,
+                "slotIndex": 11,
+                "row": 2,
+                "column": 3,
+                "quadrant": "BOTTOM_RIGHT",
+                "symbol": {
+                  "contour": "SHIELD",
+                  "innerMark": "DOT",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 14000,
+                "naturalExitEndInBatchMs": 16300
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 5,
+            "startOffsetInOperationMs": 14500,
+            "instances": [
+              {
+                "instanceId": "b1-w5-s1",
+                "batchOrdinal": 1,
+                "waveOrdinal": 5,
+                "role": "TARGET",
+                "targetCategoryId": "B",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 1,
+                "row": 0,
+                "column": 1,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "SHIELD",
+                  "innerMark": "DOT",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 17500,
+                "naturalExitEndInBatchMs": 19800
+              },
+              {
+                "instanceId": "b1-w5-s5",
+                "batchOrdinal": 1,
+                "waveOrdinal": 5,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 5,
+                "row": 1,
+                "column": 1,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "DOT",
+                  "directionDeg": 0,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 17500,
+                "naturalExitEndInBatchMs": 19800
+              },
+              {
+                "instanceId": "b1-w5-s7",
+                "batchOrdinal": 1,
+                "waveOrdinal": 5,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "B",
+                "requiresDouble": false,
+                "slotIndex": 7,
+                "row": 1,
+                "column": 3,
+                "quadrant": "BOTTOM_RIGHT",
+                "symbol": {
+                  "contour": "SHIELD",
+                  "innerMark": "CROSS",
+                  "directionDeg": 180,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 17500,
+                "naturalExitEndInBatchMs": 19800
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 6,
+            "startOffsetInOperationMs": 18000,
+            "instances": [
+              {
+                "instanceId": "b1-w6-s3",
+                "batchOrdinal": 1,
+                "waveOrdinal": 6,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 3,
+                "row": 0,
+                "column": 3,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "DOT",
+                  "directionDeg": 0,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 21000,
+                "naturalExitEndInBatchMs": 23300
+              },
+              {
+                "instanceId": "b1-w6-s4",
+                "batchOrdinal": 1,
+                "waveOrdinal": 6,
+                "role": "TARGET",
+                "targetCategoryId": "B",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 4,
+                "row": 1,
+                "column": 0,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "SHIELD",
+                  "innerMark": "DOT",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 21000,
+                "naturalExitEndInBatchMs": 23300
+              },
+              {
+                "instanceId": "b1-w6-s5",
+                "batchOrdinal": 1,
+                "waveOrdinal": 6,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "A",
+                "requiresDouble": false,
+                "slotIndex": 5,
+                "row": 1,
+                "column": 1,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "DIAMOND",
+                  "innerMark": "ARC",
+                  "directionDeg": 0,
+                  "colorFamily": "TEAL"
+                },
+                "enterStartInBatchMs": 21000,
+                "naturalExitEndInBatchMs": 23300
+              },
+              {
+                "instanceId": "b1-w6-s11",
+                "batchOrdinal": 1,
+                "waveOrdinal": 6,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": true,
+                "slotIndex": 11,
+                "row": 2,
+                "column": 3,
+                "quadrant": "BOTTOM_RIGHT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "DOT",
+                  "directionDeg": 0,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 21000,
+                "naturalExitEndInBatchMs": 23300
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 7,
+            "startOffsetInOperationMs": 21500,
+            "instances": [
+              {
+                "instanceId": "b1-w7-s1",
+                "batchOrdinal": 1,
+                "waveOrdinal": 7,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "A",
+                "requiresDouble": false,
+                "slotIndex": 1,
+                "row": 0,
+                "column": 1,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "BAR",
+                  "directionDeg": 90,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 24500,
+                "naturalExitEndInBatchMs": 26800
+              },
+              {
+                "instanceId": "b1-w7-s2",
+                "batchOrdinal": 1,
+                "waveOrdinal": 7,
+                "role": "TARGET",
+                "targetCategoryId": "B",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 2,
+                "row": 0,
+                "column": 2,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "SHIELD",
+                  "innerMark": "DOT",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 24500,
+                "naturalExitEndInBatchMs": 26800
+              },
+              {
+                "instanceId": "b1-w7-s5",
+                "batchOrdinal": 1,
+                "waveOrdinal": 7,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 5,
+                "row": 1,
+                "column": 1,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "DOT",
+                  "directionDeg": 0,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 24500,
+                "naturalExitEndInBatchMs": 26800
+              },
+              {
+                "instanceId": "b1-w7-s7",
+                "batchOrdinal": 1,
+                "waveOrdinal": 7,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "A",
+                "requiresDouble": false,
+                "slotIndex": 7,
+                "row": 1,
+                "column": 3,
+                "quadrant": "BOTTOM_RIGHT",
+                "symbol": {
+                  "contour": "DIAMOND",
+                  "innerMark": "ARC",
+                  "directionDeg": 0,
+                  "colorFamily": "BLUE"
+                },
+                "enterStartInBatchMs": 24500,
+                "naturalExitEndInBatchMs": 26800
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 8,
+            "startOffsetInOperationMs": 25000,
+            "instances": [
+              {
+                "instanceId": "b1-w8-s0",
+                "batchOrdinal": 1,
+                "waveOrdinal": 8,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 0,
+                "row": 0,
+                "column": 0,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "DOT",
+                  "directionDeg": 0,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 28000,
+                "naturalExitEndInBatchMs": 30300
+              },
+              {
+                "instanceId": "b1-w8-s2",
+                "batchOrdinal": 1,
+                "waveOrdinal": 8,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "B",
+                "requiresDouble": false,
+                "slotIndex": 2,
+                "row": 0,
+                "column": 2,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "SHIELD",
+                  "innerMark": "ARC",
+                  "directionDeg": 180,
+                  "colorFamily": "TEAL"
+                },
+                "enterStartInBatchMs": 28000,
+                "naturalExitEndInBatchMs": 30300
+              },
+              {
+                "instanceId": "b1-w8-s7",
+                "batchOrdinal": 1,
+                "waveOrdinal": 8,
+                "role": "TARGET",
+                "targetCategoryId": "B",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": true,
+                "slotIndex": 7,
+                "row": 1,
+                "column": 3,
+                "quadrant": "BOTTOM_RIGHT",
+                "symbol": {
+                  "contour": "SHIELD",
+                  "innerMark": "DOT",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 28000,
+                "naturalExitEndInBatchMs": 30300
+              },
+              {
+                "instanceId": "b1-w8-s8",
+                "batchOrdinal": 1,
+                "waveOrdinal": 8,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "A",
+                "requiresDouble": false,
+                "slotIndex": 8,
+                "row": 2,
+                "column": 0,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "TRIANGLE",
+                  "innerMark": "CROSS",
+                  "directionDeg": 90,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 28000,
+                "naturalExitEndInBatchMs": 30300
+              },
+              {
+                "instanceId": "b1-w8-s9",
+                "batchOrdinal": 1,
+                "waveOrdinal": 8,
+                "role": "TARGET",
+                "targetCategoryId": "B",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 9,
+                "row": 2,
+                "column": 1,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "SHIELD",
+                  "innerMark": "DOT",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 28000,
+                "naturalExitEndInBatchMs": 30300
+              }
+            ]
+          }
+        ],
+        "targetTotal": 20,
+        "distractorTotal": 10,
+        "doubleTotal": 4
+      },
+      "expectedBatch": {
+        "batchOrdinal": 1,
+        "closed": true,
+        "decisionEligible": true,
+        "levelBefore": 90,
+        "resultZone": "HOLD",
+        "levelTransition": "HOLD",
+        "levelAfter": 90,
+        "batchScore": 63,
+        "closedAtActiveMs": 37500,
+        "gameBatchMetrics": {
+          "H": 14,
+          "T": 20,
+          "F": 3,
+          "D": 10,
+          "timingProfile": "H",
+          "targetClassCount": 2,
+          "similarityTier": 2,
+          "directionCount": 4,
+          "doubleCount": 4,
+          "completedDoubleCount": 2,
+          "timedOutDoubleCount": 2,
+          "presentedWaveCount": 8,
+          "reactionTimeCount": 14,
+          "reactionTimeTotalMs": 70,
+          "reactionTimeMinMs": 5,
+          "reactionTimeMaxMs": 5,
+          "doubleIntervalCount": 2,
+          "doubleIntervalTotalMs": 2
+        },
+        "batchPayloadSha256": "d286b0b2f0556adfbe593550872ab8ea87587e94576c5c8b46b2655d39d23e0d"
+      },
+      "resultDraft": {
+        "gameCode": "SIGNAL_STATION",
+        "gamePayloadVersion": "A620-GP-1.1",
+        "runtimeConfigHash": "92e33a4ca7656d90ac185a227906464169e21db003f9ac550b8370dfb15e5659",
+        "designMaxLevel": 96,
+        "plannedBatchCount": 8,
+        "eligibleBatchCount": 1,
+        "eligibleBatches": [
+          {
+            "batchOrdinal": 1,
+            "closed": true,
+            "decisionEligible": true,
+            "levelBefore": 90,
+            "resultZone": "HOLD",
+            "levelTransition": "HOLD",
+            "levelAfter": 90,
+            "batchScore": 63,
+            "closedAtActiveMs": 37500,
+            "gameBatchMetrics": {
+              "H": 14,
+              "T": 20,
+              "F": 3,
+              "D": 10,
+              "timingProfile": "H",
+              "targetClassCount": 2,
+              "similarityTier": 2,
+              "directionCount": 4,
+              "doubleCount": 4,
+              "completedDoubleCount": 2,
+              "timedOutDoubleCount": 2,
+              "presentedWaveCount": 8,
+              "reactionTimeCount": 14,
+              "reactionTimeTotalMs": 70,
+              "reactionTimeMinMs": 5,
+              "reactionTimeMaxMs": 5,
+              "doubleIntervalCount": 2,
+              "doubleIntervalTotalMs": 2
+            },
+            "batchPayloadSha256": "d286b0b2f0556adfbe593550872ab8ea87587e94576c5c8b46b2655d39d23e0d"
+          }
+        ],
+        "incompleteBatchAudit": [],
+        "sessionStartLevel": 90,
+        "sessionEndLevel": 90,
+        "sessionHighestPresentedLevel": 90,
+        "sessionHighestPassedLevel": null,
+        "nextStartLevel": 90,
+        "sessionRawScore": 63,
+        "sessionRawScoreMax": 800,
+        "actualTrainingMs": 300000,
+        "gameMetrics": {
+          "totalH": 14,
+          "totalT": 20,
+          "totalF": 3,
+          "totalD": 10,
+          "reactionTimeCount": 14,
+          "reactionTimeTotalMs": 70,
+          "reactionTimeMinMs": 5,
+          "reactionTimeMaxMs": 5,
+          "doubleIntervalCount": 2,
+          "doubleIntervalTotalMs": 2,
+          "pauseCount": 0,
+          "totalPausedUptimeMs": 0,
+          "generatedBatchCount": 1,
+          "generatedWaveCount": 8,
+          "eligibleBatchCount": 1,
+          "incompleteBatchCount": 0,
+          "generatorVersion": "signal-station-gen-1.2.1",
+          "configVersion": "A620-SS-CONFIG-1.2.1",
+          "scoringRuleVersion": "signal-station-score-1.2.1",
+          "requirementVersion": "1.2.1",
+          "contentVersion": "signal-station-six-slice-1.2.1",
+          "fullLevelSetStatus": "HOLD",
+          "implementedLevels": [
+            1,
+            7,
+            67,
+            79,
+            90,
+            96
+          ]
+        }
+      }
+    },
+    {
+      "id": "SIGNAL_STATION_L96_SEED_6201096",
+      "level": 96,
+      "sessionSeed": 6201096,
+      "levelConfig": {
+        "level": 96,
+        "stageId": "S16",
+        "gridRows": 3,
+        "gridColumns": 4,
+        "timingProfile": "H",
+        "waveTemplate": "P20_D10",
+        "targetClassCount": 2,
+        "targetClassSplit": [
+          10,
+          10
+        ],
+        "similarityTier": 3,
+        "directionCount": 4,
+        "doubleCount": 5,
+        "doubleWaveOrdinals": [
+          1,
+          2,
+          4,
+          6,
+          8
+        ],
+        "maxWaveObjects": 5
+      },
+      "planSha256": "83c462020161189f2cfd41faf0cc8471aa367f5da96741b8284b8863c1a71238",
+      "plan": {
+        "generatorVersion": "signal-station-gen-1.2.1",
+        "sessionSeed": 6201096,
+        "level": 96,
+        "batchOrdinal": 1,
+        "targetCards": {
+          "A": {
+            "contour": "ROUNDED_SQUARE",
+            "innerMark": "BAR",
+            "directionDeg": 0,
+            "colorFamily": "VIOLET"
+          },
+          "B": {
+            "contour": "HEXAGON",
+            "innerMark": "ARC",
+            "directionDeg": 270,
+            "colorFamily": "AMBER"
+          }
+        },
+        "waves": [
+          {
+            "waveOrdinal": 1,
+            "startOffsetInOperationMs": 500,
+            "instances": [
+              {
+                "instanceId": "b1-w1-s1",
+                "batchOrdinal": 1,
+                "waveOrdinal": 1,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": true,
+                "slotIndex": 1,
+                "row": 0,
+                "column": 1,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "ROUNDED_SQUARE",
+                  "innerMark": "BAR",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 3500,
+                "naturalExitEndInBatchMs": 5800
+              },
+              {
+                "instanceId": "b1-w1-s6",
+                "batchOrdinal": 1,
+                "waveOrdinal": 1,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "B",
+                "requiresDouble": false,
+                "slotIndex": 6,
+                "row": 1,
+                "column": 2,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "ROUNDED_SQUARE",
+                  "innerMark": "ARC",
+                  "directionDeg": 90,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 3500,
+                "naturalExitEndInBatchMs": 5800
+              },
+              {
+                "instanceId": "b1-w1-s9",
+                "batchOrdinal": 1,
+                "waveOrdinal": 1,
+                "role": "TARGET",
+                "targetCategoryId": "B",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 9,
+                "row": 2,
+                "column": 1,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "ARC",
+                  "directionDeg": 270,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 3500,
+                "naturalExitEndInBatchMs": 5800
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 2,
+            "startOffsetInOperationMs": 4000,
+            "instances": [
+              {
+                "instanceId": "b1-w2-s6",
+                "batchOrdinal": 1,
+                "waveOrdinal": 2,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 6,
+                "row": 1,
+                "column": 2,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "ROUNDED_SQUARE",
+                  "innerMark": "BAR",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 7000,
+                "naturalExitEndInBatchMs": 9300
+              },
+              {
+                "instanceId": "b1-w2-s7",
+                "batchOrdinal": 1,
+                "waveOrdinal": 2,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 7,
+                "row": 1,
+                "column": 3,
+                "quadrant": "BOTTOM_RIGHT",
+                "symbol": {
+                  "contour": "ROUNDED_SQUARE",
+                  "innerMark": "BAR",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 7000,
+                "naturalExitEndInBatchMs": 9300
+              },
+              {
+                "instanceId": "b1-w2-s8",
+                "batchOrdinal": 1,
+                "waveOrdinal": 2,
+                "role": "TARGET",
+                "targetCategoryId": "B",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": true,
+                "slotIndex": 8,
+                "row": 2,
+                "column": 0,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "ARC",
+                  "directionDeg": 270,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 7000,
+                "naturalExitEndInBatchMs": 9300
+              },
+              {
+                "instanceId": "b1-w2-s10",
+                "batchOrdinal": 1,
+                "waveOrdinal": 2,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "B",
+                "requiresDouble": false,
+                "slotIndex": 10,
+                "row": 2,
+                "column": 2,
+                "quadrant": "BOTTOM_RIGHT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "BAR",
+                  "directionDeg": 270,
+                  "colorFamily": "TEAL"
+                },
+                "enterStartInBatchMs": 7000,
+                "naturalExitEndInBatchMs": 9300
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 3,
+            "startOffsetInOperationMs": 7500,
+            "instances": [
+              {
+                "instanceId": "b1-w3-s2",
+                "batchOrdinal": 1,
+                "waveOrdinal": 3,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 2,
+                "row": 0,
+                "column": 2,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "ROUNDED_SQUARE",
+                  "innerMark": "BAR",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 10500,
+                "naturalExitEndInBatchMs": 12800
+              },
+              {
+                "instanceId": "b1-w3-s5",
+                "batchOrdinal": 1,
+                "waveOrdinal": 3,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "A",
+                "requiresDouble": false,
+                "slotIndex": 5,
+                "row": 1,
+                "column": 1,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "SHIELD",
+                  "innerMark": "BAR",
+                  "directionDeg": 0,
+                  "colorFamily": "TEAL"
+                },
+                "enterStartInBatchMs": 10500,
+                "naturalExitEndInBatchMs": 12800
+              },
+              {
+                "instanceId": "b1-w3-s11",
+                "batchOrdinal": 1,
+                "waveOrdinal": 3,
+                "role": "TARGET",
+                "targetCategoryId": "B",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 11,
+                "row": 2,
+                "column": 3,
+                "quadrant": "BOTTOM_RIGHT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "ARC",
+                  "directionDeg": 270,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 10500,
+                "naturalExitEndInBatchMs": 12800
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 4,
+            "startOffsetInOperationMs": 11000,
+            "instances": [
+              {
+                "instanceId": "b1-w4-s3",
+                "batchOrdinal": 1,
+                "waveOrdinal": 4,
+                "role": "TARGET",
+                "targetCategoryId": "B",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": true,
+                "slotIndex": 3,
+                "row": 0,
+                "column": 3,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "ARC",
+                  "directionDeg": 270,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 14000,
+                "naturalExitEndInBatchMs": 16300
+              },
+              {
+                "instanceId": "b1-w4-s4",
+                "batchOrdinal": 1,
+                "waveOrdinal": 4,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 4,
+                "row": 1,
+                "column": 0,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "ROUNDED_SQUARE",
+                  "innerMark": "BAR",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 14000,
+                "naturalExitEndInBatchMs": 16300
+              },
+              {
+                "instanceId": "b1-w4-s5",
+                "batchOrdinal": 1,
+                "waveOrdinal": 4,
+                "role": "TARGET",
+                "targetCategoryId": "B",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 5,
+                "row": 1,
+                "column": 1,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "ARC",
+                  "directionDeg": 270,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 14000,
+                "naturalExitEndInBatchMs": 16300
+              },
+              {
+                "instanceId": "b1-w4-s9",
+                "batchOrdinal": 1,
+                "waveOrdinal": 4,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "B",
+                "requiresDouble": false,
+                "slotIndex": 9,
+                "row": 2,
+                "column": 1,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "SHIELD",
+                  "innerMark": "ARC",
+                  "directionDeg": 270,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 14000,
+                "naturalExitEndInBatchMs": 16300
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 5,
+            "startOffsetInOperationMs": 14500,
+            "instances": [
+              {
+                "instanceId": "b1-w5-s0",
+                "batchOrdinal": 1,
+                "waveOrdinal": 5,
+                "role": "TARGET",
+                "targetCategoryId": "B",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 0,
+                "row": 0,
+                "column": 0,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "ARC",
+                  "directionDeg": 270,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 17500,
+                "naturalExitEndInBatchMs": 19800
+              },
+              {
+                "instanceId": "b1-w5-s6",
+                "batchOrdinal": 1,
+                "waveOrdinal": 5,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "B",
+                "requiresDouble": false,
+                "slotIndex": 6,
+                "row": 1,
+                "column": 2,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "DIAMOND",
+                  "innerMark": "ARC",
+                  "directionDeg": 270,
+                  "colorFamily": "TEAL"
+                },
+                "enterStartInBatchMs": 17500,
+                "naturalExitEndInBatchMs": 19800
+              },
+              {
+                "instanceId": "b1-w5-s10",
+                "batchOrdinal": 1,
+                "waveOrdinal": 5,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 10,
+                "row": 2,
+                "column": 2,
+                "quadrant": "BOTTOM_RIGHT",
+                "symbol": {
+                  "contour": "ROUNDED_SQUARE",
+                  "innerMark": "BAR",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 17500,
+                "naturalExitEndInBatchMs": 19800
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 6,
+            "startOffsetInOperationMs": 18000,
+            "instances": [
+              {
+                "instanceId": "b1-w6-s0",
+                "batchOrdinal": 1,
+                "waveOrdinal": 6,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": true,
+                "slotIndex": 0,
+                "row": 0,
+                "column": 0,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "ROUNDED_SQUARE",
+                  "innerMark": "BAR",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 21000,
+                "naturalExitEndInBatchMs": 23300
+              },
+              {
+                "instanceId": "b1-w6-s6",
+                "batchOrdinal": 1,
+                "waveOrdinal": 6,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "A",
+                "requiresDouble": false,
+                "slotIndex": 6,
+                "row": 1,
+                "column": 2,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "CIRCLE",
+                  "innerMark": "DOUBLE_BAR",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 21000,
+                "naturalExitEndInBatchMs": 23300
+              },
+              {
+                "instanceId": "b1-w6-s8",
+                "batchOrdinal": 1,
+                "waveOrdinal": 6,
+                "role": "TARGET",
+                "targetCategoryId": "B",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 8,
+                "row": 2,
+                "column": 0,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "ARC",
+                  "directionDeg": 270,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 21000,
+                "naturalExitEndInBatchMs": 23300
+              },
+              {
+                "instanceId": "b1-w6-s10",
+                "batchOrdinal": 1,
+                "waveOrdinal": 6,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 10,
+                "row": 2,
+                "column": 2,
+                "quadrant": "BOTTOM_RIGHT",
+                "symbol": {
+                  "contour": "ROUNDED_SQUARE",
+                  "innerMark": "BAR",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 21000,
+                "naturalExitEndInBatchMs": 23300
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 7,
+            "startOffsetInOperationMs": 21500,
+            "instances": [
+              {
+                "instanceId": "b1-w7-s1",
+                "batchOrdinal": 1,
+                "waveOrdinal": 7,
+                "role": "TARGET",
+                "targetCategoryId": "B",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 1,
+                "row": 0,
+                "column": 1,
+                "quadrant": "TOP_LEFT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "ARC",
+                  "directionDeg": 270,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 24500,
+                "naturalExitEndInBatchMs": 26800
+              },
+              {
+                "instanceId": "b1-w7-s2",
+                "batchOrdinal": 1,
+                "waveOrdinal": 7,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 2,
+                "row": 0,
+                "column": 2,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "ROUNDED_SQUARE",
+                  "innerMark": "BAR",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 24500,
+                "naturalExitEndInBatchMs": 26800
+              },
+              {
+                "instanceId": "b1-w7-s6",
+                "batchOrdinal": 1,
+                "waveOrdinal": 7,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "B",
+                "requiresDouble": false,
+                "slotIndex": 6,
+                "row": 1,
+                "column": 2,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "CHEVRON",
+                  "directionDeg": 180,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 24500,
+                "naturalExitEndInBatchMs": 26800
+              },
+              {
+                "instanceId": "b1-w7-s7",
+                "batchOrdinal": 1,
+                "waveOrdinal": 7,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "B",
+                "requiresDouble": false,
+                "slotIndex": 7,
+                "row": 1,
+                "column": 3,
+                "quadrant": "BOTTOM_RIGHT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "BAR",
+                  "directionDeg": 270,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 24500,
+                "naturalExitEndInBatchMs": 26800
+              }
+            ]
+          },
+          {
+            "waveOrdinal": 8,
+            "startOffsetInOperationMs": 25000,
+            "instances": [
+              {
+                "instanceId": "b1-w8-s3",
+                "batchOrdinal": 1,
+                "waveOrdinal": 8,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "A",
+                "requiresDouble": false,
+                "slotIndex": 3,
+                "row": 0,
+                "column": 3,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "SHIELD",
+                  "innerMark": "BAR",
+                  "directionDeg": 0,
+                  "colorFamily": "BLUE"
+                },
+                "enterStartInBatchMs": 28000,
+                "naturalExitEndInBatchMs": 30300
+              },
+              {
+                "instanceId": "b1-w8-s5",
+                "batchOrdinal": 1,
+                "waveOrdinal": 8,
+                "role": "TARGET",
+                "targetCategoryId": "B",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": true,
+                "slotIndex": 5,
+                "row": 1,
+                "column": 1,
+                "quadrant": "BOTTOM_LEFT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "ARC",
+                  "directionDeg": 270,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 28000,
+                "naturalExitEndInBatchMs": 30300
+              },
+              {
+                "instanceId": "b1-w8-s6",
+                "batchOrdinal": 1,
+                "waveOrdinal": 8,
+                "role": "TARGET",
+                "targetCategoryId": "A",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 6,
+                "row": 1,
+                "column": 2,
+                "quadrant": "TOP_RIGHT",
+                "symbol": {
+                  "contour": "ROUNDED_SQUARE",
+                  "innerMark": "BAR",
+                  "directionDeg": 0,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 28000,
+                "naturalExitEndInBatchMs": 30300
+              },
+              {
+                "instanceId": "b1-w8-s7",
+                "batchOrdinal": 1,
+                "waveOrdinal": 8,
+                "role": "DISTRACTOR",
+                "targetCategoryId": null,
+                "similarityReferenceTargetCategoryId": "A",
+                "requiresDouble": false,
+                "slotIndex": 7,
+                "row": 1,
+                "column": 3,
+                "quadrant": "BOTTOM_RIGHT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "BAR",
+                  "directionDeg": 180,
+                  "colorFamily": "VIOLET"
+                },
+                "enterStartInBatchMs": 28000,
+                "naturalExitEndInBatchMs": 30300
+              },
+              {
+                "instanceId": "b1-w8-s11",
+                "batchOrdinal": 1,
+                "waveOrdinal": 8,
+                "role": "TARGET",
+                "targetCategoryId": "B",
+                "similarityReferenceTargetCategoryId": null,
+                "requiresDouble": false,
+                "slotIndex": 11,
+                "row": 2,
+                "column": 3,
+                "quadrant": "BOTTOM_RIGHT",
+                "symbol": {
+                  "contour": "HEXAGON",
+                  "innerMark": "ARC",
+                  "directionDeg": 270,
+                  "colorFamily": "AMBER"
+                },
+                "enterStartInBatchMs": 28000,
+                "naturalExitEndInBatchMs": 30300
+              }
+            ]
+          }
+        ],
+        "targetTotal": 20,
+        "distractorTotal": 10,
+        "doubleTotal": 5
+      },
+      "expectedBatch": {
+        "batchOrdinal": 1,
+        "closed": true,
+        "decisionEligible": true,
+        "levelBefore": 96,
+        "resultZone": "UPGRADE",
+        "levelTransition": "HOLD_MAX",
+        "levelAfter": 96,
+        "batchScore": 82,
+        "closedAtActiveMs": 37500,
+        "gameBatchMetrics": {
+          "H": 16,
+          "T": 20,
+          "F": 2,
+          "D": 10,
+          "timingProfile": "H",
+          "targetClassCount": 2,
+          "similarityTier": 3,
+          "directionCount": 4,
+          "doubleCount": 5,
+          "completedDoubleCount": 4,
+          "timedOutDoubleCount": 1,
+          "presentedWaveCount": 8,
+          "reactionTimeCount": 16,
+          "reactionTimeTotalMs": 80,
+          "reactionTimeMinMs": 5,
+          "reactionTimeMaxMs": 5,
+          "doubleIntervalCount": 4,
+          "doubleIntervalTotalMs": 4
+        },
+        "batchPayloadSha256": "bf203888e58ffe11f262dacef7f762f585ac3094022246eee805f52b6dc6968e"
+      },
+      "resultDraft": {
+        "gameCode": "SIGNAL_STATION",
+        "gamePayloadVersion": "A620-GP-1.1",
+        "runtimeConfigHash": "92e33a4ca7656d90ac185a227906464169e21db003f9ac550b8370dfb15e5659",
+        "designMaxLevel": 96,
+        "plannedBatchCount": 8,
+        "eligibleBatchCount": 1,
+        "eligibleBatches": [
+          {
+            "batchOrdinal": 1,
+            "closed": true,
+            "decisionEligible": true,
+            "levelBefore": 96,
+            "resultZone": "UPGRADE",
+            "levelTransition": "HOLD_MAX",
+            "levelAfter": 96,
+            "batchScore": 82,
+            "closedAtActiveMs": 37500,
+            "gameBatchMetrics": {
+              "H": 16,
+              "T": 20,
+              "F": 2,
+              "D": 10,
+              "timingProfile": "H",
+              "targetClassCount": 2,
+              "similarityTier": 3,
+              "directionCount": 4,
+              "doubleCount": 5,
+              "completedDoubleCount": 4,
+              "timedOutDoubleCount": 1,
+              "presentedWaveCount": 8,
+              "reactionTimeCount": 16,
+              "reactionTimeTotalMs": 80,
+              "reactionTimeMinMs": 5,
+              "reactionTimeMaxMs": 5,
+              "doubleIntervalCount": 4,
+              "doubleIntervalTotalMs": 4
+            },
+            "batchPayloadSha256": "bf203888e58ffe11f262dacef7f762f585ac3094022246eee805f52b6dc6968e"
+          }
+        ],
+        "incompleteBatchAudit": [],
+        "sessionStartLevel": 96,
+        "sessionEndLevel": 96,
+        "sessionHighestPresentedLevel": 96,
+        "sessionHighestPassedLevel": 96,
+        "nextStartLevel": 96,
+        "sessionRawScore": 82,
+        "sessionRawScoreMax": 800,
+        "actualTrainingMs": 300000,
+        "gameMetrics": {
+          "totalH": 16,
+          "totalT": 20,
+          "totalF": 2,
+          "totalD": 10,
+          "reactionTimeCount": 16,
+          "reactionTimeTotalMs": 80,
+          "reactionTimeMinMs": 5,
+          "reactionTimeMaxMs": 5,
+          "doubleIntervalCount": 4,
+          "doubleIntervalTotalMs": 4,
+          "pauseCount": 0,
+          "totalPausedUptimeMs": 0,
+          "generatedBatchCount": 1,
+          "generatedWaveCount": 8,
+          "eligibleBatchCount": 1,
+          "incompleteBatchCount": 0,
+          "generatorVersion": "signal-station-gen-1.2.1",
+          "configVersion": "A620-SS-CONFIG-1.2.1",
+          "scoringRuleVersion": "signal-station-score-1.2.1",
+          "requirementVersion": "1.2.1",
+          "contentVersion": "signal-station-six-slice-1.2.1",
+          "fullLevelSetStatus": "HOLD",
+          "implementedLevels": [
+            1,
+            7,
+            67,
+            79,
+            90,
+            96
+          ]
+        }
+      }
+    }
+  ]
+}

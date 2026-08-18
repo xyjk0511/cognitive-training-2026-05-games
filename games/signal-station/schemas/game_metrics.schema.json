@@ -1,15 +1,158 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:a620:signal-station:game-metrics:gate0",
-  "title": "SIGNAL_STATION Gate0 Session Metrics",
-  "type": "object",
-  "properties": {
-    "totalTouches": {
-      "type": "integer",
-      "minimum": 0,
-      "maximum": 1000000
+  "$id": "urn:a620:signal-station:game-metrics:1.2.1",
+  "title": "SIGNAL_STATION Session Metrics 1.2.1",
+  "description": "The empty branch exists only for inherited baseline.8 protocol vectors.",
+  "oneOf": [
+    {
+      "type": "object",
+      "maxProperties": 0,
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "totalH",
+        "totalT",
+        "totalF",
+        "totalD",
+        "reactionTimeCount",
+        "reactionTimeTotalMs",
+        "reactionTimeMinMs",
+        "reactionTimeMaxMs",
+        "doubleIntervalCount",
+        "doubleIntervalTotalMs",
+        "pauseCount",
+        "totalPausedUptimeMs",
+        "generatedBatchCount",
+        "generatedWaveCount",
+        "eligibleBatchCount",
+        "incompleteBatchCount",
+        "generatorVersion",
+        "configVersion",
+        "scoringRuleVersion",
+        "requirementVersion",
+        "contentVersion",
+        "fullLevelSetStatus",
+        "implementedLevels"
+      ],
+      "properties": {
+        "totalH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 160
+        },
+        "totalT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 160
+        },
+        "totalF": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 80
+        },
+        "totalD": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 80
+        },
+        "reactionTimeCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 160
+        },
+        "reactionTimeTotalMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4800000
+        },
+        "reactionTimeMinMs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 300000
+        },
+        "reactionTimeMaxMs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 300000
+        },
+        "doubleIntervalCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 40
+        },
+        "doubleIntervalTotalMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 48000
+        },
+        "pauseCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "totalPausedUptimeMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "generatedBatchCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8
+        },
+        "generatedWaveCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 64
+        },
+        "eligibleBatchCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8
+        },
+        "incompleteBatchCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "generatorVersion": {
+          "const": "signal-station-gen-1.2.1"
+        },
+        "configVersion": {
+          "const": "A620-SS-CONFIG-1.2.1"
+        },
+        "scoringRuleVersion": {
+          "const": "signal-station-score-1.2.1"
+        },
+        "requirementVersion": {
+          "const": "1.2.1"
+        },
+        "contentVersion": {
+          "const": "signal-station-six-slice-1.2.1"
+        },
+        "fullLevelSetStatus": {
+          "const": "HOLD"
+        },
+        "implementedLevels": {
+          "const": [
+            1,
+            7,
+            67,
+            79,
+            90,
+            96
+          ]
+        }
+      },
+      "additionalProperties": false
     }
-  },
-  "additionalProperties": false,
-  "maxProperties": 64
+  ]
 }

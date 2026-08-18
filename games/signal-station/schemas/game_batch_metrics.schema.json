@@ -1,35 +1,181 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:a620:signal-station:batch-metrics:1.2.1",
-  "title": "SIGNAL_STATION Batch Metrics 1.2.1",
+  "title": "SIGNAL_STATION Eligible Batch Metrics 1.2.1",
   "type": "object",
   "required": [
     "H",
     "T",
     "F",
-    "D"
+    "D",
+    "timingProfile",
+    "targetClassCount",
+    "similarityTier",
+    "directionCount",
+    "doubleCount",
+    "completedDoubleCount",
+    "timedOutDoubleCount",
+    "presentedWaveCount",
+    "reactionTimeCount",
+    "reactionTimeTotalMs",
+    "reactionTimeMinMs",
+    "reactionTimeMaxMs",
+    "doubleIntervalCount",
+    "doubleIntervalTotalMs"
   ],
   "properties": {
     "H": {
       "type": "integer",
       "minimum": 0,
-      "maximum": 1000
+      "maximum": 20
     },
     "T": {
-      "type": "integer",
-      "minimum": 0,
-      "maximum": 1000
+      "enum": [
+        10,
+        15,
+        20
+      ]
     },
     "F": {
       "type": "integer",
       "minimum": 0,
-      "maximum": 1000
+      "maximum": 10
     },
     "D": {
+      "enum": [
+        0,
+        5,
+        10
+      ]
+    },
+    "timingProfile": {
+      "enum": [
+        "A",
+        "C",
+        "H"
+      ]
+    },
+    "targetClassCount": {
+      "enum": [
+        1,
+        2
+      ]
+    },
+    "similarityTier": {
       "type": "integer",
       "minimum": 0,
-      "maximum": 1000
+      "maximum": 3
+    },
+    "directionCount": {
+      "enum": [
+        1,
+        2,
+        4
+      ]
+    },
+    "doubleCount": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 5
+    },
+    "completedDoubleCount": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 5
+    },
+    "timedOutDoubleCount": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 5
+    },
+    "presentedWaveCount": {
+      "const": 8
+    },
+    "reactionTimeCount": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 20
+    },
+    "reactionTimeTotalMs": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 600000
+    },
+    "reactionTimeMinMs": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 300000
+    },
+    "reactionTimeMaxMs": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 300000
+    },
+    "doubleIntervalCount": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 5
+    },
+    "doubleIntervalTotalMs": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 6000
     }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "D": {
+            "const": 0
+          }
+        },
+        "required": [
+          "D"
+        ]
+      },
+      "then": {
+        "properties": {
+          "F": {
+            "const": 0
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "doubleCount": {
+            "const": 0
+          }
+        },
+        "required": [
+          "doubleCount"
+        ]
+      },
+      "then": {
+        "properties": {
+          "completedDoubleCount": {
+            "const": 0
+          },
+          "timedOutDoubleCount": {
+            "const": 0
+          },
+          "doubleIntervalCount": {
+            "const": 0
+          },
+          "doubleIntervalTotalMs": {
+            "const": 0
+          }
+        }
+      }
+    }
+  ]
 }

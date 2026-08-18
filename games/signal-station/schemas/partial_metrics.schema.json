@@ -1,15 +1,75 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:a620:signal-station:partial-metrics:gate0",
-  "title": "SIGNAL_STATION Gate0 Partial Batch Metrics",
-  "type": "object",
-  "properties": {
-    "waveOrdinal": {
-      "type": "integer",
-      "minimum": 1,
-      "maximum": 8
+  "$id": "urn:a620:signal-station:partial-metrics:1.2.1",
+  "title": "SIGNAL_STATION Partial Batch Metrics 1.2.1",
+  "description": "The empty branch exists only for inherited baseline.8 protocol vectors.",
+  "oneOf": [
+    {
+      "type": "object",
+      "maxProperties": 0,
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "waveOrdinal",
+        "presentedTargetCount",
+        "presentedDistractorCount",
+        "H",
+        "F",
+        "waitingDoubleCount",
+        "completedDoubleCount",
+        "timedOutTargetCount",
+        "activeElapsedInBatchMs"
+      ],
+      "properties": {
+        "waveOrdinal": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8
+        },
+        "presentedTargetCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20
+        },
+        "presentedDistractorCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "H": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20
+        },
+        "F": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "waitingDoubleCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5
+        },
+        "completedDoubleCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5
+        },
+        "timedOutTargetCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20
+        },
+        "activeElapsedInBatchMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 37500
+        }
+      },
+      "additionalProperties": false
     }
-  },
-  "additionalProperties": false,
-  "maxProperties": 16
+  ]
 }
