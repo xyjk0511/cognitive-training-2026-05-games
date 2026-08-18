@@ -526,8 +526,23 @@ assertRejected(
 );
 assertEqual(lifecycleModule.currentPlan()?.batchOrdinal, 1, "rejected pointer ID does not close the active batch");
 lifecycleModule.advanceToUptimeMs(38_500);
-assertEqual(lifecycleModule.drainBatchClosedDrafts().length, 1, "adapter emits one closed batch draft");
-assertEqual(lifecycleModule.drainBatchClosedDrafts().length, 0, "closed batch draft drain is idempotent");
+const firstPendingBatchDrafts = lifecycleModule.drainBatchClosedDrafts();
+assertEqual(firstPendingBatchDrafts.length, 1, "adapter exposes one pending closed batch draft");
+const firstPendingBatchDraft = firstPendingBatchDrafts[0];
+if (firstPendingBatchDraft === undefined) throw new Error("expected one pending closed batch draft");
+const retryPendingBatchDrafts = lifecycleModule.drainBatchClosedDrafts();
+assertEqual(retryPendingBatchDrafts.length, 1, "unacknowledged batch evidence remains available after host persistence failure");
+assertEqual(
+  retryPendingBatchDrafts[0]?.batchPayloadSha256,
+  firstPendingBatchDraft.batchPayloadSha256,
+  "retry exposes the identical immutable batch evidence",
+);
+assertRejected(
+  () => lifecycleModule.acknowledgeBatchClosedDraft("0".repeat(64)),
+  "host cannot acknowledge a hash other than the first pending batch",
+);
+lifecycleModule.acknowledgeBatchClosedDraft(firstPendingBatchDraft.batchPayloadSha256);
+assertEqual(lifecycleModule.drainBatchClosedDrafts().length, 0, "durably acknowledged batch evidence leaves the pending queue");
 lifecycleModule.onPause(40_000);
 lifecycleModule.onResume(43_000, 304_000);
 assertEqual(lifecycleModule.onPointerDown(null, "deadline-input", 304_000).disposition, "IGNORED_OUTSIDE_WINDOW", "exact public deadline input is invalid");
