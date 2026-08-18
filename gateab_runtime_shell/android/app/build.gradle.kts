@@ -11,8 +11,8 @@ android {
         applicationId = "com.a620.tablet"
         minSdk = 30
         targetSdk = 36
-        versionCode = 8
-        versionName = "0.0.8-baseline.8"
+        versionCode = 9
+        versionName = "0.0.9-w1-platform-gateab"
     }
 
     buildFeatures {
@@ -41,6 +41,7 @@ android {
                 "a620/shell/Transport.kt",
             )
         }
+        getByName("test").java.srcDir("src/test/java")
     }
 
     lint {
@@ -48,4 +49,9 @@ android {
         warningsAsErrors = true
         checkDependencies = true
     }
+}
+
+
+dependencies {
+    testImplementation("junit:junit:4.13.2")
 }

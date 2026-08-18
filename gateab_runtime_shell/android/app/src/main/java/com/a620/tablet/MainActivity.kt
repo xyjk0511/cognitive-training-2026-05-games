@@ -10,7 +10,7 @@ class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(TextView(this).apply {
-            text = "A620 runtime shell baseline.8\nNot approved for patient use"
+            text = getString(R.string.runtime_shell_status)
             gravity = Gravity.CENTER
         })
     }

@@ -9,13 +9,17 @@ import a620.shell.RuntimeTaskPriority
  * consume the lane reserved for deadline/pause/terminate/result safety events.
  */
 class TrainingRuntimeActor(
+    urgentMaxMessages: Int = RuntimePolicy.URGENT_QUEUE_MAX_MESSAGES,
+    urgentMaxBytes: Int = RuntimePolicy.URGENT_QUEUE_MAX_BYTES,
+    normalMaxMessages: Int = RuntimePolicy.NORMAL_QUEUE_MAX_MESSAGES,
+    normalMaxBytes: Int = RuntimePolicy.NORMAL_QUEUE_MAX_BYTES,
     onTaskFailure: (Throwable) -> Unit = {},
 ) {
     private val delegate = PriorityRuntimeActor(
-        urgentMaxMessages = RuntimePolicy.URGENT_QUEUE_MAX_MESSAGES,
-        urgentMaxBytes = RuntimePolicy.URGENT_QUEUE_MAX_BYTES,
-        normalMaxMessages = RuntimePolicy.NORMAL_QUEUE_MAX_MESSAGES,
-        normalMaxBytes = RuntimePolicy.NORMAL_QUEUE_MAX_BYTES,
+        urgentMaxMessages = urgentMaxMessages,
+        urgentMaxBytes = urgentMaxBytes,
+        normalMaxMessages = normalMaxMessages,
+        normalMaxBytes = normalMaxBytes,
         onTaskFailure = onTaskFailure,
     )
 

@@ -62,9 +62,7 @@ class AndroidControllerStore(
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        throw AndroidStoreConflict(
-            "no deployed migration is approved for $oldVersion->$newVersion; fail closed",
-        )
+        RuntimeStoreMigration.migrate(db, oldVersion, newVersion)
     }
 
     override fun onDowngrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -100,6 +98,31 @@ class AndroidControllerStore(
                 arrayOf(bootEpochId, nowUptimeMs, nowUtcMs),
             )
             interrupted
+        }
+    }
+
+    /**
+     * A new controller process has no safe way to resume the old in-memory
+     * reducer/channel. Preserve its evidence, finalize it as interrupted, and
+     * release the one-active-runtime constraint for a new executionAttempt.
+     */
+    fun interruptActiveRuntimesOnControllerStartup(
+        nowUtcMs: Long,
+        nowUptimeMs: Long,
+    ): List<String> {
+        require(nowUtcMs >= 0 && nowUptimeMs >= 0)
+        return writableDatabase.inTransaction {
+            activeRuntimeIds().also { ids ->
+                ids.forEach { runtimeSessionId ->
+                    interruptRuntimeTx(
+                        runtimeSessionId = runtimeSessionId,
+                        completionState = "INTERRUPTED",
+                        reason = "CONTROLLER_PROCESS_RESTARTED",
+                        observedAtUtcMs = nowUtcMs,
+                        observedAtUptimeMs = nowUptimeMs,
+                    )
+                }
+            }
         }
     }
 
