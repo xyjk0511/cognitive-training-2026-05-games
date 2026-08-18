@@ -1,5 +1,24 @@
+import org.gradle.api.tasks.Sync
+
 plugins {
     id("com.android.application")
+}
+
+val stageAndroidSharedKotlin by tasks.registering(Sync::class) {
+    from("../../kotlin/src/main/kotlin") {
+        exclude(
+            "a620/shell/ControllerHarness.kt",
+            "a620/shell/InputGate.kt",
+            "a620/shell/MockGame.kt",
+            "a620/shell/RuntimeActor.kt",
+            "a620/shell/RuntimeChannel.kt",
+            "a620/shell/Transport.kt",
+        )
+    }
+    from("../../../kotlin/src/main/kotlin") {
+        exclude("a620/MockController.kt")
+    }
+    into(layout.buildDirectory.dir("generated/sources/sharedKotlin"))
 }
 
 android {
@@ -25,32 +44,26 @@ android {
     }
 
     sourceSets {
-        getByName("main").java.apply {
-            srcDirs(
-                "src/main/java",
-                "../../kotlin/src/main/kotlin",
-                "../../../kotlin/src/main/kotlin",
-            )
-            exclude(
-                "a620/MockController.kt",
-                "a620/shell/ControllerHarness.kt",
-                "a620/shell/InputGate.kt",
-                "a620/shell/MockGame.kt",
-                "a620/shell/RuntimeActor.kt",
-                "a620/shell/RuntimeChannel.kt",
-                "a620/shell/Transport.kt",
-            )
+        getByName("main") {
+            java.directories.add("src/main/java")
+            kotlin.directories.add("src/main/java")
+            kotlin.directories.add(layout.buildDirectory.dir("generated/sources/sharedKotlin").get().asFile.path)
         }
-        getByName("test").java.srcDir("src/test/java")
+        getByName("test").java.directories.add("src/test/java")
     }
 
     lint {
         abortOnError = true
         warningsAsErrors = true
         checkDependencies = true
+        // compileSdk/targetSdk are intentionally pinned by toolchain.lock.json.
+        disable.addAll(setOf("GradleDependency", "OldTargetApi"))
     }
 }
 
+tasks.named("preBuild").configure {
+    dependsOn(stageAndroidSharedKotlin)
+}
 
 dependencies {
     testImplementation("junit:junit:4.13.2")
