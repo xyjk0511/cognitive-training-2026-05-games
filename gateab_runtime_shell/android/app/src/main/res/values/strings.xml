@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">A620</string>
-    <string name="runtime_shell_status">A620 Gate A/B W1 platform shell\nNot approved for patient use</string>
+    <string name="dashboard_eyebrow">A620 · 认知训练</string>
+    <string name="dashboard_title">选择今天的训练任务</string>
+    <string name="dashboard_subtitle">每次训练 5 分钟 · 支持暂停和安全恢复 · 结果保存在本机</string>
+    <string name="catch_light_title">捕光行动</string>
+    <string name="catch_light_subtitle">记住目标水果，捕捉正确目标</string>
+    <string name="signal_station_title">信号反应站</string>
+    <string name="signal_station_subtitle">识别目标信号，快速作出反应</string>
+    <string name="game_button_format">%1$s\n\n%2$s\n\n开始训练  →</string>
+    <string name="dashboard_ready">设备底座与训练进程已就绪</string>
+    <string name="dashboard_disclaimer">研发验证版本 · 尚未批准用于患者任务</string>
+    <string name="dashboard_connecting">正在建立独立训练进程…</string>
+    <string name="dashboard_start_failed">启动失败：%1$s</string>
+    <string name="controller_channel_name">A620 训练控制</string>
+    <string name="controller_channel_description">保持训练计时和本地结果事务运行</string>
+    <string name="controller_notification_title">A620 训练正在进行</string>
+    <string name="controller_notification_text">本机控制器正在守护训练计时与结果保存</string>
 </resources>

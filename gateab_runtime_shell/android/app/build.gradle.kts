@@ -4,6 +4,32 @@ plugins {
     id("com.android.application")
 }
 
+val trainingRuntimeBundle = file("src/main/assets/training/training-runtime.bundle.js")
+
+val verifyAndroidTrainingAssets by tasks.registering {
+    inputs.file(trainingRuntimeBundle)
+    doLast {
+        check(trainingRuntimeBundle.isFile && trainingRuntimeBundle.length() > 10_000L) {
+            "training-runtime.bundle.js is missing or stale; run npm run build:android-training"
+        }
+    }
+}
+
+val stageAndroidGameAssets by tasks.registering(Sync::class) {
+    from("../../../packages/catch-light/content/config/catch-light-v1.5-w2.json") {
+        into("game-config")
+        rename { "catch-light.json" }
+    }
+    from("../../../packages/signal-station/content/config/runtime-config.json") {
+        into("game-config")
+        rename { "signal-station.json" }
+    }
+    from("../../../packages/catch-light/content/assets/backgrounds") {
+        into("game-assets/backgrounds/catch-light")
+    }
+    into(layout.buildDirectory.dir("generated/assets/a620Games"))
+}
+
 val stageAndroidSharedKotlin by tasks.registering(Sync::class) {
     from("../../kotlin/src/main/kotlin") {
         exclude(
@@ -30,8 +56,8 @@ android {
         applicationId = "com.a620.tablet"
         minSdk = 30
         targetSdk = 36
-        versionCode = 9
-        versionName = "0.0.9-w1-platform-gateab"
+        versionCode = 10
+        versionName = "0.1.0-game-integration"
     }
 
     buildFeatures {
@@ -48,6 +74,7 @@ android {
             java.directories.add("src/main/java")
             kotlin.directories.add("src/main/java")
             kotlin.directories.add(layout.buildDirectory.dir("generated/sources/sharedKotlin").get().asFile.path)
+            assets.directories.add(layout.buildDirectory.dir("generated/assets/a620Games").get().asFile.path)
         }
         getByName("test").java.directories.add("src/test/java")
     }
@@ -62,7 +89,7 @@ android {
 }
 
 tasks.named("preBuild").configure {
-    dependsOn(stageAndroidSharedKotlin)
+    dependsOn(stageAndroidSharedKotlin, stageAndroidGameAssets, verifyAndroidTrainingAssets)
 }
 
 dependencies {

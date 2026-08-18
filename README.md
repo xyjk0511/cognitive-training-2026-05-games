@@ -1,62 +1,73 @@
-# A620 Cognitive Training Platform — 单线施工 rc3-baseline.8
+# A620 Cognitive Training Platform — Android game-integration candidate
 
-状态：`GATE_AB_AUTHENTICATED_DURABLE_CONTROLLER_CANDIDATE_NOT_DEVICE_APPROVED`
+状态：`AVAILABLE_VERTICAL_SLICES_PLAYABLE_END_TO_END_NOT_DEVICE_APPROVED`
 
-本仓库坚持一个 A620 主 APK、一个患者入口和多个受控训练包。baseline.8
-仍处于公共底座施工，不提前实现《信号反应站》或《捕光行动》的正式关卡。
+本仓库保持一个 A620 主 APK、一个患者入口和两个受控训练模块。公共 wire 仍为
+`A620-TRC-1.1`；`contracts/**` 没有因游戏接入而改变。
 
-## 继承能力
+## 当前可运行能力
 
-- A620-TRC-1.1 wire、Schema、状态机、JCS、毫秒 uptime 与训练包安全参考实现；
-- baseline.5 并发 inbox/outbox、租约 fencing、watchdog/retry 与安装协调；
-- baseline.6 boot epoch、持久化完整性、结果事务与 Android 形态运行壳；
-- baseline.7 严格 canonical 入口、PFD 异步读取、有序入口、反压与触摸流取消。
+- Android 首页可选择《捕光行动》和《信号反应站》；
+- 主进程持有 `PersistentPlatformController`、SQLite schema v4 和权威 300 秒截止；
+- 游戏页面与 `TrainingRuntimeService` 位于独立 `:training` 进程；
+- 主控与训练侧通过同 UID、token、generation 鉴权的 AIDL/Binder 通道通信；
+- 游戏运行时采用无网络权限的本地 WebView bundle，执行现有 TypeScript 游戏模块；
+- 支持触摸、暂停、继续、主动结束、8 批证据、正式结果事务和 ACK outbox；
+- 主进程训练期间由非导出的 foreground controller service 保持可调度，避免独立训练页面在前台时权威 DEADLINE 被系统冻结；
+- API 36 模拟器已分别完成两款游戏的 300000 ms / 8 批完整会话，结果均提交为 `COMPLETE`。
 
-## baseline.8 新增
+数据流：
 
-1. 每次绑定生成新的 256-bit 内部通道令牌；每个 AIDL 请求和回调均携带令牌与 generation；
-2. 同 UID 校验、常量时间 token digest 比较，以及异步 bulk 解析前/后双重 channel fencing；
-3. ControllerRuntimeClient 不再向业务代码暴露原始 AIDL 接口；
-4. Cocos→Android 方向补齐 inline/PFD 双向事件传输、预算与失败收口；
-5. 新增 A620-ACDS-1 / schema v4：运行身份、入站事件、发送序列、批次证据、正式结果、执行结局、同步队列、ACK outbox 与主控状态；
-6. PREPARE 必须绑定当前 boot epoch；同一 epoch 内 uptime 回退 fail closed；
-7. `BATCH_CLOSED` 过程证据与最终 `RESULT_READY` 按 ordinal、内容与 SHA-256 精确对账；
-8. 正式结果、待上传队列、主控状态、`ACK_RESULT_COMMITTED` 和 runtime finalization 在一个 SQLite 事务中提交；
-9. ACK 由持久 outbox 以 owner + claimGeneration 领取；Binder 发送失败只重试原消息，不回滚已保存正式结果；
-10. 重放同一 `RESULT_READY` 返回第一次提交的 resultId、时间、hash 与 ACK 原始字节；
-11. 跨重启重试使用 UTC deadline，不把旧 boot 的 uptime 当作可比较时间；
-12. Android 工具链预检修正为 JDK 17 minimum，并在当前 JDK 21 上完成 JVM/stub 编译。
-
-## 验证
-
-```bash
-./scripts/test_all.sh
+```text
+MainActivity
+→ PersistentPlatformController
+→ authenticated AIDL/Binder
+→ :training TrainingRuntimeService + TrainingActivity
+→ CatchLightGameModule / SignalStationTrainingGameModule
+→ BATCH_CLOSED / RESULT_READY
+→ AndroidControllerStore transaction
+→ ACK_RESULT_COMMITTED
 ```
 
-也可分阶段运行：
+## 构建与验证
 
 ```bash
-./scripts/test_python.sh
-./scripts/test_typescript.sh
-./scripts/test_kotlin.sh
-./scripts/build_sample_packages.sh
-./baseline5_hardening/scripts/test_baseline5_hardening.sh
-./baseline6_hardening/scripts/test_baseline6_hardening.sh
-./gateab_runtime_shell/tools/test_baseline8.sh
+cd typescript
+npm ci
+npm test
+npm run build:android-training
+cd ..
+
+./scripts/build_android_gateab.sh
 ```
 
-Android SDK 预检：
+Android 构建入口执行 `assembleDebug`、`testDebugUnitTest` 和 `lintDebug`，要求锁定的
+Gradle 9.5.0、AGP 9.3.1、JDK 17+、Android platform/build-tools 36。
+
+接入结构回归：
 
 ```bash
-./gateab_runtime_shell/android/ci/android_sdk_preflight.sh
+python -m pytest gateab_runtime_shell/python/tests/test_android_scaffold.py -q
 ```
+
+当前原生 Windows 环境运行整仓 `scripts/test_all.sh` 仍会触发既有 Unix 假设：
+Python `fcntl` 和把 Windows 盘符直接用于 Node ESM import 的生成物脚本。应在 Linux/WSL
+运行完整聚合脚本；Android SDK build/lint、游戏 TypeScript 测试和接入测试可分别运行。
+
+## 已实现游戏范围
+
+- 《捕光行动》：L1、L28、L102、L120 代表级；L67 是 golden anchor；
+- 《信号反应站》：L1、L7、L67、L79、L90、L96 代表级。
+
+未实现等级会 fail closed，不会套用最近代表级。当前 Android 渲染属于工程验证 UI：
+水果使用 emoji/占位表现，信号使用程序化轮廓；不是生产美术或 Cocos Creator 原生场景。
 
 ## 必须准确理解
 
-- baseline.8 的 SQLite schema 在 Python `sqlite3` 中真实执行，Kotlin Android 源码在 JVM/AIDL stub 下完成编译与对抗测试；
-- 当前持久化核心使用 `SQLiteOpenHelper` 保持跨表单事务边界，不应被描述为已经完成 Room 生产接入；
-- 当前环境缺少 Gradle 9.5.0、Android SDK 和依赖解析条件，未生成真实 APK，也未完成真实 AIDL、Binder/PFD、Room migration 或 Android lint；
-- 尚无 Cocos Creator 原生工程、候选平板进程死亡/300 秒边界/断电证据；
-- 尚未进入两款游戏 L1、生产素材和生产密钥阶段。
+- 持久化核心仍直接使用 `SQLiteOpenHelper` 保证跨表事务，不应描述为 Room 生产层；
+- 当前没有后台上传实现，正式结果进入本机 `PENDING_UPLOAD`；
+- 尚未提供完整 L1–L120 / L1–L96 数值、正式水果 sprites、CORE_B 产品批准、音频和生产动画；
+- 尚未验证候选真实平板、生产签名、进程回收/断电恢复、性能、热量、内存和临床环境；
+- WebView 运行容器不是尚未提供的 Cocos Creator 原生工程。
 
-baseline.8 不能用于患者任务，也不构成 Gate A/B 通过证明。
+该候选是可玩的端到端工程验证版，不能用于患者任务，也不构成 Gate A/B 或生产批准。

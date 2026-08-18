@@ -1,0 +1,121 @@
+@font-face { font-family: system-ui; src: local("sans-serif"); }
+:root {
+  color: #f8fafc;
+  background: #07111d;
+  font-family: system-ui, "Noto Sans SC", sans-serif;
+  font-size: 20px;
+  -webkit-tap-highlight-color: transparent;
+}
+* { box-sizing: border-box; }
+html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+body {
+  background:
+    radial-gradient(circle at 15% 15%, rgba(18, 184, 134, .18), transparent 34%),
+    radial-gradient(circle at 85% 82%, rgba(59, 130, 246, .18), transparent 40%),
+    #07111d;
+}
+button { font: inherit; }
+#app { height: 100%; display: grid; grid-template-rows: auto 1fr auto; padding: 28px 36px 24px; gap: 20px; }
+.topbar { display: flex; justify-content: space-between; align-items: center; gap: 32px; }
+.eyebrow { margin: 0 0 4px; color: #5eead4; font-size: .72rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+h1 { margin: 0; font-size: 1.8rem; letter-spacing: -.03em; }
+.session-meta { display: flex; align-items: center; gap: 18px; }
+#status { color: #99f6e4; background: rgba(13, 148, 136, .16); border: 1px solid rgba(94, 234, 212, .25); border-radius: 999px; padding: 9px 16px; font-size: .75rem; }
+#timer { min-width: 116px; text-align: right; font-size: 1.8rem; font-variant-numeric: tabular-nums; }
+.training-shell { min-height: 0; display: grid; grid-template-columns: 290px 1fr; gap: 24px; }
+.instruction-panel, .game-board {
+  border: 1px solid rgba(148, 163, 184, .22);
+  border-radius: 28px;
+  background: rgba(15, 30, 47, .82);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, .28);
+}
+.instruction-panel { padding: 28px; display: flex; flex-direction: column; justify-content: center; gap: 22px; }
+#batch { color: #94a3b8; font-weight: 700; font-size: .78rem; }
+#cue { font-size: 1.3rem; font-weight: 850; line-height: 1.4; }
+.game-board {
+  --rows: 2;
+  --cols: 2;
+  min-width: 0;
+  min-height: 0;
+  padding: 24px;
+  display: grid;
+  grid-template-rows: repeat(var(--rows), minmax(0, 1fr));
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  align-items: center;
+  justify-items: center;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+.game-board::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(135deg, rgba(255,255,255,.035), transparent 48%); }
+.game-object {
+  position: relative;
+  width: min(10vw, 150px);
+  height: min(10vw, 150px);
+  min-width: 88px;
+  min-height: 88px;
+  border: 0;
+  border-radius: 28px;
+  color: white;
+  background: rgba(30, 50, 70, .92);
+  box-shadow: 0 14px 28px rgba(0,0,0,.28), inset 0 0 0 2px rgba(255,255,255,.08);
+  cursor: pointer;
+  touch-action: manipulation;
+  animation: appear .18s ease-out;
+}
+.game-object:active { transform: scale(.92); }
+.game-object[disabled] { opacity: .7; }
+.game-object::after {
+  content: attr(data-double);
+  position: absolute;
+  right: -9px;
+  top: -9px;
+  min-width: 38px;
+  padding: 6px 8px;
+  border-radius: 999px;
+  background: #f97316;
+  color: white;
+  font-size: .65rem;
+  font-weight: 900;
+  box-shadow: 0 6px 18px rgba(249,115,22,.4);
+}
+.game-object:not([data-double])::after { display: none; }
+.fruit { font-size: clamp(3rem, 6vw, 5.6rem); background: rgba(255,255,255,.08); }
+.fruit.target { box-shadow: 0 12px 28px rgba(0,0,0,.3), inset 0 0 0 2px rgba(94,234,212,.18); }
+.signal-symbol, .target-card {
+  --symbol-color: #3b82f6;
+  --rotation: 0deg;
+  display: inline-grid;
+  place-items: center;
+  width: 62%;
+  aspect-ratio: 1;
+  border: 10px solid var(--symbol-color);
+  color: var(--symbol-color);
+  transform: rotate(var(--rotation));
+}
+.target-card { width: 58px; margin-left: 10px; vertical-align: middle; border-width: 7px; }
+.contour-circle { border-radius: 50%; }
+.contour-rounded_square { border-radius: 24%; }
+.contour-triangle { clip-path: polygon(50% 0, 100% 100%, 0 100%); background: color-mix(in srgb, var(--symbol-color) 20%, transparent); }
+.contour-diamond { transform: rotate(calc(45deg + var(--rotation))); border-radius: 12%; }
+.contour-hexagon { clip-path: polygon(25% 3%,75% 3%,100% 50%,75% 97%,25% 97%,0 50%); }
+.contour-shield { clip-path: polygon(8% 0,92% 0,88% 65%,50% 100%,12% 65%); }
+.signal-symbol::before, .target-card::before { content: attr(data-mark); font-size: .54rem; font-weight: 950; transform: rotate(calc(-1 * var(--rotation))); }
+.signal.distractor { opacity: .86; }
+.controls { display: grid; grid-template-columns: 170px 1fr 170px; align-items: center; gap: 18px; }
+.controls p { margin: 0; color: #64748b; text-align: center; font-size: .68rem; }
+.controls button { min-height: 56px; border-radius: 18px; border: 1px solid rgba(148,163,184,.28); font-weight: 800; color: white; }
+.secondary { background: #17324b; }
+.danger { background: rgba(190, 24, 93, .2); border-color: rgba(251,113,133,.4) !important; }
+.controls button:disabled { opacity: .35; }
+.result-panel { grid-row: 1 / -1; grid-column: 1 / -1; align-self: center; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.result-panel strong { font-size: 2.4rem; color: #5eead4; }
+.result-panel span { color: #cbd5e1; }
+.committed .result-panel strong::after { content: " ✓"; }
+@keyframes appear { from { opacity: 0; transform: scale(.78); } }
+@media (max-width: 900px) {
+  :root { font-size: 16px; }
+  #app { padding: 18px; }
+  .training-shell { grid-template-columns: 220px 1fr; }
+  .game-object { min-width: 72px; min-height: 72px; }
+}

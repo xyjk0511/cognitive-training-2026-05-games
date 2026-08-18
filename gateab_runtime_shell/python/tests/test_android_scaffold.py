@@ -22,8 +22,11 @@ def test_manifest_has_one_entry_and_unexported_training_process() -> None:
             if category.attrib.get(NS + "name") == "android.intent.category.LAUNCHER":
                 launchers.append(activity)
     assert len(launchers) == 1
-    service = application.find("service")
-    assert service is not None
+    service = next(
+        item
+        for item in application.findall("service")
+        if item.attrib.get(NS + "name") == ".training.TrainingRuntimeService"
+    )
     assert service.attrib[NS + "exported"] == "false"
     assert service.attrib[NS + "process"] == ":training"
 
@@ -210,11 +213,12 @@ def test_receiver_closes_aidl_delivered_bulk_fd_after_coordinator_dup() -> None:
 def test_placeholder_sink_is_no_longer_wired_into_runtime_or_controller() -> None:
     service = (ANDROID / "app/src/main/java/com/a620/tablet/training/TrainingRuntimeService.kt").read_text()
     client = (ANDROID / "app/src/main/java/com/a620/tablet/training/ControllerRuntimeClient.kt").read_text()
-    mock = (ANDROID / "app/src/main/java/com/a620/tablet/training/DeviceShellMockGame.kt").read_text()
+    interactive = (ANDROID / "app/src/main/java/com/a620/tablet/training/InteractiveTrainingRuntime.kt").read_text()
     sink = (ANDROID / "app/src/main/java/com/a620/tablet/training/RuntimeMessageSink.kt").read_text()
     assert "SwitchableRuntimeMessageSink" in service
-    assert "DeviceShellMockRuntime" in service
-    assert "StrictRuntimeMessageSink" in mock
+    assert "InteractiveTrainingRuntime" in service
+    assert "DeviceShellMockRuntime" not in service
+    assert "StrictRuntimeMessageSink" in interactive
     assert "StrictRuntimeMessageSink" in client
     assert "RejectingPlaceholderSink" not in service
     assert "RejectingPlaceholderSink" not in client
@@ -249,3 +253,74 @@ def test_runtime_client_always_closes_ingress_when_interruption_persistence_fail
     assert "eventIngress.close()" in source
     assert "eventActor.shutdownNow()" in source
     assert "INTERRUPTION_PERSIST_FAILED" in source
+
+
+def test_android_launcher_wires_both_real_game_modules_into_training_process() -> None:
+    manifest = ElementTree.parse(ANDROID / "app/src/main/AndroidManifest.xml")
+    application = manifest.getroot().find("application")
+    assert application is not None
+    training_activity = next(
+        activity
+        for activity in application.findall("activity")
+        if activity.attrib.get(NS + "name") == ".training.TrainingActivity"
+    )
+    assert training_activity.attrib[NS + "exported"] == "false"
+    assert training_activity.attrib[NS + "process"] == ":training"
+
+    launcher = (ANDROID / "app/src/main/java/com/a620/tablet/MainActivity.kt").read_text()
+    assert "CATCH_LIGHT" in launcher
+    assert "SIGNAL_STATION" in launcher
+    assert "startInteractiveExecution" in launcher
+    assert "runtime_shell_status" not in launcher
+
+    service = (ANDROID / "app/src/main/java/com/a620/tablet/training/TrainingRuntimeService.kt").read_text()
+    assert "InteractiveTrainingRuntime" in service
+    assert "DeviceShellMockRuntime(" not in service
+
+    web_source = ROOT / "typescript/src/android-training/app.ts"
+    assert web_source.is_file()
+    text = web_source.read_text()
+    assert "new CatchLightGameModule" in text
+    assert "new SignalStationTrainingGameModule" in text
+    assert "setEvidenceSink" in text
+    assert "RESULT_READY" in text
+
+
+def test_main_controller_stays_foreground_while_training_process_is_visible() -> None:
+    tree = ElementTree.parse(ANDROID / "app/src/main/AndroidManifest.xml")
+    root = tree.getroot()
+    permissions = {item.attrib[NS + "name"] for item in root.findall("uses-permission")}
+    assert "android.permission.FOREGROUND_SERVICE" in permissions
+    assert "android.permission.FOREGROUND_SERVICE_SPECIAL_USE" in permissions
+    application = root.find("application")
+    assert application is not None
+    keep_alive = next(
+        service
+        for service in application.findall("service")
+        if service.attrib.get(NS + "name") == ".ControllerKeepAliveService"
+    )
+    assert keep_alive.attrib[NS + "exported"] == "false"
+    assert keep_alive.attrib[NS + "foregroundServiceType"] == "specialUse"
+    source = (ANDROID / "app/src/main/java/com/a620/tablet/ControllerKeepAliveService.kt").read_text()
+    assert "startForeground" in source
+    assert "durable controller" in source
+
+
+def test_android_training_bundle_is_packaged_and_has_no_network_surface() -> None:
+    gradle = (ANDROID / "app/build.gradle.kts").read_text()
+    assert "training-runtime.bundle.js" in gradle
+    assert "game-config" in gradle
+
+    manifest = (ANDROID / "app/src/main/AndroidManifest.xml").read_text()
+    assert "android.permission.INTERNET" not in manifest
+
+    build_script = (ROOT / "scripts/build_android_gateab.sh").read_text()
+    assert "npm run build:android-training" in build_script
+    assert "npm ci" in build_script
+
+    html = ANDROID / "app/src/main/assets/training/index.html"
+    bundle = ANDROID / "app/src/main/assets/training/training-runtime.bundle.js"
+    assert html.is_file()
+    assert bundle.is_file()
+    assert "training-runtime.bundle.js" in html.read_text()
+    assert bundle.stat().st_size > 10_000

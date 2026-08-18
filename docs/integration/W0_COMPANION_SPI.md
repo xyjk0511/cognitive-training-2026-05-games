@@ -51,6 +51,8 @@ Run:
 
 The test drives both games through the same companion interface, injects a first-attempt host persistence failure, retries the same evidence, and reconciles delivered batch ordinals/hashes against each final `eligibleBatches` array.
 
-## Limitations
+## Android integration status and limits
 
-This is reference TypeScript/headless integration evidence. It is not evidence of a real Cocos process, Android Binder/PFD transport, AGP build, candidate-tablet timing, production signing, Gate A/B approval or patient readiness.
+The current integration candidate now uses this SPI from the Android `:training` process: a bundled local WebView executes both TypeScript modules, injects Android uptime/pointer identity, and sends evidence through authenticated Binder into the SQLite v4 controller. API 36 emulator runs have completed both 300000 ms sessions with eight persisted batches, a formal result and an ACK.
+
+This remains representative-slice engineering evidence. The runtime container is WebView, not a Cocos Creator native project, and there is still no candidate-tablet, process-kill/power-loss, production-signing, full-level, production-asset, Gate A/B approval or patient-readiness evidence.

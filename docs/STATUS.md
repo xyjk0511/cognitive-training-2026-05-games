@@ -1,33 +1,42 @@
-# 单线施工状态
+# 集成候选状态
 
-候选状态：`GATE_AB_AUTHENTICATED_DURABLE_CONTROLLER_RC3_BASELINE_8_NOT_DEVICE_APPROVED`
+候选状态：`AVAILABLE_VERTICAL_SLICES_PLAYABLE_END_TO_END_NOT_DEVICE_APPROVED`
 
 ## 已完成
 
 - A620-TRC-1.1 公共契约与 Python/TypeScript/Kotlin 参考实现；
-- baseline.5 并发、fencing、outbox/watchdog 与训练包安装协调；
-- baseline.6 boot epoch、持久化完整性、结果事务和 Android 形态运行壳；
-- baseline.7 严格 canonical 入口、PFD 异步读取、有序入口、反压与触摸流取消；
-- baseline.8 同 UID AIDL 通道认证、双向事件传输、SQLite v4 主控持久层、批次证据对账、正式结果单事务提交、精确 RESULT_READY/ACK 重放及 senderSeq 严格有序的持久 outbox。
+- baseline.5–8 的并发、fencing、boot epoch、canonical/PFD、AIDL 通道认证和 SQLite v4 结果事务；
+- 《捕光行动》四个代表级和《信号反应站》六个代表级 TypeScript 领域模块；
+- Android 单入口任务选择页和独立 `:training` 训练页；
+- 本地 WebView bundle 到真实游戏模块的触摸、计时、暂停/继续/截止接入；
+- Controller→Binder→训练模块→`BATCH_CLOSED`/`RESULT_READY`→SQLite→ACK 完整路径；
+- 前台主控 service，确保训练页位于独立进程时权威 300 秒 deadline 仍可调度；
+- API 36 Pixel Tablet 模拟器上的 Debug APK 构建、单测、lint、安装和两款游戏完整 300 秒会话。
 
-## 已验证的边界
+## 当前证据
 
-- schema 和事务在 Python SQLite 中执行；
-- 公共生成器、Python、TypeScript、Kotlin/JVM 与 Android/AIDL stub 测试通过；
-- PREPARE/事件身份、messageId 幂等、按 senderRole 独立 senderSeq、boot epoch 和 uptime 回退规则有机器检查；
-- 正式结果与 ExecutionOutcome 互斥，结果提交失败不会留下半条结果、半条同步队列或无 ACK 的 COMPLETE 状态。
+- 两款游戏各产生 8 条 ordinal 1–8 批次证据；
+- 两款游戏均提交 1 条正式结果；
+- 两个 ACK outbox 均为 `ACKED / attempt_count=1`；
+- Controller 状态均为 `COMPLETE / PENDING_UPLOAD`；
+- SQLite `quick_check=ok`、schema version 4；
+- 最终 APK smoke 未发现 `FATAL EXCEPTION`。
+
+详细证据见交付目录：
+`delivery/A620_GAME_INTEGRATION_VALIDATION_REPORT_20260818.md`。
 
 ## 仍不得声称
 
-- 没有真实 Android SDK build、AGP AIDL 生成、lint、instrumentation；
-- `SQLiteOpenHelper` 事务核心不是已经完成的 Room 生产层；
-- 没有真实 Binder/PFD/Cocos 进程、候选平板 kill、300 秒计时和断电证据；
-- 没有可供患者使用的 APK 或正式游戏。
+- 完整 L1–L120《捕光行动》或 L1–L96《信号反应站》；
+- Cocos Creator 原生场景、生产水果素材、音频、动画或正式内容批准；
+- Room 生产接入或后台上传完成；
+- 候选真实平板、生产签名、进程回收、断电恢复、性能/热量/内存验证；
+- Gate A/B、生产发布或患者任务批准。
 
 ## 下一步
 
-1. 在锁定工具链的 Android CI 中执行 `assembleDebug`、`lintDebug` 与 AIDL 生成；
-2. 将 SQLite v4 schema 接入真实 Android 数据库测试，决定 Room facade 是否保留同一原子事务边界；
-3. 接入 Cocos `:training` 进程和真实 ACTION_CANCEL；
-4. 实测 Binder/PFD 反压、进程死亡、boot epoch、300 秒截止与结果 ACK 丢失；
-5. 通过 Gate A/B 后开始《信号反应站》L1，再用《捕光行动》L1 检查公共底座未过拟合。
+1. 补齐全等级冻结配置和正式素材；
+2. 如产品仍要求 Cocos，提供并接入 Cocos Creator 原生工程，保持现有 companion SPI；
+3. 在候选平板验证 Binder/PFD 大载荷、进程死亡、断电恢复和完整性能指标；
+4. 接入受控上传端并验证 `PENDING_UPLOAD` 生命周期；
+5. 使用生产签名重新执行发布 Gate。

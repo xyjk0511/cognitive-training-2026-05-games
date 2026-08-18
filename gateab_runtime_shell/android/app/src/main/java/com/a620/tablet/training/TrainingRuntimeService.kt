@@ -53,7 +53,7 @@ class TrainingRuntimeService : Service() {
             val completed = CountDownLatch(1)
             val failure = AtomicReference<Throwable?>(null)
             val installedRecipient = AtomicReference<IBinder.DeathRecipient?>(null)
-            val nextSink = DeviceShellMockRuntime(
+            val nextSink = InteractiveTrainingRuntime(
                 eventSender = DeviceRuntimeEventSender { envelope, bytes ->
                     eventTransport.send(envelope, bytes)
                 },
@@ -114,7 +114,7 @@ class TrainingRuntimeService : Service() {
                             // Reducer replacement and old-channel terminalization are
                             // serialized on the actor, never executed on the Binder thread.
                             val previous = sink.replace(nextSink)
-                            if (previous is DeviceShellMockRuntime) {
+                            if (previous is InteractiveTrainingRuntime) {
                                 runCatching {
                                     previous.onControllerChannelClosed("CHANNEL_REPLACED_BY_NEW_BINDING")
                                 }

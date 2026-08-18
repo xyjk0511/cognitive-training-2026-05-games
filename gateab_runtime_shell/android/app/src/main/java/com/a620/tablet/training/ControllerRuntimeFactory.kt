@@ -12,6 +12,10 @@ class ControllerRuntimeSession(
     private val commandTransport: ControllerCommandTransport,
     private val closeStoreOnClose: Boolean = false,
 ) : AutoCloseable {
+    fun send(envelope: RuntimeWireEnvelope, canonicalJson: ByteArray) {
+        commandTransport.send(envelope, canonicalJson)
+    }
+
     override fun close() {
         client.close("CONTROLLER_RUNTIME_SESSION_CLOSED")
         outboxDispatcher.close()
@@ -30,6 +34,7 @@ class ControllerRuntimeFactory(
         bootEpochId: String,
         nowUtcMs: Long,
         nowUptimeMs: Long,
+        onRuntimeEvent: (RuntimeWireEnvelope) -> Unit = {},
     ): ControllerRuntimeSession {
         require(prepareEnvelope.messageType == "PREPARE")
         store.bindBootEpoch(bootEpochId, nowUtcMs, nowUptimeMs)
@@ -39,6 +44,7 @@ class ControllerRuntimeFactory(
             store = store,
             runtimeSessionId = prepareEnvelope.runtimeSessionId,
             executionAttempt = prepareEnvelope.executionAttempt,
+            onPersistedEvent = onRuntimeEvent,
         )
         lateinit var client: ControllerRuntimeClient
         lateinit var commandTransport: ControllerCommandTransport
@@ -54,7 +60,10 @@ class ControllerRuntimeFactory(
             executionAttempt = prepareEnvelope.executionAttempt,
             outcomeWriter = store,
             eventSink = sink,
-            onChannelAvailable = outboxDispatcher::scheduleDrain,
+            onChannelAvailable = {
+                outboxDispatcher.scheduleDrain()
+                commandTransport.send(prepareEnvelope, canonicalPrepare)
+            },
         )
         commandTransport = ControllerCommandTransport(
             channel = client,

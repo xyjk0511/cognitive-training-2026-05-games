@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <title>A620 训练</title>
+  <link rel="stylesheet" href="training.css">
+</head>
+<body>
+  <main id="app" data-game="">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">A620 · 认知训练</p>
+        <h1 id="game-title">正在载入训练</h1>
+      </div>
+      <div class="session-meta">
+        <span id="status">初始化</span>
+        <strong id="timer">05:00</strong>
+      </div>
+    </header>
+
+    <section class="training-shell">
+      <div class="instruction-panel">
+        <span id="batch">准备会话</span>
+        <div id="cue" aria-live="polite">正在建立安全训练通道</div>
+      </div>
+      <div id="board" class="game-board" aria-label="训练操作区"></div>
+    </section>
+
+    <footer class="controls">
+      <button id="pause-button" class="secondary" disabled>暂停</button>
+      <p>训练结果仅保存在本机控制数据库</p>
+      <button id="end-button" class="danger" disabled>结束训练</button>
+    </footer>
+  </main>
+  <script src="training-runtime.bundle.js"></script>
+</body>
+</html>

@@ -3,6 +3,8 @@
 基线固定为 `a620-trc-1.1-rc3-baseline.8` / `eb810135965c0c08bc53715c3724539bff73a0c5`，
 公共 wire 固定为 `A620-TRC-1.1`。本线未修改 `contracts/`、`games/`、`packages/`，也未实现两款游戏玩法。
 
+> 历史边界说明：本文件记录 W1 原始施工线。当前集成分支已在不修改公共 wire 的前提下，用 `InteractiveTrainingRuntime`、`TrainingActivity` 和本地 WebView bundle 接入两款代表级游戏，并完成 API 36 模拟器完整会话；当前状态以 `docs/STATUS.md` 为准。
+
 ## 进程与所有权
 
 应用只有一个 launcher。`A620Application` 在主进程启动时打开应用私有
@@ -58,9 +60,8 @@ v4 正式结果事务仍是一个 SQLite transaction：`formal_training_result`�
 重发首次 `RESULT_READY` 的同一 envelope、senderSeq 和 canonical bytes。
 Mock 不包含水果、信号、等级设计、场景、触控命中或生产计分规则。
 
-## 证据边界
+## W1 当时的证据边界
 
-本环境可确认：Python/SQLite、TypeScript、Kotlin、JVM/AIDL stub、源码 scope。
-本环境缺少 Gradle 9.5.0、Android SDK/platform 36/build-tools 36.0.0 和 adb，
-因此不能确认 APK 构建、Android lint、真实 AIDL 生成、Binder/PFD 驱动行为、
-双进程 kill、断电恢复、候选平板或真实 300 秒运行。
+W1 原始环境只能确认 Python/SQLite、TypeScript、Kotlin、JVM/AIDL stub 和源码 scope。
+后续 W0 集成已补 Android SDK build、lint、安装及两款 300 秒模拟器会话；仍未补齐
+候选平板、双进程 kill、断电恢复、Cocos 和生产签名证据。

@@ -116,6 +116,7 @@ class DurableControllerEventSink(
     private val store: AndroidControllerStore,
     private val runtimeSessionId: String,
     private val executionAttempt: Long,
+    private val onPersistedEvent: (RuntimeWireEnvelope) -> Unit = {},
 ) : RuntimeMessageSink {
     private val interrupted = AtomicBoolean(false)
     @Volatile private var resultCoordinator: ControllerResultCommitCoordinator? = null
@@ -139,6 +140,7 @@ class DurableControllerEventSink(
         val disposition = store.persistRuntimeEvent(envelope, canonicalJson, SystemClock.uptimeMillis())
         if (disposition == EventPersistenceDisposition.LATE_AUDIT) return
         coordinator?.commitAndSend(envelope, canonicalJson)
+        onPersistedEvent(envelope)
     }
 
     override fun onProtocolViolation(messageId: String?, reason: String) {

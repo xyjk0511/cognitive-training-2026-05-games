@@ -2,6 +2,7 @@ package com.a620.tablet
 
 import android.app.Application
 import android.content.Context
+import android.content.Intent
 import android.os.SystemClock
 import android.provider.Settings
 import a620.RuntimeWireEnvelope
@@ -9,6 +10,8 @@ import com.a620.tablet.training.AndroidControllerStore
 import com.a620.tablet.training.AndroidStoreConflict
 import com.a620.tablet.training.ControllerRuntimeFactory
 import com.a620.tablet.training.ControllerRuntimeSession
+import com.a620.tablet.training.GameLaunchSpec
+import com.a620.tablet.training.InteractiveExecutionController
 import java.io.File
 
 /** Stable Android boot identity used to fence monotonic uptime across restarts. */
@@ -63,6 +66,7 @@ class PersistentPlatformController(
     fun startExecution(
         prepareEnvelope: RuntimeWireEnvelope,
         canonicalPrepare: ByteArray,
+        onRuntimeEvent: (RuntimeWireEnvelope) -> Unit = {},
     ): ControllerRuntimeSession {
         check(activeSession == null) { "another execution attempt is already owned by the controller" }
         require(prepareEnvelope.monotonicEpochId == bootEpochId) {
@@ -74,6 +78,7 @@ class PersistentPlatformController(
             bootEpochId = bootEpochId,
             nowUtcMs = System.currentTimeMillis(),
             nowUptimeMs = SystemClock.uptimeMillis(),
+            onRuntimeEvent = onRuntimeEvent,
         )
         if (!session.client.bind()) {
             session.close()
@@ -104,6 +109,7 @@ class PersistentPlatformController(
 
 class A620Application : Application() {
     private var ownedPlatformController: PersistentPlatformController? = null
+    @Volatile private var interactiveController: InteractiveExecutionController? = null
 
     /** Only the APK main process may own durable controller state. */
     val platformController: PersistentPlatformController
@@ -118,10 +124,42 @@ class A620Application : Application() {
         }
     }
 
+    @Synchronized
+    fun startInteractiveExecution(gameCode: String, onStatus: (String) -> Unit): InteractiveExecutionController {
+        check(Application.getProcessName() == packageName) { "interactive controller belongs to the main process" }
+        check(interactiveController == null) { "another interactive execution is already active" }
+        val keepAliveIntent = Intent(this, ControllerKeepAliveService::class.java)
+        startForegroundService(keepAliveIntent)
+        val controller = InteractiveExecutionController(this, GameLaunchSpec.forCode(gameCode), onStatus)
+        interactiveController = controller
+        try {
+            controller.start()
+        } catch (error: Throwable) {
+            interactiveController = null
+            stopService(keepAliveIntent)
+            throw error
+        }
+        return controller
+    }
+
+    fun requestInteractiveControl(action: String) {
+        interactiveController?.requestControl(action)
+    }
+
+    @Synchronized
+    fun clearInteractiveController(value: InteractiveExecutionController) {
+        if (interactiveController === value) {
+            interactiveController = null
+            stopService(Intent(this, ControllerKeepAliveService::class.java))
+        }
+    }
+
     internal fun ownsPlatformControllerForTest(): Boolean = ownedPlatformController != null
 
     // Android production does not normally call this; it keeps local/JVM lifecycle deterministic.
     override fun onTerminate() {
+        interactiveController?.close()
+        interactiveController = null
         ownedPlatformController?.close()
         ownedPlatformController = null
         super.onTerminate()
