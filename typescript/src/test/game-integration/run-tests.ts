@@ -1,6 +1,7 @@
-import type {
-  A620InteractiveTrainingGameModule,
-  TrainingPointerEvent,
+import {
+  TrainingPointerEventGate,
+  type A620InteractiveTrainingGameModule,
+  type TrainingPointerEvent,
 } from "../../game-plugin.js";
 import type { EligibleBatch, GameResultDraft } from "../../contracts.js";
 import { CatchLightGameModule } from "../../games/catch-light/adapter.js";
@@ -29,6 +30,43 @@ function assertBatchReconciliation(delivered: readonly EligibleBatch[], draft: G
     assertEqual(emitted.batchOrdinal, finalized.batchOrdinal, `${label} batch ordinal ${index}`);
     assertEqual(emitted.batchPayloadSha256, finalized.batchPayloadSha256, `${label} batch hash ${index}`);
   }
+}
+
+const inputGate = new TrainingPointerEventGate();
+const firstDown: TrainingPointerEvent = Object.freeze({
+  pointerEventId: "gate-down-1", pointerId: "gate-pointer-1", phase: "DOWN",
+  sourceUptimeMs: 1, xPx: 10, yPx: 20, hitToken: null,
+});
+assertEqual(inputGate.accept(firstDown), "DOWN", "first DOWN enters the game");
+assertEqual(inputGate.accept(Object.freeze({...firstDown, pointerEventId: "gate-down-2"})), "IGNORE", "one pointer stream cannot score two DOWN events");
+inputGate.cancelAll("PAUSE");
+const postCancelDown = Object.freeze({...firstDown, pointerEventId: "gate-down-3"});
+assertEqual(inputGate.accept(postCancelDown), "DOWN", "stream cancellation permits a new DOWN after resume");
+inputGate.rollbackDown(postCancelDown);
+assertEqual(inputGate.accept(postCancelDown), "DOWN", "failed dispatch may retry the same stable pointer event");
+
+async function verifyDeadlineOrdering(options: {
+  label: string;
+  module: A620InteractiveTrainingGameModule;
+  prepareContext: Parameters<A620InteractiveTrainingGameModule["prepare"]>[0];
+  startUptimeMs: number;
+  cutoffUptimeMs: number;
+}): Promise<void> {
+  options.module.setEvidenceSink(() => {});
+  await options.module.prepare(options.prepareContext);
+  options.module.onStart(options.startUptimeMs, options.cutoffUptimeMs);
+  let errorMessage: string | null = null;
+  try {
+    options.module.onDeadline(options.cutoffUptimeMs);
+  } catch (error) {
+    errorMessage = error instanceof Error ? error.message : String(error);
+  }
+  assertEqual(
+    errorMessage,
+    "interactive host must advance and persist BATCH_CLOSED before DEADLINE",
+    `${options.label} prevents BATCH_CLOSED emission from FINALIZING`,
+  );
+  await options.module.dispose();
 }
 
 async function verifyInteractiveModule(options: {
@@ -74,11 +112,27 @@ async function verifyInteractiveModule(options: {
   options.module.onPointerEvent(pointerDown);
   options.module.onInputStreamsCancelled("PAUSE");
 
+  options.module.advanceToUptime(options.cutoffUptimeMs);
   options.module.onDeadline(options.cutoffUptimeMs);
   const draft = options.module.buildResultDraft();
   assertBatchReconciliation(delivered, draft, options.label);
   await options.module.dispose();
 }
+
+await verifyDeadlineOrdering({
+  label: "catch-light",
+  module: new CatchLightGameModule(),
+  prepareContext: {
+    gameCode: "CATCH_LIGHT",
+    sessionSeed: 620_100,
+    sessionStartLevel: 1,
+    durationMs: 300000,
+    runtimeConfigHash: CATCH_LIGHT_VERTICAL_SLICE_CONFIG_SHA256,
+    gameConfig: CATCH_LIGHT_VERTICAL_SLICE_CONFIG as unknown as Readonly<Record<string, unknown>>,
+  },
+  startUptimeMs: 0,
+  cutoffUptimeMs: 300000,
+});
 
 const catchLightModule = new CatchLightGameModule();
 await verifyInteractiveModule({
@@ -95,6 +149,21 @@ await verifyInteractiveModule({
   startUptimeMs: 0,
   cutoffUptimeMs: 300000,
   firstBatchBoundaryUptimeMs: 37500,
+});
+
+await verifyDeadlineOrdering({
+  label: "signal-station",
+  module: new SignalStationTrainingGameModule(),
+  prepareContext: {
+    gameCode: "SIGNAL_STATION",
+    sessionSeed: 620_100,
+    sessionStartLevel: 1,
+    durationMs: 300000,
+    runtimeConfigHash: canonicalSha256(VERTICAL_SLICE_RUNTIME_CONFIG),
+    gameConfig: VERTICAL_SLICE_RUNTIME_CONFIG as unknown as Readonly<Record<string, unknown>>,
+  },
+  startUptimeMs: 1000,
+  cutoffUptimeMs: 301000,
 });
 
 const signalStationModule = new SignalStationTrainingGameModule();
