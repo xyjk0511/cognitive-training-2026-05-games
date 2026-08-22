@@ -1,0 +1,142 @@
+name: A620 locked Android toolchain bootstrap
+
+on:
+  push:
+    branches:
+      - chatgpt/a620-toolchain-bootstrap-20260822
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    env:
+      GRADLE_VERSION: "9.5.0"
+      ANDROID_API: "36"
+      BUILD_TOOLS: "36.0.0"
+      GRADLE_USER_HOME: ${{ github.workspace }}/.gradle-bootstrap
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Install locked Gradle and Android SDK packages
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/a620-gradle"
+          curl --fail --location --retry 5 \
+            "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip" \
+            --output "$RUNNER_TEMP/gradle.zip"
+          unzip -q "$RUNNER_TEMP/gradle.zip" -d "$RUNNER_TEMP/a620-gradle"
+
+          SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          if [ ! -x "$SDKMANAGER" ]; then
+            SDKMANAGER="$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | sort | tail -1)"
+          fi
+          yes | "$SDKMANAGER" --licenses >/dev/null 2>&1 || true
+          "$SDKMANAGER" \
+            "platform-tools" \
+            "platforms;android-${ANDROID_API}" \
+            "build-tools;${BUILD_TOOLS}" \
+            "emulator" \
+            "system-images;android-${ANDROID_API};google_apis;x86_64"
+
+          "$RUNNER_TEMP/a620-gradle/gradle-${GRADLE_VERSION}/bin/gradle" --version
+          "$SDKMANAGER" --list_installed
+
+      - name: Prime AGP 9.3.1 dependency cache
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$RUNNER_TEMP/a620-gradle/gradle-${GRADLE_VERSION}/bin:$ANDROID_HOME/platform-tools:$PATH"
+          cd gateab_runtime_shell/android
+          gradle --no-daemon --stacktrace help | tee "$RUNNER_TEMP/gradle-help.log"
+          set +e
+          gradle --no-daemon --stacktrace :app:assembleDebug :app:testDebugUnitTest :app:lintDebug \
+            | tee "$RUNNER_TEMP/remote-prime-build.log"
+          echo "${PIPESTATUS[0]}" > "$RUNNER_TEMP/remote-prime-build.exit"
+          set -e
+
+      - name: Assemble portable build toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="$RUNNER_TEMP/a620-build-toolchain"
+          mkdir -p "$OUT/gradle" "$OUT/android-sdk" "$OUT/gradle-user-home"
+          cp -a "$RUNNER_TEMP/a620-gradle/gradle-${GRADLE_VERSION}" "$OUT/gradle/"
+          cp -a "$ANDROID_HOME/cmdline-tools" "$OUT/android-sdk/"
+          cp -a "$ANDROID_HOME/platform-tools" "$OUT/android-sdk/"
+          mkdir -p "$OUT/android-sdk/platforms" "$OUT/android-sdk/build-tools"
+          cp -a "$ANDROID_HOME/platforms/android-${ANDROID_API}" "$OUT/android-sdk/platforms/"
+          cp -a "$ANDROID_HOME/build-tools/${BUILD_TOOLS}" "$OUT/android-sdk/build-tools/"
+          cp -a "$ANDROID_HOME/licenses" "$OUT/android-sdk/"
+          cp -a "$GRADLE_USER_HOME/." "$OUT/gradle-user-home/"
+          rm -rf "$OUT/gradle-user-home/daemon" "$OUT/gradle-user-home/workers"
+          cp "$RUNNER_TEMP/gradle-help.log" "$OUT/"
+          cp "$RUNNER_TEMP/remote-prime-build.log" "$OUT/"
+          cp "$RUNNER_TEMP/remote-prime-build.exit" "$OUT/"
+          cat > "$OUT/TOOLCHAIN_METADATA.json" <<JSON
+          {
+            "schema": "A620-PORTABLE-ANDROID-TOOLCHAIN-1",
+            "gradle": "${GRADLE_VERSION}",
+            "agp": "9.3.1",
+            "jdk": "17",
+            "compileSdk": ${ANDROID_API},
+            "buildTools": "${BUILD_TOOLS}",
+            "sourceCommit": "${GITHUB_SHA}",
+            "runner": "${RUNNER_OS}/${RUNNER_ARCH}"
+          }
+          JSON
+          tar -C "$RUNNER_TEMP" -I 'zstd -T0 -3' -cf "$RUNNER_TEMP/a620-build-toolchain.tar.zst" a620-build-toolchain
+          sha256sum "$RUNNER_TEMP/a620-build-toolchain.tar.zst" > "$RUNNER_TEMP/a620-build-toolchain.tar.zst.sha256"
+          du -sh "$OUT" "$RUNNER_TEMP/a620-build-toolchain.tar.zst"
+
+      - name: Assemble portable API 36 emulator
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="$RUNNER_TEMP/a620-api36-emulator"
+          mkdir -p "$OUT/android-sdk/system-images/android-${ANDROID_API}/google_apis" "$OUT/android-sdk"
+          cp -a "$ANDROID_HOME/emulator" "$OUT/android-sdk/"
+          cp -a "$ANDROID_HOME/platform-tools" "$OUT/android-sdk/"
+          cp -a "$ANDROID_HOME/system-images/android-${ANDROID_API}/google_apis/x86_64" \
+            "$OUT/android-sdk/system-images/android-${ANDROID_API}/google_apis/"
+          cp -a "$ANDROID_HOME/licenses" "$OUT/android-sdk/"
+          cat > "$OUT/EMULATOR_METADATA.json" <<JSON
+          {
+            "schema": "A620-PORTABLE-API36-EMULATOR-1",
+            "api": ${ANDROID_API},
+            "tag": "google_apis",
+            "abi": "x86_64",
+            "sourceCommit": "${GITHUB_SHA}",
+            "runner": "${RUNNER_OS}/${RUNNER_ARCH}"
+          }
+          JSON
+          tar -C "$RUNNER_TEMP" -I 'zstd -T0 -3' -cf "$RUNNER_TEMP/a620-api36-emulator.tar.zst" a620-api36-emulator
+          sha256sum "$RUNNER_TEMP/a620-api36-emulator.tar.zst" > "$RUNNER_TEMP/a620-api36-emulator.tar.zst.sha256"
+          du -sh "$OUT" "$RUNNER_TEMP/a620-api36-emulator.tar.zst"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: a620-build-toolchain-linux-x86_64
+          path: |
+            ${{ runner.temp }}/a620-build-toolchain.tar.zst
+            ${{ runner.temp }}/a620-build-toolchain.tar.zst.sha256
+          compression-level: 0
+          retention-days: 1
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: a620-api36-emulator-linux-x86_64
+          path: |
+            ${{ runner.temp }}/a620-api36-emulator.tar.zst
+            ${{ runner.temp }}/a620-api36-emulator.tar.zst.sha256
+          compression-level: 0
+          retention-days: 1
