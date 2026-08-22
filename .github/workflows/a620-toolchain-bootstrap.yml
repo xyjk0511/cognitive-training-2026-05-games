@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - chatgpt/a620-toolchain-bootstrap-20260822
+  pull_request:
+    branches:
+      - chatgpt/integration-a620-w1-w2-w3
   workflow_dispatch:
 
 permissions:
