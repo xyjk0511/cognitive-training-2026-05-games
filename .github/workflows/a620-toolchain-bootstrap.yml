@@ -38,7 +38,6 @@ jobs:
             "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip" \
             --output "$RUNNER_TEMP/gradle.zip"
           unzip -q "$RUNNER_TEMP/gradle.zip" -d "$RUNNER_TEMP/a620-gradle"
-
           SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
           if [ ! -x "$SDKMANAGER" ]; then
             SDKMANAGER="$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | sort | tail -1)"
@@ -50,7 +49,6 @@ jobs:
             "build-tools;${BUILD_TOOLS}" \
             "emulator" \
             "system-images;android-${ANDROID_API};google_apis;x86_64"
-
           "$RUNNER_TEMP/a620-gradle/gradle-${GRADLE_VERSION}/bin/gradle" --version
           "$SDKMANAGER" --list_installed
 
@@ -67,79 +65,94 @@ jobs:
           echo "${PIPESTATUS[0]}" > "$RUNNER_TEMP/remote-prime-build.exit"
           set -e
 
-      - name: Assemble portable build toolchain
+      - name: Assemble and split portable archives
         shell: bash
         run: |
           set -euo pipefail
-          OUT="$RUNNER_TEMP/a620-build-toolchain"
-          mkdir -p "$OUT/gradle" "$OUT/android-sdk" "$OUT/gradle-user-home"
-          cp -a "$RUNNER_TEMP/a620-gradle/gradle-${GRADLE_VERSION}" "$OUT/gradle/"
-          cp -a "$ANDROID_HOME/cmdline-tools" "$OUT/android-sdk/"
-          cp -a "$ANDROID_HOME/platform-tools" "$OUT/android-sdk/"
-          mkdir -p "$OUT/android-sdk/platforms" "$OUT/android-sdk/build-tools"
-          cp -a "$ANDROID_HOME/platforms/android-${ANDROID_API}" "$OUT/android-sdk/platforms/"
-          cp -a "$ANDROID_HOME/build-tools/${BUILD_TOOLS}" "$OUT/android-sdk/build-tools/"
-          cp -a "$ANDROID_HOME/licenses" "$OUT/android-sdk/"
-          cp -a "$GRADLE_USER_HOME/." "$OUT/gradle-user-home/"
-          rm -rf "$OUT/gradle-user-home/daemon" "$OUT/gradle-user-home/workers"
-          cp "$RUNNER_TEMP/gradle-help.log" "$OUT/"
-          cp "$RUNNER_TEMP/remote-prime-build.log" "$OUT/"
-          cp "$RUNNER_TEMP/remote-prime-build.exit" "$OUT/"
-          cat > "$OUT/TOOLCHAIN_METADATA.json" <<JSON
-          {
-            "schema": "A620-PORTABLE-ANDROID-TOOLCHAIN-1",
-            "gradle": "${GRADLE_VERSION}",
-            "agp": "9.3.1",
-            "jdk": "17",
-            "compileSdk": ${ANDROID_API},
-            "buildTools": "${BUILD_TOOLS}",
-            "sourceCommit": "${GITHUB_SHA}",
-            "runner": "${RUNNER_OS}/${RUNNER_ARCH}"
-          }
+          BUILD="$RUNNER_TEMP/a620-build-toolchain"
+          mkdir -p "$BUILD/gradle" "$BUILD/android-sdk" "$BUILD/gradle-user-home"
+          cp -a "$RUNNER_TEMP/a620-gradle/gradle-${GRADLE_VERSION}" "$BUILD/gradle/"
+          cp -a "$ANDROID_HOME/cmdline-tools" "$BUILD/android-sdk/"
+          cp -a "$ANDROID_HOME/platform-tools" "$BUILD/android-sdk/"
+          mkdir -p "$BUILD/android-sdk/platforms" "$BUILD/android-sdk/build-tools"
+          cp -a "$ANDROID_HOME/platforms/android-${ANDROID_API}" "$BUILD/android-sdk/platforms/"
+          cp -a "$ANDROID_HOME/build-tools/${BUILD_TOOLS}" "$BUILD/android-sdk/build-tools/"
+          cp -a "$ANDROID_HOME/licenses" "$BUILD/android-sdk/"
+          cp -a "$GRADLE_USER_HOME/." "$BUILD/gradle-user-home/"
+          rm -rf "$BUILD/gradle-user-home/daemon" "$BUILD/gradle-user-home/workers"
+          cp "$RUNNER_TEMP/gradle-help.log" "$BUILD/"
+          cp "$RUNNER_TEMP/remote-prime-build.log" "$BUILD/"
+          cp "$RUNNER_TEMP/remote-prime-build.exit" "$BUILD/"
+          cat > "$BUILD/TOOLCHAIN_METADATA.json" <<JSON
+          {"schema":"A620-PORTABLE-ANDROID-TOOLCHAIN-2","gradle":"${GRADLE_VERSION}","agp":"9.3.1","jdk":"17","compileSdk":${ANDROID_API},"buildTools":"${BUILD_TOOLS}","sourceCommit":"${GITHUB_SHA}","runner":"${RUNNER_OS}/${RUNNER_ARCH}"}
           JSON
           tar -C "$RUNNER_TEMP" -I 'zstd -T0 -3' -cf "$RUNNER_TEMP/a620-build-toolchain.tar.zst" a620-build-toolchain
           sha256sum "$RUNNER_TEMP/a620-build-toolchain.tar.zst" > "$RUNNER_TEMP/a620-build-toolchain.tar.zst.sha256"
-          du -sh "$OUT" "$RUNNER_TEMP/a620-build-toolchain.tar.zst"
+          split -b 450M -d -a 2 "$RUNNER_TEMP/a620-build-toolchain.tar.zst" "$RUNNER_TEMP/a620-build-toolchain.part-"
 
-      - name: Assemble portable API 36 emulator
-        shell: bash
-        run: |
-          set -euo pipefail
-          OUT="$RUNNER_TEMP/a620-api36-emulator"
-          mkdir -p "$OUT/android-sdk/system-images/android-${ANDROID_API}/google_apis" "$OUT/android-sdk"
-          cp -a "$ANDROID_HOME/emulator" "$OUT/android-sdk/"
-          cp -a "$ANDROID_HOME/platform-tools" "$OUT/android-sdk/"
+          EMU="$RUNNER_TEMP/a620-api36-emulator"
+          mkdir -p "$EMU/android-sdk/system-images/android-${ANDROID_API}/google_apis" "$EMU/android-sdk"
+          cp -a "$ANDROID_HOME/emulator" "$EMU/android-sdk/"
+          cp -a "$ANDROID_HOME/platform-tools" "$EMU/android-sdk/"
           cp -a "$ANDROID_HOME/system-images/android-${ANDROID_API}/google_apis/x86_64" \
-            "$OUT/android-sdk/system-images/android-${ANDROID_API}/google_apis/"
-          cp -a "$ANDROID_HOME/licenses" "$OUT/android-sdk/"
-          cat > "$OUT/EMULATOR_METADATA.json" <<JSON
-          {
-            "schema": "A620-PORTABLE-API36-EMULATOR-1",
-            "api": ${ANDROID_API},
-            "tag": "google_apis",
-            "abi": "x86_64",
-            "sourceCommit": "${GITHUB_SHA}",
-            "runner": "${RUNNER_OS}/${RUNNER_ARCH}"
-          }
+            "$EMU/android-sdk/system-images/android-${ANDROID_API}/google_apis/"
+          cp -a "$ANDROID_HOME/licenses" "$EMU/android-sdk/"
+          cat > "$EMU/EMULATOR_METADATA.json" <<JSON
+          {"schema":"A620-PORTABLE-API36-EMULATOR-2","api":${ANDROID_API},"tag":"google_apis","abi":"x86_64","sourceCommit":"${GITHUB_SHA}","runner":"${RUNNER_OS}/${RUNNER_ARCH}"}
           JSON
           tar -C "$RUNNER_TEMP" -I 'zstd -T0 -3' -cf "$RUNNER_TEMP/a620-api36-emulator.tar.zst" a620-api36-emulator
           sha256sum "$RUNNER_TEMP/a620-api36-emulator.tar.zst" > "$RUNNER_TEMP/a620-api36-emulator.tar.zst.sha256"
-          du -sh "$OUT" "$RUNNER_TEMP/a620-api36-emulator.tar.zst"
+          split -b 450M -d -a 2 "$RUNNER_TEMP/a620-api36-emulator.tar.zst" "$RUNNER_TEMP/a620-api36-emulator.part-"
+          sha256sum "$RUNNER_TEMP"/a620-build-toolchain.part-* "$RUNNER_TEMP"/a620-api36-emulator.part-* > "$RUNNER_TEMP/a620-parts.sha256"
+          ls -lh "$RUNNER_TEMP"/a620-*.part-* "$RUNNER_TEMP"/*.sha256
 
       - uses: actions/upload-artifact@v4
         with:
-          name: a620-build-toolchain-linux-x86_64
-          path: |
-            ${{ runner.temp }}/a620-build-toolchain.tar.zst
-            ${{ runner.temp }}/a620-build-toolchain.tar.zst.sha256
+          name: a620-build-toolchain-part-00
+          path: ${{ runner.temp }}/a620-build-toolchain.part-00
           compression-level: 0
           retention-days: 1
-
       - uses: actions/upload-artifact@v4
         with:
-          name: a620-api36-emulator-linux-x86_64
-          path: |
-            ${{ runner.temp }}/a620-api36-emulator.tar.zst
-            ${{ runner.temp }}/a620-api36-emulator.tar.zst.sha256
+          name: a620-build-toolchain-part-01
+          path: ${{ runner.temp }}/a620-build-toolchain.part-01
           compression-level: 0
+          retention-days: 1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: a620-api36-emulator-part-00
+          path: ${{ runner.temp }}/a620-api36-emulator.part-00
+          compression-level: 0
+          retention-days: 1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: a620-api36-emulator-part-01
+          path: ${{ runner.temp }}/a620-api36-emulator.part-01
+          compression-level: 0
+          retention-days: 1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: a620-api36-emulator-part-02
+          path: ${{ runner.temp }}/a620-api36-emulator.part-02
+          compression-level: 0
+          retention-days: 1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: a620-api36-emulator-part-03
+          path: ${{ runner.temp }}/a620-api36-emulator.part-03
+          compression-level: 0
+          retention-days: 1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: a620-api36-emulator-part-04
+          path: ${{ runner.temp }}/a620-api36-emulator.part-04
+          compression-level: 0
+          retention-days: 1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: a620-toolchain-checksums
+          path: |
+            ${{ runner.temp }}/a620-build-toolchain.tar.zst.sha256
+            ${{ runner.temp }}/a620-api36-emulator.tar.zst.sha256
+            ${{ runner.temp }}/a620-parts.sha256
           retention-days: 1
